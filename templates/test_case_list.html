@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试用例列表</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center"><h1>测试用例列表</h1></div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>ID</th>
+                            <th>测试用例名称</th>
+                            <th>接口url</th>
+                            <th>测试数据</th>
+                            <th>请求方法</th>
+                            <th>请求结果</th>
+                            <th>操作</th>
+                        </tr>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ loop.index0 }}</td>          <!--使用循环的数字作为id -->
+                            <td>{{ item[2] }}</td>
+                            <td>{{ item[3] }}</td>
+                            <td>{{ item[4] }}</td>
+                            <td>{{ item[6] }}</td>
+                            <td>{{ item[5] }}</td>
+                            <td>
+                                <a href="{{ url_for('post_test_case',id=item[1]) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>
+                                <a href="{{ url_for('delete_test_case',id=item[1]) }}" class="btn btn-default btn-xs" title="删除"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
+<style>
+    th,td{
+        text-align: center;
+    }
+</style>
