@@ -73,9 +73,11 @@ from modles.case_group import CaseGroup
 db.create_all()
 from views.testcase import testcase_blueprint  # 不能放在其他位置
 from views.home import home_blueprint
+from views.case_group import case_group_blueprint
 
 app.register_blueprint(testcase_blueprint)
 app.register_blueprint(home_blueprint)
+app.register_blueprint(case_group_blueprint)
 
 if __name__ == '__main__':
     app.debug = True
