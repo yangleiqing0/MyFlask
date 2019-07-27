@@ -18,12 +18,22 @@
                 <h4 style="text-align: center">添加测试用例</h4>
             </div>
             <div class="panel-body" >
-                <form action="{{ url_for('post_test_case') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form action="{{ url_for('testcase_blueprint.post_test_case',id=-1) }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group">
                         <label for="name" class="control-label col-md-4">测试用例名称</label>
                         <div class="col-md-4">
                             <input type="text" class="form-control" id="name" name="name" placeholder="测试用例名称">
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="case_group" class="control-label col-md-4">测试用例分组</label>
+                            <div class="col-md-4">
+                                    <select name="case_group" id="case_group" class="form-control">
+                                        {% for case_group in case_groups %}
+                                            <option  value="{{ case_group[0] }}">{{ case_group[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                            </div>
                     </div>
                     <div class="form-group">
                         <label for="method" class="control-label col-md-4">请求方式</label>
@@ -40,7 +50,7 @@
                     <div class="form-group">
                         <label for="data" class="control-label col-md-4">测试报文</label>
                             <div class="col-md-4">
-                                <textarea rows="3" cols="10" style="resize:none;" class="form-control" id="data" name="data" placeholder="测试报文"></textarea>
+                                <textarea rows="8" cols="10" style="resize:none;" class="form-control" id="data" name="data" placeholder="测试报文"></textarea>
                         </div>
                     </div>
                     <div class="control-label col-md-6" >
