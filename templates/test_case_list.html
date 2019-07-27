@@ -31,16 +31,16 @@
                         </tr>
                         {% for item in items %}
                         <tr>
-                            <td>{{ item.id }}</td>
-                            <td>{{ case_groups[item.group_id-1].name}}</td>          <!--使用循环的数字作为id -->
+                            <td>{{ loop.index0 }}</td> <!--使用循环的数字作为id -->
+                            <td>{{ case_groups[item.group_id-1].name}}</td>
                             <td>{{ item.name }}</td>
                             <td>{{ item.url }}</td>
                             <td>{{ item.data }}</td>
                             <td>{{ item.method }}</td>
                             <td>{{ item.result }}</td>
                             <td>
-                                <a href="{{ url_for('testcase_blueprint.post_test_case',id=item[1]) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>
-                                <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item[1]) }}" class="btn btn-default btn-xs" title="删除"><i class="fa fa-trash"></i></a>
+                                <a href="{{ url_for('testcase_blueprint.post_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>
+                                <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="删除"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                         {% endfor %}

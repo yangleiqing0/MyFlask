@@ -14,18 +14,6 @@ app.debug = True
 db = SQLAlchemy(app)
 
 
-# @app.before_first_request
-# def create_db():
-#
-#   conn = sqlite3.connect(config.DATABASE_URL)
-#   c = conn.cursor()
-#   # 创建表
-#   # c.execute('''DROP TABLE IF EXISTS testcases''')
-#   c.execute('''CREATE TABLE if not exists case_group(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,descrption TEXT)''')
-#   c.execute('''CREATE TABLE if not exists testcases(id INTEGER PRIMARY KEY AUTOINCREMENT,name TEXT,url TEXT,data TEXT,result TEXT,method text,group_id INTEGER,FOREIGN KEY (group_id) REFERENCES case_group(id))''')
-#   c.close()
-#   conn.close()
-
 class cdb:
     def __init__(self):
         self.conn = sqlite3.connect(config.DATABASE_URL)
@@ -58,26 +46,21 @@ class cdb:
             self.conn.close()
 
 
-# cdb().opeat_db('insert into testcases values (?,?,?,?,?)',(None,"yi","dqw","dwq",1))
-
-# @app.route('/testcaselist/')
-# def test_case_list():
-#     sql = 'select ROWID,id,name,url,data,result,method from testcases'
-#     tests = cdb().query_db(sql)
-#     return render_template('test_case_list.html', items = tests)
 
 
 from modles.testcase import TestCases
 from modles.case_group import CaseGroup
-
+from modles.variables import Variables
 db.create_all()
 from views.testcase import testcase_blueprint  # 不能放在其他位置
 from views.home import home_blueprint
 from views.case_group import case_group_blueprint
+from views.variables import variables_blueprint
 
 app.register_blueprint(testcase_blueprint)
 app.register_blueprint(home_blueprint)
 app.register_blueprint(case_group_blueprint)
+app.register_blueprint(variables_blueprint)
 
 if __name__ == '__main__':
     app.run()

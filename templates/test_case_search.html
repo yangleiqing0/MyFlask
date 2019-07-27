@@ -18,37 +18,37 @@
                 <h4 style="text-align: center">修改测试用例</h4>
             </div>
             <div class="panel-body" >
-                <form  action="{{ url_for('testcase_blueprint.update_test_case',id=items[0]) }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form  action="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group">
                         <label for="name" class="control-label col-md-4">测试用例名称</label>
                         <div class="col-md-4">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="测试用例名称" value="{{ items[1]}}">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="测试用例名称" value="{{ item.name}}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="case_group" class="control-label col-md-4">测试用例分组</label>
                             <div class="col-md-4">
                                     <select disabled="disabled" name="case_group" id="case_group" class="form-control">
-                                            <option value="1">{{ items[6] }}</option>
+                                            <option value="1">{{ case_group.name }}</option>
                                     </select>
                             </div>
                     </div>
                     <div class="form-group">
                         <label for="method" class="control-label col-md-4">请求方式</label>
                         <div class="col-md-4">
-                            <input type="text" class="form-control" id="method" name="method" placeholder="请求方式" value="{{ items[4]}}">
+                            <input type="text" class="form-control" id="method" name="method" placeholder="请求方式" value="{{ item.method}}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="url" class="control-label col-md-4">测试接口</label>
                             <div class="col-md-4">
-                            <input type="text" class="form-control" id="url" name="url" placeholder="测试接口" value="{{ items[2]}}">
+                            <input type="text" class="form-control" id="url" name="url" placeholder="测试接口" value="{{ item.url}}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="data" class="control-label col-md-4">测试报文</label>
                             <div class="col-md-4">
-                                <textarea rows="10" cols="10" style="resize:none;" class="form-control" id="data" name="data" placeholder="测试报文" >{{ items[3]}}</textarea>
+                                <textarea rows="10" cols="10" style="resize:none;" class="form-control" id="data" name="data" placeholder="测试报文" >{{ item.data}}</textarea>
                         </div>
                     </div>
                     <div class="control-label col-md-6" >
