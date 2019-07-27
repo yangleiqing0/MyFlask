@@ -21,6 +21,7 @@
                     <table class="table table-hover">
                         <tr>
                             <th>ID</th>
+                            <th>测试用例分组</th>
                             <th>测试用例名称</th>
                             <th>接口url</th>
                             <th>测试数据</th>
@@ -30,12 +31,13 @@
                         </tr>
                         {% for item in items %}
                         <tr>
-                            <td>{{ item[1] }}</td>          <!--使用循环的数字作为id -->
-                            <td>{{ item[2] }}</td>
-                            <td>{{ item[3] }}</td>
-                            <td>{{ item[4] }}</td>
-                            <td>{{ item[6] }}</td>
-                            <td>{{ item[5] }}</td>
+                            <td>{{ item.id }}</td>
+                            <td>{{ case_groups[item.group_id-1].name}}</td>          <!--使用循环的数字作为id -->
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.url }}</td>
+                            <td>{{ item.data }}</td>
+                            <td>{{ item.method }}</td>
+                            <td>{{ item.result }}</td>
                             <td>
                                 <a href="{{ url_for('testcase_blueprint.post_test_case',id=item[1]) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item[1]) }}" class="btn btn-default btn-xs" title="删除"><i class="fa fa-trash"></i></a>

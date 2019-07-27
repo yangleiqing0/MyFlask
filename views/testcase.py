@@ -2,6 +2,8 @@ import requests
 from flask.views import MethodView
 from flask import render_template,Blueprint,request,redirect,url_for
 from modles.testcase import TestCases
+from modles.case_group import CaseGroup
+
 from app import cdb
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
@@ -10,15 +12,24 @@ testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 class TestCastList(MethodView):
 
     def get(self):
-        sql = 'select ROWID,id,name,url,data,result,method from testcases'
-        tests = cdb().query_db(sql)
-        return render_template('test_case_list.html', items=tests)
+        # sql = 'select ROWID,id,name,url,data,result,method,group_id from testcases'
+        # tests = cdb().query_db(sql)
+        # 过滤有测试用例分组的查询结果
+        tests = TestCases.query.join(CaseGroup,TestCases.group_id ==
+                                     CaseGroup.id).filter(TestCases.group_id == CaseGroup.id).all()
+        # 获取测试用例分组的列表
+        case_groups = CaseGroup.query.all()
+        print(tests, case_groups[0].name)
+        return render_template('test_case_list.html', items=tests, case_groups=case_groups)
 
 
 class TestCaseAdd(MethodView):
 
     def get(self):
-        return render_template('test_case_add.html')
+        case_groups_querys_sql = 'select id,name from case_group'
+        case_groups = cdb().query_db(case_groups_querys_sql)
+        print(case_groups, case_groups[0][0])
+        return render_template('test_case_add.html', case_groups=case_groups)
 
 
 class PostTestCase(MethodView):
@@ -39,6 +50,7 @@ class PostTestCase(MethodView):
         url = request.form.get('url', 'default')
         data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
         method = request.form.get('method', 'default')
+        group_id = request.form.get('case_group')
         print(request.form)
         sql = 'insert into testcases values (?,?,?,?,?,?,?)'
         if request.form.get('test', 0) == '测试':
@@ -61,7 +73,7 @@ class PostTestCase(MethodView):
         if (name,) in all_names:
             return '已有相同测试用例名称，请修改'
         else:
-            cdb().opeat_db(sql, (None, name, url, data, None, method))
+            cdb().opeat_db(sql, (None, name, url, data, None, method, group_id))
             return '插入数据库成功'
 
 

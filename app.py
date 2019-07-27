@@ -10,7 +10,7 @@ requests.packages.urllib3.disable_warnings()
 app = Flask(__name__)
 
 app.config.from_object(config)
-
+app.debug = True
 db = SQLAlchemy(app)
 
 
@@ -80,5 +80,4 @@ app.register_blueprint(home_blueprint)
 app.register_blueprint(case_group_blueprint)
 
 if __name__ == '__main__':
-    app.debug = True
     app.run()
