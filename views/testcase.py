@@ -42,27 +42,8 @@ class TestCaseAdd(MethodView):
         return render_template('test_case_add.html', case_groups=case_groups,
                                request_headers=request_headers)
 
-
-class PostTestCase(MethodView):
-
-    def get(self, id=-1):
-
-        testcase = TestCases.query.filter(TestCases.id == id).first()
-        print('testcase.group_id:', testcase.group_id)
-        # 获取测试用例分组的列表
-        case_group = CaseGroup.query.filter(CaseGroup.id == testcase.group_id).first()
-        request_headers = RequestHeaders.query.filter(RequestHeaders.id == testcase.request_headers_id).first()
-        print('testcase:', testcase)
-        print('case_group:', case_group)
-        print('request_headers:', request_headers)
-        # return 'o'
-        return render_template('test_case_search.html', item=testcase, case_group=case_group, request_headers=request_headers)
-
-    def post(self, id=-1):
-        # headers = {
-        #     'Content-Type': 'application/json; charset=utf-8',
-        #     'Accept': 'application/json, text/plain, */*'
-        # }
+    def post(self):
+        print('要添加的测试用例：', request.form)
         name = request.form['name']
         url = request.form.get('url', 'default')
         data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
@@ -72,7 +53,7 @@ class PostTestCase(MethodView):
         request_headers_query_sql = 'select value from request_headers where id=?'
         headers = json.loads(cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0])
         print('headers: ', headers, type(headers))
-        print(request.form)
+
         sql = 'insert into testcases values (?,?,?,?,?,?,?,?)'
         if request.form.get('test', 0) == '测试':
             if method.upper() == 'GET':
@@ -99,8 +80,75 @@ class PostTestCase(MethodView):
             cdb().opeat_db(sql, (None, name, url, data, None, method, group_id, request_headers_id))
             return '插入数据库成功'
 
+# class SearchTestCast(MethodView):
+#
+#     def get(self, id=-1):
+#         testcase = TestCases.query.filter(TestCases.id == id).first()
+#         print('testcase.group_id:', testcase.group_id)
+#         # 获取测试用例分组的列表
+#         case_group = CaseGroup.query.filter(CaseGroup.id == testcase.group_id).first()
+#         request_headers = RequestHeaders.query.filter(RequestHeaders.id == testcase.request_headers_id).first()
+#         print('testcase:', testcase)
+#         print('case_group:', case_group)
+#         print('request_headers:', request_headers)
+#         # return 'o'
+#         return render_template('test_case_search.html', item=testcase, case_group=case_group, request_headers=request_headers)
+
+
+# class PostTestCase(MethodView):
+#
+#     def post(self):
+#         print('要添加的测试用例：', request.form)
+#         name = request.form['name']
+#         url = request.form.get('url', 'default')
+#         data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
+#         method = request.form.get('method', 'default')
+#         group_id = request.form.get('case_group')
+#         request_headers_id = request.form.get('request_headers')
+#         request_headers_query_sql = 'select value from request_headers where id=?'
+#         headers = json.loads(cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0])
+#         print('headers: ', headers, type(headers))
+#
+#         sql = 'insert into testcases values (?,?,?,?,?,?,?,?)'
+#         if request.form.get('test', 0) == '测试':
+#             if method.upper() == 'GET':
+#                 if 'https' in url:
+#                     result = requests.get(url, headers=headers, verify=False).text
+#                 else:
+#                     result = requests.get(url, headers=headers).text
+#             elif method.upper() == 'POST':
+#                 data = AnalysisParams().analysis_params(data)
+#                 print(data)
+#                 if 'https' in url:
+#                     result = requests.post(url, data=data, headers=headers, verify=False).text
+#                 else:
+#                     result = requests.get(url, data=data, headers=headers).text
+#             else:
+#                 result = '请求方法不对'
+#             return '''%s''' % result.replace('<', '').replace('>', '')
+#         query_all_names_sql = 'select name from testcases'
+#         all_names = cdb().query_db(query_all_names_sql)
+#         print(all_names)
+#         if (name,) in all_names:
+#             return '已有相同测试用例名称，请修改'
+#         else:
+#             cdb().opeat_db(sql, (None, name, url, data, None, method, group_id, request_headers_id))
+#             return '插入数据库成功'
+
 
 class UpdateTestCase(MethodView):
+
+    def get(self, id=-1):
+        testcase = TestCases.query.filter(TestCases.id == id).first()
+        print('testcase.group_id:', testcase.group_id)
+        # 获取测试用例分组的列表
+        case_group = CaseGroup.query.filter(CaseGroup.id == testcase.group_id).first()
+        request_headers = RequestHeaders.query.filter(RequestHeaders.id == testcase.request_headers_id).first()
+        print('testcase:', testcase)
+        print('case_group:', case_group)
+        print('request_headers:', request_headers)
+        # return 'o'
+        return render_template('test_case_search.html', item=testcase, case_group=case_group, request_headers=request_headers)
 
     def post(self, id=-1):
         print('UpdateTestCase：request_form: ', request.form)
@@ -147,6 +195,7 @@ class DeleteTestCase(MethodView):
 
 testcase_blueprint.add_url_rule('/testcaselist/', view_func=TestCastList.as_view('test_case_list'))
 testcase_blueprint.add_url_rule('/addtestcase/', view_func=TestCaseAdd.as_view('add_test_case'))
-testcase_blueprint.add_url_rule('/posttestcase/<id>/', view_func=PostTestCase.as_view('post_test_case'),)
+# testcase_blueprint.add_url_rule('/posttestcase/', view_func=PostTestCase.as_view('post_test_case'),)
 testcase_blueprint.add_url_rule('/deletetestcase/<id>/', view_func=DeleteTestCase.as_view('delete_test_case'))
 testcase_blueprint.add_url_rule('/updatetestcase/<id>/', view_func=UpdateTestCase.as_view('update_test_case'))
+# testcase_blueprint.add_url_rule('/searchtestcase/<id>/', view_func=SearchTestCast.as_view('search_test_case'))

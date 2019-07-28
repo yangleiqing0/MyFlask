@@ -12,7 +12,7 @@ class TestCases(db.Model):
     result = db.Column(db.String(20))
     method = db.Column(db.String(20))
     group_id = db.Column(db.Integer, db.ForeignKey(CaseGroup.id))
-    request_headers_id = db.Column(db.Integer,db.ForeignKey(RequestHeaders.id))
+    request_headers_id = db.Column(db.Integer, db.ForeignKey(RequestHeaders.id))
 
     def __repr__(self):
         return "<TestCase:%s,%s,%s,%s>" % (self.id, self.name, self.url, self.data)

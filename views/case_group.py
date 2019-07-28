@@ -1,5 +1,5 @@
 from flask.views import MethodView
-from flask import render_template,Blueprint,request
+from flask import render_template, Blueprint, request, redirect, url_for
 from modles.case_group import CaseGroup
 from app import cdb
 
@@ -21,10 +21,34 @@ class CaseGroupAdd(MethodView):
 class CaseGroupList(MethodView):
 
     def get(self):
-        tests = CaseGroup.query.all()
-        print(tests)
-        return render_template('case_group_list.html', items=tests)
+        case_groups = CaseGroup.query.all()
+        print('case_groups: ', case_groups)
+        return render_template('case_group_list.html', items=case_groups)
+
+
+class CaseGroupUpdate(MethodView):
+
+    def get(self, id=-1):
+        case_group = CaseGroup.query.get(id)
+        return render_template('case_group_update.html', item=case_group)
+
+    def post(self, id=-1):
+        name = request.form.get('name')
+        description = request.form.get('description')
+        case_group_update_sql = 'update case_group set name=?,description=? where id=?'
+        cdb().opeat_db(case_group_update_sql, (name, description, id))
+        return '修改测试用例分组成功'
+
+class CaseGroupDelete(MethodView):
+
+    def get(self,id=-1):
+        print('删除测试用例分组')
+        delete_case_group_sql = 'delete from case_group where id=?'
+        cdb().opeat_db(delete_case_group_sql, (id,))
+        return redirect(url_for('case_group_blueprint.case_group_list'))
 
 
 case_group_blueprint.add_url_rule('/addcasegroup/', view_func=CaseGroupAdd.as_view('add_case_group'))
 case_group_blueprint.add_url_rule('/casegrouplist/', view_func=CaseGroupList.as_view('case_group_list'))
+case_group_blueprint.add_url_rule('/casegroupupdate/<id>/', view_func=CaseGroupUpdate.as_view('case_group_update'))
+case_group_blueprint.add_url_rule('/casegroupdelete/<id>/', view_func=CaseGroupDelete.as_view('case_group_delete'))

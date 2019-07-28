@@ -6,7 +6,7 @@
                 <h4 style="text-align: center">添加测试用例</h4>
             </div>
             <div class="panel-body" >
-                <form action="{{ url_for('testcase_blueprint.post_test_case',id=-1) }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form action="{{ url_for('testcase_blueprint.add_test_case') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group">
                         <label for="name" class="control-label col-md-4">测试用例名称</label>
                         <div class="col-md-4">
@@ -24,7 +24,7 @@
                             </div>
                     </div>
                     <div class="form-group">
-                        <label for="case_group" class="control-label col-md-4">请求头部</label>
+                        <label for="request_headers" class="control-label col-md-4">请求头部</label>
                             <div class="col-md-4">
                                     <select name="request_headers" id="request_headers" class="form-control">
                                         {% for request_header in request_headers %}

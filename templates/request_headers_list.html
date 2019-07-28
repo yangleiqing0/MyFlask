@@ -19,10 +19,10 @@
                             <td>{{ item.name }}</td>
                             <td>{{ item.value }}</td>
                             <td>{{ item.description}}</td>
-{#                            <td>#}
-{#                                <a href="{{ url_for('post_test_case',id=item[1]) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>#}
-{#                                <a href="{{ url_for('delete_test_case',id=item[1]) }}" class="btn btn-default btn-xs" title="删除"><i class="fa fa-trash"></i></a>#}
-{#                            </td>#}
+                            <td>
+                                <a href="{{ url_for('request_headers_blueprint.request_headers_update',id=item.id) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>
+                                <a href="{{ url_for('request_headers_blueprint.request_headers_delete',id=item.id) }}" class="btn btn-default btn-xs" title="删除"><i class="fa fa-trash"></i></a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </table>
