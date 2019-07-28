@@ -1,34 +1,22 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <title>添加测试用例</title>
-</head>
-<body>
+{% extends 'home.html' %}
+{% block content %}
 <div class="row">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 style="text-align: center">添加测试用例</h4>
+                <h4 style="text-align: center">添加测试用例分组</h4>
             </div>
             <div class="panel-body" >
                 <form action="{{ url_for('case_group_blueprint.add_case_group') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group">
-                        <label for="name" class="control-label col-md-4">测试分组名称</label>
+                        <label for="name" class="control-label col-md-4">测试用例分组名称</label>
                         <div class="col-md-4">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="测试分组名称">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="测试用例分组名称">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="description" class="control-label col-md-4">测试分组备注</label>
+                        <label for="description" class="control-label col-md-4">测试用例分组备注</label>
                             <div class="col-md-4">
-                            <input type="text" class="form-control" id="description" name="description" placeholder="测试分组备注">
+                            <input type="text" class="form-control" id="description" name="description" placeholder="测试用例分组备注">
                         </div>
                     </div>
                     <div class="control-label col-md-6" >
@@ -37,8 +25,7 @@
                     </div>
                 </form>
             </div>
-            <div class="panel-footer"></div>
+{#            <div class="panel-footer"></div>#}
         </div>
     </div>
-</body>
-</html>
+{% endblock %}

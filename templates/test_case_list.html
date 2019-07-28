@@ -1,17 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>测试用例列表</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-</head>
-<body>
+{% extends 'home.html' %}
+{% block content %}
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -21,8 +9,9 @@
                     <table class="table table-hover">
                         <tr>
                             <th>ID</th>
-                            <th>测试用例分组</th>
+                            <th>测试用例分组名称</th>
                             <th>测试用例名称</th>
+                            <th>请求头部</th>
                             <th>接口url</th>
                             <th>测试数据</th>
                             <th>请求方法</th>
@@ -34,6 +23,7 @@
                             <td>{{ loop.index0 }}</td> <!--使用循环的数字作为id -->
                             <td>{{ case_groups[item.group_id-1].name}}</td>
                             <td>{{ item.name }}</td>
+                            <td>{{ request_headers[item.request_headers_id-1].name}}</td>
                             <td>{{ item.url }}</td>
                             <td>{{ item.data }}</td>
                             <td>{{ item.method }}</td>
@@ -50,8 +40,7 @@
         </div>
     </div>
 </div>
-</body>
-</html>
+{% endblock %}
 <style>
     th,td{
         text-align: center;

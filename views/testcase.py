@@ -3,6 +3,7 @@ from flask.views import MethodView
 from flask import render_template,Blueprint,request,redirect,url_for
 from modles.testcase import TestCases
 from modles.case_group import CaseGroup
+from modles.request_headers import RequestHeaders
 from common.analysis_params import AnalysisParams
 
 from app import cdb
@@ -20,8 +21,11 @@ class TestCastList(MethodView):
                                      CaseGroup.id).filter(TestCases.group_id == CaseGroup.id).all()
         # 获取测试用例分组的列表
         case_groups = CaseGroup.query.all()
-        print(tests, case_groups[0].name)
-        return render_template('test_case_list.html', items=tests, case_groups=case_groups)
+        request_headers = RequestHeaders.query.all()
+        print('request_headers: ', request_headers)
+        # print(tests, case_groups[0].name)
+        return render_template('test_case_list.html', items=tests, case_groups=case_groups,
+                               request_headers=request_headers)
 
 
 class TestCaseAdd(MethodView):
@@ -29,8 +33,13 @@ class TestCaseAdd(MethodView):
     def get(self):
         case_groups_querys_sql = 'select id,name from case_group'
         case_groups = cdb().query_db(case_groups_querys_sql)
-        print(case_groups, case_groups[0][0])
-        return render_template('test_case_add.html', case_groups=case_groups)
+        # print(case_groups, case_groups[0][0])
+
+        request_headers_querys_sql = 'select id,name from request_headers'
+        request_headers = cdb().query_db(request_headers_querys_sql)
+        print('request_headers: ', request_headers )
+        return render_template('test_case_add.html', case_groups=case_groups,
+                               request_headers=request_headers)
 
 
 class PostTestCase(MethodView):
@@ -41,10 +50,12 @@ class PostTestCase(MethodView):
         print('testcase.group_id:', testcase.group_id)
         # 获取测试用例分组的列表
         case_group = CaseGroup.query.filter(CaseGroup.id == testcase.group_id).first()
+        request_headers = RequestHeaders.query.filter(RequestHeaders.id == testcase.request_header_id).first()
         print('testcase:', testcase)
         print('case_group:', case_group)
+        print('request_headers:', request_headers)
         # return 'o'
-        return render_template('test_case_search.html', item=testcase, case_group=case_group)
+        return render_template('test_case_search.html', item=testcase, case_group=case_group, request_header=request_header)
 
     def post(self, id=-1):
         headers = {
@@ -56,8 +67,9 @@ class PostTestCase(MethodView):
         data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
         method = request.form.get('method', 'default')
         group_id = request.form.get('case_group')
+        request_headers_id = request.form.get('request_headers')
         print(request.form)
-        sql = 'insert into testcases values (?,?,?,?,?,?,?)'
+        sql = 'insert into testcases values (?,?,?,?,?,?,?,?)'
         if request.form.get('test', 0) == '测试':
             if method.upper() == 'GET':
                 if 'https' in url:
@@ -80,7 +92,7 @@ class PostTestCase(MethodView):
         if (name,) in all_names:
             return '已有相同测试用例名称，请修改'
         else:
-            cdb().opeat_db(sql, (None, name, url, data, None, method, group_id))
+            cdb().opeat_db(sql, (None, name, url, data, None, method, group_id, request_headers_id))
             return '插入数据库成功'
 
 
@@ -92,7 +104,7 @@ class UpdateTestCase(MethodView):
         data = request.form.get('data')
         method = request.form.get('method')
         update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=? where id=?'
-        cdb().opeat_db(update_test_case_sql, (name,url,data,method,id))
+        cdb().opeat_db(update_test_case_sql, (name, url, data, method, id))
         return '修改测试用例成功'
 
 

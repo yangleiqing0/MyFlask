@@ -3,26 +3,26 @@
 <div class="row">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h4 style="text-align: center">添加全局变量</h4>
+                <h4 style="text-align: center">添加请求头部</h4>
             </div>
             <div class="panel-body" >
-                <form action="{{ url_for('variables_blueprint.variable_add') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form action="{{ url_for('request_headers_blueprint.request_headers_add') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group">
-                        <label for="name" class="control-label col-md-4">全局变量名称</label>
+                        <label for="name" class="control-label col-md-4">请求头部名称</label>
                         <div class="col-md-4">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="全局变量名称">
+                            <input type="text" class="form-control" id="name" name="name" placeholder="请求头部名称">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="value" class="control-label col-md-4">全局变量的值</label>
+                        <label for="value" class="control-label col-md-4">请求头部的值</label>
                         <div class="col-md-4">
-                            <input type="text" class="form-control" id="value" name="value" placeholder="全局变量的值">
+                            <input type="text" class="form-control" id="value" name="value" placeholder="请求头部的值">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="description" class="control-label col-md-4">全局变量备注</label>
+                        <label for="description" class="control-label col-md-4">请求头部备注</label>
                             <div class="col-md-4">
-                            <input type="text" class="form-control" id="description" name="description" placeholder="全局变量备注">
+                            <input type="text" class="form-control" id="description" name="description" placeholder="请求头部备注">
                         </div>
                     </div>
                     <div class="control-label col-md-6" >

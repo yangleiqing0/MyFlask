@@ -8,7 +8,7 @@ home_blueprint = Blueprint('home_blueprint', __name__)
 class Home(MethodView):
 
     def get(self):
-        return render_template('homepage.html')
+        return render_template('home.html')
 
 
 home_blueprint.add_url_rule('/', view_func=Home.as_view('home'))
