@@ -3,8 +3,7 @@ import sqlite3
 import requests
 import config
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, render_template, redirect, url_for, request
-
+from flask import Flask
 requests.packages.urllib3.disable_warnings()
 
 app = Flask(__name__)

@@ -65,7 +65,7 @@ class PostTestCase(MethodView):
                 else:
                     result = requests.get(url, headers=headers).text
             elif method.upper() == 'POST':
-                data = AnalysisParams().analysis_describe(data)
+                data = AnalysisParams().analysis_params(data)
                 print(data)
                 if 'https' in url:
                     result = requests.post(url, data=data, headers=headers, verify=False).text

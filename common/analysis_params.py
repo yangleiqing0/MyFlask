@@ -9,10 +9,11 @@ class AnalysisParams:
         print('init:self.variables:',self.variables)
 
 
-    def analysis_describe(self, params):
+    def analysis_params(self, params):
         print('analysis_before:', params)
         res = r'\${([^\${}]+)}'
         words = re.findall(re.compile(res), params)
+        print('分割后的列表:', words)
         for word in words:
             if (word,) in self.variables:
                 variable_value_query_sql = 'select value from variables where name=?'
@@ -22,6 +23,7 @@ class AnalysisParams:
             else:
                 continue
         print('解析后的参数为:', params)
+        return params
         # return params
         # res = r'\${|}'
 
@@ -48,4 +50,4 @@ class AnalysisParams:
 
 
 if __name__ == '__main__':
-    AnalysisParams().analysis_describe('${btest${A}${B}${C}hhh')
+    AnalysisParams().analysis_params('{btest{A}{B}{C}hhh')
