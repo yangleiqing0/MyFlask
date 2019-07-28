@@ -12,7 +12,7 @@ class RequestHeadersAdd(MethodView):
 
     def post(self):
         name = request.form.get('name')
-        value = request.form.get('value')
+        value = request.form.get('value').replace(' ','').replace('\n', '').replace('\r', '')
         description = request.form.get('description')
         request_headers__add_sql = 'insert into request_headers values (?,?,?,?)'
         cdb().opeat_db(request_headers__add_sql, (None, name, value, description))

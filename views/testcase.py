@@ -1,4 +1,5 @@
 import requests
+import json
 from flask.views import MethodView
 from flask import render_template,Blueprint,request,redirect,url_for
 from modles.testcase import TestCases
@@ -50,24 +51,27 @@ class PostTestCase(MethodView):
         print('testcase.group_id:', testcase.group_id)
         # 获取测试用例分组的列表
         case_group = CaseGroup.query.filter(CaseGroup.id == testcase.group_id).first()
-        request_headers = RequestHeaders.query.filter(RequestHeaders.id == testcase.request_header_id).first()
+        request_headers = RequestHeaders.query.filter(RequestHeaders.id == testcase.request_headers_id).first()
         print('testcase:', testcase)
         print('case_group:', case_group)
         print('request_headers:', request_headers)
         # return 'o'
-        return render_template('test_case_search.html', item=testcase, case_group=case_group, request_header=request_header)
+        return render_template('test_case_search.html', item=testcase, case_group=case_group, request_headers=request_headers)
 
     def post(self, id=-1):
-        headers = {
-            'Content-Type': 'application/json; charset=utf-8',
-            'Accept': 'application/json, text/plain, */*'
-        }
+        # headers = {
+        #     'Content-Type': 'application/json; charset=utf-8',
+        #     'Accept': 'application/json, text/plain, */*'
+        # }
         name = request.form['name']
         url = request.form.get('url', 'default')
         data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
         method = request.form.get('method', 'default')
         group_id = request.form.get('case_group')
         request_headers_id = request.form.get('request_headers')
+        request_headers_query_sql = 'select value from request_headers where id=?'
+        headers = json.loads(cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0])
+        print('headers: ', headers, type(headers))
         print(request.form)
         sql = 'insert into testcases values (?,?,?,?,?,?,?,?)'
         if request.form.get('test', 0) == '测试':
@@ -99,6 +103,30 @@ class PostTestCase(MethodView):
 class UpdateTestCase(MethodView):
 
     def post(self, id=-1):
+        print('UpdateTestCase：request_form: ', request.form)
+        if request.form.get('test', 0) == '测试':
+            print('进入测试：')
+            url = request.form.get('url', 'default')
+            data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
+            data = AnalysisParams().analysis_params(data)
+            print('测试：', data)
+            method = request.form.get('method', 'default')
+            request_headers_query_sql = 'select request_headers.value from request_headers,testcases where testcases.request_headers_id=request_headers.id and testcases.id=?'
+            headers = json.loads(cdb().query_db(request_headers_query_sql, (id,), True)[0])
+            print('UpdataTestCase:headers: ', headers)
+            if method.upper() == 'GET':
+                if 'https' in url:
+                    result = requests.get(url, headers=headers, verify=False).text
+                else:
+                    result = requests.get(url, headers=headers).text
+            elif method.upper() == 'POST':
+                if 'https' in url:
+                    result = requests.post(url, data=data, headers=headers, verify=False).text
+                else:
+                    result = requests.get(url, data=data, headers=headers).text
+            else:
+                result = '请求方法不对'
+            return '''%s''' % result.replace('<', '').replace('>', '')
         name = request.form.get('name')
         url = request.form.get('url')
         data = request.form.get('data')

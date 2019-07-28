@@ -13,7 +13,7 @@ class AnalysisParams:
         print('analysis_before:', params)
         res = r'\${([^\${}]+)}'
         words = re.findall(re.compile(res), params)
-        print('分割后的列表:', words)
+        print('请求报文：%s, 筛选出的变量: %s' % (params, words))
         for word in words:
             if (word,) in self.variables:
                 variable_value_query_sql = 'select value from variables where name=?'
@@ -27,7 +27,7 @@ class AnalysisParams:
 
     def analysis_headers(self, headers):
         print('header_before:', headers)
-        header = headers.replace(' ', '')
+        header = headers.replace(' ', '').replace('\n', '').replace('\r', '')
 
         return header
 
