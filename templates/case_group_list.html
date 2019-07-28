@@ -1,16 +1,13 @@
 {% extends 'home.html' %}
+{% block title %}测试用例分组列表{% endblock %}
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading text-center"><h1>测试用例分组列表</h1></div>
                 <div class="panel-body">
                     <table class="table table-hover">
                         <tr>
                             <th>ID</th>
                             <th>测试用例分组名称</th>
                             <th>测试用例分组备注</th>
+                            <th>操作</th>
                         </tr>
                         {% for item in items %}
                         <tr>
@@ -25,8 +22,4 @@
                         {% endfor %}
                     </table>
                 </div>
-            </div>
-        </div>
-    </div>
-</div>
 {% endblock %}

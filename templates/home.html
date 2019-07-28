@@ -145,9 +145,21 @@
     {%block hello%}
     {%endblock%}
 </div>
-{%block content%}
-{%endblock%}
 
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading text-center"><h1>
+                    {% block title %}
+                    {% endblock %}
+                </h1></div>
+            {%block content%}
+            {%endblock%}
+             </div>
+        </div>
+    </div>
+</div>
 {% block js %}
 {%endblock%}
 </body>

@@ -1,10 +1,6 @@
 {% extends 'home.html' %}
+{% block title %}添加测试用例分组{% endblock %}
 {% block content %}
-<div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 style="text-align: center">添加测试用例分组</h4>
-            </div>
             <div class="panel-body" >
                 <form action="{{ url_for('case_group_blueprint.add_case_group') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group">
@@ -25,7 +21,4 @@
                     </div>
                 </form>
             </div>
-{#            <div class="panel-footer"></div>#}
-        </div>
-    </div>
 {% endblock %}

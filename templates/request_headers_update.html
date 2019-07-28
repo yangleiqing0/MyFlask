@@ -1,10 +1,6 @@
 {% extends 'home.html' %}
+{% block title %}修改请求头部{% endblock %}
 {% block content %}
-<div class="row">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h4 style="text-align: center">修改请求头部</h4>
-            </div>
             <div class="panel-body" >
                 <form  action="{{ url_for('request_headers_blueprint.request_headers_update',id=item.id) }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group">
@@ -32,7 +28,4 @@
                     </div>
                 </form>
             </div>
-{#            <div class="panel-footer"></div>#}
-        </div>
-    </div>
 {% endblock %}
