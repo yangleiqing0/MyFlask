@@ -1,0 +1,45 @@
+{% extends 'home.html' %}
+{% block title %}分组测试用例列表{% endblock %}
+{% block content %}
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>ID</th>
+                            <th>测试用例分组名称</th>
+                            <th>测试用例名称</th>
+                            <th>请求头部</th>
+                            <th>接口url</th>
+                            <th>测试数据</th>
+                            <th>请求方法</th>
+                            <th>请求结果</th>
+                            <th>操作</th>
+                        </tr>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ loop.index0 }}</td> <!--使用循环的数字作为id -->
+                            <td>{{ case_group.name }}</td>
+                            <td>{{ item.name }}</td>
+                            <td>
+                            {% for request_header in request_headers %}
+                                    {% if request_header.id==item.request_headers_id %}
+                                    {{ request_header.name }}{% endif %}{% endfor %}
+                            </td>
+                            <td>{{ item.url }}</td>
+                            <td>{{ item.data }}</td>
+                            <td>{{ item.method }}</td>
+                            <td>{{ item.result }}</td>
+                            <td>
+                                <a href="{{ url_for('testcase_blueprint.add_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="添加"><i class="fa fa-plus"></i></a>
+                                <a href="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>
+                                <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="删除"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+{% endblock %}
+<style>
+    th,td{
+        text-align: center;
+    }
+</style>
