@@ -147,7 +147,7 @@
 </div>
 
 <div class="container">
-    <div class="row">
+    <div class="row" style="width: 1300px">
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading text-center"><h1>
@@ -164,3 +164,19 @@
 {%endblock%}
 </body>
 </html>
+<style>
+    {# 超过固定高度自动换行 #}
+    table{
+        table-layout:fixed;
+    }
+    {# 最大宽度100px  居中   超过宽度后自动隐藏... #}
+    table > tbody > tr > th,td{
+        text-align: center;
+        max-width: 100px;
+        width:100%;
+        word-break:break-all;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+</style>
