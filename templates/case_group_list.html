@@ -15,6 +15,7 @@
                             <td>{{ item.name }}</td>
                             <td>{{ item.description}}</td>
                             <td>
+                                <a href="{{ url_for('case_group_blueprint.case_group_search_case',id=item.id) }}" class="btn btn-default btn-xs" title="查询"><i class="fa fa-search"></i></a>
                                 <a href="{{ url_for('case_group_blueprint.case_group_update',id=item.id) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>
                                 <a href="{{ url_for('case_group_blueprint.case_group_delete',id=item.id) }}" class="btn btn-default btn-xs" title="删除"><i class="fa fa-trash"></i></a>
                             </td>

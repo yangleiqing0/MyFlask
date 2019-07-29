@@ -7,7 +7,7 @@ class CaseGroup(db.Model):
     name = db.Column(db.String(11), nullable=False)
     description = db.Column(db.String(50), nullable=False)
 
-    # testcases = db.relationship('TestCases',backref=db.backref('casegroup', lazy='dynamic'))
+    testcases = db.relationship('TestCases', backref='case_group')
 
     def __repr__(self):
         return "<CaseGroup:%s,%s,%s>" % (self.id, self.name, self.description)

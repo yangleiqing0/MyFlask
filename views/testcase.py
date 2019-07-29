@@ -18,14 +18,17 @@ class TestCastList(MethodView):
         # sql = 'select ROWID,id,name,url,data,result,method,group_id from testcases'
         # tests = cdb().query_db(sql)
         # 过滤有测试用例分组的查询结果
-        tests = TestCases.query.join(CaseGroup,TestCases.group_id ==
+        testcases = TestCases.query.join(CaseGroup,TestCases.group_id ==
                                      CaseGroup.id).filter(TestCases.group_id == CaseGroup.id).all()
         # 获取测试用例分组的列表
+        print('testcases: ', testcases)
+
         case_groups = CaseGroup.query.all()
+        print('case_groups: ', case_groups)
         request_headers = RequestHeaders.query.all()
         print('request_headers: ', request_headers)
         # print(tests, case_groups[0].name)
-        return render_template('test_case_list.html', items=tests, case_groups=case_groups,
+        return render_template('test_case_list.html', items=testcases, case_groups=case_groups,
                                request_headers=request_headers)
 
 

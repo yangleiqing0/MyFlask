@@ -17,9 +17,17 @@
                         {% for item in items %}
                         <tr>
                             <td>{{ loop.index0 }}</td> <!--使用循环的数字作为id -->
-                            <td>{{ case_groups[item.group_id-1].name}}</td>
+                            <td>
+                                {% for case_group in case_groups %}
+                                    {% if case_group.id==item.group_id %}
+                                    {{ case_group.name }}{% endif %}{% endfor %}
+                                </td>
                             <td>{{ item.name }}</td>
-                            <td>{{ request_headers[item.request_headers_id-1].name}}</td>
+                            <td>
+                            {% for request_header in request_headers %}
+                                    {% if request_header.id==item.request_headers_id %}
+                                    {{ request_header.name }}{% endif %}{% endfor %}
+                            </td>
                             <td>{{ item.url }}</td>
                             <td>{{ item.data }}</td>
                             <td>{{ item.method }}</td>
