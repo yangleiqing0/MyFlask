@@ -26,3 +26,37 @@ textarea_class_name="form-control",textarea_style="resize:none;",rows="8",col="1
     <input type="reset" class="btn btn-default" value="{{ reset_value }}">
 </div>
 {% endmacro %}
+
+{% macro submit_test(submit_name="修改") %}
+<div class="control-label col-md-6" >
+    <input type="submit" class="btn btn-primary" value="{{ submit_name }}">
+    <input type="submit" class="btn btn-primary" name="test" value="测试">
+    <input type="reset" class="btn btn-default" value="重置">
+</div>
+{% endmacro %}
+
+
+{% macro pagination_widget(pagination, endpoint) %}
+    <div class="col-md-offset-5"><ul class="pagination">
+     <li{% if not pagination.has_prev %} class="disabled"{% endif %}>
+         <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.page - 1, **kwargs) }}{% else %}#{% endif %}">
+          &laquo;
+      </a>
+    </li>
+   {% for p in pagination.iter_pages() %}
+       {% if p %}
+        {% if p == pagination.page %}
+           <li class="active"><a href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a></li>
+        {% else %}
+           <li><a href="{{ url_for(endpoint, page=p, **kwargs) }}">{{ p }}</a></li>
+        {% endif %}
+     {% endif %}
+   {% endfor %}
+    <li{% if not pagination.has_next %} class="disabled"{% endif %}>
+         <a href="{% if pagination.has_next %}{{ url_for(endpoint, page=pagination.page + 1, **kwargs) }}{% else %}#{% endif %}">
+        &raquo;
+       </a>
+    </li>
+ </ul></div>
+
+{% endmacro %}

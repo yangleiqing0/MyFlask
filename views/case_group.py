@@ -1,8 +1,8 @@
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for ,jsonify
+from flask import render_template, Blueprint, request, redirect, url_for, current_app
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
-from app import cdb
+from app import cdb, db
 import json
 
 case_group_blueprint = Blueprint('case_group_blueprint',__name__)
@@ -16,8 +16,9 @@ class CaseGroupAdd(MethodView):
     def post(self):
         name = request.form.get('name')
         description = request.form.get('description')
-        case_group_add_sql = 'insert into case_group values (?,?,?)'
-        cdb().opeat_db(case_group_add_sql,(None, name, description))
+        case_group = CaseGroup(name, description)
+        db.session.add(case_group)
+        db.session.commit()
         return '插入测试用例分组成功'
 
 
@@ -37,8 +38,17 @@ class CaseGroupList(MethodView):
             print('case_group_list_ajax : True')
             return json.dumps({"case_groups_dict": str(case_groups_dict)})  # 需要转行成字符串再转成json
         else:
-            print('出来了')
-            return render_template('case_group_list.html', items=case_groups)
+            page = request.args.get('page', 1, type=int)
+            #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
+            pagination = CaseGroup.query.order_by(CaseGroup.timestamp.desc()).paginate(page,
+                                                                                       per_page=current_app.config[
+                                                                                           'FLASK_POST_PRE_ARGV'],
+                                                                                       error_out=False)
+            # 返回一个内容对象
+            case_groups = pagination.items
+            print("pagination: ", pagination)
+            return render_template('case_group_list.html', pagination=pagination, items=case_groups)
+
 
 
 class CaseGroupUpdate(MethodView):

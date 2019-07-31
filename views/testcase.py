@@ -1,13 +1,13 @@
 import requests
 import json
 from flask.views import MethodView
-from flask import render_template,Blueprint,request,redirect,url_for
+from flask import render_template, Blueprint, request, redirect, url_for, current_app
 from modles.testcase import TestCases
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
 from common.analysis_params import AnalysisParams
 
-from app import cdb
+from app import cdb, db
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -28,7 +28,17 @@ class TestCastList(MethodView):
         request_headers = RequestHeaders.query.all()
         print('request_headers: ', request_headers)
         # print(tests, case_groups[0].name)
-        return render_template('test_case_list.html', items=testcases, case_groups=case_groups,
+        # return render_template('test_case_list.html', items=testcases, case_groups=case_groups,
+        #                        request_headers=request_headers)
+
+        page = request.args.get('page', 1, type=int)
+        #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
+        pagination = TestCases.query.order_by(TestCases.timestamp.desc()).paginate(page, per_page=current_app.config[
+            'FLASK_POST_PRE_ARGV'], error_out=False)
+        # 返回一个内容对象
+        testcaseses = pagination.items
+        print("pagination: ", pagination)
+        return render_template('test_case_list.html', pagination=pagination, items=testcaseses, case_groups=case_groups,
                                request_headers=request_headers)
 
 
@@ -80,7 +90,9 @@ class TestCaseAdd(MethodView):
         if (name,) in all_names:
             return '已有相同测试用例名称，请修改'
         else:
-            cdb().opeat_db(sql, (None, name, url, data, None, method, group_id, request_headers_id))
+            testcase = TestCases(name, url, data, method, group_id, request_headers_id)
+            db.session.add(testcase)
+            db.session.commit()
             return '插入数据库成功'
 
 # class SearchTestCast(MethodView):

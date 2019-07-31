@@ -24,6 +24,8 @@
                         {% endfor %}
                     </table>
                 </div>
+                {{ macro.pagination_widget(pagination, 'variables_blueprint.variable_list') }}
+
 {% endblock %}
 <style>
     th,td{

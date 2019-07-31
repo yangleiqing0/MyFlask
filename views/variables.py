@@ -1,7 +1,8 @@
 from flask.views import MethodView
-from app import cdb
+from app import cdb, db
 from modles.variables import Variables
-from flask import render_template,Blueprint,request,redirect,url_for
+from flask import render_template, Blueprint, request, redirect, url_for, current_app
+from flask_sqlalchemy import Pagination
 
 variables_blueprint = Blueprint('variables_blueprint', __name__)
 
@@ -14,16 +15,28 @@ class VariableAdd(MethodView):
         name = request.form.get('name')
         value = request.form.get('value')
         description = request.form.get('description')
-        variable_add_sql = 'insert into variables values (?,?,?,?)'
-        cdb().opeat_db(variable_add_sql, (None, name, value, description))
-        return '插入全部变量成功'
+        variable = Variables(name, value, description)
+        db.session.add(variable)
+        db.session.commit()
+        return '插入全局变量成功'
+
 
 class VariableList(MethodView):
 
     def get(self):
-        tests = Variables.query.all()
-        print(tests)
-        return render_template('variable_list.html', items=tests)
+        # tests = Variables.query.all()
+        # print(tests)
+        # 指定渲染的页数
+        # variable = Variables()
+        page = request.args.get('page', 1, type=int)
+        #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
+        pagination = Variables.query.order_by(Variables.timestamp.desc()).paginate(page, per_page=current_app.config[
+            'FLASK_POST_PRE_ARGV'], error_out=False)
+        # 返回一个内容对象
+        variables = pagination.items
+        print("pagination: ", pagination)
+        return render_template('variable_list.html', pagination=pagination, items=variables)
+
 
 
 class VariableUpdate(MethodView):

@@ -1,8 +1,8 @@
 import json
 from flask.views import MethodView
-from app import cdb
+from app import cdb, db
 from modles.request_headers import RequestHeaders
-from flask import render_template, Blueprint, request, redirect, url_for
+from flask import render_template, Blueprint, request, redirect, url_for, current_app
 
 request_headers_blueprint = Blueprint('request_headers_blueprint', __name__)
 
@@ -15,8 +15,11 @@ class RequestHeadersAdd(MethodView):
         name = request.form.get('name')
         value = request.form.get('value').replace(' ','').replace('\n', '').replace('\r', '')
         description = request.form.get('description')
-        request_headers__add_sql = 'insert into request_headers values (?,?,?,?)'
-        cdb().opeat_db(request_headers__add_sql, (None, name, value, description))
+        request_headers = RequestHeaders(name, value, description)
+        db.session.add(request_headers)
+        db.session.commit()
+        # request_headers__add_sql = 'insert into request_headers values (?,?,?,?)'
+        # cdb().opeat_db(request_headers__add_sql, (None, name, value, description))
         return '添加头部成功'
 
 
@@ -35,7 +38,15 @@ class RequestHeadersList(MethodView):
             print("request_headers_dict: ", request_headers_dict)
             print('request_headers_list_ajax : True')
             return json.dumps({"request_headers_dict": str(request_headers_dict)})  # 需要转行成字符串再转成json
-        return render_template('request_headers_list.html', items=request_headers)
+        page = request.args.get('page', 1, type=int)
+        #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
+        pagination = RequestHeaders.query.order_by(RequestHeaders.timestamp.desc()).paginate(page, per_page=current_app.config[
+            'FLASK_POST_PRE_ARGV'], error_out=False)
+        # 返回一个内容对象
+        request_headerses = pagination.items
+        print("request_headers_pagination: ", pagination)
+        return render_template('request_headers_list.html', pagination=pagination, items=request_headerses)
+
 
 
 class RequestHeadersUpdate(MethodView):

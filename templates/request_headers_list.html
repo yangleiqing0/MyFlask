@@ -24,6 +24,8 @@
                         {% endfor %}
                     </table>
                 </div>
+                {{ macro.pagination_widget(pagination, 'request_headers_blueprint.request_headers_list') }}
+
 {% endblock %}
 <style>
     th,td{

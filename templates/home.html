@@ -160,6 +160,7 @@
                 </h1></div>
             {%block content%}
             {%endblock%}
+                 <div class="panel-footer"></div>
              </div>
         </div>
     </div>
@@ -169,7 +170,6 @@
 </body>
 </html>
 <style>
-    {# 超过固定高度自动换行 #}
     table{
         table-layout:fixed;
     }
@@ -184,3 +184,13 @@
         text-overflow:ellipsis;
     }
 </style>
+<script>
+$(document).ready(function() {
+    {#  动态在td 标签上悬浮时设置title属性为当前标签的test内容 #}
+    $("td",$(this)).hover(function(){
+        $(this).attr('title',$(this).text());
+
+    });
+});
+
+</script>
