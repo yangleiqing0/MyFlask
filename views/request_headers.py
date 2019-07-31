@@ -1,3 +1,4 @@
+import json
 from flask.views import MethodView
 from app import cdb
 from modles.request_headers import RequestHeaders
@@ -24,12 +25,23 @@ class RequestHeadersList(MethodView):
     def get(self):
         request_headers = RequestHeaders.query.all()
         print('request_headers:', request_headers)
+        if request.is_xhr:
+            request_headers_query_sql = 'select id,name from request_headers'
+            request_headerses = cdb().query_db(request_headers_query_sql)
+            request_headers_dict = {}
+            for index, request_headers in enumerate(request_headerses):
+                print('request_header:', request_headers)
+                request_headers_dict.update({"index": index, "id%s" % index: request_headers[0], "name%s" % index: request_headers[1]})
+            print("request_headers_dict: ", request_headers_dict)
+            print('request_headers_list_ajax : True')
+            return json.dumps({"request_headers_dict": str(request_headers_dict)})  # 需要转行成字符串再转成json
         return render_template('request_headers_list.html', items=request_headers)
 
 
 class RequestHeadersUpdate(MethodView):
 
     def get(self, id=-1):
+        id = request.args.get('request_headers_id', id)# 如果有request_headers_id的get请求参数，那么用此参数作为id,否则就用id
         request_headers = RequestHeaders.query.get(id)
         return render_template('request_headers_update.html', item=request_headers)
 

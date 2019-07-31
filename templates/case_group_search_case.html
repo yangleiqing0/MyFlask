@@ -29,7 +29,7 @@
                             <td>{{ item.method }}</td>
                             <td>{{ item.result }}</td>
                             <td>
-                                <a href="{{ url_for('testcase_blueprint.add_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="添加"><i class="fa fa-plus"></i></a>
+                                <a href="{{ url_for('testcase_blueprint.add_test_case') }}" class="btn btn-default btn-xs" title="添加"><i class="fa fa-plus"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="删除"><i class="fa fa-trash"></i></a>
                             </td>

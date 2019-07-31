@@ -2,7 +2,7 @@
 {% block title %}添加测试用例分组{% endblock %}
 {% block content %}
             <div class="panel-body" >
-                <form action="{{ url_for('case_group_blueprint.add_case_group') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form action="{{ url_for('case_group_blueprint.case_group_add') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
                     <div class="form-group">
                         <label for="name" class="control-label col-md-4">测试用例分组名称</label>
                         <div class="col-md-4">

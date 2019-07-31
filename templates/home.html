@@ -2,6 +2,9 @@
 <head>
     <meta charset="UTF-8">
     <title>自动化平台</title>
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
     <link href="{{url_for('static',filename='css/amazeui.min.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/admin.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/app.css')}}"  rel="stylesheet">
@@ -77,7 +80,7 @@
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('case_group_blueprint.add_case_group') }}" class="nav-link tpl-left-nav-link-list">
+                    <a href="{{ url_for('case_group_blueprint.case_group_add') }}" class="nav-link tpl-left-nav-link-list">
                         <i class="am-icon-key"></i>
                         <span>用例分组添加</span>
                     </a>
@@ -174,8 +177,8 @@
         text-align: center;
         max-width: 100px;
         width:100%;
-        word-break:break-all;
-        white-space:nowrap;
+        word-break:break-all;   {# 不换行  #}
+        white-space:nowrap;      {# 不换行  #}
         overflow:hidden;
         text-overflow:ellipsis;
     }

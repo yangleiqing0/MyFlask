@@ -18,6 +18,12 @@
                                         {% endfor %}
                                     </select>
                             </div>
+                            <div class="col-md-4" style="border-color:rgba(200,200,200,0)">
+                                    <a href="{{ url_for('case_group_blueprint.case_group_list') }}" class="btn btn-default btn-xs" title="查询"><i class="fa fa-search"></i></a>
+                                    <a href="{{ url_for('case_group_blueprint.case_group_add') }}" class="btn btn-default btn-xs" title="添加"><i class="fa fa-plus"></i></a>
+                                    <a class="btn btn-default btn-xs" id="update_case_group" title="选择" style="text-align: center"><i class="fa fa-pencil"></i></a>
+                                    <a id="refresh_case_group_list" class="btn btn-default btn-xs" title="刷新"><i class="fa fa-refresh"></i></a>
+                            </div>
                     </div>
                     <div class="form-group">
                         <label for="request_headers" class="control-label col-md-4">请求头部</label>
@@ -27,6 +33,13 @@
                                             <option  value="{{ request_header[0] }}">{{ request_header[1] }}</option>
                                         {% endfor %}
                                     </select>
+                            </div>
+                            <div class="col-md-4">
+                                <a href="{{ url_for('request_headers_blueprint.request_headers_list') }}" class="btn btn-default btn-xs" title="查询"><i class="fa fa-search"></i></a>
+                                <a href="{{ url_for('request_headers_blueprint.request_headers_add') }}" class="btn btn-default btn-xs" title="添加"><i class="fa fa-plus"></i></a>
+                                <a class="btn btn-default btn-xs" id="update_request_headers" title="选择"><i class="fa fa-pencil"></i></a>
+                                <a id="refresh_request_headers_list" class="btn btn-default btn-xs" title="刷新"><i class="fa fa-refresh"></i></a>
+
                             </div>
                     </div>
                     <div class="form-group">
@@ -54,4 +67,56 @@
                     </div>
                 </form>
             </div>
+{% endblock %}
+{% block js %}
+<script>
+$(document).ready(function() {
+        $('#update_case_group').click(function(){
+            case_group_id = $('#case_group').val();
+            window.location = "{{ url_for('case_group_blueprint.case_group_update',id=0)}}?case_group_id=" + case_group_id
+            }
+        );
+        $('#update_request_headers').click(function(){
+            request_headers_id = $('#request_headers').val();
+            window.location = "{{ url_for('request_headers_blueprint.request_headers_update',id=0)}}?request_headers_id=" + request_headers_id
+            }
+        );
+        $('#refresh_case_group_list').click(function(){
+            $.ajax({
+                url:{{ url_for('case_group_blueprint.case_group_list') }},
+                method:'GET',
+                success:function(response){
+                    var case_groups = JSON.parse(response)["case_groups_dict"];
+                    case_groups = eval("("+case_groups+")");
+                    $("#case_group").empty();
+                    for (i = 0; i <= case_groups["index"]; i++) {
+                        var case_group_id=case_groups["id"+i];
+                        var case_group_name=case_groups["name"+i];
+                         $("#case_group").append("<option value="+case_group_id+">"+case_group_name+"</option>")
+                        }
+                }
+            })
+        })
+    $('#refresh_request_headers_list').click(function(){
+            $.ajax({
+                url:{{ url_for('request_headers_blueprint.request_headers_list') }},
+                method:'GET',
+                success:function(response){
+                    var request_headers_dict = JSON.parse(response)["request_headers_dict"];
+                    request_headers_dict = eval("("+request_headers_dict+")");
+                    $("#request_headers").empty();
+                    for (i = 0; i <= request_headers_dict["index"]; i++) {
+                        var request_headers_id=request_headers_dict["id"+i];
+                        var request_headers_name=request_headers_dict["name"+i];
+                         $("#request_headers").append("<option value="+request_headers_id+">"+request_headers_name+"</option>")
+                        }
+                }
+            })
+        })
+}
+);
+
+
+
+</script>
 {% endblock %}
