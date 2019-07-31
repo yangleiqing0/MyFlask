@@ -55,7 +55,7 @@ class TestCaseAdd(MethodView):
         request_headers_id = request.form.get('request_headers')
         request_headers_query_sql = 'select value from request_headers where id=?'
         headers = json.loads(cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0])
-        print('headers: ', headers, type(headers))
+        print('request_headers_id: %s headers:%s ' % (request_headers_id,headers))
 
         sql = 'insert into testcases values (?,?,?,?,?,?,?,?)'
         if request.form.get('test', 0) == '测试':
@@ -163,6 +163,7 @@ class UpdateTestCase(MethodView):
             print('测试：', data)
             method = request.form.get('method', 'default')
             request_headers_query_sql = 'select request_headers.value from request_headers,testcases where testcases.request_headers_id=request_headers.id and testcases.id=?'
+            print("query_headers_value: ", cdb().query_db(request_headers_query_sql, (id,), True)[0])
             headers = json.loads(cdb().query_db(request_headers_query_sql, (id,), True)[0])
             print('UpdataTestCase:headers: ', headers)
             if method.upper() == 'GET':

@@ -3,23 +3,9 @@
 {% block content %}
             <div class="panel-body" >
                 <form  action="{{ url_for('case_group_blueprint.case_group_update',id=item.id) }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
-                    <div class="form-group">
-                        <label for="name" class="control-label col-md-4">测试用例分组名称</label>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="测试用例分组名称" value="{{ item.name}}">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="control-label col-md-4">测试用例分组备注</label>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" id="description" name="description" placeholder="测试用例分组备注" value="{{ item.description}}">
-                        </div>
-                    </div>
-
-                    <div class="control-label col-md-6" >
-                        <input type="submit" class="btn btn-primary" value="修改">
-                        <input type="reset" class="btn btn-default" value="重置">
-                    </div>
+                    {{ macro.form_group(lable_name="name",blank_name="测试用例分组名称",value=item.name) }}
+                    {{ macro.form_group(lable_name="description",blank_name="测试用例分组备注",value=item.description) }}
+                    {{ macro.submit() }}
                 </form>
             </div>
 {% endblock %}

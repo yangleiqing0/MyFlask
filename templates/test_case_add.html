@@ -3,12 +3,7 @@
 {% block content %}
             <div class="panel-body" >
                 <form action="{{ url_for('testcase_blueprint.add_test_case') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
-                    <div class="form-group">
-                        <label for="name" class="control-label col-md-4">测试用例名称</label>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="测试用例名称">
-                        </div>
-                    </div>
+                    {{ macro.form_group(lable_name="name",blank_name="测试用例名称") }}
                     <div class="form-group">
                         <label for="case_group" class="control-label col-md-4">测试用例分组</label>
                             <div class="col-md-4">
@@ -42,26 +37,11 @@
 
                             </div>
                     </div>
-                    <div class="form-group">
-                        <label for="method" class="control-label col-md-4">请求方式</label>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" id="method" name="method" placeholder="请求方式">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="url" class="control-label col-md-4">测试接口</label>
-                            <div class="col-md-4">
-                            <input type="text" class="form-control" id="url" name="url" placeholder="测试接口">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="data" class="control-label col-md-4">测试报文</label>
-                            <div class="col-md-4">
-                                <textarea rows="8" cols="10" style="resize:none;" class="form-control" id="data" name="data" placeholder="测试报文"></textarea>
-                        </div>
-                    </div>
+                    {{ macro.form_group(lable_name="method",blank_name="请求方式") }}
+                    {{ macro.form_group(lable_name="url",blank_name="测试接口") }}
+                    {{ macro.form_group_textarea(lable_name="data",blank_name="测试报文") }}
                     <div class="control-label col-md-6" >
-                        <input type="submit" class="btn btn-primary" value="提交">
+                        <input type="submit" class="btn btn-primary" value="修改">
                         <input type="submit" class="btn btn-primary" name="test" value="测试">
                         <input type="reset" class="btn btn-default" value="重置">
                     </div>

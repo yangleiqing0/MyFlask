@@ -3,28 +3,10 @@
 {% block content %}
             <div class="panel-body" >
                 <form action="{{ url_for('request_headers_blueprint.request_headers_add') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
-                    <div class="form-group">
-                        <label for="name" class="control-label col-md-4">请求头部名称</label>
-                        <div class="col-md-4">
-                            <input type="text" class="form-control" id="name" name="name" placeholder="请求头部名称">
-                        </div>
-                    </div>
-                     <div class="form-group">
-                        <label for="value" class="control-label col-md-4">请求头部的值</label>
-                            <div class="col-md-4">
-                                <textarea rows="8" cols="10" style="resize:none;" class="form-control" id="value" name="value" placeholder="请求头部的值"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="control-label col-md-4">请求头部备注</label>
-                            <div class="col-md-4">
-                            <input type="text" class="form-control" id="description" name="description" placeholder="请求头部备注">
-                        </div>
-                    </div>
-                    <div class="control-label col-md-6" >
-                        <input type="submit" class="btn btn-primary" value="提交">
-                        <input type="reset" class="btn btn-default" value="重置">
-                    </div>
+                    {{ macro.form_group(lable_name="name",blank_name="请求头部名称") }}
+                    {{ macro.form_group_textarea(lable_name="value",blank_name="请求头部的值") }}
+                    {{ macro.form_group(lable_name="description",blank_name="请求头部备注") }}
+                    {{ macro.submit() }}
                 </form>
             </div>
 {% endblock %}
