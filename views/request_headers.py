@@ -1,6 +1,6 @@
 import json
 from flask.views import MethodView
-from app import cdb, db
+from app import cdb, db, app
 from modles.request_headers import RequestHeaders
 from flask import render_template, Blueprint, request, redirect, url_for, current_app
 
@@ -18,9 +18,8 @@ class RequestHeadersAdd(MethodView):
         request_headers = RequestHeaders(name, value, description)
         db.session.add(request_headers)
         db.session.commit()
-        # request_headers__add_sql = 'insert into request_headers values (?,?,?,?)'
-        # cdb().opeat_db(request_headers__add_sql, (None, name, value, description))
-        return '添加头部成功'
+        app.logger.info('message:insert into request_headers success, name: %s' % name)
+        return redirect(url_for('request_headers_blueprint.request_headers_list'))
 
 
 class RequestHeadersList(MethodView):
@@ -62,14 +61,16 @@ class RequestHeadersUpdate(MethodView):
         description = request.form.get('description')
         request_headers_update_sql = 'update request_headers set name=?,value=?,description=? where id=?'
         cdb().opeat_db(request_headers_update_sql, (name, value, description, id))
-        return '修改请求头部成功'
+        app.logger.info('message:update request_headers success, name: %s' % name)
+        return redirect(url_for('request_headers_blueprint.request_headers_list'))
 
 class RequestHeadersDelete(MethodView):
 
     def get(self,id=-1):
-        print('删除请求头部')
+
         delete_request_headers_sql = 'delete from request_headers where id=?'
         cdb().opeat_db(delete_request_headers_sql, (id,))
+        app.logger.info('message:delete request_headers success, id: %s' % id)
         return redirect(url_for('request_headers_blueprint.request_headers_list'))
 
 

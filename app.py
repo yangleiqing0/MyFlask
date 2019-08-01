@@ -2,12 +2,15 @@ import requests
 import config
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask
+from logs.config import file_log_handler, logging
+
 requests.packages.urllib3.disable_warnings()
 
 app = Flask(__name__)
-
-app.config.from_object(config)
 app.debug = True
+app.config.from_object(config)
+
+logging.getLogger().addHandler(file_log_handler)
 db = SQLAlchemy(app)
 
 from common.connect_sqlite import cdb

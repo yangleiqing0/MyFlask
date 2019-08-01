@@ -14,10 +14,10 @@
                                     </select>
                             </div>
                             <div class="col-md-4" style="border-color:rgba(200,200,200,0)">
-                                    <a href="{{ url_for('case_group_blueprint.case_group_list') }}" class="btn btn-default btn-xs" title="查询"><i class="fa fa-search"></i></a>
-                                    <a href="{{ url_for('case_group_blueprint.case_group_add') }}" class="btn btn-default btn-xs" title="添加"><i class="fa fa-plus"></i></a>
-                                    <a class="btn btn-default btn-xs" id="update_case_group" title="选择" style="text-align: center"><i class="fa fa-pencil"></i></a>
-                                    <a id="refresh_case_group_list" class="btn btn-default btn-xs" title="刷新"><i class="fa fa-refresh"></i></a>
+                                    <a href="{{ url_for('case_group_blueprint.case_group_list') }}" class="btn btn-default btn-xs" title="查询测试用例分组列表"><i class="fa fa-search"></i></a>
+                                    <a href="{{ url_for('case_group_blueprint.case_group_add') }}" class="btn btn-default btn-xs" title="添加测试用例分组"><i class="fa fa-plus"></i></a>
+                                    <a class="btn btn-default btn-xs" id="update_case_group" title="编辑测试用例分组" style="text-align: center"><i class="fa fa-pencil"></i></a>
+                                    <a id="refresh_case_group_list" class="btn btn-default btn-xs" title="刷新测试用例分组"><i class="fa fa-refresh"></i></a>
                             </div>
                     </div>
                     <div class="form-group">
@@ -30,17 +30,16 @@
                                     </select>
                             </div>
                             <div class="col-md-4">
-                                <a href="{{ url_for('request_headers_blueprint.request_headers_list') }}" class="btn btn-default btn-xs" title="查询"><i class="fa fa-search"></i></a>
-                                <a href="{{ url_for('request_headers_blueprint.request_headers_add') }}" class="btn btn-default btn-xs" title="添加"><i class="fa fa-plus"></i></a>
-                                <a class="btn btn-default btn-xs" id="update_request_headers" title="选择"><i class="fa fa-pencil"></i></a>
-                                <a id="refresh_request_headers_list" class="btn btn-default btn-xs" title="刷新"><i class="fa fa-refresh"></i></a>
-
+                                <a href="{{ url_for('request_headers_blueprint.request_headers_list') }}" class="btn btn-default btn-xs" title="查询请求头部列表"><i class="fa fa-search"></i></a>
+                                <a href="{{ url_for('request_headers_blueprint.request_headers_add') }}" class="btn btn-default btn-xs" title="添加请求头部列表"><i class="fa fa-plus"></i></a>
+                                <a class="btn btn-default btn-xs" id="update_request_headers" title="编辑请求头部"><i class="fa fa-pencil"></i></a>
+                                <a id="refresh_request_headers_list" class="btn btn-default btn-xs" title="刷新请求头部列表"><i class="fa fa-refresh"></i></a>
                             </div>
                     </div>
                     {{ macro.form_group(lable_name="method",blank_name="请求方式") }}
                     {{ macro.form_group(lable_name="url",blank_name="测试接口") }}
                     {{ macro.form_group_textarea(lable_name="data",blank_name="测试报文") }}
-                    {{ macro.submit_test(submit_name="添加") }}
+                    {{ macro.submit_test() }}
                 </form>
             </div>
 {% endblock %}

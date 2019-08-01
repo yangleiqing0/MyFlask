@@ -1,9 +1,10 @@
+import json
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, current_app
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
-from app import cdb, db
-import json
+from app import cdb, db, app
+
 
 case_group_blueprint = Blueprint('case_group_blueprint',__name__)
 
@@ -19,7 +20,8 @@ class CaseGroupAdd(MethodView):
         case_group = CaseGroup(name, description)
         db.session.add(case_group)
         db.session.commit()
-        return '插入测试用例分组成功'
+        app.logger.info('message:insert into case_group success, name: %s' % name)
+        return redirect(url_for('case_group_blueprint.case_group_list'))
 
 
 class CaseGroupList(MethodView):
@@ -64,15 +66,17 @@ class CaseGroupUpdate(MethodView):
         description = request.form.get('description')
         case_group_update_sql = 'update case_group set name=?,description=? where id=?'
         cdb().opeat_db(case_group_update_sql, (name, description, id))
-        return '修改测试用例分组成功'
+        app.logger.info('message:update case_group success, name: %s' % name)
+        return redirect(url_for('case_group_blueprint.case_group_list'))
+
 
 
 class CaseGroupDelete(MethodView):
 
     def get(self,id=-1):
-        print('删除测试用例分组')
         delete_case_group_sql = 'delete from case_group where id=?'
         cdb().opeat_db(delete_case_group_sql, (id,))
+        app.logger.info('message:delete case_group success, id: %s' % id)
         return redirect(url_for('case_group_blueprint.case_group_list'))
 
 

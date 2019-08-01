@@ -6,8 +6,7 @@ from modles.testcase import TestCases
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
 from common.analysis_params import AnalysisParams
-
-from app import cdb, db
+from app import cdb, db, app
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -93,7 +92,8 @@ class TestCaseAdd(MethodView):
             testcase = TestCases(name, url, data, method, group_id, request_headers_id)
             db.session.add(testcase)
             db.session.commit()
-            return '插入数据库成功'
+            app.logger.info('message:insert into testcases success, name: %s' % name)
+            return redirect(url_for('testcase_blueprint.test_case_list'))
 
 # class SearchTestCast(MethodView):
 #
@@ -197,15 +197,16 @@ class UpdateTestCase(MethodView):
         method = request.form.get('method')
         update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=? where id=?'
         cdb().opeat_db(update_test_case_sql, (name, url, data, method, id))
-        return '修改测试用例成功'
+        app.logger.info('message:update testcases success, name: %s' % name)
+        return redirect(url_for('testcase_blueprint.test_case_list'))
 
 
 class DeleteTestCase(MethodView):
 
     def get(self,id=-1):
-        print('删除测试用例')
         delete_test_case_sql = 'delete from testcases where id=?'
         cdb().opeat_db(delete_test_case_sql, (id,))
+        app.logger.info('message:delete testcases success, id: %s' % id)
         return redirect(url_for('testcase_blueprint.test_case_list'))
 
 

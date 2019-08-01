@@ -1,15 +1,17 @@
 from flask.views import MethodView
-from app import cdb, db
+from app import cdb, db, app
 from modles.variables import Variables
 from flask import render_template, Blueprint, request, redirect, url_for, current_app
-from flask_sqlalchemy import Pagination
+
 
 variables_blueprint = Blueprint('variables_blueprint', __name__)
+
 
 class VariableAdd(MethodView):
 
     def get(self):
-        return render_template('variable_add.html')
+        log_operate = '进入添加变量页面'
+        return render_template('variable_add.html', log_operate=log_operate)
 
     def post(self):
         name = request.form.get('name')
@@ -18,7 +20,8 @@ class VariableAdd(MethodView):
         variable = Variables(name, value, description)
         db.session.add(variable)
         db.session.commit()
-        return '插入全局变量成功'
+        app.logger.info('message:insert into variables success, name: %s' % name)
+        return redirect(url_for('variables_blueprint.variable_list'))
 
 
 class VariableList(MethodView):
@@ -51,15 +54,17 @@ class VariableUpdate(MethodView):
         description = request.form.get('description')
         variable_update_sql = 'update variables set name=?,value=?,description=? where id=?'
         cdb().opeat_db(variable_update_sql, (name, value, description, id))
-        return '修改全局变量成功'
+        app.logger.info('message:update variables success, name: %s' % name)
+        return redirect(url_for('variables_blueprint.variable_list'))
+
 
 
 class VariableDelete(MethodView):
 
     def get(self,id=-1):
-        print('删除全局变量')
         delete_variables_sql = 'delete from variables where id=?'
         cdb().opeat_db(delete_variables_sql, (id,))
+        app.logger.info('message:delete variables success, id: %s' % id)
         return redirect(url_for('variables_blueprint.variable_list'))
 
 variables_blueprint.add_url_rule('/variableadd/', view_func=VariableAdd.as_view('variable_add'))

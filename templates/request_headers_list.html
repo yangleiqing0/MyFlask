@@ -17,8 +17,9 @@
                             <td>{{ item.value }}</td>
                             <td>{{ item.description}}</td>
                             <td>
-                                <a href="{{ url_for('request_headers_blueprint.request_headers_update',id=item.id) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>
-                                <a href="{{ url_for('request_headers_blueprint.request_headers_delete',id=item.id) }}" class="btn btn-default btn-xs" title="删除"><i class="fa fa-trash"></i></a>
+                                <a href="{{ url_for('request_headers_blueprint.request_headers_add') }}" class="btn btn-default btn-xs" title="添加请求头部"><i class="fa fa-plus"></i></a>
+                                <a href="{{ url_for('request_headers_blueprint.request_headers_update',id=item.id) }}" class="btn btn-default btn-xs" title="编辑请求头部"><i class="fa fa-pencil"></i></a>
+                                <a href="{{ url_for('request_headers_blueprint.request_headers_delete',id=item.id) }}" class="btn btn-default btn-xs" title="删除请求头部"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                         {% endfor %}

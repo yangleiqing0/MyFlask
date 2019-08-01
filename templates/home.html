@@ -69,21 +69,9 @@
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('testcase_blueprint.add_test_case') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-key"></i>
-                        <span>测试用例添加</span>
-                    </a>
-                </li>
-                <li class="tpl-left-nav-item">
                     <a href="{{ url_for('case_group_blueprint.case_group_list') }}" class="nav-link tpl-left-nav-link-list">
                         <i class="am-icon-key"></i>
                         <span>用例分组列表</span>
-                    </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('case_group_blueprint.case_group_add') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-key"></i>
-                        <span>用例分组添加</span>
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
@@ -93,21 +81,9 @@
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('variables_blueprint.variable_add') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-key"></i>
-                        <span>全局变量添加</span>
-                    </a>
-                </li>
-                <li class="tpl-left-nav-item">
                     <a href="{{ url_for('request_headers_blueprint.request_headers_list') }}" class="nav-link tpl-left-nav-link-list">
                         <i class="am-icon-key"></i>
                         <span>请求头部列表</span>
-                    </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('request_headers_blueprint.request_headers_add') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-key"></i>
-                        <span>请求头部添加</span>
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
@@ -160,6 +136,7 @@
                 </h1></div>
             {%block content%}
             {%endblock%}
+                 <div class="panel panel-default" id="log_operate">{{ log_operate }}</div>
                  <div class="panel-footer"></div>
              </div>
         </div>
