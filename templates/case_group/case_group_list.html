@@ -3,6 +3,9 @@
 {% block content %}
                 <div class="panel-body">
                     <table class="table table-hover">
+                    <div class="col-md-offset-10">
+                          <a  href="{{ url_for('case_group_blueprint.case_group_add') }}" title="添加测试用例分组"><button style="color: black">添加测试用例分组</button></a>
+                    </div>
                         <tr>
                             <th>ID</th>
                             <th>测试用例分组名称</th>
@@ -15,7 +18,6 @@
                             <td>{{ item.name }}</td>
                             <td>{{ item.description}}</td>
                             <td>
-                                <a href="{{ url_for('case_group_blueprint.case_group_add') }}" class="btn btn-default btn-xs" title="添加测试用例分组"><i class="fa fa-plus"></i></a>
                                 <a href="{{ url_for('case_group_blueprint.case_group_search_case',id=item.id) }}" class="btn btn-default btn-xs" title="查询测试用例分组关联的所有测试用例"><i class="fa fa-search"></i></a>
                                 <a href="{{ url_for('case_group_blueprint.case_group_update',id=item.id) }}" class="btn btn-default btn-xs" title="编辑测试用例分组"><i class="fa fa-pencil"></i></a>
                                 <a href="{{ url_for('case_group_blueprint.case_group_delete',id=item.id) }}" class="btn btn-default btn-xs" title="删除测试用例分组"><i class="fa fa-trash"></i></a>

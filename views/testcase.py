@@ -35,7 +35,7 @@ class TestCastList(MethodView):
         testcaseses = pagination.items
         print("pagination: ", pagination)
         FrontLogs('进入测试用例列表页面 第%s页' % page).add_to_front_log()
-        return render_template('test_case_list.html', pagination=pagination, items=testcaseses, case_groups=case_groups,
+        return render_template('test_case/test_case_list.html', pagination=pagination, items=testcaseses, case_groups=case_groups,
                                request_headers=request_headers)
 
 
@@ -50,7 +50,7 @@ class TestCaseAdd(MethodView):
         request_headers = cdb().query_db(request_headers_querys_sql)
         print('request_headers: ', request_headers )
         FrontLogs('进入添加测试用例页面').add_to_front_log()
-        return render_template('test_case_add.html', case_groups=case_groups,
+        return render_template('test_case/test_case_add.html', case_groups=case_groups,
                                request_headers=request_headers)
 
     def post(self):
@@ -163,7 +163,7 @@ class UpdateTestCase(MethodView):
         print('case_group:', case_group)
         print('request_headers:', request_headers)
         FrontLogs('进入编辑测试用例 id: %s 页面' % id).add_to_front_log()
-        return render_template('test_case_search.html', item=testcase, case_group=case_group, request_headers=request_headers)
+        return render_template('test_case/test_case_search.html', item=testcase, case_group=case_group, request_headers=request_headers)
 
     def post(self, id=-1):
         print('UpdateTestCase：request_form: ', request.form)

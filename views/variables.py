@@ -12,7 +12,7 @@ class VariableAdd(MethodView):
 
     def get(self):
         FrontLogs('进入添加全局变量页面').add_to_front_log()
-        return render_template('variable_add.html')
+        return render_template('variable/variable_add.html')
 
     def post(self):
         name = request.form.get('name')
@@ -39,7 +39,7 @@ class VariableList(MethodView):
         # 返回一个内容对象
         variables = pagination.items
         print("pagination: ", pagination)
-        return render_template('variable_list.html', pagination=pagination, items=variables)
+        return render_template('variable/variable_list.html', pagination=pagination, items=variables)
 
 
 
@@ -48,7 +48,7 @@ class VariableUpdate(MethodView):
     def get(self, id=-1):
         FrontLogs('进入编辑全局变量 id: %s 页面' % id).add_to_front_log()
         variable = Variables.query.get(id)
-        return render_template('variable_update.html', item=variable)
+        return render_template('variable/variable_update.html', item=variable)
 
     def post(self, id=-1):
         name = request.form.get('name')

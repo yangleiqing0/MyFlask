@@ -87,6 +87,12 @@
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
+                    <a href="{{ url_for('test_case_request_blueprint.test_case_request') }}" class="nav-link tpl-left-nav-link-list">
+                        <i class="am-icon-key"></i>
+                        <span>测试用例执行</span>
+                    </a>
+                </li>
+                <li class="tpl-left-nav-item">
                     <a href="" class="nav-link tpl-left-nav-link-list">
                         <i class="am-icon-file"></i>
                         <span>测试报告</span>
@@ -162,6 +168,9 @@
         white-space:nowrap;      {# 不换行  #}
         overflow:hidden;
         text-overflow:ellipsis;
+    }
+    i{
+        zoom:1.5
     }
 </style>
 <script>

@@ -1,0 +1,17 @@
+{% extends 'home.html' %}
+{% block title %}测试用例执行{% endblock %}
+{% block content %}
+    <div class="panel-body " style="font-size: 16px">
+        <form action="{{ url_for('test_case_request_blueprint.test_case_request') }}"  method="post" enctype="multipart/form-data" class="form-horizontal col-md-12">
+            {% for item in items %}
+                 <div class="form-group col-md-3">
+                    <label for="{{ item.id }}" class="control-label col-md-6">{{ item.name }}</label>
+                    <div class="col-md-6 " style="margin: 0 auto">
+                        <input  type="checkbox" id="{{ item.id }}" value="{{ item.id }}" name="testcase" style="zoom: 2" >
+                    </div>
+                 </div>
+            {% endfor %}
+            {{ macro.submit(test_type="submit", div_class="control-label col-md-7") }}
+        </form>
+    </div>
+{% endblock %}

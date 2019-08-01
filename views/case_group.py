@@ -14,7 +14,7 @@ class CaseGroupAdd(MethodView):
 
     def get(self):
         FrontLogs('进入测试用例分组添加页面').add_to_front_log()
-        return render_template('case_group_add.html')
+        return render_template('case_group/case_group_add.html')
 
     def post(self):
         name = request.form.get('name')
@@ -54,7 +54,7 @@ class CaseGroupList(MethodView):
             # 返回一个内容对象
             case_groups = pagination.items
             print("pagination: ", pagination)
-            return render_template('case_group_list.html', pagination=pagination, items=case_groups)
+            return render_template('case_group/case_group_list.html', pagination=pagination, items=case_groups)
 
 
 class CaseGroupUpdate(MethodView):
@@ -64,7 +64,7 @@ class CaseGroupUpdate(MethodView):
         id = request.args.get('case_group_id', id) # 如果有case_group_id的get请求参数，那么用此参数作为id,否则就用id
         case_group = CaseGroup.query.get(id)
         print('case_group:', case_group)
-        return render_template('case_group_update.html', item=case_group)
+        return render_template('case_group/case_group_update.html', item=case_group)
 
     def post(self, id=-1):
         name = request.form.get('name')
@@ -97,7 +97,7 @@ class CaseGroupSearchCase(MethodView):
         request_headers = RequestHeaders.query.all()
         print('CaseGroupSearchCase:request_headers: ', request_headers)
         FrontLogs('进入测试用例分组  id:%s 关联测试用例页面' % id).add_to_front_log()
-        return render_template('case_group_search_case.html',
+        return render_template('case_group/case_group_search_case.html',
                                items=testcases, case_group=case_group,
                                request_headers=request_headers)
 

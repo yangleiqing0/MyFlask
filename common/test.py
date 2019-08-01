@@ -1,4 +1,4 @@
-from logs.config import FLASK_LOGS_FILE
+FLASK_LOGS_FILE = '../logs/flask.log'
 with open(FLASK_LOGS_FILE) as logs:
     flask_logs = logs.readlines()
     flask_logs = "<br/>".join(flask_logs[len(flask_logs) - 10:])

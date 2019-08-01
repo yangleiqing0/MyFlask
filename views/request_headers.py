@@ -11,7 +11,7 @@ class RequestHeadersAdd(MethodView):
 
     def get(self):
         FrontLogs('进入请求头部列表页面').add_to_front_log()
-        return render_template('request_headers_add.html')
+        return render_template('request_headers/request_headers_add.html')
 
     def post(self):
         name = request.form.get('name')
@@ -49,7 +49,7 @@ class RequestHeadersList(MethodView):
         # 返回一个内容对象
         request_headerses = pagination.items
         print("request_headers_pagination: ", pagination)
-        return render_template('request_headers_list.html', pagination=pagination, items=request_headerses)
+        return render_template('request_headers/request_headers_list.html', pagination=pagination, items=request_headerses)
 
 
 
@@ -59,7 +59,7 @@ class RequestHeadersUpdate(MethodView):
         id = request.args.get('request_headers_id', id)# 如果有request_headers_id的get请求参数，那么用此参数作为id,否则就用id
         FrontLogs('进入修改请求头部 id: %s 页面' % id).add_to_front_log()
         request_headers = RequestHeaders.query.get(id)
-        return render_template('request_headers_update.html', item=request_headers)
+        return render_template('request_headers/request_headers_update.html', item=request_headers)
 
     def post(self, id=-1):
         name = request.form.get('name')
