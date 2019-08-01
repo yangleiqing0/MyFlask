@@ -1,6 +1,7 @@
 from flask.views import MethodView
 from app import cdb, db, app
 from modles.variables import Variables
+from common.tail_font_log import FrontLogs
 from flask import render_template, Blueprint, request, redirect, url_for, current_app
 
 
@@ -10,16 +11,18 @@ variables_blueprint = Blueprint('variables_blueprint', __name__)
 class VariableAdd(MethodView):
 
     def get(self):
-        log_operate = '进入添加变量页面'
-        return render_template('variable_add.html', log_operate=log_operate)
+        FrontLogs('进入添加全局变量页面').add_to_front_log()
+        return render_template('variable_add.html')
 
     def post(self):
         name = request.form.get('name')
         value = request.form.get('value')
         description = request.form.get('description')
+        FrontLogs('开始添加全局变量 name: %s' % name).add_to_front_log()
         variable = Variables(name, value, description)
         db.session.add(variable)
         db.session.commit()
+        FrontLogs('添加全局变量 name: %s 成功' % name).add_to_front_log()
         app.logger.info('message:insert into variables success, name: %s' % name)
         return redirect(url_for('variables_blueprint.variable_list'))
 
@@ -27,11 +30,9 @@ class VariableAdd(MethodView):
 class VariableList(MethodView):
 
     def get(self):
-        # tests = Variables.query.all()
-        # print(tests)
         # 指定渲染的页数
-        # variable = Variables()
         page = request.args.get('page', 1, type=int)
+        FrontLogs('进入全局变量列表 第%s页' % page).add_to_front_log()
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
         pagination = Variables.query.order_by(Variables.timestamp.desc()).paginate(page, per_page=current_app.config[
             'FLASK_POST_PRE_ARGV'], error_out=False)
@@ -45,6 +46,7 @@ class VariableList(MethodView):
 class VariableUpdate(MethodView):
 
     def get(self, id=-1):
+        FrontLogs('进入编辑全局变量 id: %s 页面' % id).add_to_front_log()
         variable = Variables.query.get(id)
         return render_template('variable_update.html', item=variable)
 
@@ -55,6 +57,7 @@ class VariableUpdate(MethodView):
         variable_update_sql = 'update variables set name=?,value=?,description=? where id=?'
         cdb().opeat_db(variable_update_sql, (name, value, description, id))
         app.logger.info('message:update variables success, name: %s' % name)
+        FrontLogs('编辑全局变量 name: %s 成功' % name).add_to_front_log()
         return redirect(url_for('variables_blueprint.variable_list'))
 
 
@@ -64,6 +67,7 @@ class VariableDelete(MethodView):
     def get(self,id=-1):
         delete_variables_sql = 'delete from variables where id=?'
         cdb().opeat_db(delete_variables_sql, (id,))
+        FrontLogs('删除全局变量 id: %s 成功' % id).add_to_front_log()
         app.logger.info('message:delete variables success, id: %s' % id)
         return redirect(url_for('variables_blueprint.variable_list'))
 

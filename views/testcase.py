@@ -1,5 +1,6 @@
 import requests
 import json
+from common.tail_font_log import FrontLogs
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, current_app
 from modles.testcase import TestCases
@@ -26,10 +27,6 @@ class TestCastList(MethodView):
         print('case_groups: ', case_groups)
         request_headers = RequestHeaders.query.all()
         print('request_headers: ', request_headers)
-        # print(tests, case_groups[0].name)
-        # return render_template('test_case_list.html', items=testcases, case_groups=case_groups,
-        #                        request_headers=request_headers)
-
         page = request.args.get('page', 1, type=int)
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
         pagination = TestCases.query.order_by(TestCases.timestamp.desc()).paginate(page, per_page=current_app.config[
@@ -37,6 +34,7 @@ class TestCastList(MethodView):
         # 返回一个内容对象
         testcaseses = pagination.items
         print("pagination: ", pagination)
+        FrontLogs('进入测试用例列表页面 第%s页' % page).add_to_front_log()
         return render_template('test_case_list.html', pagination=pagination, items=testcaseses, case_groups=case_groups,
                                request_headers=request_headers)
 
@@ -51,6 +49,7 @@ class TestCaseAdd(MethodView):
         request_headers_querys_sql = 'select id,name from request_headers'
         request_headers = cdb().query_db(request_headers_querys_sql)
         print('request_headers: ', request_headers )
+        FrontLogs('进入添加测试用例页面').add_to_front_log()
         return render_template('test_case_add.html', case_groups=case_groups,
                                request_headers=request_headers)
 
@@ -64,7 +63,7 @@ class TestCaseAdd(MethodView):
         request_headers_id = request.form.get('request_headers')
         request_headers_query_sql = 'select value from request_headers where id=?'
         headers = json.loads(cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0])
-        print('request_headers_id: %s headers:%s ' % (request_headers_id,headers))
+        print('request_headers_id: %s headers:%s ' % (request_headers_id, headers))
 
         sql = 'insert into testcases values (?,?,?,?,?,?,?,?)'
         if request.form.get('test', 0) == '测试':
@@ -92,6 +91,7 @@ class TestCaseAdd(MethodView):
             testcase = TestCases(name, url, data, method, group_id, request_headers_id)
             db.session.add(testcase)
             db.session.commit()
+            FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
             app.logger.info('message:insert into testcases success, name: %s' % name)
             return redirect(url_for('testcase_blueprint.test_case_list'))
 
@@ -162,7 +162,7 @@ class UpdateTestCase(MethodView):
         print('testcase:', testcase)
         print('case_group:', case_group)
         print('request_headers:', request_headers)
-        # return 'o'
+        FrontLogs('进入编辑测试用例 id: %s 页面' % id).add_to_front_log()
         return render_template('test_case_search.html', item=testcase, case_group=case_group, request_headers=request_headers)
 
     def post(self, id=-1):
@@ -197,6 +197,7 @@ class UpdateTestCase(MethodView):
         method = request.form.get('method')
         update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=? where id=?'
         cdb().opeat_db(update_test_case_sql, (name, url, data, method, id))
+        FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
         app.logger.info('message:update testcases success, name: %s' % name)
         return redirect(url_for('testcase_blueprint.test_case_list'))
 
@@ -206,6 +207,7 @@ class DeleteTestCase(MethodView):
     def get(self,id=-1):
         delete_test_case_sql = 'delete from testcases where id=?'
         cdb().opeat_db(delete_test_case_sql, (id,))
+        FrontLogs('删除测试用例 id: %s 成功' % id).add_to_front_log()
         app.logger.info('message:delete testcases success, id: %s' % id)
         return redirect(url_for('testcase_blueprint.test_case_list'))
 

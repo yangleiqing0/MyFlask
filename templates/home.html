@@ -136,8 +136,11 @@
                 </h1></div>
             {%block content%}
             {%endblock%}
-                 <div class="panel panel-default" id="log_operate">{{ log_operate }}</div>
-                 <div class="panel-footer"></div>
+                <div class="panel panel-default col-lg-12" style="float: left">
+                    <div  id="front_logs" class="col-lg-3"></div>
+                    <div  id="flask_logs" class="col-lg-9"></div>
+                </div>
+                 <div class="panel-footer" style="clear:both"></div>
              </div>
         </div>
     </div>
@@ -166,8 +169,29 @@ $(document).ready(function() {
     {#  动态在td 标签上悬浮时设置title属性为当前标签的test内容 #}
     $("td",$(this)).hover(function(){
         $(this).attr('title',$(this).text());
-
     });
+    function auto_front_logs(){
+            $.ajax({
+                url:{{ url_for('home_blueprint.front_logs') }},
+                method:'GET',
+                success:function(response){
+                    var front_logs = JSON.parse(response)["front_logs"];
+                    $("#front_logs").html(front_logs)
+                }
+            })
+        }
+    function auto_flask_logs(){
+            $.ajax({
+                url:{{ url_for('home_blueprint.flask_logs') }},
+                method:'GET',
+                success:function(response){
+                    var flask_logs = JSON.parse(response)["flask_logs"];
+                    $("#flask_logs").html(flask_logs)
+                }
+            })
+    }
+        window.setTimeout(auto_front_logs, 2);
+        window.setTimeout(auto_flask_logs, 1);
 });
 
 </script>

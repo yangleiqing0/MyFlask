@@ -3,6 +3,7 @@ from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, current_app
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
+from common.tail_font_log import FrontLogs
 from app import cdb, db, app
 
 
@@ -12,14 +13,17 @@ case_group_blueprint = Blueprint('case_group_blueprint',__name__)
 class CaseGroupAdd(MethodView):
 
     def get(self):
+        FrontLogs('进入测试用例分组添加页面').add_to_front_log()
         return render_template('case_group_add.html')
 
     def post(self):
         name = request.form.get('name')
         description = request.form.get('description')
+        FrontLogs('开始添加测试用例分组 name: %s ' % name).add_to_front_log()
         case_group = CaseGroup(name, description)
         db.session.add(case_group)
         db.session.commit()
+        FrontLogs('开始添加测试用例分组 name: %s 成功' % name).add_to_front_log()
         app.logger.info('message:insert into case_group success, name: %s' % name)
         return redirect(url_for('case_group_blueprint.case_group_list'))
 
@@ -41,21 +45,22 @@ class CaseGroupList(MethodView):
             return json.dumps({"case_groups_dict": str(case_groups_dict)})  # 需要转行成字符串再转成json
         else:
             page = request.args.get('page', 1, type=int)
+            FrontLogs('进入测试用例分组列表页面 第%s页' % page).add_to_front_log()
             #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
             pagination = CaseGroup.query.order_by(CaseGroup.timestamp.desc()).paginate(page,
                                                                                        per_page=current_app.config[
                                                                                            'FLASK_POST_PRE_ARGV'],
-                                                                                       error_out=False)
+                                                                                    error_out=False)
             # 返回一个内容对象
             case_groups = pagination.items
             print("pagination: ", pagination)
             return render_template('case_group_list.html', pagination=pagination, items=case_groups)
 
 
-
 class CaseGroupUpdate(MethodView):
 
     def get(self, id=-1):
+        FrontLogs('进入编辑测试用例分组 id:%s 页面' % id).add_to_front_log()
         id = request.args.get('case_group_id', id) # 如果有case_group_id的get请求参数，那么用此参数作为id,否则就用id
         case_group = CaseGroup.query.get(id)
         print('case_group:', case_group)
@@ -66,6 +71,7 @@ class CaseGroupUpdate(MethodView):
         description = request.form.get('description')
         case_group_update_sql = 'update case_group set name=?,description=? where id=?'
         cdb().opeat_db(case_group_update_sql, (name, description, id))
+        FrontLogs('编辑测试用例分组 name:%s 成功' % name).add_to_front_log()
         app.logger.info('message:update case_group success, name: %s' % name)
         return redirect(url_for('case_group_blueprint.case_group_list'))
 
@@ -76,6 +82,7 @@ class CaseGroupDelete(MethodView):
     def get(self,id=-1):
         delete_case_group_sql = 'delete from case_group where id=?'
         cdb().opeat_db(delete_case_group_sql, (id,))
+        FrontLogs('删除测试用例分组 id:%s 成功' % id).add_to_front_log()
         app.logger.info('message:delete case_group success, id: %s' % id)
         return redirect(url_for('case_group_blueprint.case_group_list'))
 
@@ -89,6 +96,7 @@ class CaseGroupSearchCase(MethodView):
         print('CaseGroupSearchCase:testcases: ', testcases)
         request_headers = RequestHeaders.query.all()
         print('CaseGroupSearchCase:request_headers: ', request_headers)
+        FrontLogs('进入测试用例分组  id:%s 关联测试用例页面' % id).add_to_front_log()
         return render_template('case_group_search_case.html',
                                items=testcases, case_group=case_group,
                                request_headers=request_headers)

@@ -11,318 +11,71 @@ INFO log.py:110 ()
 INFO log.py:110 PRAGMA table_info("variables")
 INFO log.py:110 ()
 INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:27:12] "GET /addcasegroup/ HTTP/1.1" 200 -
 INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 INSERT INTO case_group (name, description, timestamp) VALUES (?, ?, ?)
-INFO log.py:110 ('122222', '21', '2019-08-01 01:27:13.579321')
-INFO log.py:110 COMMIT
-INFO case_group.py:23 group_case add 
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:27:13] "POST /addcasegroup/ HTTP/1.1" 200 -
-INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("case_group")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("request_headers")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("testcases")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("variables")
-INFO log.py:110 ()
-INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:28:52] "GET /addcasegroup/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 INSERT INTO case_group (name, description, timestamp) VALUES (?, ?, ?)
-INFO log.py:110 ('122222r', '21', '2019-08-01 01:28:56.002832')
-INFO log.py:110 COMMIT
-ERROR app.py:1780 Exception on /addcasegroup/ [POST]
-Traceback (most recent call last):
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 2311, in wsgi_app
-    response = self.full_dispatch_request()
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\_compat.py", line 36, in reraise
-    raise value
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 1818, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\views.py", line 88, in view
-    return self.dispatch_request(*args, **kwargs)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\views.py", line 158, in dispatch_request
-    return meth(*args, **kwargs)
-  File "D:\PycharmProjects\new Project\MytestFlask\views\case_group.py", line 23, in post
-    app.logger.info("group_case add ", app.info)
-AttributeError: 'Flask' object has no attribute 'info'
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:28:56] "POST /addcasegroup/ HTTP/1.1" 500 -
-INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("case_group")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("request_headers")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("testcases")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("variables")
-INFO log.py:110 ()
-INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 INSERT INTO case_group (name, description, timestamp) VALUES (?, ?, ?)
-INFO log.py:110 ('122222rr', '21', '2019-08-01 01:29:24.584268')
-INFO log.py:110 COMMIT
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group 
-WHERE case_group.id = ?
-INFO log.py:110 (12,)
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:29:24] "POST /addcasegroup/ HTTP/1.1" 200 -
-INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("case_group")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("request_headers")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("testcases")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("variables")
-INFO log.py:110 ()
-INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:31:47] "GET /addcasegroup/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 INSERT INTO case_group (name, description, timestamp) VALUES (?, ?, ?)
-INFO log.py:110 ('122222rr33', '21', '2019-08-01 01:31:49.163470')
-INFO log.py:110 COMMIT
-INFO case_group.py:23 插入测试用例分组成功
-ERROR app.py:1780 Exception on /addcasegroup/ [POST]
-Traceback (most recent call last):
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 2311, in wsgi_app
-    response = self.full_dispatch_request()
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 1834, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 1737, in handle_user_exception
-    reraise(exc_type, exc_value, tb)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\_compat.py", line 36, in reraise
-    raise value
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 1832, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 1818, in dispatch_request
-    return self.view_functions[rule.endpoint](**req.view_args)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\views.py", line 88, in view
-    return self.dispatch_request(*args, **kwargs)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\views.py", line 158, in dispatch_request
-    return meth(*args, **kwargs)
-  File "D:\PycharmProjects\new Project\MytestFlask\views\case_group.py", line 24, in post
-    return redirect(url_for('case_group_list'))
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\helpers.py", line 356, in url_for
-    return appctx.app.handle_url_build_error(error, endpoint, values)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\app.py", line 2080, in handle_url_build_error
-    reraise(exc_type, exc_value, tb)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\_compat.py", line 36, in reraise
-    raise value
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\flask\helpers.py", line 345, in url_for
-    force_external=external)
-  File "C:\Users\yl\AppData\Local\Programs\Python\Python37\lib\site-packages\werkzeug\routing.py", line 2007, in build
-    raise BuildError(endpoint, values, method, self)
-werkzeug.routing.BuildError: Could not build url for endpoint 'case_group_list'. Did you mean 'case_group_blueprint.case_group_list' instead?
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:31:49] "POST /addcasegroup/ HTTP/1.1" 500 -
-INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("case_group")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("request_headers")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("testcases")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("variables")
-INFO log.py:110 ()
-INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 INSERT INTO case_group (name, description, timestamp) VALUES (?, ?, ?)
-INFO log.py:110 ('122222rr332', '21', '2019-08-01 01:32:04.618160')
-INFO log.py:110 COMMIT
-INFO case_group.py:23 插入测试用例分组成功
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:32:04] "POST /addcasegroup/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
  LIMIT ? OFFSET ?
 INFO log.py:110 (5, 0)
 INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:32:04] "GET /casegrouplist/ HTTP/1.1" 200 -
-INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("case_group")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("request_headers")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("testcases")
-INFO log.py:110 ()
-INFO log.py:110 PRAGMA table_info("variables")
-INFO log.py:110 ()
-INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:14] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:14] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:14] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
  LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
+INFO log.py:110 (5, 5)
 INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:16] "GET /casegrouplist/ HTTP/1.1" 200 -
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:18] "GET /addcasegroup/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:15] "GET /variablelist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:15] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:15] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 INSERT INTO case_group (name, description, timestamp) VALUES (?, ?, ?)
-INFO log.py:110 ('wdwd', 'dwqdwq', '2019-08-01 01:36:22.912785')
-INFO log.py:110 COMMIT
-INFO case_group.py:23 message:insert into case_group success, name: wdwd
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:23] "POST /addcasegroup/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:23] "GET /casegrouplist/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group 
-WHERE case_group.id = ?
-INFO log.py:110 ('15',)
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases 
-WHERE ? = testcases.group_id
-INFO log.py:110 (15,)
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:25] "GET /casegroupsearchcase/15/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
  LIMIT ? OFFSET ?
 INFO log.py:110 (5, 10)
 INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:32] "GET /casegrouplist/?page=3 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:15] "GET /variablelist/?page=3 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:15] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:15] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group 
-WHERE case_group.id = ?
-INFO log.py:110 ('1',)
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases 
-WHERE ? = testcases.group_id
-INFO log.py:110 (1,)
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:33] "GET /casegroupsearchcase/1/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group 
-WHERE case_group.id = ?
-INFO log.py:110 ('1',)
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:36] "GET /casegroupupdate/1/ HTTP/1.1" 200 -
-INFO case_group.py:69 message:update case_group success, name: 12
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:39] "POST /casegroupupdate/1/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
  LIMIT ? OFFSET ?
 INFO log.py:110 (5, 0)
 INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:39] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:27] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:27] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:27] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 10)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:41] "GET /casegrouplist/?page=3 HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
  LIMIT ? OFFSET ?
 INFO log.py:110 (5, 0)
 INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:43] "GET /casegrouplist/?page=1 HTTP/1.1" 200 -
-INFO case_group.py:79 message:delete case_group success, id: 15
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:44] "GET /casegroupdelete/15/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:36:44] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:28] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:28] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:09:28] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
@@ -337,6 +90,32 @@ INFO log.py:110 PRAGMA table_info("variables")
 INFO log.py:110 ()
 INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:11] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:11] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:11] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 5)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:12] "GET /variablelist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:12] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:12] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
 INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
 FROM case_group
 INFO log.py:110 ()
@@ -349,7 +128,238 @@ FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name,
 FROM case_group) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:05] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:15] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:15] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:15] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:16] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:16] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:11:16] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("case_group")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("request_headers")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("testcases")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("variables")
+INFO log.py:110 ()
+INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:11] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:11] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:11] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 10)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:19] "GET /variablelist/?page=3 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:20] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:20] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 5)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:20] "GET /variablelist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:20] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:20] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 5)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:21] "GET /variablelist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:21] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:21] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:22] "GET /variablelist/?page=1 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:22] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:22] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 10)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:23] "GET /variablelist/?page=3 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:23] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:23] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 5)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:26] "GET /variablelist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:26] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:26] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:27] "GET /variablelist/?page=1 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:27] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:27] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group ORDER BY case_group.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:29] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:29] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:29] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:30] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:30] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:30] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers ORDER BY request_headers.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:32] "GET /requestheaderslist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:32] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:32] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("case_group")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("request_headers")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("testcases")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("variables")
+INFO log.py:110 ()
+INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers ORDER BY request_headers.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:47] "GET /requestheaderslist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:47] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:47] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers 
+WHERE request_headers.id = ?
+INFO log.py:110 ('5',)
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:56] "GET /requestheadersupdate/5/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:56] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:12:56] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:00] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:01] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:01] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:01] "GET / HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:01] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:01] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 BEGIN (implicit)
 INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
 FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
@@ -370,21 +380,32 @@ FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, tes
 FROM testcases) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:06] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:03] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:03] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:03] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
 INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
 FROM case_group
 INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
  LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
+INFO log.py:110 (5, 5)
 INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:07] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:07] "GET /testcaselist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:07] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:07] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 BEGIN (implicit)
 INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
 FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
@@ -405,14 +426,279 @@ FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, tes
 FROM testcases) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:08] "GET /testcaselist/ HTTP/1.1" 200 -
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:09] "GET /addtestcase/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:08] "GET /testcaselist/?page=1 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:08] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:08] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:10] "GET /static/css/bootstrap.min.css.map HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases 
+WHERE testcases.id = ?
+ LIMIT ? OFFSET ?
+INFO log.py:110 ('6', 1, 0)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group 
+WHERE case_group.id = ?
+ LIMIT ? OFFSET ?
+INFO log.py:110 (1, 1, 0)
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers 
+WHERE request_headers.id = ?
+ LIMIT ? OFFSET ?
+INFO log.py:110 (1, 1, 0)
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:24] "GET /updatetestcase/6/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:24] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:24] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers ORDER BY request_headers.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:41] "GET /requestheaderslist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:41] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:13:41] "GET /frontlogs/ HTTP/1.1" 200 -
+
+
+
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers ORDER BY request_headers.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 5)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:12] "GET /requestheaderslist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:12] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:12] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers ORDER BY request_headers.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 5)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:20] "GET /requestheaderslist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:20] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:20] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers ORDER BY request_headers.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:22] "GET /requestheaderslist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:22] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:22] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers ORDER BY request_headers.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 5)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:25] "GET /requestheaderslist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:25] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:25] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers 
+WHERE request_headers.id = ?
+INFO log.py:110 ('2',)
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:27] "GET /requestheadersupdate/2/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:27] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:27] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group ORDER BY case_group.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:30] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:30] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:30] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO case_group.py:86 message:delete case_group success, id: 15
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:32] "GET /casegroupdelete/15/ HTTP/1.1" 302 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group ORDER BY case_group.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:32] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:32] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:32] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group ORDER BY case_group.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 5)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:39] "GET /casegrouplist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:39] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:39] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group ORDER BY case_group.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 10)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:40] "GET /casegrouplist/?page=3 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:40] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:40] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:51] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:51] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:51] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:52] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:52] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:14:52] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 5)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:29] "GET /testcaselist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:29] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:29] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:38] "GET /testcaselist/?page=1 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:38] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:38] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:41] "GET /addtestcase/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:41] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:41] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 BEGIN (implicit)
 INFO log.py:110 INSERT INTO testcases (name, url, data, result, method, group_id, request_headers_id, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-INFO log.py:110 ('1', 'https://www.baidu.com', '1', None, 'POST', '1', '1', '2019-08-01 01:46:14.491879')
+INFO log.py:110 ('', 'https://www.baidu.com', '的武器大全', None, 'POST', '2', '1', '2019-08-01 05:15:50.432706')
 INFO log.py:110 COMMIT
-INFO testcase.py:95 message:insert into testcases success, name: 1
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:14] "POST /addtestcase/ HTTP/1.1" 302 -
+INFO testcase.py:95 message:insert into testcases success, name: 
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:50] "POST /addtestcase/ HTTP/1.1" 302 -
 INFO log.py:110 BEGIN (implicit)
 INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
 FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
@@ -433,341 +719,9 @@ FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, tes
 FROM testcases) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:14] "GET /testcaselist/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases 
-WHERE testcases.id = ?
- LIMIT ? OFFSET ?
-INFO log.py:110 ('8', 1, 0)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group 
-WHERE case_group.id = ?
- LIMIT ? OFFSET ?
-INFO log.py:110 (1, 1, 0)
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers 
-WHERE request_headers.id = ?
- LIMIT ? OFFSET ?
-INFO log.py:110 (1, 1, 0)
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:17] "GET /updatetestcase/8/ HTTP/1.1" 200 -
-INFO testcase.py:200 message:update testcases success, name: 111
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:19] "POST /updatetestcase/8/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
-WHERE testcases.group_id = case_group.id
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases ORDER BY testcases.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:19] "GET /testcaselist/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
-WHERE testcases.group_id = case_group.id
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases ORDER BY testcases.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:21] "GET /testcaselist/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases 
-WHERE testcases.id = ?
- LIMIT ? OFFSET ?
-INFO log.py:110 ('8', 1, 0)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group 
-WHERE case_group.id = ?
- LIMIT ? OFFSET ?
-INFO log.py:110 (1, 1, 0)
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers 
-WHERE request_headers.id = ?
- LIMIT ? OFFSET ?
-INFO log.py:110 (1, 1, 0)
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:22] "GET /updatetestcase/8/ HTTP/1.1" 200 -
-INFO testcase.py:200 message:update testcases success, name: 11111111
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:25] "POST /updatetestcase/8/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
-WHERE testcases.group_id = case_group.id
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases ORDER BY testcases.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:25] "GET /testcaselist/ HTTP/1.1" 200 -
-INFO testcase.py:209 message:insert into testcases success, id: 8
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:26] "GET /deletetestcase/8/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
-WHERE testcases.group_id = case_group.id
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases ORDER BY testcases.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:26] "GET /testcaselist/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:28] "GET /casegrouplist/ HTTP/1.1" 200 -
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:30] "GET /addcasegroup/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 INSERT INTO case_group (name, description, timestamp) VALUES (?, ?, ?)
-INFO log.py:110 ('123', '123', '2019-08-01 01:46:32.904408')
-INFO log.py:110 COMMIT
-INFO case_group.py:23 message:insert into case_group success, name: 123
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:33] "POST /addcasegroup/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:33] "GET /casegrouplist/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group 
-WHERE case_group.id = ?
-INFO log.py:110 ('15',)
-INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
-FROM testcases 
-WHERE ? = testcases.group_id
-INFO log.py:110 (15,)
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:34] "GET /casegroupsearchcase/15/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group 
-WHERE case_group.id = ?
-INFO log.py:110 ('15',)
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:38] "GET /casegroupupdate/15/ HTTP/1.1" 200 -
-INFO case_group.py:79 message:delete case_group success, id: 15
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:46] "GET /casegroupdelete/15/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group
-INFO log.py:110 ()
-INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group ORDER BY case_group.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
-FROM case_group) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:46] "GET /casegrouplist/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
-FROM variables ORDER BY variables.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
-FROM variables) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:48] "GET /variablelist/ HTTP/1.1" 200 -
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:49] "GET /variableadd/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 INSERT INTO variables (name, value, description, timestamp) VALUES (?, ?, ?, ?)
-INFO log.py:110 ('213', '123', '123', '2019-08-01 01:46:53.311332')
-INFO log.py:110 COMMIT
-INFO variables.py:23 message:insert into variables success, name: 213
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:53] "POST /variableadd/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
-FROM variables ORDER BY variables.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
-FROM variables) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:53] "GET /variablelist/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
-FROM variables 
-WHERE variables.id = ?
-INFO log.py:110 ('15',)
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:54] "GET /variableupdate/15/ HTTP/1.1" 200 -
-INFO variables.py:57 message:update variables success, name: 21323
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:56] "POST /variableupdate/15/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
-FROM variables ORDER BY variables.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
-FROM variables) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:56] "GET /variablelist/ HTTP/1.1" 200 -
-INFO variables.py:67 message:delete variables success, id: 15
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:58] "GET /variabledelete/15/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
-FROM variables ORDER BY variables.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
-FROM variables) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:58] "GET /variablelist/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers ORDER BY request_headers.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:46:59] "GET /requestheaderslist/ HTTP/1.1" 200 -
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:47:01] "GET /requestheadersadd/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 INSERT INTO request_headers (name, value, description, timestamp) VALUES (?, ?, ?, ?)
-INFO log.py:110 ('123', '123', '213', '2019-08-01 01:47:08.892811')
-INFO log.py:110 COMMIT
-INFO request_headers.py:21 message:insert into request_headers success, name: 123
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:47:09] "POST /requestheadersadd/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers ORDER BY request_headers.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:47:09] "GET /requestheaderslist/ HTTP/1.1" 200 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers 
-WHERE request_headers.id = ?
-INFO log.py:110 ('9',)
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:47:11] "GET /requestheadersupdate/9/ HTTP/1.1" 200 -
-INFO request_headers.py:64 message:update request_headers success, name: 123123
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:47:13] "POST /requestheadersupdate/9/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers ORDER BY request_headers.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:47:13] "GET /requestheaderslist/ HTTP/1.1" 200 -
-INFO request_headers.py:73 message:insert into request_headers success, id: 9
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:47:15] "GET /requestheadersdelete/9/ HTTP/1.1" 302 -
-INFO log.py:110 BEGIN (implicit)
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers
-INFO log.py:110 ()
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers ORDER BY request_headers.timestamp DESC
- LIMIT ? OFFSET ?
-INFO log.py:110 (5, 0)
-INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers) AS anon_1
-INFO log.py:110 ()
-INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:47:15] "GET /requestheaderslist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:50] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:50] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:15:50] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
@@ -782,28 +736,405 @@ INFO log.py:110 PRAGMA table_info("variables")
 INFO log.py:110 ()
 INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
 INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
 FROM request_headers
 INFO log.py:110 ()
-INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers ORDER BY request_headers.timestamp DESC
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
  LIMIT ? OFFSET ?
 INFO log.py:110 (5, 0)
 INFO log.py:110 SELECT count(*) AS count_1 
-FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
-FROM request_headers) AS anon_1
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:54:12] "GET /requestheaderslist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:29] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:29] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:29] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("case_group")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("request_headers")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("testcases")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("variables")
+INFO log.py:110 ()
+INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:46] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:47] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:47] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("case_group")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("request_headers")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("testcases")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("variables")
+INFO log.py:110 ()
+INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:57] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:57] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:57] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:57] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:57] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:17:57] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("case_group")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("request_headers")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("testcases")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("variables")
+INFO log.py:110 ()
+INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:11] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:12] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:12] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:12] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:12] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:12] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:13] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:13] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:13] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:13] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:13] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:13] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:13] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:13] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:13] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 SELECT CAST('test plain returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 SELECT CAST('test unicode returns' AS VARCHAR(60)) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("case_group")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("request_headers")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("testcases")
+INFO log.py:110 ()
+INFO log.py:110 PRAGMA table_info("variables")
+INFO log.py:110 ()
+INFO _internal.py:122  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:35] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:35] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:36] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:36] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:36] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:36] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 5)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:39] "GET /testcaselist/?page=2 HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:39] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:39] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases 
+WHERE testcases.id = ?
+ LIMIT ? OFFSET ?
+INFO log.py:110 ('1', 1, 0)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group 
+WHERE case_group.id = ?
+ LIMIT ? OFFSET ?
+INFO log.py:110 (1, 1, 0)
 INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
 FROM request_headers 
 WHERE request_headers.id = ?
-INFO log.py:110 ('7',)
+ LIMIT ? OFFSET ?
+INFO log.py:110 (1, 1, 0)
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:54:14] "GET /requestheadersupdate/7/ HTTP/1.1" 200 -
-INFO request_headers.py:64 message:update request_headers success, name: 123123111111
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:54:16] "POST /requestheadersupdate/7/ HTTP/1.1" 302 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:42] "GET /updatetestcase/1/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:42] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:42] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:50] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:51] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:51] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group ORDER BY case_group.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:51] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:51] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:51] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:52] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:52] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:52] "GET /frontlogs/ HTTP/1.1" 200 -
 INFO log.py:110 BEGIN (implicit)
 INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
 FROM request_headers
@@ -817,4 +1148,93 @@ FROM (SELECT request_headers.id AS request_headers_id, request_headers.name AS r
 FROM request_headers) AS anon_1
 INFO log.py:110 ()
 INFO log.py:110 ROLLBACK
-INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 09:54:16] "GET /requestheaderslist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:52] "GET /requestheaderslist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:52] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:52] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:53] "GET / HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:53] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:53] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group ORDER BY case_group.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:54] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:55] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:55] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases JOIN case_group ON testcases.group_id = case_group.id 
+WHERE testcases.group_id = case_group.id
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT request_headers.id AS request_headers_id, request_headers.name AS request_headers_name, request_headers.value AS request_headers_value, request_headers.description AS request_headers_description, request_headers.timestamp AS request_headers_timestamp 
+FROM request_headers
+INFO log.py:110 ()
+INFO log.py:110 SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases ORDER BY testcases.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT testcases.id AS testcases_id, testcases.name AS testcases_name, testcases.url AS testcases_url, testcases.data AS testcases_data, testcases.result AS testcases_result, testcases.method AS testcases_method, testcases.group_id AS testcases_group_id, testcases.request_headers_id AS testcases_request_headers_id, testcases.timestamp AS testcases_timestamp 
+FROM testcases) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:55] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:55] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:55] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group ORDER BY case_group.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:56] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:56] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:56] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables ORDER BY variables.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT variables.id AS variables_id, variables.name AS variables_name, variables.value AS variables_value, variables.description AS variables_description, variables.timestamp AS variables_timestamp 
+FROM variables) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:56] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:56] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:56] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO log.py:110 BEGIN (implicit)
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group
+INFO log.py:110 ()
+INFO log.py:110 SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group ORDER BY case_group.timestamp DESC
+ LIMIT ? OFFSET ?
+INFO log.py:110 (5, 0)
+INFO log.py:110 SELECT count(*) AS count_1 
+FROM (SELECT case_group.id AS case_group_id, case_group.name AS case_group_name, case_group.description AS case_group_description, case_group.timestamp AS case_group_timestamp 
+FROM case_group) AS anon_1
+INFO log.py:110 ()
+INFO log.py:110 ROLLBACK
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:56] "GET /casegrouplist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:57] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [01/Aug/2019 13:18:57] "GET /frontlogs/ HTTP/1.1" 200 -
