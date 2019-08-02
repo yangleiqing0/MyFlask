@@ -4,7 +4,7 @@ from app import cdb
 
 class AnalysisParams:
 
-    def __init__(self, params=None):
+    def __init__(self):
         variables_query_sql = 'select name from variables'
         self.variables = cdb().query_db(variables_query_sql)
         print('init:self.variables:',self.variables)
@@ -18,7 +18,7 @@ class AnalysisParams:
             if (word,) in self.variables:
                 variable_value_query_sql = 'select value from variables where name=?'
                 variable_value = cdb().query_db(variable_value_query_sql, (word,), True)[0]
-                print('${%s}' % word, variable_value)
+                print('variable_value: ${%s}' % word, variable_value)
                 params = params.replace('${%s}' % word, variable_value)
             else:
                 continue
@@ -30,6 +30,9 @@ class AnalysisParams:
         header = headers.replace(' ', '').replace('\n', '').replace('\r', '')
 
         return header
+
+    # def analysis_boject_value(self, object):
+
 
 
 if __name__ == '__main__':

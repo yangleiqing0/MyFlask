@@ -60,13 +60,14 @@ class TestCaseAdd(MethodView):
         data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
         method = request.form.get('method', 'default')
         group_id = request.form.get('case_group')
+        regist_variable = request.form.get('regist_variable', None)
+        regular = request.form.get('regular', None)
         request_headers_id = request.form.get('request_headers')
         request_headers_query_sql = 'select value from request_headers where id=?'
         headers = json.loads(cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0])
         print('request_headers_id: %s headers:%s ' % (request_headers_id, headers))
-
-        sql = 'insert into testcases values (?,?,?,?,?,?,?,?)'
         if request.form.get('test', 0) == '测试':
+            url = AnalysisParams().analysis_params(url)
             if method.upper() == 'GET':
                 if 'https' in url:
                     result = requests.get(url, headers=headers, verify=False).text
@@ -88,7 +89,7 @@ class TestCaseAdd(MethodView):
         if (name,) in all_names:
             return '已有相同测试用例名称，请修改'
         else:
-            testcase = TestCases(name, url, data, method, group_id, request_headers_id)
+            testcase = TestCases(name, url, data, regist_variable, regular, method, group_id, request_headers_id)
             db.session.add(testcase)
             db.session.commit()
             FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
@@ -171,9 +172,12 @@ class UpdateTestCase(MethodView):
             print('进入测试：')
             url = request.form.get('url', 'default')
             data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
+            url = AnalysisParams().analysis_params(url)
             data = AnalysisParams().analysis_params(data)
-            print('测试：', data)
+            print('测试：', data, url)
             method = request.form.get('method', 'default')
+            regist_variable = request.form.get('regist_variable', None)
+            regular = request.form.get('regular', None)
             request_headers_query_sql = 'select request_headers.value from request_headers,testcases where testcases.request_headers_id=request_headers.id and testcases.id=?'
             print("query_headers_value: ", cdb().query_db(request_headers_query_sql, (id,), True)[0])
             headers = json.loads(cdb().query_db(request_headers_query_sql, (id,), True)[0])

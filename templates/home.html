@@ -169,14 +169,26 @@
         overflow:hidden;
         text-overflow:ellipsis;
     }
-    i{
-        zoom:1.5
+    #dots label {
+        text-align: center;
+        max-width: 100px;
+        width:100%;
+        word-break:break-all;   {# 不换行  #}
+        white-space:nowrap;      {# 不换行  #}
+        overflow:hidden;
+        text-overflow:ellipsis;
     }
+    {#i{#}
+    {#    zoom:1.5#}
+    {#}#}
 </style>
 <script>
 $(document).ready(function() {
     {#  动态在td 标签上悬浮时设置title属性为当前标签的test内容 #}
     $("td",$(this)).hover(function(){
+        $(this).attr('title',$(this).text());
+    });
+    $("#dots",$(this)).hover(function(){
         $(this).attr('title',$(this).text());
     });
     function auto_front_logs(){

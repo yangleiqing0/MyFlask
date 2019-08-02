@@ -14,7 +14,8 @@
                             <th>接口url</th>
                             <th>测试数据</th>
                             <th>请求方法</th>
-                            <th>请求结果</th>
+                            <th>注册变量</th>
+                            <th>正则匹配</th>
                             <th>操作</th>
                         </tr>
                         {% for item in items %}
@@ -34,7 +35,8 @@
                             <td>{{ item.url }}</td>
                             <td>{{ item.data }}</td>
                             <td>{{ item.method }}</td>
-                            <td>{{ item.result }}</td>
+                            <td>{{ item.regist_variable }}</td>
+                            <td>{{ item.regular }}</td>
                             <td>
                                 <a href="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>

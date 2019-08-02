@@ -17,9 +17,9 @@ class VariableAdd(MethodView):
     def post(self):
         name = request.form.get('name')
         value = request.form.get('value')
-        description = request.form.get('description')
+        description = request.form.get('description', None)
         FrontLogs('开始添加全局变量 name: %s' % name).add_to_front_log()
-        variable = Variables(name, value, description)
+        variable = Variables(name, value, description=description)
         db.session.add(variable)
         db.session.commit()
         FrontLogs('添加全局变量 name: %s 成功' % name).add_to_front_log()

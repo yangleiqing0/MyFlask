@@ -1,6 +1,7 @@
 from app import db
 from datetime import datetime
 
+
 class RequestHeaders(db.Model):
 
     __tablename__ = 'request_headers'
@@ -10,6 +11,7 @@ class RequestHeaders(db.Model):
     description= db.Column(db.String(50))
 
     timestamp = db.Column(db.DateTime, index=True)
+    testcases = db.relationship('TestCases', backref='request_headers')
 
     def __init__(self, name, value, description):
         self.name = name
@@ -19,3 +21,7 @@ class RequestHeaders(db.Model):
 
     def __repr__(self):
         return '<请求头部 {}： {} {} {}>'.format(self.name, self.value, self.description, self.timestamp)
+
+    def to_json(self):
+        return dict(id=self.id, name=self.name, value=self.value,
+                    description=self.description)

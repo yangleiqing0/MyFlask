@@ -1,0 +1,46 @@
+{% extends 'home.html' %}
+{% block title %}测试用例执行列表{% endblock %}
+{% block content %}
+                <div class="panel-body">
+                    <table class="table table-hover">
+                    <div class="col-md-offset-10">
+                    </div>
+                        <tr>
+                            <th>ID</th>
+                            <th>测试用例名称</th>
+                            <th>请求返回报文</th>
+                        </tr>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ loop.index0 }}</td>          <!--使用循环的数字作为id -->
+                            <td>{{ item.name }}</td>
+                            <td><div id="response_body"></div></td>
+                        </tr>
+                        {% endfor %}
+
+                    </table>
+                        <div class="control-label col-md-6" >
+                            <input type="submit" class="btn btn-primary" value="开始" id="start_testcase">
+                        </div>
+                </div>
+{% endblock %}
+{% block js %}
+<script>
+$(document).ready(function() {
+    $("#start_testcase").click(function () {
+        {% for item in items %}
+        var testcase_id = {{ item.id }};
+            $.ajax({
+                url:{{ url_for('test_case_request_blueprint.test_case_request_start') }},
+                method:"POST",
+                data:{'id':testcase_id},
+                success:function (response) {
+                    $('#response_body').html(response)
+                }
+            });
+        {% endfor %}
+    })
+    })
+
+</script>
+{% endblock %}
