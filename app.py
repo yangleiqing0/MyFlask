@@ -18,6 +18,8 @@ from modles.testcase import TestCases
 from modles.case_group import CaseGroup
 from modles.variables import Variables
 from modles.request_headers import RequestHeaders
+from modles.testcase_start_times import TestCaseStartTimes
+from modles.testcase_result import TestCaseResult
 db.create_all()
 
 from views.testcase import testcase_blueprint  # 不能放在其他位置

@@ -20,11 +20,13 @@ textarea_class_name="form-control",textarea_style="resize:none;",rows="8",col="1
 {% endmacro %}
 
 
-{% macro submit(submit_value="提交",reset_value="重置",test_type="hidden",div_class="control-label col-md-6",div_style="") %}
+{% macro submit(submit_value="提交",reset_value="重置",test_type="hidden",
+div_class="control-label col-md-6",div_style="",submit_id="",reset_id="",
+submit_type="submit",reset_type="reset") %}
 <div class="{{ div_class }}" style="{{ div_style }}">
-        <input type="submit" class="btn btn-primary" value="{{ submit_value }}">
+        <input type="{{ submit_type }}" class="btn btn-primary" value="{{ submit_value }}" id="{{ submit_id }}">
         <input type="{{ test_type }}" class="btn btn-primary" style="visibility: hidden;" value="测试">
-        <input type="reset" class="btn btn-default" value="{{ reset_value }}">
+        <input type="{{ reset_type }}" class="btn btn-default" value="{{ reset_value }}" id="{{ reset_id }}">
 </div>
 {% endmacro %}
 
