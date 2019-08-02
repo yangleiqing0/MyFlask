@@ -8,6 +8,7 @@ from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
 from common.analysis_params import AnalysisParams
 from app import cdb, db, app
+from common.method_request import MethodRequest
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -64,24 +65,13 @@ class TestCaseAdd(MethodView):
         regular = request.form.get('regular', None)
         request_headers_id = request.form.get('request_headers')
         request_headers_query_sql = 'select value from request_headers where id=?'
-        headers = json.loads(cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0])
+        request_headers = AnalysisParams().analysis_params(cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0], is_change="headers")
+        print('request_headers: ', request_headers)
+        headers = json.loads(request_headers)
         print('request_headers_id: %s headers:%s ' % (request_headers_id, headers))
         if request.form.get('test', 0) == '测试':
             url = AnalysisParams().analysis_params(url)
-            if method.upper() == 'GET':
-                if 'https' in url:
-                    result = requests.get(url, headers=headers, verify=False).text
-                else:
-                    result = requests.get(url, headers=headers).text
-            elif method.upper() == 'POST':
-                data = AnalysisParams().analysis_params(data)
-                print(data)
-                if 'https' in url:
-                    result = requests.post(url, data=data, headers=headers, verify=False).text
-                else:
-                    result = requests.get(url, data=data, headers=headers).text
-            else:
-                result = '请求方法不对'
+            result = MethodRequest().request_value(method, url, data, headers)
             return '''%s''' % result.replace('<', '').replace('>', '')
         query_all_names_sql = 'select name from testcases'
         all_names = cdb().query_db(query_all_names_sql)
@@ -95,61 +85,6 @@ class TestCaseAdd(MethodView):
             FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
             app.logger.info('message:insert into testcases success, name: %s' % name)
             return redirect(url_for('testcase_blueprint.test_case_list'))
-
-# class SearchTestCast(MethodView):
-#
-#     def get(self, id=-1):
-#         testcase = TestCases.query.filter(TestCases.id == id).first()
-#         print('testcase.group_id:', testcase.group_id)
-#         # 获取测试用例分组的列表
-#         case_group = CaseGroup.query.filter(CaseGroup.id == testcase.group_id).first()
-#         request_headers = RequestHeaders.query.filter(RequestHeaders.id == testcase.request_headers_id).first()
-#         print('testcase:', testcase)
-#         print('case_group:', case_group)
-#         print('request_headers:', request_headers)
-#         # return 'o'
-#         return render_template('test_case_search.html', item=testcase, case_group=case_group, request_headers=request_headers)
-
-
-# class PostTestCase(MethodView):
-#
-#     def post(self):
-#         print('要添加的测试用例：', request.form)
-#         name = request.form['name']
-#         url = request.form.get('url', 'default')
-#         data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
-#         method = request.form.get('method', 'default')
-#         group_id = request.form.get('case_group')
-#         request_headers_id = request.form.get('request_headers')
-#         request_headers_query_sql = 'select value from request_headers where id=?'
-#         headers = json.loads(cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0])
-#         print('headers: ', headers, type(headers))
-#
-#         sql = 'insert into testcases values (?,?,?,?,?,?,?,?)'
-#         if request.form.get('test', 0) == '测试':
-#             if method.upper() == 'GET':
-#                 if 'https' in url:
-#                     result = requests.get(url, headers=headers, verify=False).text
-#                 else:
-#                     result = requests.get(url, headers=headers).text
-#             elif method.upper() == 'POST':
-#                 data = AnalysisParams().analysis_params(data)
-#                 print(data)
-#                 if 'https' in url:
-#                     result = requests.post(url, data=data, headers=headers, verify=False).text
-#                 else:
-#                     result = requests.get(url, data=data, headers=headers).text
-#             else:
-#                 result = '请求方法不对'
-#             return '''%s''' % result.replace('<', '').replace('>', '')
-#         query_all_names_sql = 'select name from testcases'
-#         all_names = cdb().query_db(query_all_names_sql)
-#         print(all_names)
-#         if (name,) in all_names:
-#             return '已有相同测试用例名称，请修改'
-#         else:
-#             cdb().opeat_db(sql, (None, name, url, data, None, method, group_id, request_headers_id))
-#             return '插入数据库成功'
 
 
 class UpdateTestCase(MethodView):
@@ -178,22 +113,12 @@ class UpdateTestCase(MethodView):
             method = request.form.get('method', 'default')
             regist_variable = request.form.get('regist_variable', None)
             regular = request.form.get('regular', None)
+            # request_headers_id = request.form.get('request_headers')
             request_headers_query_sql = 'select request_headers.value from request_headers,testcases where testcases.request_headers_id=request_headers.id and testcases.id=?'
             print("query_headers_value: ", cdb().query_db(request_headers_query_sql, (id,), True)[0])
-            headers = json.loads(cdb().query_db(request_headers_query_sql, (id,), True)[0])
+            headers = json.loads(AnalysisParams().analysis_params(cdb().query_db(request_headers_query_sql, (id,), True)[0], is_change="headers"))
             print('UpdataTestCase:headers: ', headers)
-            if method.upper() == 'GET':
-                if 'https' in url:
-                    result = requests.get(url, headers=headers, verify=False).text
-                else:
-                    result = requests.get(url, headers=headers).text
-            elif method.upper() == 'POST':
-                if 'https' in url:
-                    result = requests.post(url, data=data, headers=headers, verify=False).text
-                else:
-                    result = requests.get(url, data=data, headers=headers).text
-            else:
-                result = '请求方法不对'
+            result = MethodRequest().request_value(method, url, data, headers)
             return '''%s''' % result.replace('<', '').replace('>', '')
         name = request.form.get('name')
         url = request.form.get('url')

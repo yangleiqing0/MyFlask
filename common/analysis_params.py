@@ -9,7 +9,7 @@ class AnalysisParams:
         self.variables = cdb().query_db(variables_query_sql)
         print('init:self.variables:',self.variables)
 
-    def analysis_params(self,  params):
+    def analysis_params(self,  params, is_change=None):
         print('analysis_before:', params)
         res = r'\${([^\${}]+)}'
         words = re.findall(re.compile(res), params)
@@ -19,6 +19,8 @@ class AnalysisParams:
                 variable_value_query_sql = 'select value from variables where name=?'
                 variable_value = cdb().query_db(variable_value_query_sql, (word,), True)[0]
                 print('variable_value: ${%s}' % word, variable_value)
+                if is_change == "headers":
+                    params = params.replace('${%s}' % word, '"%s"' % variable_value)
                 params = params.replace('${%s}' % word, variable_value)
             else:
                 continue
@@ -28,7 +30,6 @@ class AnalysisParams:
     def analysis_headers(self, headers):
         print('header_before:', headers)
         header = headers.replace(' ', '').replace('\n', '').replace('\r', '')
-
         return header
 
     # def analysis_boject_value(self, object):

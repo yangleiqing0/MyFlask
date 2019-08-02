@@ -14,7 +14,7 @@
                         <tr>
                             <td>{{ loop.index0 }}</td>          <!--使用循环的数字作为id -->
                             <td>{{ item.name }}</td>
-                            <td><div id="response_body"></div></td>
+                            <td><div id="response_{{ item.id }}"></div></td>
                         </tr>
                         {% endfor %}
 
@@ -35,8 +35,9 @@ $(document).ready(function() {
                 method:"POST",
                 data:{'id':testcase_id},
                 success:function (response) {
-                    $('#response_body').html(response)
-                }
+                    $('#response_{{ item.id }}').html(response)
+                },
+                async: false,
             });
         {% endfor %}
     })

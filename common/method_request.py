@@ -19,6 +19,16 @@ class MethodRequest:
                     result = requests.post(url, data=data, headers=headers, verify=False).text
                 else:
                     result = requests.get(url, data=data, headers=headers).text
+            elif method.upper() == 'PUT':
+                if 'https' in url:
+                    result = requests.put(url, data=data, headers=headers, verify=False).text
+                else:
+                    result = requests.put(url, data=data, headers=headers).text
+            elif method.upper() == 'DELETE':
+                if 'https' in url:
+                    result = requests.delete(url, data=data, headers=headers, verify=False).text
+                else:
+                    result = requests.delete(url, data=data, headers=headers).text
             else:
                 result = "请求方法不正确"
         except Exception as e:

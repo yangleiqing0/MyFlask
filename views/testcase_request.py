@@ -55,10 +55,10 @@ class TestCaseRequestStart(MethodView):
             method = testcase.method
             regist_variable = testcase.regist_variable
             regular = testcase.regular
-            headers = json.loads(AnalysisParams().analysis_headers(testcase.request_headers.value))
+            headers = json.loads(AnalysisParams().analysis_params(testcase.request_headers.value, is_change="headers"))
             print('request_headers:', headers)
+            result = MethodRequest().request_value(method, url, data, headers)
             if regist_variable and regular:
-                result = MethodRequest().request_value(method, url, data, headers)
                 regist_variable_value = re.compile(regular).findall(result)
                 if len(regist_variable_value) > 0:
                     if Variables.query.filter(Variables.name == regist_variable).count() > 0:
@@ -73,7 +73,7 @@ class TestCaseRequestStart(MethodView):
                     return result
 
                 return '未成功解析报文 %s ' % result
-            return '不注册变量'
+            return result
 
 
 test_case_request_blueprint.add_url_rule('/testcaserequest/', view_func=TestCaseRequest.as_view('test_case_request'))
