@@ -18,7 +18,7 @@ class TestCaseResult(db.Model):
         self.testcase_start_time_id = testcase_start_time_id
         self.response_body = response_body
         self.testcase_result = testcase_result
-        self.timestamp = datetime.utcnow()
+        self.timestamp = datetime.now()
 
     def __repr__(self):
         return '<测试用例执行结果 {} {} {} {}>'.format(self.response_body, self.response_body, self.testcase_id, self.testcase_start_time_id)

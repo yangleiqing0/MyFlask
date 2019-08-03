@@ -22,12 +22,15 @@ from modles.testcase_start_times import TestCaseStartTimes
 from modles.testcase_result import TestCaseResult
 db.create_all()
 
+from common.pre_db_insert_data import *  # 建表后的预配置参数
+
 from views.testcase import testcase_blueprint  # 不能放在其他位置
 from views.home import home_blueprint
 from views.case_group import case_group_blueprint
 from views.variables import variables_blueprint
 from views.request_headers import request_headers_blueprint
 from views.testcase_request import test_case_request_blueprint
+from views.testcase_report import testcase_report_blueprint
 
 app.register_blueprint(testcase_blueprint)
 app.register_blueprint(home_blueprint)
@@ -35,6 +38,7 @@ app.register_blueprint(case_group_blueprint)
 app.register_blueprint(variables_blueprint)
 app.register_blueprint(request_headers_blueprint)
 app.register_blueprint(test_case_request_blueprint)
+app.register_blueprint(testcase_report_blueprint)
 
 if __name__ == '__main__':
     app.run()

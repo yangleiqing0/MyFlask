@@ -1,6 +1,6 @@
-import requests
 import json
 import re
+from _datetime import datetime
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, current_app
 from modles.variables import Variables
@@ -25,7 +25,7 @@ class TestCaseRequest(MethodView):
             testcase.name = AnalysisParams().analysis_params(testcase.name)
             testcase_list.append(testcase)
         print(testcases)
-        return render_template('test_case_request.html', items=testcase_list)
+        return render_template('test_case_request/test_case_request.html', items=testcase_list)
 
     def post(self):
         testcase_ids = request.form.getlist('testcase')
@@ -41,7 +41,7 @@ class TestCaseRequest(MethodView):
         # print('testcase_dict: ', testcase_dict)
         print('testcase_list: ', testcase_list)
 
-        return render_template('test_case_request_list.html', items=testcase_list)
+        return render_template('test_case_request/test_case_request_list.html', items=testcase_list)
 
 
 class TestCaseRequestStart(MethodView):
@@ -85,11 +85,13 @@ class TestCaseRequestStart(MethodView):
 class TestCaseTimeGet(MethodView):
 
     def get(self):
-        testcase_time = TestCaseStartTimes()
+        time_strftime = datetime.now().strftime('%Y%m%d%H%M%S')
+        testcase_time = TestCaseStartTimes(time_strftime=time_strftime)
         db.session.add(testcase_time)
         db.session.commit()
         print('testcase_time: ', testcase_time)
         return json.dumps({"testcase_time_id": str(testcase_time.id)})
+
 
 test_case_request_blueprint.add_url_rule('/testcaserequest/', view_func=TestCaseRequest.as_view('test_case_request'))
 test_case_request_blueprint.add_url_rule('/testcaserequeststart/', view_func=TestCaseRequestStart.as_view('test_case_request_start'))

@@ -19,7 +19,7 @@ class TestCases(db.Model):
     def __init__(self, name, url, data, regist_variable, regular, method, group_id, request_headers_id):
         self.regist_variable = regist_variable
         self.regular = regular
-        self.timestamp = datetime.utcnow()
+        self.timestamp = datetime.now()
         self.name = name
         self.url = url
         self.data = data

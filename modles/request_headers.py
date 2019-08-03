@@ -17,7 +17,7 @@ class RequestHeaders(db.Model):
         self.name = name
         self.value = value
         self.description = description
-        self.timestamp = datetime.utcnow()
+        self.timestamp = datetime.now()
 
     def __repr__(self):
         return '<请求头部 {}： {} {} {}>'.format(self.name, self.value, self.description, self.timestamp)

@@ -14,7 +14,7 @@ class CaseGroup(db.Model):
     def __init__(self, name, description):
         self.name = name
         self.description = description
-        self.timestamp = datetime.utcnow()
+        self.timestamp = datetime.now()
 
     def __repr__(self):
         return "<CaseGroup:%s,%s,%s>" % (self.id, self.name, self.description)

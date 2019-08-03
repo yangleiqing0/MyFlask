@@ -17,7 +17,7 @@ class Variables(db.Model):
         self.value = value
         self.description = description
         self.is_private = is_private
-        self.timestamp = datetime.utcnow()
+        self.timestamp = datetime.now()
 
     def __repr__(self):
         return '<全局变量 {}： {} {} {}>' . format(self.name, self.value, self.description, self.timestamp )
