@@ -76,7 +76,6 @@ class CaseGroupUpdate(MethodView):
         return redirect(url_for('case_group_blueprint.case_group_list'))
 
 
-
 class CaseGroupDelete(MethodView):
 
     def get(self,id=-1):

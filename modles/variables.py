@@ -7,7 +7,7 @@ class Variables(db.Model):
     __tablename__ = 'variables'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(11), unique=True, nullable=False)
-    value = db.Column(db.String(100), nullable=False, default=None)
+    value = db.Column(db.TEXT, nullable=False, default=None)
     description= db.Column(db.String(50))
     is_private = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True)

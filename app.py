@@ -31,6 +31,7 @@ from views.variables import variables_blueprint
 from views.request_headers import request_headers_blueprint
 from views.testcase_request import test_case_request_blueprint
 from views.testcase_report import testcase_report_blueprint
+from views.system_config import system_config_blueprint
 
 app.register_blueprint(testcase_blueprint)
 app.register_blueprint(home_blueprint)
@@ -39,6 +40,7 @@ app.register_blueprint(variables_blueprint)
 app.register_blueprint(request_headers_blueprint)
 app.register_blueprint(test_case_request_blueprint)
 app.register_blueprint(testcase_report_blueprint)
+app.register_blueprint(system_config_blueprint)
 
 if __name__ == '__main__':
     app.run()

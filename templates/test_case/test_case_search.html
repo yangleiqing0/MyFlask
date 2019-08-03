@@ -21,10 +21,10 @@
                             </div>
                     </div>
                     {{ macro.form_group(lable_name="method",blank_name="请求方式",value=item.method) }}
-                    {{ macro.form_group(lable_name="url",blank_name="测试接口",value=item.url) }}
+                    {{ macro.form_group(lable_name="url",blank_name="请求接口",value=item.url) }}
                     {{ macro.form_group(lable_name="regist_variable",blank_name="注册变量") }}
                     {{ macro.form_group(lable_name="regular",blank_name="正则匹配") }}
-                    {{ macro.form_group_textarea(lable_name="data",blank_name="测试报文",value=item.data) }}
+                    {{ macro.form_group_textarea(lable_name="data",blank_name="请求报文",value=item.data) }}
                     {{ macro.submit_test() }}
                 </form>
             </div>
