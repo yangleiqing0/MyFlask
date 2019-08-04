@@ -6,12 +6,12 @@ from datetime import datetime
 class TestCases(db.Model):
     __tablename__ = 'testcases'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(30))
-    url = db.Column(db.String(300))
+    name = db.Column(db.String(30), nullable=False)
+    url = db.Column(db.String(300), nullable=False)
     data = db.Column(db.TEXT)
     regist_variable = db.Column(db.String(30))
     regular = db.Column(db.TEXT)
-    method = db.Column(db.String(10))
+    method = db.Column(db.String(10), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey(CaseGroup.id))
     request_headers_id = db.Column(db.Integer, db.ForeignKey(RequestHeaders.id))
     hope_result = db.Column(db.String(200))

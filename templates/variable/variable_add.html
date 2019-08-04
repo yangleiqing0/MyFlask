@@ -2,11 +2,52 @@
 {% block title %}添加全局变量{% endblock %}
 {% block content %}
             <div class="panel-body" >
-                <form action="{{ url_for('variables_blueprint.variable_add') }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form action="{{ url_for('variables_blueprint.variable_add') }}" id="variable_add_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="全局变量名称") }}
                     {{ macro.form_group(lable_name="value",blank_name="全局变量的值") }}
                     {{ macro.form_group(lable_name="description",blank_name="全局变量备注") }}
-                    {{ macro.submit() }}
+                    {{ macro.submit(submit_id="variable_add") }}
                 </form>
             </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            var validate = function () {
+                    $('#variable_add_form').validate({
+                        rules: {
+                            name: {required: true, minlength: 2, maxlength: 20, remote: '/variablevalidate/'},
+                            value:{required: true},
+                            description: {maxlength: 50},
+                        },
+                        messages: {
+                            name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过20位', remote: '已存在名称'},
+                            value: {required: '不可为空'},
+                            description: {maxlength: '不可超过50位'},
+                        }
+                    })
+                };
+            $('input').bind('input propertychange', function() {
+                validate()
+                });
+            $('#variable_add').click(function () {
+                $('#variable_add_form').validate({
+                        rules: {
+                            name: {required: true, minlength: 2, maxlength: 20, remote: '/variablevalidate/'},
+                            value:{required: true},
+                            description: {maxlength: 50},
+                        },
+                        messages: {
+                            name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过20位', remote: '已存在名称'},
+                            value: {required: '不可为空'},
+                            description: {maxlength: '不可超过50位'},
+                        },
+                    submitHandler: function (form) {
+                        form.submit()
+                    }
+                    })
+            })
+});
+
+    </script>
 {% endblock %}

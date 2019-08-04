@@ -1,11 +1,13 @@
 {% macro form_group(lable_name,blank_name,id_name=lable_name,name_name=lable_name,placeholder_name=blank_name,
 type_name="text",lable_class_name="control-label col-md-4",div_class_name="col-md-4",
 input_name="form-control",value="") %}
-        <div class="form-group">
+        <div class="form-group agileinfo wthree w3-agileits agile">
             <label for="{{ lable_name }}" class="{{ lable_class_name }}">{{ blank_name }}</label>
             <div class="{{ div_class_name }}">
-                <input type="{{ type_name }}" class="{{ input_name }}" id="{{ id_name }}" name="{{ name_name }}" placeholder="{{ placeholder_name }}" value="{{ value }}">
+                <input type="{{ type_name }}" class="{{ input_name }}" id="{{ id_name }}" name="{{ name_name }}"
+                       placeholder="{{ placeholder_name }} " value="{{ value }}" >
             </div>
+            <div class="help-block with-errors"></div>
         </div>
 {% endmacro %}
 
@@ -30,9 +32,9 @@ submit_type="submit",reset_type="reset") %}
 </div>
 {% endmacro %}
 
-{% macro submit_test(submit_name="提交") %}
+{% macro submit_test(submit_name="提交", submit_id="") %}
 <div class="control-label col-md-6" >
-    <input type="submit" class="btn btn-primary" value="{{ submit_name }}">
+    <input type="submit" class="btn btn-primary" value="{{ submit_name }}" id="{{ submit_id }}">
     <input type="submit" class="btn btn-primary" name="test" value="测试">
     <input type="reset" class="btn btn-default" value="重置">
 </div>
@@ -62,4 +64,21 @@ submit_type="submit",reset_type="reset") %}
     </li>
  </ul></div>
 
+{% endmacro %}
+
+
+{% macro render_field(field) %}
+    <tr>
+        <td>{{ field.label }}</td>
+        <td>{{ field(**kwargs) }}</td>
+        <td>
+            {% if field.errors %}
+                <ul>
+                {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </td>
+    </tr>
 {% endmacro %}

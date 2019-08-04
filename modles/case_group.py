@@ -6,7 +6,7 @@ class CaseGroup(db.Model):
     __tablename__ = 'case_group'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(11), nullable=False)
-    description = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(50))
     timestamp = db.Column(db.DateTime, index=True)
 
     testcases = db.relationship('TestCases', backref='case_group')

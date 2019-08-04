@@ -1,6 +1,6 @@
 import json
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, current_app
+from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
 from common.tail_font_log import FrontLogs
@@ -18,6 +18,7 @@ class CaseGroupAdd(MethodView):
 
     def post(self):
         name = request.form.get('name')
+        print("name: ", name)
         description = request.form.get('description')
         FrontLogs('开始添加测试用例分组 name: %s ' % name).add_to_front_log()
         case_group = CaseGroup(name, description)
@@ -101,8 +102,34 @@ class CaseGroupSearchCase(MethodView):
                                request_headers=request_headers)
 
 
+class CaseGroupValidata(MethodView):
+
+    def get(self):
+        name = request.args.get('name')
+        case_group = CaseGroup.query.filter(CaseGroup.name == name).count()
+        if case_group != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
+class CaseGroupUpdateValidata(MethodView):
+
+    def get(self):
+        name = request.args.get('name')
+        case_group_id = request.args.get('case_group_id')
+        case_group = CaseGroup.query.filter(CaseGroup.id != case_group_id).filter(CaseGroup.name == name).count()
+        if case_group != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
 case_group_blueprint.add_url_rule('/addcasegroup/', view_func=CaseGroupAdd.as_view('case_group_add'))
 case_group_blueprint.add_url_rule('/casegrouplist/', view_func=CaseGroupList.as_view('case_group_list'))
 case_group_blueprint.add_url_rule('/casegroupupdate/<id>/', view_func=CaseGroupUpdate.as_view('case_group_update'))
 case_group_blueprint.add_url_rule('/casegroupdelete/<id>/', view_func=CaseGroupDelete.as_view('case_group_delete'))
 case_group_blueprint.add_url_rule('/casegroupsearchcase/<id>/', view_func=CaseGroupSearchCase.as_view('case_group_search_case'))
+
+case_group_blueprint.add_url_rule('/casegroupvalidate/', view_func=CaseGroupValidata.as_view('case_group_validate'))
+case_group_blueprint.add_url_rule('/casegroupupdatevalidate/', view_func=CaseGroupUpdateValidata.as_view('case_group_update_validate'))

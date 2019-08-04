@@ -3,7 +3,7 @@ from flask.views import MethodView
 from common.tail_font_log import FrontLogs
 from app import cdb, db, app
 from modles.request_headers import RequestHeaders
-from flask import render_template, Blueprint, request, redirect, url_for, current_app
+from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
 
 request_headers_blueprint = Blueprint('request_headers_blueprint', __name__)
 
@@ -83,7 +83,34 @@ class RequestHeadersDelete(MethodView):
         return redirect(url_for('request_headers_blueprint.request_headers_list'))
 
 
+class RequestHeadersValidata(MethodView):
+
+    def get(self):
+        name = request.args.get('name')
+        request_headers = RequestHeaders.query.filter(RequestHeaders.name == name).count()
+        if request_headers != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
+class RequestHeadersUpdateValidata(MethodView):
+
+    def get(self):
+        name = request.args.get('name')
+        request_headers_id = request.args.get('case_group_id')
+        request_headers = RequestHeaders.query.filter(RequestHeaders.id != request_headers_id).filter(RequestHeaders.name == name).count()
+        if request_headers != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
 request_headers_blueprint.add_url_rule('/requestheadersadd/', view_func=RequestHeadersAdd.as_view('request_headers_add'))
 request_headers_blueprint.add_url_rule('/requestheaderslist/', view_func=RequestHeadersList.as_view('request_headers_list'))
 request_headers_blueprint.add_url_rule('/requestheadersupdate/<id>/', view_func=RequestHeadersUpdate.as_view('request_headers_update'))
 request_headers_blueprint.add_url_rule('/requestheadersdelete/<id>/', view_func=RequestHeadersDelete.as_view('request_headers_delete'))
+
+request_headers_blueprint.add_url_rule('/requestheadersvalidate/', view_func=RequestHeadersValidata.as_view('request_headers_validate'))
+request_headers_blueprint.add_url_rule('/requestheadersupdatevalidate/', view_func=RequestHeadersUpdateValidata.as_view('request_headers_update_validate'))
+

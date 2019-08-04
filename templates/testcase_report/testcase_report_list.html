@@ -15,11 +15,11 @@
                             <td>{{ loop.index0 }}</td>          <!--使用循环的数字作为id -->
                             <td>{{ item.name }}</td>
                             <td>
-                                <a href="{{ url_for('request_headers_blueprint.request_headers_update',id=item.id) }}" class="btn btn-default btn-xs" title="编辑请求头部"><i class="fa fa-pencil"></i></a>
-                                <a href="{{ url_for('request_headers_blueprint.request_headers_delete',id=item.id) }}" class="btn btn-default btn-xs" title="删除请求头部"><i class="fa fa-trash"></i></a>
+                                <a href="{{ url_for('testcase_report_blueprint.testcase_report',testcase_time_id=item.id) }}" id="search_report"  class="btn btn-default btn-xs" title="查看测试报告"><i class="fa fa-search"></i></a>
+                                <a href="{{ url_for('testcase_report_blueprint.testcase_report_delete',id=item.id) }}" class="btn btn-default btn-xs" title="删除测试报告"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                         {% endfor %}
                     </table>
                 </div>
-{% endblock %}
+{% endblock  %}

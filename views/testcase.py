@@ -2,7 +2,7 @@ import requests
 import json
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, current_app
+from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
 from modles.testcase import TestCases
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
@@ -19,11 +19,13 @@ class TestCastList(MethodView):
         # sql = 'select ROWID,id,name,url,data,result,method,group_id from testcases'
         # tests = cdb().query_db(sql)
         # 过滤有测试用例分组的查询结果
-        testcases = TestCases.query.join(CaseGroup,TestCases.group_id ==
+        testcases = TestCases.query.join(CaseGroup, TestCases.group_id ==
                                      CaseGroup.id).filter(TestCases.group_id == CaseGroup.id).all()
         # 获取测试用例分组的列表
         print('testcases: ', testcases)
-
+        for testcase in testcases:
+            testcase.name = AnalysisParams().analysis_params(testcase.name)
+            testcase.url = AnalysisParams().analysis_params(testcase.url)
         case_groups = CaseGroup.query.all()
         print('case_groups: ', case_groups)
         request_headers = RequestHeaders.query.all()
@@ -45,7 +47,6 @@ class TestCaseAdd(MethodView):
     def get(self):
         case_groups_querys_sql = 'select id,name from case_group'
         case_groups = cdb().query_db(case_groups_querys_sql)
-        # print(case_groups, case_groups[0][0])
 
         request_headers_querys_sql = 'select id,name from request_headers'
         request_headers = cdb().query_db(request_headers_querys_sql)
@@ -105,10 +106,8 @@ class UpdateTestCase(MethodView):
         print('UpdateTestCase：request_form: ', request.form)
         if request.form.get('test', 0) == '测试':
             print('进入测试：')
-            url = request.form.get('url', 'default')
-            data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
-            url = AnalysisParams().analysis_params(url)
-            data = AnalysisParams().analysis_params(data)
+            url = AnalysisParams().analysis_params(request.form.get('url', 'default'))
+            data = AnalysisParams().analysis_params(request.form.get('data', 'default').replace('/n', '').replace(' ', ''))
             print('测试：', data, url)
             method = request.form.get('method', 'default')
             regist_variable = request.form.get('regist_variable', None)
@@ -117,7 +116,7 @@ class UpdateTestCase(MethodView):
             request_headers_query_sql = 'select request_headers.value from request_headers,testcases where testcases.request_headers_id=request_headers.id and testcases.id=?'
             print("query_headers_value: ", cdb().query_db(request_headers_query_sql, (id,), True)[0])
             headers = json.loads(AnalysisParams().analysis_params(cdb().query_db(request_headers_query_sql, (id,), True)[0], is_change="headers"))
-            print('UpdataTestCase:headers: ', headers)
+            print('UpdataTestCase:headers: ', headers, url, method, data)
             result = MethodRequest().request_value(method, url, data, headers)
             return '''%s''' % result.replace('<', '').replace('>', '')
         name = request.form.get('name')
@@ -140,6 +139,29 @@ class DeleteTestCase(MethodView):
         app.logger.info('message:delete testcases success, id: %s' % id)
         return redirect(url_for('testcase_blueprint.test_case_list'))
 
+class TestCaseValidata(MethodView):
+
+    def get(self):
+        name = request.args.get('name')
+        testcase = TestCases.query.filter(TestCases.name == name).count()
+        if testcase != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
+class TestCaseUpdateValidata(MethodView):
+
+    def get(self):
+        name = request.args.get('name')
+        testcase_id = request.args.get('testcase_id')
+        testcase = TestCases.query.filter(TestCases.id != testcase_id).filter(TestCases.name == name).count()
+        if testcase != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
 
 testcase_blueprint.add_url_rule('/testcaselist/', view_func=TestCastList.as_view('test_case_list'))
 testcase_blueprint.add_url_rule('/addtestcase/', view_func=TestCaseAdd.as_view('add_test_case'))
@@ -147,3 +169,6 @@ testcase_blueprint.add_url_rule('/addtestcase/', view_func=TestCaseAdd.as_view('
 testcase_blueprint.add_url_rule('/deletetestcase/<id>/', view_func=DeleteTestCase.as_view('delete_test_case'))
 testcase_blueprint.add_url_rule('/updatetestcase/<id>/', view_func=UpdateTestCase.as_view('update_test_case'))
 # testcase_blueprint.add_url_rule('/searchtestcase/<id>/', view_func=SearchTestCast.as_view('search_test_case'))
+
+testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))
+testcase_blueprint.add_url_rule('/testcaseupdatevalidate/', view_func=TestCaseUpdateValidata.as_view('testcase_update_validate'))

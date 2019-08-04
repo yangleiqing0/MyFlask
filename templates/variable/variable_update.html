@@ -2,11 +2,63 @@
 {% block title %}修改全局变量{% endblock %}
 {% block content %}
             <div class="panel-body" >
-                <form  action="{{ url_for('variables_blueprint.variable_update',id=item.id) }}"  method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form  action="{{ url_for('variables_blueprint.variable_update',id=item.id) }}" id="variable_update_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="全局变量名称",value=item.name) }}
                     {{ macro.form_group(lable_name="value",blank_name="全局变量的值",value=item.value) }}
                     {{ macro.form_group(lable_name="description",blank_name="全局变量备注",value=item.description) }}
-                    {{ macro.submit() }}
+                    {{ macro.submit(submit_id="variable_update") }}
                 </form>
             </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            var validate = function () {
+                 variable_id = {{ item.id }}
+                    $('#variable_update_form').validate({
+                        rules: {
+                            name: {
+                                required: true, minlength: 2, maxlength: 20, remote: {
+                                url:'/variableupdatevalidate/',
+                                data:{"variable_id":variable_id}
+                                }
+                                },
+                            value:{required: true},
+                            description: {maxlength: 50},
+                        },
+                        messages: {
+                            name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过20位', remote: '已存在名称'},
+                            value: {required: '不可为空'},
+                            description: {maxlength: '不可超过50位'},
+                        }
+                    })
+                };
+            $('input').bind('input propertychange', function() {
+                validate()
+                });
+            $('#variable_update').click(function () {
+                $('#variable_update_form').validate({
+                        rules: {
+                           name: {
+                                required: true, minlength: 2, maxlength: 20, remote: {
+                                url:'/variableupdatevalidate/',
+                                data:{"variable_id":variable_id}
+                                }
+                                },
+                            value:{required: true},
+                            description: {maxlength: 50},
+                        },
+                        messages: {
+                            name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过20位', remote: '已存在名称'},
+                            value: {required: '不可为空'},
+                            description: {maxlength: '不可超过50位'},
+                        },
+                    submitHandler: function (form) {
+                        form.submit()
+                    }
+                    })
+            })
+});
+
+    </script>
 {% endblock %}

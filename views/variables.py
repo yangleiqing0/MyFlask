@@ -2,7 +2,7 @@ from flask.views import MethodView
 from app import cdb, db, app
 from modles.variables import Variables
 from common.tail_font_log import FrontLogs
-from flask import render_template, Blueprint, request, redirect, url_for, current_app
+from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
 
 
 variables_blueprint = Blueprint('variables_blueprint', __name__)
@@ -71,7 +71,34 @@ class VariableDelete(MethodView):
         app.logger.info('message:delete variables success, id: %s' % id)
         return redirect(url_for('variables_blueprint.variable_list'))
 
+
+class VariableValidata(MethodView):
+
+    def get(self):
+        name = request.args.get('name')
+        variable = Variables.query.filter(Variables.name == name).count()
+        if variable != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
+class VariableUpdateValidata(MethodView):
+
+    def get(self):
+        name = request.args.get('name')
+        variable_id = request.args.get('variable_id')
+        request_headers = Variables.query.filter(Variables.id != variable_id).filter(Variables.name == name).count()
+        if request_headers != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
 variables_blueprint.add_url_rule('/variableadd/', view_func=VariableAdd.as_view('variable_add'))
 variables_blueprint.add_url_rule('/variablelist/', view_func=VariableList.as_view('variable_list'))
 variables_blueprint.add_url_rule('/variableupdate/<id>/', view_func=VariableUpdate.as_view('variable_update'))
 variables_blueprint.add_url_rule('/variabledelete/<id>/', view_func=VariableDelete.as_view('variable_delete'))
+
+variables_blueprint.add_url_rule('/variablevalidate/', view_func=VariableValidata.as_view('variable_validate'))
+variables_blueprint.add_url_rule('/variableupdatevalidate/', view_func=VariableUpdateValidata.as_view('variable_update_validate'))

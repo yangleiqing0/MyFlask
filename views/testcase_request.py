@@ -24,7 +24,7 @@ class TestCaseRequest(MethodView):
         for testcase in testcases:
             testcase.name = AnalysisParams().analysis_params(testcase.name)
             testcase_list.append(testcase)
-        print(testcases)
+        print('testcase :', testcases)
         return render_template('test_case_request/test_case_request.html', items=testcase_list)
 
     def post(self):

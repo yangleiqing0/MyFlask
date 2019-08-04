@@ -2,7 +2,7 @@
 {% block title %}测试用例执行{% endblock %}
 {% block content %}
     <div class="panel-body " >
-        <form action="{{ url_for('test_case_request_blueprint.test_case_request') }}"  method="post" enctype="multipart/form-data" class="form-horizontal col-md-12">
+        <form action="{{ url_for('test_case_request_blueprint.test_case_request') }}" method="post" enctype="multipart/form-data" class="form-horizontal col-md-12">
         <div style="float: left" class="col-md-12">
 
             {% for item in items %}
@@ -14,7 +14,28 @@
                  </div>
             {% endfor %}
         </div>
-        {{ macro.submit(submit_value="确认",test_type="submit", div_class="control-label col-md-7") }}
+        <div class="col-md-4 col-md-offset-4" id="nocheck" style="text-align: center"></div>
+        {{ macro.submit(submit_value="确认",submit_id="assign",test_type="submit", div_class="control-label col-md-7") }}
         </form>
     </div>
+{% endblock %}
+{% block js %}
+    <script>
+    $(document).ready(function () {
+        $('#assign').click(function () {
+            var checkVal = [];
+            $("input[name='testcase']:checkbox").each(function() {
+                if ($(this).is(":checked")) {
+                    var s= $(this).val();
+                    checkVal.push(s);
+                }
+            });
+            if(checkVal.length === 0){
+                $('#nocheck').html('请选择测试用例');
+                return false
+            }
+        })
+    });
+    </script>
+
 {% endblock %}
