@@ -1,5 +1,6 @@
 import xlsxwriter
 from modles.testcase import TestCases
+from modles.testcase_result import TestCaseResult
 from modles.testcase_start_times import TestCaseStartTimes
 from modles.variables import Variables
 from app import cdb
@@ -46,7 +47,8 @@ def test_report(testcase_time_id):
     test_net = Variables.query.filter(Variables.name == '_TEST_NET').first().value
     title_name = Variables.query.filter(Variables.name == '_TITLE_NAME').first().value
     test_sum = len(testcase_results)
-    test_success = 2
+    test_success = TestCaseResult.query.filter(TestCaseResult.testcase_test_result == "测试成功",
+                                                   TestCaseResult.testcase_start_time_id == testcase_time_id).count()
     time_strftime = testcase_time.time_strftime
     filename = testcase_time.filename
     data_title = {"test_name": test_name, "test_version": zdbm_version, "test_pl": test_pl, "test_net": test_net}

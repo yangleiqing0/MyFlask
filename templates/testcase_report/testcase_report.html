@@ -15,7 +15,7 @@
                             <td>{{ allocation.zdbm_version }}</td>
                             <th>通过总数</th>
                             <td>{{ allocation.test_success }}</td>
-                            <td rowspan="3">{{ allocation.score }}</td>
+                            <td rowspan="3" id="score">{{ allocation.score }}</td>
                         </tr>
                         <tr>
                             <th>运行环境</th>          <!--使用循环的数字作为id -->
@@ -53,8 +53,8 @@
                             <td>{{ item.url }}</td>
                             <td>{{ item.method }}</td>
                             <td>{{ item.request_body }}</td>
-                            <td>{{ item.response_body }}</td>
                             <td>{{ item.hope }}</td>
+                            <td>{{ item.response_body }}</td>
                             <td>{{ item.old_database_value }}</td>
                             <td>{{ item.new_database_value }}</td>
                             <td>{{ item.result }}</td>
@@ -63,4 +63,14 @@
 
                     </table>
     </div>
+{% endblock %}
+{% block js %}
+    <script>
+    $(document).ready(function() {
+    {#  动态在td 标签上悬浮时设置title属性为当前标签的test内容 #}
+        $('#score').css('vertical-align', 'middle');
+    $("td",$(this)).hover(function(){
+        $(this).attr('title',$(this).text());
+    });})
+    </script>
 {% endblock %}
