@@ -8,21 +8,29 @@ class TestCaseResult(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     response_body = db.Column(db.TEXT)
-    testcase_result = db.Column(db.Integer)
+    testcase_test_result = db.Column(db.String(10))
     testcase_id = db.Column(db.Integer,db.ForeignKey(TestCases.id))
     testcase_start_time_id = db.Column(db.Integer,db.ForeignKey(TestCaseStartTimes.id))
+    old_sql_value = db.Column(db.TEXT)
+    new_sql_value = db.Column(db.TEXT)
     timestamp = db.Column(db.DateTime, index=True)
 
-    def __init__(self, testcase_id, testcase_start_time_id, response_body, testcase_result):
+    def __init__(self, testcase_id, testcase_start_time_id, response_body, testcase_test_result="测试成功",
+                 old_sql_value="", new_sql_value=""):
         self.testcase_id = testcase_id
         self.testcase_start_time_id = testcase_start_time_id
         self.response_body = response_body
-        self.testcase_result = testcase_result
+        self.testcase_test_result = testcase_test_result
         self.timestamp = datetime.now()
+        self.old_sql_value = old_sql_value
+        self.new_sql_value = new_sql_value
 
     def __repr__(self):
-        return '<测试用例执行结果 {} {} {} {}>'.format(self.response_body, self.response_body, self.testcase_id, self.testcase_start_time_id)
+        return '<测试用例执行结果 {} {} {} {} {} {}{}>'.format(self.response_body,
+                self.response_body, self.testcase_id, self.testcase_start_time_id,
+                self.old_sql_value, self.new_sql_value, self.testcase_test_result)
 
     def to_json(self):
         return dict(id=self.id, testcase_id=self.testcase_id, testcase_start_time_id=self.testcase_start_time_id,
-                    response_body =self.response_body, testcase_result=self.testcase_result)
+                    response_body =self.response_body, testcase_test_result=self.testcase_test_result,
+                    old_sql_value=self.old_sql_value, new_sql_value=self.new_sql_value)

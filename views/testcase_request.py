@@ -61,7 +61,7 @@ class TestCaseRequestStart(MethodView):
             headers = json.loads(AnalysisParams().analysis_params(testcase.request_headers.value, is_change="headers"))
             print('request_headers:', headers)
             response_body = MethodRequest().request_value(method, url, data, headers)
-            testcase_result = TestCaseResult(test_case_id,testcase_time_id, response_body, 1)
+            testcase_result = TestCaseResult(test_case_id,testcase_time_id, response_body)
             db.session.add(testcase_result)
             db.session.commit()
             if regist_variable and regular:

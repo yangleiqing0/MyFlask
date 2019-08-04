@@ -10,6 +10,8 @@ class AnalysisParams:
         print('init:self.variables:',self.variables)
 
     def analysis_params(self,  params, is_change=None):
+        if params is "":
+            return params
         print('analysis_before:', params)
         res = r'\${([^\${}]+)}'
         words = re.findall(re.compile(res), params)

@@ -8,11 +8,10 @@ SQLALCHEMY_ECHO = True
 base_dir = os.path.join(os.path.dirname(__file__))
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(base_dir, 'db\\test.sqlite')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
+SQLALCHEMY_COMMIT_TEARDOWN = True
+
+
 FLASK_POST_PRE_ARGV = 5
 # 这个配置将来会被禁用,设置为True或者False可以解除警告信息,建议设置False
 
-
-
-SQLALCHEMY_COMMIT_TEARDOWN = True
-
-print(DATABASE_URL,SQLALCHEMY_DATABASE_URI)
+EXCEL_TO_HTML_PATH = 'templates/reports/'

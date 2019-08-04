@@ -1,5 +1,8 @@
+import inspect, re
+
 class Dict(dict):
     __setattr__ = dict.__setitem__
+
 
 def dict_to_object(dictObj):
     if not isinstance(dictObj, dict):
@@ -10,9 +13,8 @@ def dict_to_object(dictObj):
     return inst
 
 
-# def object_to_dict(object):
-#     dic = {}
-#     for column in object.__table__.columns:
-#         dic[column.name] = str(getattr(object, column.name))
-#
-#     return dic
+
+
+if __name__ == '__main__':
+    a = 4
+

@@ -3,5 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/logs/flask.log" charset="GBK" />
     <file url="file://$PROJECT_DIR$/logs/frontlogs.log" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/reports/ZDBM_test_report_20190803193519.html" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/reports/ZDBM_test_report_20190803234441.html" charset="GBK" />
   </component>
 </project>
