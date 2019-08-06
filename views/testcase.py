@@ -67,8 +67,10 @@ class TestCaseAdd(MethodView):
         regular = request.form.get('regular', None)
         request_headers_id = request.form.get('request_headers')
         request_headers_query_sql = 'select value from request_headers where id=?'
-        request_headers = AnalysisParams().analysis_params(cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0], is_change="headers")
-        print('request_headers: ', request_headers)
+        request_headers = cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0]
+        print('TestCaseAdd request_headers before: ', request_headers)
+        request_headers = AnalysisParams().analysis_params(request_headers, is_change="headers")
+        print('TestCaseAdd request_headers: ', request_headers)
         headers = json.loads(request_headers)
         print('request_headers_id: %s headers:%s ' % (request_headers_id, headers))
         if request.form.get('test', 0) == '测试':
@@ -95,37 +97,47 @@ class UpdateTestCase(MethodView):
         testcase = TestCases.query.filter(TestCases.id == id).first()
         print('testcase.group_id:', testcase.group_id)
         # 获取测试用例分组的列表
-        case_group = CaseGroup.query.filter(CaseGroup.id == testcase.group_id).first()
-        request_headers = RequestHeaders.query.filter(RequestHeaders.id == testcase.request_headers_id).first()
+        case_groups = CaseGroup.query.all()
+        case_group_id_before = testcase.group_id
+        request_headers_id_before = testcase.request_headers_id
+        request_headerses = RequestHeaders.query.all()
         print('testcase:', testcase)
-        print('case_group:', case_group)
-        print('request_headers:', request_headers)
+        print('case_groups :', case_groups)
+        print('request_headerses:', request_headerses)
         FrontLogs('进入编辑测试用例 id: %s 页面' % id).add_to_front_log()
-        return render_template('test_case/test_case_search.html', item=testcase, case_group=case_group, request_headers=request_headers)
+        return render_template('test_case/test_case_search.html', item=testcase, case_groups=case_groups,
+                               request_headers_id_before=request_headers_id_before, case_group_id_before=case_group_id_before,
+                               request_headerses=request_headerses)
 
     def post(self, id=-1):
         print('UpdateTestCase：request_form: ', request.form)
-        if request.form.get('test', 0) == '测试':
-            print('进入测试：')
-            url = AnalysisParams().analysis_params(request.form.get('url', 'default'))
-            data = AnalysisParams().analysis_params(request.form.get('data', 'default').replace('/n', '').replace(' ', ''))
-            print('测试：', data, url)
-            method = request.form.get('method', 'default')
-            regist_variable = request.form.get('regist_variable', None)
-            regular = request.form.get('regular', None)
-            # request_headers_id = request.form.get('request_headers')
-            request_headers_query_sql = 'select request_headers.value from request_headers,testcases where testcases.request_headers_id=request_headers.id and testcases.id=?'
-            print("query_headers_value: ", cdb().query_db(request_headers_query_sql, (id,), True)[0])
-            headers = json.loads(AnalysisParams().analysis_params(cdb().query_db(request_headers_query_sql, (id,), True)[0], is_change="headers"))
-            print('UpdataTestCase:headers: ', headers, url, method, data)
-            result = MethodRequest().request_value(method, url, data, headers)
-            return '''%s''' % result.replace('<', '').replace('>', '')
         name = request.form.get('name')
         url = request.form.get('url')
         data = request.form.get('data')
         method = request.form.get('method')
-        update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=? where id=?'
-        cdb().opeat_db(update_test_case_sql, (name, url, data, method, id))
+        group_id = request.form.get('case_group')
+        request_headers_id = request.form.get('request_headers')
+        regist_variable = request.form.get('regist_variable', '')
+        regular = request.form.get('regular', '')
+        id = request.args.get('id', id)
+        print('UpdateTestCase: id', id)
+        if request.form.get('test', 0) == '测试':
+            print('进入测试：')
+            url = AnalysisParams().analysis_params(url)
+            data = AnalysisParams().analysis_params(data.replace('/n', '').replace(' ', ''))
+            print('测试：', name, data, method, url, group_id, request_headers_id, regist_variable, regular, id)
+            request_headers_value_sql = 'select value from request_headers where id=?'
+            query_headers_value = cdb().query_db(request_headers_value_sql, (request_headers_id,), True)[0]
+            print("query_headers_value: ", query_headers_value)
+            headers = json.loads(AnalysisParams().analysis_params(query_headers_value, is_change="headers"))
+            print('UpdataTestCase:headers: ', headers, url, method, data)
+            result = MethodRequest().request_value(method, url, data, headers)
+            print('UpdataTestCase TEST: 响应报文: %s' % result)
+            return '''%s''' % result.replace('<', '').replace('>', '')
+        update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=?,group_id=?,' \
+                               'request_headers_id=?,regist_variable=?,regular=? where id=?'
+        cdb().opeat_db(update_test_case_sql, (name, url, data, method, group_id,
+                                              request_headers_id, regist_variable, regular, id))
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
         app.logger.info('message:update testcases success, name: %s' % name)
         return redirect(url_for('testcase_blueprint.test_case_list'))

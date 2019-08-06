@@ -7,6 +7,7 @@ from flask import render_template, Blueprint, request, redirect, url_for, curren
 
 request_headers_blueprint = Blueprint('request_headers_blueprint', __name__)
 
+
 class RequestHeadersAdd(MethodView):
 
     def get(self):
@@ -50,7 +51,6 @@ class RequestHeadersList(MethodView):
         request_headerses = pagination.items
         print("request_headers_pagination: ", pagination)
         return render_template('request_headers/request_headers_list.html', pagination=pagination, items=request_headerses)
-
 
 
 class RequestHeadersUpdate(MethodView):

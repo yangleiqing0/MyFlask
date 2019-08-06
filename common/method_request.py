@@ -8,6 +8,7 @@ class MethodRequest:
 
     @staticmethod
     def request_value(method, url, data, headers):
+        print('请求方法: ', method, url, data, headers)
         try:
             if method.upper() == 'GET':
                 if 'https' in url:

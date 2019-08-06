@@ -7,17 +7,30 @@
                     <div class="form-group">
                         <label for="case_group" class="control-label col-md-4">测试用例分组</label>
                             <div class="col-md-4">
-                                    <select disabled="disabled" name="case_group" id="case_group" class="form-control">
-                                            <option value="1">{{ case_group.name }}</option>
-                                    </select>
+                                        <select name="case_group" id="case_group" class="form-control">
+                                            <option value=""></option>
+                                            {% for case_group in case_groups %}
+                                                {% if case_group.id == case_group_id_before %}
+                                                      <option selected="selected" value="{{ case_group.id }}">{{ case_group.name }}</option>
+                                                {% else %}
+                                                <option  value="{{ case_group.id }}">{{ case_group.name }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
                             </div>
                     </div>
                     <div class="form-group">
                         <label for="request_headers" class="control-label col-md-4">请求头部</label>
                             <div class="col-md-4">
-                                    <select disabled="disabled" name="request_headers" id="request_headers" class="form-control">
-                                            <option value="1">{{ request_headers.name }}</option>
-                                    </select>
+                                <select name="request_headers" id="request_headers" class="form-control">
+                                    {% for request_headers in request_headerses %}
+                                        {% if request_headers.id == request_headers_id_before %}
+                                              <option selected="selected" value="{{ request_headers.id }}">{{ request_headers.name }}</option>
+                                        {% else %}
+                                        <option  value="{{ request_headers.id }}">{{ request_headers.name }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
                             </div>
                     </div>
                     {{ macro.form_group(lable_name="method",blank_name="请求方式",value=item.method) }}
