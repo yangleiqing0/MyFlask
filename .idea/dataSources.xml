@@ -5,10 +5,16 @@
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\PycharmProjects\new Project\MytestFlask\db\test.sqlite</jdbc-url>
+      <jdbc-url>jdbc:sqlite:D:\PythonProject\MytestFlask\db\test.sqlite</jdbc-url>
       <driver-properties>
         <property name="enable_load_extension" value="true" />
       </driver-properties>
+    </data-source>
+    <data-source source="LOCAL" name="User Data Source [2] -" uuid="933caf9e-664c-4770-9cb1-6aa27e3933c1">
+      <driver-ref>6e71f5ad-505e-4f39-b58e-eb9bca71825e</driver-ref>
+      <synchronize>true</synchronize>
+      <configured-by-url>true</configured-by-url>
+      <jdbc-driver>java.sql.Driver</jdbc-driver>
     </data-source>
   </component>
 </project>
