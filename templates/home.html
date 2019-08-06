@@ -16,6 +16,8 @@
 {#    <script src="{{url_for('static',filename='js/echarts.common.min.js')}}"></script>#}
 {#    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>#}
 {#    <script src="https://cdn.staticfile.org/jquery/3.1.1/jquery.min.js"></script>#}
+    <link href="/try/bootstrap/twitter-bootstrap-v2/docs/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
+
     <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.js"></script>
     <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css?param=Math.random()">
@@ -63,10 +65,19 @@
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('testcase_blueprint.test_case_list') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-key"></i>
-                        <span>测试用例列表</span>
-                    </a>
+                    <div class="">
+                        <a href="{{ url_for('testcase_blueprint.test_case_list') }}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-key"></i>
+                            <span>测试用例列表</span>
+                        </a>
+                    </div>
+
+                    <div class="list-group">
+                         <a href="{{ url_for('testcase_blueprint.test_case_list') }}" class="list-group-item active">
+                            <i class="am-icon-key"></i>
+                            <span>测试用例列表</span>
+                        </a>
+                    </div>
                 </li>
                 <li class="tpl-left-nav-item">
                     <a href="{{ url_for('case_group_blueprint.case_group_list') }}" class="nav-link tpl-left-nav-link-list">
@@ -129,6 +140,15 @@
              </div>
         </div>
     </div>
+	<div><a href="#demo" data-toggle="collapse">点击我扩展并且再次点击我折叠。</a></div>
+        <div id="demo" class="collapse">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehe.
+        </div>
+        <div id="demo1" class="collapse">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehe.
+        </div>
+
+
 </div>
 {% block js %}
 {%endblock%}
@@ -191,3 +211,5 @@ $(document).ready(function() {
 });
 
 </script>
+<script type="text/javascript" src="/static/js/collapse/jquery.js"></script>
+<script type="text/javascript" src="/static/js/collapse/bootstrap-collapse.js"></script>
