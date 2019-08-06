@@ -26,6 +26,7 @@ class TestCastList(MethodView):
         for testcase in testcases:
             testcase.name = AnalysisParams().analysis_params(testcase.name)
             testcase.url = AnalysisParams().analysis_params(testcase.url)
+            testcase.data = AnalysisParams().analysis_params(testcase.data)
         case_groups = CaseGroup.query.all()
         print('case_groups: ', case_groups)
         request_headers = RequestHeaders.query.all()
