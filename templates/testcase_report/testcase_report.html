@@ -69,8 +69,9 @@
     $(document).ready(function() {
     {#  动态在td 标签上悬浮时设置title属性为当前标签的test内容 #}
         $('#score').css('vertical-align', 'middle');
-    $("td",$(this)).hover(function(){
-        $(this).attr('title',$(this).text());
-    });})
+        $("td",$(this)).hover(function(){
+            $(this).attr('title',$(this).text());
+        })
+    })
     </script>
 {% endblock %}
