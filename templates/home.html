@@ -65,38 +65,78 @@
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
-                    <div class="">
-                        <a href="{{ url_for('testcase_blueprint.test_case_list') }}" class="nav-link tpl-left-nav-link-list">
-                            <i class="am-icon-key"></i>
-                            <span>测试用例列表</span>
+                    <a href="#test_case" id="MytestcaseCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
+                        <i class="am-icon-key"></i>
+                        <span>测试用例</span>
+                    </a>
+                </li>
+                <li>
+                    <div id="test_case" class="collapse">
+                        <a href="{{ url_for('testcase_blueprint.test_case_list') }}" class="list-group-item">
+                        <i class="am-icon-search"></i>
+                        <span>测试用例列表</span>
                         </a>
-                    </div>
-
-                    <div class="list-group">
-                         <a href="{{ url_for('testcase_blueprint.test_case_list') }}" class="list-group-item active">
-                            <i class="am-icon-key"></i>
-                            <span>测试用例列表</span>
+                        <a href="{{ url_for('testcase_blueprint.add_test_case') }}" class="list-group-item">
+                        <i class="am-icon-plus"></i>
+                        <span>添加测试用例</span>
                         </a>
                     </div>
                 </li>
                 <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('case_group_blueprint.case_group_list') }}" class="nav-link tpl-left-nav-link-list">
+                    <a href="#case_group" id="MycasegroupCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
                         <i class="am-icon-key"></i>
+                        <span>用例分组</span>
+                    </a>
+                </li>
+                <li>
+                    <div id="case_group" class="collapse">
+                        <a href="{{ url_for('case_group_blueprint.case_group_list')}}" class="list-group-item">
+                        <i class="am-icon-search"></i>
                         <span>用例分组列表</span>
-                    </a>
+                        </a>
+                        <a href="{{ url_for('case_group_blueprint.case_group_add') }}" class="list-group-item">
+                        <i class="am-icon-plus"></i>
+                        <span>添加用例分组</span>
+                        </a>
+                    </div>
                 </li>
                 <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('variables_blueprint.variable_list') }}" class="nav-link tpl-left-nav-link-list">
+                    <a href="#variable" id="MyvariableCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
                         <i class="am-icon-key"></i>
+                        <span>全局变量</span>
+                    </a>
+                </li>
+                <li>
+                    <div id="variable" class="collapse">
+                        <a href="{{ url_for('variables_blueprint.variable_list')}}" class="list-group-item">
+                        <i class="am-icon-search"></i>
                         <span>全局变量列表</span>
-                    </a>
+                        </a>
+                        <a href="{{ url_for('variables_blueprint.variable_add') }}" class="list-group-item">
+                        <i class="am-icon-plus"></i>
+                        <span>添加全局变量</span>
+                        </a>
+                    </div>
                 </li>
                 <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('request_headers_blueprint.request_headers_list') }}" class="nav-link tpl-left-nav-link-list">
+                    <a href="#request_headers" id="MyrequestheadersCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
                         <i class="am-icon-key"></i>
-                        <span>请求头部列表</span>
+                        <span>请求头部</span>
                     </a>
                 </li>
+                <li>
+                    <div id="request_headers" class="collapse">
+                        <a href="{{ url_for('request_headers_blueprint.request_headers_list')}}" class="list-group-item">
+                        <i class="am-icon-search"></i>
+                        <span>请求头部列表</span>
+                        </a>
+                        <a href="{{ url_for('request_headers_blueprint.request_headers_add') }}" class="list-group-item">
+                        <i class="am-icon-plus"></i>
+                        <span>添加请求头部</span>
+                        </a>
+                    </div>
+                </li>
+
                 <li class="tpl-left-nav-item">
                     <a href="{{ url_for('test_case_request_blueprint.test_case_request') }}" class="nav-link tpl-left-nav-link-list">
                         <i class="am-icon-key"></i>
@@ -140,15 +180,14 @@
              </div>
         </div>
     </div>
-	<div><a href="#demo" data-toggle="collapse">点击我扩展并且再次点击我折叠。</a></div>
+	<div>
+        <a href="#demo" data-toggle="collapse">点击我扩展并且再次点击我折叠。</a></div>
         <div id="demo" class="collapse">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehe.
         </div>
         <div id="demo1" class="collapse">
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehe.
         </div>
-
-
 </div>
 {% block js %}
 {%endblock%}
