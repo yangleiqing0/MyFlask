@@ -6,6 +6,7 @@ from flask import render_template, Blueprint, request, redirect, url_for, curren
 from modles.variables import Variables
 from modles.testcase import TestCases
 from modles.testcase_result import TestCaseResult
+from modles.case_group import CaseGroup
 from modles.testcase_start_times import TestCaseStartTimes
 from common.tail_font_log import FrontLogs
 from app import cdb, db, app
@@ -20,12 +21,25 @@ class TestCaseRequest(MethodView):
     def get(self):
         testcases = TestCases.query.all()
         FrontLogs('进入测试用例执行页面').add_to_front_log()
+        case_groups = CaseGroup.query.all()
         testcase_list = []
         for testcase in testcases:
             testcase.name = AnalysisParams().analysis_params(testcase.name)
             testcase_list.append(testcase)
+        for case_group in case_groups:
+            case_group_testcases = case_group.testcases
+            for case_group_testcase in case_group_testcases:
+                case_group_testcase.name = AnalysisParams().analysis_params(case_group_testcase.name)
+        no_case_group = type('no_case_group', (object,), dict(a=-1))
+        case_groups.append(no_case_group)
+        no_case_group.testcases = TestCases.query.filter(TestCases.group_id == "").all()
+        no_case_group.name = "未加入分组的测试用例"
         print('testcase :', testcases)
-        return render_template('test_case_request/test_case_request.html', items=testcase_list)
+        print('test_case_request case_groups :', case_groups)
+        for case_group in case_groups:
+            print('test_case_request case_group :', case_group.testcases)
+
+        return render_template('test_case_request/test_case_request.html', case_groups=case_groups)
 
     def post(self):
         testcase_ids = request.form.getlist('testcase')
@@ -61,7 +75,10 @@ class TestCaseRequestStart(MethodView):
             headers = json.loads(AnalysisParams().analysis_params(testcase.request_headers.value, is_change="headers"))
             print('request_headers:', headers)
             response_body = MethodRequest().request_value(method, url, data, headers)
-            testcase_result = TestCaseResult(test_case_id,testcase_time_id, response_body)
+            response_body = '<xmp> %s </xmp>' % response_body
+
+            print('response_body:', response_body)
+            testcase_result = TestCaseResult(test_case_id, testcase_time_id, response_body)
             db.session.add(testcase_result)
             db.session.commit()
             if regist_variable and regular:

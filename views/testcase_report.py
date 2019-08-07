@@ -62,9 +62,9 @@ class TestCaseReport(MethodView):
     def post(self):
         testcase_time_id = request.args.get('testcase_time_id')
         time_strftime = datetime.now().strftime('%Y%m%d%H%M%S')
-        testcase_report_name = Variables.query.filter(Variables.name=="_TEST_REPORT_EXCEL_NAME").first().value + "_" + \
+        testcase_report_name = Variables.query.filter(Variables.name =="_TEST_REPORT_EXCEL_NAME").first().value + "_" + \
                                time_strftime + ".xlsx"
-        REPORT_FILE_PATH = Variables.query.filter(Variables.name=="_REPORT_FILE_PATH").first().value
+        REPORT_FILE_PATH = Variables.query.filter(Variables.name == "_REPORT_FILE_PATH").first().value
         Filename = REPORT_FILE_PATH + testcase_report_name
         print("Filename: ", Filename)
         test_case_start_time = TestCaseStartTimes().query.get(testcase_time_id)
@@ -112,6 +112,8 @@ class TestCaseReport(MethodView):
         Allocation.score = int(Allocation.test_success * 100 / Allocation.test_sum)
 
         Allocation()
+
+        # return items, Allocation
         return render_template("testcase_report/testcase_report.html", items=items, allocation=Allocation)
 
 

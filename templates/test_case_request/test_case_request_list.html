@@ -32,18 +32,18 @@ $(document).ready(function() {
     $("#start_testcase").click(function () {
         $.ajax({
                 url:{{ url_for('test_case_request_blueprint.test_case_time_get') }},
-                method:"GET",
+                type:"GET",
                 async: false,
                 success:function (response) {
-                     testcase_time_id = JSON.parse(response)["testcase_time_id"];
-                    testcase_time_id = eval(testcase_time_id);
+                        testcase_time_id = JSON.parse(response)["testcase_time_id"];
+                        testcase_time_id = eval(testcase_time_id);
                 }
             });
         {% for item in items %}
             var testcase_id = {{ item.id }};
             $.ajax({
                 url:{{ url_for('test_case_request_blueprint.test_case_request_start') }},
-                method:"POST",
+                type:"POST",
                 data:{'id':testcase_id, 'test_case_time_id':testcase_time_id},
                 success:function (response) {
                     $('#response_{{ item.id }}').html(response)
@@ -56,7 +56,7 @@ $(document).ready(function() {
     $("#to_report").click(function(){
         $.ajax({
             url:"{{ url_for("testcase_report_blueprint.testcase_report")}}?testcase_time_id=" + testcase_time_id,
-            method:"POST",
+            type:"POST",
             success:function (response) {
                 document.write(response + "<script>" +
                         "$('#score').css('vertical-align', 'middle');" +

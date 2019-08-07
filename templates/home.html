@@ -180,22 +180,20 @@
              </div>
         </div>
     </div>
-	<div>
-        <a href="#demo" data-toggle="collapse">点击我扩展并且再次点击我折叠。</a></div>
-        <div id="demo" class="collapse">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehe.
-        </div>
-        <div id="demo1" class="collapse">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehe.
-        </div>
 </div>
 {% block js %}
 {%endblock%}
 </body>
 </html>
+{% block css %}
+{% endblock %}
 <style>
     table{
         table-layout:fixed;
+    }
+    xmp{
+        height: 40px
+    ;
     }
     {# 最大宽度100px  居中   超过宽度后自动隐藏... #}
     table > tbody > tr > th,td,
@@ -214,7 +212,7 @@
 </style>
 <script>
 $(document).ready(function() {
-    var $fullText = $('.admin-fullText');
+    let $fullText = $('.admin-fullText');
         $('#admin-fullscreen').on('click', function() {
             $.AMUI.fullscreen.toggle();
         });

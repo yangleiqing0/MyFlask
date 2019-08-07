@@ -1,19 +1,23 @@
 {% extends 'home.html' %}
 {% block title %}测试用例执行{% endblock %}
 {% block content %}
-    <div class="panel-body " >
-        <form action="{{ url_for('test_case_request_blueprint.test_case_request') }}" method="post" enctype="multipart/form-data" class="form-horizontal col-md-12">
-        <div style="float: left" class="col-md-12">
-
-            {% for item in items %}
-                 <div class="form-group col-md-4">
-                 <div>
-                      <label for="{{ item.id }}"  class="dots control-label col-md-8" style="max-width: 280px">{{ item.name }}</label>
-                 </div>
-                      <input  type="checkbox" id="{{ item.id }}" value="{{ item.id }}" name="testcase" style="zoom:1.5;width: 20px" >
-                 </div>
-            {% endfor %}
-        </div>
+    <div class="panel-body no-padding " >
+        <form action="{{ url_for('test_case_request_blueprint.test_case_request') }}" method="post" enctype="multipart/form-data" class="form-horizontal col-md-12 no-padding">
+            <div style="float: left" class="col-md-12 no-padding">
+                        {% for case_group in case_groups %}
+                            <div class="btn col-md-12 btn-default no-padding"   href="#case_group_{{ case_group.id }}" data-toggle="collapse"><span>{{case_group.name }}</span></div>
+                            <div id="case_group_{{ case_group.id }}" class="collapse no-padding">
+                            {% for testcase in case_group.testcases %}
+                                 <div class="form-group col-md-4">
+                                 <div>
+                                      <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px">{{ testcase.name }}</label>
+                                 </div>
+                                      <input  type="checkbox" id="{{ testcase.id }}" value="{{ testcase.id }}" name="testcase" style="zoom:1.5;width: 20px" >
+                                 </div>
+                                {% endfor %}
+                                </div>
+                        {% endfor %}
+            </div>
         <div class="col-md-4 col-md-offset-4" id="nocheck" style="text-align: center;color: red"></div>
         {{ macro.submit(submit_value="确认",submit_id="assign",test_type="submit", div_class="control-label col-md-7") }}
         </form>
@@ -34,8 +38,19 @@
                 $('#nocheck').html('请选择测试用例');
                 return false
             }
-        })
+        });
     });
     </script>
 
+{% endblock %}
+{% block css %}
+<style>
+    div{
+        text-align: center;
+    }
+    .no-padding{
+        padding: 8px;
+        margin: 0px
+    }
+</style>
 {% endblock %}
