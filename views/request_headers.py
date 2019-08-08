@@ -16,7 +16,6 @@ class RequestHeadersAdd(MethodView):
 
     def post(self):
         name = request.form.get('name')
-        FrontLogs('添加请求头部 name: %s' % name).add_to_front_log()
         value = request.form.get('value').replace(' ','').replace('\n', '').replace('\r', '')
         description = request.form.get('description')
         request_headers = RequestHeaders(name, value, description)

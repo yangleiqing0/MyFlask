@@ -32,7 +32,6 @@ class AnalysisParams:
                     continue
             print('解析后的参数为:', params)
 
-
     def analysis_headers(self, headers):
         print('header_before:', headers)
         header = headers.replace(' ', '').replace('\n', '').replace('\r', '')

@@ -7,21 +7,22 @@
 {#    <meta http-equiv="pragma" content="no-cache">#}
 {#    <meta http-equiv="cache-control" content="no-cache">#}
 {#    <meta http-equiv="expires" content="0">#}
+    <script src="https://cdn.staticfile.org/jquery/3.1.1/jquery.min.js"></script>
+    <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.js"></script>
+    <script type="text/javascript" src="http://127.0.0.1:5000/static/js/collapse/jquery.js"></script>   {# 需要这个错误的地址保证下面的链接生效 #}
+    <script type="text/javascript" src="http://127.0.0.1:5000/static/js/collapse/bootstrap-collapse.js"></script>
     <link href="{{url_for('static',filename='css/amazeui.min.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/admin.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/app.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/bootstrap.min.css')}}"  rel="stylesheet">
     <link rel="icon" href="{{url_for('static',filename='img/log.png')}}" type="image/x-icon">
     <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
+    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
 {#    <script src="{{url_for('static',filename='js/echarts.common.min.js')}}"></script>#}
 {#    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>#}
-{#    <script src="https://cdn.staticfile.org/jquery/3.1.1/jquery.min.js"></script>#}
-    <link href="/try/bootstrap/twitter-bootstrap-v2/docs/assets/css/bootstrap.css" rel="stylesheet" type="text/css" />
 
-    <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.js"></script>
-    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css?param=Math.random()">
-{#    <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css?param=Math.random()">#}
 
 </head>
 <body style="background-color:ghostwhite" >
@@ -228,7 +229,7 @@ $(document).ready(function() {
                 url:{{ url_for('home_blueprint.front_logs') }},
                 method:'GET',
                 success:function(response){
-                    var front_logs = JSON.parse(response)["front_logs"];
+                    let front_logs = JSON.parse(response)["front_logs"];
                     $("#front_logs").html(front_logs)
                 }
             })
@@ -238,7 +239,7 @@ $(document).ready(function() {
                 url:{{ url_for('home_blueprint.flask_logs') }},
                 method:'GET',
                 success:function(response){
-                    var flask_logs = JSON.parse(response)["flask_logs"];
+                    let flask_logs = JSON.parse(response)["flask_logs"];
                     $("#flask_logs").html(flask_logs)
                 }
             })
@@ -248,5 +249,3 @@ $(document).ready(function() {
 });
 
 </script>
-<script type="text/javascript" src="/static/js/collapse/jquery.js"></script>
-<script type="text/javascript" src="/static/js/collapse/bootstrap-collapse.js"></script>

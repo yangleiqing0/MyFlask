@@ -57,6 +57,7 @@ class TestCaseReport(MethodView):
         Allocation.score = int(Allocation.test_success * 100 / Allocation.test_sum)
 
         Allocation()
+        FrontLogs('进入测试用例执行页面 执行id: ' % testcase_time_id).add_to_front_log()
         return render_template("testcase_report/testcase_report.html", items=items, allocation=Allocation)
 
     def post(self):
@@ -112,7 +113,7 @@ class TestCaseReport(MethodView):
         Allocation.score = int(Allocation.test_success * 100 / Allocation.test_sum)
 
         Allocation()
-
+        FrontLogs('进入测试报告页面 报告id: %s' % testcase_time_id).add_to_front_log()
         # return items, Allocation
         return render_template("testcase_report/testcase_report.html", items=items, allocation=Allocation)
 
@@ -122,6 +123,7 @@ class TestCaseReportList(MethodView):
     def get(self):
         testcase_reports = TestCaseStartTimes.query.filter(TestCaseStartTimes.name != "").order_by(TestCaseStartTimes.timestamp.desc()).all()
         print('testcase_reports: ', testcase_reports)
+        FrontLogs('进入测试报告列表页面').add_to_front_log()
         return render_template('testcase_report/testcase_report_list.html', items=testcase_reports)
 
 
@@ -149,7 +151,9 @@ class TestCaseReportDownLoad(MethodView):
         print('download_path:', download_path)
         dirpath = os.path.join(app.root_path, download_path)  # 这里是下在目录，从工程的根目录写起，比如你要下载static/js里面的js文件，这里就要写“static/js”
         print('dirpath:', dirpath)
+        FrontLogs('下载测试报告 测试报告名称: ' % name).add_to_front_log()
         return send_from_directory(dirpath, name, as_attachment=True)  # as_attachment=True 一定要写，不然会变成打开，而不是下载
+
 
 testcase_report_blueprint.add_url_rule('/testcasereport/', view_func=TestCaseReport.as_view('testcase_report'))
 testcase_report_blueprint.add_url_rule('/testcasereportlist/', view_func=TestCaseReportList.as_view('testcase_report_list'))

@@ -11,6 +11,7 @@ class Home(MethodView):
     def get(self):
         return render_template('home.html')
 
+
 class Test(MethodView):
     
     def get(self):

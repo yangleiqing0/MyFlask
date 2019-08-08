@@ -19,7 +19,7 @@ class MethodRequest:
                 if 'https' in url:
                     result = requests.post(url, data=data, headers=headers, verify=False).text
                 else:
-                    result = requests.get(url, data=data, headers=headers).text
+                    result = requests.post(url, data=data, headers=headers).text
             elif method.upper() == 'PUT':
                 if 'https' in url:
                     result = requests.put(url, data=data, headers=headers, verify=False).text

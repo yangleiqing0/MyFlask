@@ -152,6 +152,7 @@ class DeleteTestCase(MethodView):
         app.logger.info('message:delete testcases success, id: %s' % id)
         return redirect(url_for('testcase_blueprint.test_case_list'))
 
+
 class TestCaseValidata(MethodView):
 
     def get(self):

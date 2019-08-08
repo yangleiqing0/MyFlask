@@ -58,12 +58,12 @@ $(document).ready(function() {
             url:"{{ url_for("testcase_report_blueprint.testcase_report")}}?testcase_time_id=" + testcase_time_id,
             type:"POST",
             success:function (response) {
-                document.write(response + "<script>" +
-                        "$('#score').css('vertical-align', 'middle');" +
-                        "var tds = document.getElementsByTagName('td');\n" +
-                        "        for (i=0;i<tds.length;i++){\n" +
-                        "            tds[i].setAttribute('title', tds[i].textContent)\n" +
-                        "        }<\/script>");
+                document.write(response + '<script>' +
+                        '$(\'#score\').css(\'vertical-align\', \'middle\');' +
+                        'var tds = document.getElementsByTagName(\'td\');\n' +
+                        '        for (i=0;i<tds.length;i++){\n' +
+                        '            tds[i].setAttribute(\'title\', tds[i].textContent)\n' +
+                        '        }<\/script>');
                 /* 需要协程原始js形式 完成自动添加title功能*/
 
             }

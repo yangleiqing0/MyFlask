@@ -50,9 +50,9 @@
 <script>
 $(document).ready(function() {
     let case_group_add = window.localStorage.getItem('case_group_add');
-    case_group_add = JSON.parse(case_group_add)
+    case_group_add = JSON.parse(case_group_add);
     let request_headers_add = window.localStorage.getItem('request_headers_add');
-    request_headers_add = JSON.parse(request_headers_add)
+    request_headers_add = JSON.parse(request_headers_add);
     if (case_group_add != null){
         $('#case_group').val(case_group_add)
     }
@@ -153,4 +153,5 @@ $(document).ready(function() {
 
 
 </script>
+<script type="text/javascript" src="http://127.0.0.1:5000/static/js/collapse/bootstrap-collapse.js"></script>
 {% endblock %}
