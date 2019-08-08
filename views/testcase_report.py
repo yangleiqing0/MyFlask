@@ -57,7 +57,7 @@ class TestCaseReport(MethodView):
         Allocation.score = int(Allocation.test_success * 100 / Allocation.test_sum)
 
         Allocation()
-        FrontLogs('进入测试用例执行页面 执行id: ' % testcase_time_id).add_to_front_log()
+        FrontLogs('进入测试用例执行页面 执行id: %s' % testcase_time_id).add_to_front_log()
         return render_template("testcase_report/testcase_report.html", items=items, allocation=Allocation)
 
     def post(self):
