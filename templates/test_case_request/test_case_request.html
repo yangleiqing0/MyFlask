@@ -3,9 +3,21 @@
 {% block content %}
     <div class="panel-body no-padding " >
         <form action="{{ url_for('test_case_request_blueprint.test_case_request') }}" method="post" enctype="multipart/form-data" class="form-horizontal col-md-12 no-padding">
-            <div style="float: left" class="col-md-12 no-padding">
+            <div style="float: left" class="col-md-12 no-padding"  >
                         {% for case_group in case_groups %}
-                            <div class="btn col-md-12 btn-default no-padding"   href="#case_group_{{ case_group.id }}" data-toggle="collapse"><span>{{case_group.name }}</span></div>
+                            <div class="btn col-md-12 btn-default no-padding"  >
+                                <div class="col-md-11" href="#case_group_{{ case_group.id }}" data-toggle="collapse">
+                                    <span style="margin-left: 120px">{{case_group.name }}</span>
+                                </div>
+                                 <div class="col-md-1 has_no_padding" style="float: left">
+                                     <div class=" has_no_padding" >
+                                         <label style="font-weight: normal" for="case_group_{{ case_group.id }}_all" class="col-md-8 has_no_padding">全选分组</label>
+                                     </div>
+                                     <div class="col-md-4 has_no_padding" >
+                                         <input type="checkbox" id="case_group_{{ case_group.id }}_all" value="case_group_{{ case_group.id }}_all" name="case_group_{{ case_group.id }}_all" class="all_checkbox" style="zoom:1.5;width: 20px;margin-top: 1px;">
+                                     </div>
+                                </div>
+                            </div>
                             <div id="case_group_{{ case_group.id }}" class="collapse no-padding">
                             {% for testcase in case_group.testcases %}
                                  <div class="form-group col-md-4">
@@ -16,21 +28,54 @@
                                  </div>
                                 {% endfor %}
                                 </div>
-                        {% endfor %}
-            </div>
+                        {% endfor %}</div>
         <div class="col-md-4 col-md-offset-4" id="nocheck" style="text-align: center;color: red"></div>
-        {{ macro.submit(submit_value="确认",submit_id="assign",test_type="submit", div_class="control-label col-md-7") }}
+        {{ macro.submit(submit_value="确认",submit_id="assign",test_type="button",
+        div_class="control-label col-md-7",test_style="",test_value="全选",test_id="all_checkboxes") }}
         </form>
     </div>
 {% endblock %}
 {% block js %}
     <script>
+    isnotCheckboxes=true;
     $(document).ready(function () {
+        $('.all_checkbox').click(function () {
+            let case_group_checkboxes_value = $(this).val().replace('_all','');
+            if ($(this).is(':checked')){
+                if ($('#'+case_group_checkboxes_value).hasClass('in collapse')) {
+                    $('#'+case_group_checkboxes_value+' input[type="checkbox"]:not(:checked)').each(function () {
+                        $(this).attr('checked',true)
+                    });
+                }else {
+                     $('div[href="#' + case_group_checkboxes_value + '"]').click();
+                     $('#'+case_group_checkboxes_value+' input[type="checkbox"]:not(:checked)').each(function () {
+                        $(this).attr('checked',true)
+                });
+                }
+            }else {
+                $('#'+case_group_checkboxes_value+' input[type="checkbox"]:(:checked)').each(function () {
+                    $(this).attr('checked',false)
+                })
+            }
+        });
+        $('#all_checkboxes').click(function () {
+            $('input:checkbox').each(function () {
+                $(this).click();
+            });
+            if (isnotCheckboxes){
+                isnotCheckboxes=false;
+                $('#all_checkboxes').attr('value','已全选').attr('class','btn btn-success')
+            }else {
+                $('#all_checkboxes').attr('value','全选').attr('class','btn btn-default');
+                isnotCheckboxes=true;
+            }
+
+        });
         $('#assign').click(function () {
-            var checkVal = [];
+            let checkVal = [];
             $("input[name='testcase']:checkbox").each(function() {
                 if ($(this).is(":checked")) {
-                    var s= $(this).val();
+                    let s= $(this).val();
                     checkVal.push(s);
                 }
             });
@@ -45,10 +90,23 @@
 {% endblock %}
 {% block css %}
 <style>
+    input[type="checkbox"]{
+        margin-top: 7px;
+    }
     .no-padding{
         text-align: center;
         padding: 8px;
         margin: 0
     }
+    .has_no_padding{
+        text-align: center;
+        padding: 0;
+        margin: 0;
+    }
+    .all_checkbox{
+        margin-top: 0;
+        padding-bottom: inherit;
+    }
+
 </style>
 {% endblock %}
