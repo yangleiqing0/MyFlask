@@ -1,0 +1,84 @@
+{% extends 'home.html' %}
+{% block title %}测试场景列表{% endblock %}
+{% block content %}
+    <div class="panel-body no-padding " >
+        <div class="col-md-offset-10">
+            <a  href="{{ url_for('testcase_scene_blueprint.testcase_scene_add') }}" title="添加测试场景"><button style="color: black">添加测试场景</button></a>
+        </div>
+        <div style="float: left" class="col-md-12 no-padding"  >
+                {% for testcase_scene in testcase_scenes %}
+                    <div class="btn col-md-12 btn-default no-padding"  >
+                        <div class="col-md-9" href="#case_group_{{ testcase_scene.id }}" data-toggle="collapse">
+                            <div class="col-md-2"><a href="#"><span class="badge">{{ loop.index0 }}</span></a></div>
+                            <div class="col-md-10"><span style="margin-left: 120px">{{testcase_scene.name }}</span></div>
+                        </div>
+                        <div class="col-md-3 has_no_padding" style="float: left">
+                            <a href='{{ url_for("testcase_blueprint.add_test_case")}}?testcase_scene_id={{ testcase_scene.id }}' class="btn btn-default btn-xs" title="添加场景用例"><i class="fa fa-plus"></i></a>
+                            <select name="testcase_list" id="testcase_list_{{ testcase_scene.id }}">
+                                {% for model_testcase in model_testcases %}
+                                    <option  value="{{ model_testcase.id }}" style="width: 20px">{{ model_testcase.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <a id="testcase_add_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="复制测试用例"><i class="fa fa-copy"></i></a>
+                        </div>
+                    </div>
+                    <div id="case_group_{{ testcase_scene.id }}" class="collapse no-padding">
+                        {% for testcase in testcase_scene.testcases %}
+                            <div class="col-md-12 has_no_padding">
+                                <div class="btn btn-default col-md-6 col-md-offset-3" style="margin-bottom: 0">
+                                    <div class="col-md-2"><a href="#"><span class="badge">{{ loop.index0 }}</span></a></div>
+                                    <div class="col-md-10"><span>{{ testcase.name }}</span></div>
+                                 </div>
+                                <div class="btn btn-default col-md-2 col-md-offset-1">
+                                    <a href="{{ url_for('testcase_blueprint.update_test_case',id=testcase.id) }}?testcase_scene_id={{ testcase_scene.id }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
+                                    <a href="{{ url_for('testcase_blueprint.delete_test_case',id=testcase.id) }}?testcase_scene_id={{ testcase_scene.id }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+                    </div>
+                {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+    $(document).ready(function () {
+        $('a[id*="testcase_add"]').click(function () {
+            let testcase_scene_id = $(this).attr('id').replace('testcase_add_','');
+            let testcase_id = $("#testcase_list_"+testcase_scene_id).val()
+            $.ajax({
+                url:'{{ url_for("testcase_scene_blueprint.testcase_scene_copy")}}?testcase_scene_id='+testcase_scene_id+"&testcase_id="+testcase_id,
+                type:'GET',
+                success:function () {
+                    window.location.href = "{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}"
+                }
+            })
+
+
+        });
+    });
+    </script>
+{% endblock %}
+{% block css %}
+<style>
+    input[type="checkbox"]{
+        margin-top: 7px;
+    }
+    .no-padding{
+        text-align: center;
+        padding: 8px;
+        margin: 0
+    }
+    .has_no_padding{
+        text-align: center;
+        padding: 0;
+        margin: 0;
+    }
+    .dots{
+        margin-top: 8px;
+        padding-bottom: inherit;
+    }
+
+</style>
+{% endblock %}
