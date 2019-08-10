@@ -19,15 +19,15 @@
                                 </div>
                             </div>
                             <div id="case_group_{{ case_group.id }}" class="collapse no-padding">
-                            {% for testcase in case_group.testcases %}
-                                 <div class="form-group col-md-4">
-                                 <div>
-                                      <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px">{{ testcase.name }}</label>
-                                 </div>
-                                      <input  type="checkbox" id="{{ testcase.id }}" value="{{ testcase.id }}" name="testcase" style="zoom:1.5;width: 20px" >
-                                 </div>
+                                {% for testcase in case_group.testcases %}
+                                     <div class="form-group col-md-4">
+                                         <div>
+                                              <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px">{{ testcase.name }}</label>
+                                         </div>
+                                              <input  type="checkbox" id="{{ testcase.id }}" value="{{ testcase.id }}" name="testcase" style="zoom:1.5;width: 20px" >
+                                     </div>
                                 {% endfor %}
-                                </div>
+                            </div>
                         {% endfor %}</div>
         <div class="col-md-4 col-md-offset-4" id="nocheck" style="text-align: center;color: red"></div>
         {{ macro.submit(submit_value="确认",submit_id="assign",test_type="button",

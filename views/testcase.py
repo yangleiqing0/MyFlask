@@ -1,4 +1,3 @@
-import requests
 import json
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
@@ -6,6 +5,7 @@ from flask import render_template, Blueprint, request, redirect, url_for, curren
 from modles.testcase import TestCases
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
+from modles.testcase_scene import TestCaseScene
 from common.analysis_params import AnalysisParams
 from app import cdb, db, app
 from common.method_request import MethodRequest
@@ -33,7 +33,7 @@ class TestCastList(MethodView):
         print('request_headers: ', request_headers)
         page = request.args.get('page', 1, type=int)
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-        pagination = TestCases.query.order_by(TestCases.timestamp.desc()).paginate(page, per_page=current_app.config[
+        pagination = TestCases.query.filter(TestCases.testcase_scene_id.is_(None)).order_by(TestCases.timestamp.desc()).paginate(page, per_page=current_app.config[
             'FLASK_POST_PRE_ARGV'], error_out=False)
         # 返回一个内容对象
         testcaseses = pagination.items
@@ -48,19 +48,19 @@ class TestCaseAdd(MethodView):
     def get(self):
         case_groups_querys_sql = 'select id,name from case_group'
         case_groups = cdb().query_db(case_groups_querys_sql)
-
+        testcase_scene_id = request.args.get('testcase_scene_id', None)
         request_headers_querys_sql = 'select id,name from request_headers'
         request_headers = cdb().query_db(request_headers_querys_sql)
         print('request_headers: ', request_headers )
         FrontLogs('进入添加测试用例页面').add_to_front_log()
         return render_template('test_case/test_case_add.html', case_groups=case_groups,
-                               request_headers=request_headers)
+                               request_headers=request_headers, testcase_scene_id=testcase_scene_id)
 
     def post(self):
         print('要添加的测试用例：', request.form)
         name = request.form['name']
-        url = request.form.get('url', 'default')
-        data = request.form.get('data', 'default').replace('/n', '').replace(' ', '')
+        url = request.form.get('url', None)
+        data = request.form.get('data', None).replace('/n', '').replace(' ', '')
         method = request.form.get('method', 'default')
         group_id = request.form.get('case_group')
         regist_variable = request.form.get('regist_variable', None)
@@ -71,6 +71,7 @@ class TestCaseAdd(MethodView):
         print('TestCaseAdd request_headers before: ', request_headers)
         request_headers = AnalysisParams().analysis_params(request_headers, is_change="headers")
         print('TestCaseAdd request_headers: ', request_headers)
+        testcase_scene_id = request.args.get('testcase_scene_id', None)
         headers = json.loads(request_headers)
         print('request_headers_id: %s headers:%s ' % (request_headers_id, headers))
         if request.form.get('test', 0) == '测试':
@@ -83,17 +84,21 @@ class TestCaseAdd(MethodView):
         if (name,) in all_names:
             return '已有相同测试用例名称，请修改'
         else:
-            testcase = TestCases(name, url, data, regist_variable, regular, method, group_id, request_headers_id)
+            testcase = TestCases(name, url, data, regist_variable, regular, method, group_id, request_headers_id,testcase_scene_id)
             db.session.add(testcase)
             db.session.commit()
             FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
             app.logger.info('message:insert into testcases success, name: %s' % name)
+            if testcase_scene_id not in(None, "None"):
+                return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
             return redirect(url_for('testcase_blueprint.test_case_list'))
 
 
 class UpdateTestCase(MethodView):
 
     def get(self, id=-1):
+        testcase_scene_id = request.args.get('testcase_scene_id', None)
+        print('UpdateTestCase get:testcase_scene_id ', testcase_scene_id)
         testcase = TestCases.query.filter(TestCases.id == id).first()
         print('testcase.group_id:', testcase.group_id)
         # 获取测试用例分组的列表
@@ -107,10 +112,12 @@ class UpdateTestCase(MethodView):
         FrontLogs('进入编辑测试用例 id: %s 页面' % id).add_to_front_log()
         return render_template('test_case/test_case_search.html', item=testcase, case_groups=case_groups,
                                request_headers_id_before=request_headers_id_before, case_group_id_before=case_group_id_before,
-                               request_headerses=request_headerses)
+                               request_headerses=request_headerses, testcase_scene_id=testcase_scene_id)
 
     def post(self, id=-1):
         print('UpdateTestCase：request_form: ', request.form)
+        testcase_scene_id = request.args.get('testcase_scene_id', None)
+        print('UpdateTestCase post:testcase_scene_id ', testcase_scene_id)
         name = request.form.get('name')
         url = request.form.get('url')
         data = request.form.get('data')
@@ -140,16 +147,35 @@ class UpdateTestCase(MethodView):
                                               request_headers_id, regist_variable, regular, id))
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
         app.logger.info('message:update testcases success, name: %s' % name)
+        print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id, len(testcase_scene_id))
+        if testcase_scene_id not in(None, "None"):
+            print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id is True,len(testcase_scene_id))
+            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
         return redirect(url_for('testcase_blueprint.test_case_list'))
 
 
 class DeleteTestCase(MethodView):
 
     def get(self,id=-1):
+        testcase_scene_id = request.args.get('testcase_scene_id', None)
         delete_test_case_sql = 'delete from testcases where id=?'
         cdb().opeat_db(delete_test_case_sql, (id,))
         FrontLogs('删除测试用例 id: %s 成功' % id).add_to_front_log()
         app.logger.info('message:delete testcases success, id: %s' % id)
+        if testcase_scene_id not in(None, "None"):
+            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
+        return redirect(url_for('testcase_blueprint.test_case_list'))
+
+
+class ModelTestCase(MethodView):
+
+    def get(self, id=-1):
+        testcase = TestCases.query.get(id)
+        if testcase.is_model == 0:
+            testcase.is_model = 1
+        else:
+            testcase.is_model = 0
+        db.session.commit()
         return redirect(url_for('testcase_blueprint.test_case_list'))
 
 
@@ -176,13 +202,10 @@ class TestCaseUpdateValidata(MethodView):
             return jsonify(True)
 
 
-
 testcase_blueprint.add_url_rule('/testcaselist/', view_func=TestCastList.as_view('test_case_list'))
 testcase_blueprint.add_url_rule('/addtestcase/', view_func=TestCaseAdd.as_view('add_test_case'))
-# testcase_blueprint.add_url_rule('/posttestcase/', view_func=PostTestCase.as_view('post_test_case'),)
 testcase_blueprint.add_url_rule('/deletetestcase/<id>/', view_func=DeleteTestCase.as_view('delete_test_case'))
 testcase_blueprint.add_url_rule('/updatetestcase/<id>/', view_func=UpdateTestCase.as_view('update_test_case'))
-# testcase_blueprint.add_url_rule('/searchtestcase/<id>/', view_func=SearchTestCast.as_view('search_test_case'))
-
+testcase_blueprint.add_url_rule('/testcase_model/<id>/', view_func=ModelTestCase.as_view('test_case_model'))
 testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))
 testcase_blueprint.add_url_rule('/testcaseupdatevalidate/', view_func=TestCaseUpdateValidata.as_view('testcase_update_validate'))

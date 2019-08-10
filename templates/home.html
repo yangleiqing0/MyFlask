@@ -9,9 +9,8 @@
 {#    <meta http-equiv="expires" content="0">#}
     <script src="https://cdn.staticfile.org/jquery/3.1.1/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.js"></script>
-    <script type="text/javascript" src="http://127.0.0.1:5000/static/js/collapse/jquery.js"></script>   {# 需要这个错误的地址保证下面的链接生效 #}
-    <script type="text/javascript" src="http://127.0.0.1:5000/static/js/collapse/bootstrap-collapse.js"></script>
+    <script type="text/javascript" src="/static/js/collapse/jquery.js"></script>   {# 需要这个错误的地址保证下面的链接生效 #}
+    <script type="text/javascript" src="/static/js/collapse/bootstrap-collapse.js"></script>
     <link href="{{url_for('static',filename='css/amazeui.min.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/admin.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/app.css')}}"  rel="stylesheet">
@@ -20,6 +19,7 @@
     <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
     <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.js"></script>
 {#    <script src="{{url_for('static',filename='js/echarts.common.min.js')}}"></script>#}
 {#    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>#}
 
@@ -80,6 +80,24 @@
                         <a href="{{ url_for('testcase_blueprint.add_test_case') }}" class="list-group-item">
                         <i class="am-icon-plus"></i>
                         <span>添加测试用例</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="tpl-left-nav-item">
+                    <a href="#testcase_scene" id="MytestcaseSceneCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
+                        <i class="am-icon-key"></i>
+                        <span>测试场景</span>
+                    </a>
+                </li>
+                <li>
+                    <div id="testcase_scene" class="collapse">
+                        <a href="{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}" class="list-group-item">
+                        <i class="am-icon-search"></i>
+                        <span>测试场景列表</span>
+                        </a>
+                        <a href="{{ url_for('testcase_scene_blueprint.testcase_scene_add') }}" class="list-group-item">
+                        <i class="am-icon-plus"></i>
+                        <span>添加测试场景</span>
                         </a>
                     </div>
                 </li>

@@ -13,7 +13,7 @@ class TestCaseStartTimes(db.Model):
 
     this_time_testcase_result = db.relationship('TestCaseResult', backref='test_case_which_time')
 
-    def __init__(self, time_strftime="", filename="", name=""):
+    def __init__(self, time_strftime=None, filename=None, name=None):
         self.time_strftime = time_strftime
         self.filename = filename
         self.name = name

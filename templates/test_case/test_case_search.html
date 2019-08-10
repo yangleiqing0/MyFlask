@@ -2,7 +2,7 @@
 {% block title %}修改测试用例{% endblock %}
 {% block content %}
             <div class="panel-body" >
-                <form  action="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}" id="testcase_update_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form  action="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}?testcase_scene_id={{ testcase_scene_id }}" id="testcase_update_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="测试用例名称",value=item.name) }}
                     <div class="form-group">
                         <label for="case_group" class="control-label col-md-4">测试用例分组</label>

@@ -16,7 +16,7 @@ class TestCaseResult(db.Model):
     timestamp = db.Column(db.DateTime, index=True)
 
     def __init__(self, testcase_id, testcase_start_time_id, response_body, testcase_test_result="测试成功",
-                 old_sql_value="", new_sql_value=""):
+                 old_sql_value=None, new_sql_value=None):
         self.testcase_id = testcase_id
         self.testcase_start_time_id = testcase_start_time_id
         self.response_body = response_body

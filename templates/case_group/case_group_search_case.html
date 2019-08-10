@@ -16,7 +16,7 @@
                         </tr>
                         {% for item in items %}
                         <tr>
-                            <td>{{ loop.index0 }}</td> <!--使用循环的数字作为id -->
+                            <td><a href="#"><span class="badge">{{ loop.index0 }}</span></a></td> <!--使用循环的数字作为id -->
                             <td>{{ case_group.name }}</td>
                             <td>{{ item.name }}</td>
                             <td>

@@ -20,13 +20,14 @@
                         </tr>
                         {% for item in items %}
                         <tr>
-                            <td>{{ loop.index0 }}</td> <!--使用循环的数字作为id -->
+                            <td><a href="#"><span class="badge">{{ loop.index0 }}</span></a></td> <!--使用循环的数字作为id -->
+
                             <td>
                                 {% for case_group in case_groups %}
-                                    {% if case_group.id==item.group_id %}
-                                    {{ case_group.name }}{% endif %}{% endfor %}
-                                </td>
-                            <td>{{ item.name }}</td>
+                                {% if case_group.id==item.group_id %}
+                                {{ case_group.name }}{% endif %}{% endfor %}
+                            </td>
+                            <td> {{ item.name }}</td>
                             <td>
                             {% for request_header in request_headers %}
                                     {% if request_header.id==item.request_headers_id %}
@@ -34,12 +35,17 @@
                             </td>
                             <td>{{ item.url }}</td>
                             <td>{{ item.data }}</td>
-                            <td>{{ item.method }}</td>
+                            <td> {{ item.method }}</td>
                             <td>{{ item.regist_variable }}</td>
                             <td>{{ item.regular }}</td>
                             <td>
                                 <a href="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>
+                                {% if item.is_model ==0 %}
+                                    <a href="{{ url_for('testcase_blueprint.test_case_model',id=item.id) }}" class="btn btn-default btn-xs" title="设置为用例模板"><i class="fa fa-file-text-o"></i></a>
+                                {% else %}
+                                     <a href="{{ url_for('testcase_blueprint.test_case_model',id=item.id) }}" class="btn btn-default btn-xs" title="取消设置为用例模板"><i class="fa fa-file-text"></i></a>
+                                {% endif %}
                             </td>
                         </tr>
                         {% endfor %}

@@ -20,6 +20,7 @@ from modles.variables import Variables
 from modles.request_headers import RequestHeaders
 from modles.testcase_start_times import TestCaseStartTimes
 from modles.testcase_result import TestCaseResult
+from modles.testcase_scene import TestCaseScene
 db.create_all()
 
 from common.pre_db_insert_data import *  # 建表后的预配置参数
@@ -32,6 +33,7 @@ from views.request_headers import request_headers_blueprint
 from views.testcase_request import test_case_request_blueprint
 from views.testcase_report import testcase_report_blueprint
 from views.system_config import system_config_blueprint
+from views.testcase_scene import testcase_scene_blueprint
 
 app.register_blueprint(testcase_blueprint)
 app.register_blueprint(home_blueprint)
@@ -41,6 +43,7 @@ app.register_blueprint(request_headers_blueprint)
 app.register_blueprint(test_case_request_blueprint)
 app.register_blueprint(testcase_report_blueprint)
 app.register_blueprint(system_config_blueprint)
+app.register_blueprint(testcase_scene_blueprint)
 
 if __name__ == '__main__':
     app.run()

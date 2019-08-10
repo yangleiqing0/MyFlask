@@ -7,10 +7,6 @@
 # import requests
 # ht = requests.get('http://www.woniuxy.com').text
 # print(ht)
-def te():
-    a=0
-    while 1:
-        a += 1
-        if a ==10:
-            return a
-print(te())
+#
+a = 12
+print(a in(None, "None"))

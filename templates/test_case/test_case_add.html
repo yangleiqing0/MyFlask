@@ -2,7 +2,7 @@
 {% block title %}添加测试用例{% endblock %}
 {% block content %}
             <div class="panel-body" >
-                <form action="{{ url_for('testcase_blueprint.add_test_case') }}" id="testcase_add_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form action="{{ url_for('testcase_blueprint.add_test_case') }}?testcase_scene_id={{ testcase_scene_id }}" id="testcase_add_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="测试用例名称") }}
                     <div class="form-group">
                         <label for="case_group" class="control-label col-md-4">测试用例分组</label>
@@ -49,16 +49,21 @@
 {% block js %}
 <script>
 $(document).ready(function() {
-    let case_group_add = window.localStorage.getItem('case_group_add');
-    case_group_add = JSON.parse(case_group_add);
-    let request_headers_add = window.localStorage.getItem('request_headers_add');
-    request_headers_add = JSON.parse(request_headers_add);
-    if (case_group_add != null){
+    try{       /*如果测试用例分组没有的时候会报错,捕获异常*/
+         let case_group_add = window.localStorage.getItem('case_group_add');
+        case_group_add = JSON.parse(case_group_add);
+        let request_headers_add = window.localStorage.getItem('request_headers_add');
+        request_headers_add = JSON.parse(request_headers_add);
+         if (case_group_add != null){
         $('#case_group').val(case_group_add)
     }
     if (request_headers_add != null){
         $('#request_headers').val(request_headers_add)
     }
+    }catch (e) {
+    }
+
+
     $('#testcase_add').click(function () {
         let case_group_id = $('#case_group option:selected') .val();
         let request_headers_id = $('#request_headers option:selected') .val();
@@ -153,5 +158,4 @@ $(document).ready(function() {
 
 
 </script>
-<script type="text/javascript" src="http://127.0.0.1:5000/static/js/collapse/bootstrap-collapse.js"></script>
 {% endblock %}
