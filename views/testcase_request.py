@@ -19,7 +19,7 @@ test_case_request_blueprint = Blueprint('test_case_request_blueprint', __name__)
 class TestCaseRequest(MethodView):
 
     def get(self):
-        testcases = TestCases.query.all()
+        testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None)).all()
         FrontLogs('进入测试用例执行页面').add_to_front_log()
         case_groups = CaseGroup.query.all()
         testcase_list = []
@@ -28,11 +28,18 @@ class TestCaseRequest(MethodView):
             testcase_list.append(testcase)
         for case_group in case_groups:
             case_group_testcases = case_group.testcases
+            num = 0
+            while num < len(case_group_testcases):
+                if case_group_testcases[num].testcase_scene_id not in (None, "", "None"):
+                    print('remove:', case_group_testcases[num].testcase_scene_id)
+                    del(case_group_testcases[num])
+                else:
+                    num += 1
             for case_group_testcase in case_group_testcases:
                 case_group_testcase.name = AnalysisParams().analysis_params(case_group_testcase.name)
         no_case_group = type('no_case_group', (object,), dict(a=-1))
         case_groups.append(no_case_group)
-        no_case_group.testcases = TestCases.query.filter(TestCases.group_id == "").all()
+        no_case_group.testcases = TestCases.query.filter(TestCases.group_id == "", TestCases.testcase_scene_id.is_(None)).all()
         no_case_group.name = "未加入分组的测试用例"
         print('testcase :', testcases)
         print('test_case_request case_groups :', case_groups)
@@ -44,15 +51,11 @@ class TestCaseRequest(MethodView):
     def post(self):
         testcase_ids = request.form.getlist('testcase')
         print("request_from_list: ", request.form.getlist('testcase'))
-        # testcase_dict = {}
         testcase_list = []
         for index, testcase_id in enumerate(testcase_ids):
             testcase = TestCases.query.get(testcase_id)
             testcase.name = AnalysisParams().analysis_params(testcase.name)
             testcase_list.append(testcase)
-        #     testcase_dict.update({"index": index, "id%s" % index: testcase_id, "name%s" % index: testcase_name})
-        # testcase_dict = json.dumps({"testcase_dict": str(testcase_dict)})
-        # print('testcase_dict: ', testcase_dict)
         print('testcase_list: ', testcase_list)
 
         return render_template('test_case_request/test_case_request_list.html', items=testcase_list)
