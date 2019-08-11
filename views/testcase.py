@@ -72,6 +72,9 @@ class TestCaseAdd(MethodView):
         request_headers = AnalysisParams().analysis_params(request_headers, is_change="headers")
         print('TestCaseAdd request_headers: ', request_headers)
         testcase_scene_id = request.args.get('testcase_scene_id', None)
+        if testcase_scene_id == "None":
+            testcase_scene_id = None
+        print('testcase_scene_id的值：', testcase_scene_id, type(testcase_scene_id))
         headers = json.loads(request_headers)
         print('request_headers_id: %s headers:%s ' % (request_headers_id, headers))
         if request.form.get('test', 0) == '测试':
@@ -84,7 +87,8 @@ class TestCaseAdd(MethodView):
         if (name,) in all_names:
             return '已有相同测试用例名称，请修改'
         else:
-            testcase = TestCases(name, url, data, regist_variable, regular, method, group_id, request_headers_id,testcase_scene_id)
+            print('testcase_scene_id的值：', testcase_scene_id, type(testcase_scene_id))
+            testcase = TestCases(name, url, data, regist_variable, regular, method, group_id, request_headers_id, testcase_scene_id)
             db.session.add(testcase)
             db.session.commit()
             FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()

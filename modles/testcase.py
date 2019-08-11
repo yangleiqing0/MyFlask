@@ -47,4 +47,4 @@ class TestCases(db.Model):
                     method=self.method, group_id=self.group_id,
                     regular=self.regular, hope_result=self.hope_result,
                     testcase_scene_id=self.testcase_scene_id,
-                    is_model = self.is_model)
+                    is_model=self.is_model)

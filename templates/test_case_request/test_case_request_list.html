@@ -9,12 +9,14 @@
                             <th>ID</th>
                             <th>测试用例名称</th>
                             <th>请求返回报文</th>
+                            <th>归属测试场景</th>
                         </tr>
                         {% for item in items %}
                         <tr>
                             <td><a href="#"><span class="badge">{{ loop.index0 }}</span></a></td>          <!--使用循环的数字作为id -->
                             <td>{{ item.name }}</td>
                             <td><samp id="response_{{ item.id }}"></samp></td>
+                            <td>{{ item.scene_name }}</td>
                         </tr>
                         {% endfor %}
 
@@ -58,12 +60,7 @@ $(document).ready(function() {
             url:"{{ url_for("testcase_report_blueprint.testcase_report")}}?testcase_time_id=" + testcase_time_id,
             type:"POST",
             success:function (response) {
-                document.write(response + '<script>' +
-                        '$(\'#score\').css(\'vertical-align\', \'middle\');' +
-                        'var tds = document.getElementsByTagName(\'td\');\n' +
-                        '        for (i=0;i<tds.length;i++){\n' +
-                        '            tds[i].setAttribute(\'title\', tds[i].textContent)\n' +
-                        '        }<\/script>');
+                window.location.href = "{{ url_for("testcase_report_blueprint.testcase_report")}}?testcase_time_id=" + testcase_time_id
                 /* 需要协程原始js形式 完成自动添加title功能*/
 
             }

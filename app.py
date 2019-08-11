@@ -5,7 +5,6 @@ from flask import Flask
 from logs.config import file_log_handler, logging
 
 requests.packages.urllib3.disable_warnings()
-#ha
 app = Flask(__name__)
 app.debug = True
 app.config.from_object(config)

@@ -11,7 +11,8 @@ class AnalysisParams:
         print('init:self.variables:', self.variables)
 
     def analysis_params(self,  params, is_change=None):
-        if params is "":
+        if params in ("", None):
+            params = ""
             return params
         while 1:
             print('analysis_before:', params)

@@ -8,6 +8,7 @@ from modles.testcase import TestCases
 from modles.testcase_result import TestCaseResult
 from modles.case_group import CaseGroup
 from modles.testcase_start_times import TestCaseStartTimes
+from modles.testcase_scene import TestCaseScene
 from common.tail_font_log import FrontLogs
 from app import cdb, db, app
 from common.analysis_params import AnalysisParams
@@ -40,23 +41,39 @@ class TestCaseRequest(MethodView):
         no_case_group = type('no_case_group', (object,), dict(a=-1))
         case_groups.append(no_case_group)
         no_case_group.testcases = TestCases.query.filter(TestCases.group_id == "", TestCases.testcase_scene_id.is_(None)).all()
-        no_case_group.name = "未加入分组的测试用例"
+        no_case_group.name = "未分组测试用例"
         print('testcase :', testcases)
         print('test_case_request case_groups :', case_groups)
+
+        testcase_scene_group = type('testcase_scene_group', (object,), dict(a=-1))
+        case_groups.append(testcase_scene_group)
+        testcase_scene_group.testcases = TestCaseScene.query.all()
+        testcase_scene_group.name = "测试场景"
+
         for case_group in case_groups:
             print('test_case_request case_group :', case_group.testcases)
 
         return render_template('test_case_request/test_case_request.html', case_groups=case_groups)
 
     def post(self):
+        print('TestCaseRequest post request.form: ', request.form)
         testcase_ids = request.form.getlist('testcase')
-        print("request_from_list: ", request.form.getlist('testcase'))
+        print("request_from_list: ", testcase_ids)
         testcase_list = []
         for index, testcase_id in enumerate(testcase_ids):
             testcase = TestCases.query.get(testcase_id)
             testcase.name = AnalysisParams().analysis_params(testcase.name)
             testcase_list.append(testcase)
         print('testcase_list: ', testcase_list)
+
+        testcase_scene_ids = request.form.getlist('testcase_scene')
+        for testcase_scene_id in testcase_scene_ids:
+            testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+            testcases = testcase_scene.testcases
+            for testcase in testcases:
+                testcase.scene_name = testcase.testcase_scene.name
+                testcase_list.append(testcase)
+        print("request_testcase_ids_list: ", testcase_ids)
 
         return render_template('test_case_request/test_case_request_list.html', items=testcase_list)
 

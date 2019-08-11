@@ -6,29 +6,37 @@
             <div style="float: left" class="col-md-12 no-padding"  >
                         {% for case_group in case_groups %}
                             <div class="btn col-md-12 btn-default no-padding"  >
-                                <div class="col-md-11" href="#case_group_{{ case_group.id }}" data-toggle="collapse">
-                                    <span style="margin-left: 120px">{{case_group.name }}</span>
+                                <div class="col-md-11" href="#case_group_{{ loop.index0 }}" data-toggle="collapse">
+                                    <span style="margin-left: 120px"><b>{{case_group.name }}</b></span>
                                 </div>
                                  <div class="col-md-1 has_no_padding" style="float: left">
                                      <div class=" has_no_padding" >
-                                         <label style="font-weight: normal" for="case_group_{{ case_group.id }}_all" class="col-md-8 has_no_padding">全选分组</label>
+                                         <label style="font-weight: normal" for="case_group_{{ loop.index0 }}_all" class="col-md-8 has_no_padding">全选分组</label>
                                      </div>
                                      <div class="col-md-4 has_no_padding" >
-                                         <input type="checkbox" id="case_group_{{ case_group.id }}_all" value="case_group_{{ case_group.id }}_all" name="case_group_{{ case_group.id }}_all" class="all_checkbox" style="zoom:1.5;width: 20px;margin-top: 1px;">
+                                         <input type="checkbox" id="case_group_{{ loop.index0 }}_all" value="case_group_{{ loop.index0 }}_all" name="case_group_{{ loop.index0 }}_all" class="all_checkbox" style="zoom:1.5;width: 20px;margin-top: 1px;">
                                      </div>
                                 </div>
                             </div>
-                            <div id="case_group_{{ case_group.id }}" class="collapse no-padding">
+                            <div id="case_group_{{ loop.index0 }}" class="collapse no-padding">
                                 {% for testcase in case_group.testcases %}
                                      <div class="form-group col-md-4">
-                                         <div>
-                                              <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px">{{ testcase.name }}</label>
-                                         </div>
+                                         {% if case_group.name == '测试场景' %}
+                                              <div>
+                                                  <label for="testcase_scene_{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal">{{ testcase.name }}</label>
+                                              </div>
+                                              <input  type="checkbox" id="testcase_scene_{{ testcase.id }}" value="{{ testcase.id }}" name="testcase_scene" style="zoom:1.5;width: 20px" >
+                                         {% else %}
+                                              <div>
+                                              <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal">{{ testcase.name }}</label>
+                                              </div>
                                               <input  type="checkbox" id="{{ testcase.id }}" value="{{ testcase.id }}" name="testcase" style="zoom:1.5;width: 20px" >
+                                         {% endif %}
                                      </div>
                                 {% endfor %}
                             </div>
-                        {% endfor %}</div>
+                        {% endfor %}
+            </div>
         <div class="col-md-4 col-md-offset-4" id="nocheck" style="text-align: center;color: red"></div>
         {{ macro.submit(submit_value="确认",submit_id="assign",test_type="button",
         div_class="control-label col-md-7",test_style="",test_value="全选",test_id="all_checkboxes") }}
@@ -73,7 +81,7 @@
         });
         $('#assign').click(function () {
             let checkVal = [];
-            $("input[name='testcase']:checkbox").each(function() {
+            $("input[name*='testcase']:checkbox").each(function() {
                 if ($(this).is(":checked")) {
                     let s= $(this).val();
                     checkVal.push(s);

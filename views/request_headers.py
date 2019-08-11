@@ -1,4 +1,5 @@
 import json
+from urllib import parse
 from flask.views import MethodView
 from common.tail_font_log import FrontLogs
 from app import cdb, db, app
@@ -105,6 +106,21 @@ class RequestHeadersUpdateValidata(MethodView):
             return jsonify(True)
 
 
+class RequestHeadersValueValidata(MethodView):
+
+    def get(self):
+        value = request.args.get('value')
+        value = parse.unquote(value)
+        try:
+            if isinstance(eval(value), dict):
+                return jsonify(True)
+            else:
+                return jsonify(False)
+        except Exception as e:
+            print(e)
+            return jsonify(False)
+
+
 request_headers_blueprint.add_url_rule('/requestheadersadd/', view_func=RequestHeadersAdd.as_view('request_headers_add'))
 request_headers_blueprint.add_url_rule('/requestheaderslist/', view_func=RequestHeadersList.as_view('request_headers_list'))
 request_headers_blueprint.add_url_rule('/requestheadersupdate/<id>/', view_func=RequestHeadersUpdate.as_view('request_headers_update'))
@@ -112,4 +128,5 @@ request_headers_blueprint.add_url_rule('/requestheadersdelete/<id>/', view_func=
 
 request_headers_blueprint.add_url_rule('/requestheadersvalidate/', view_func=RequestHeadersValidata.as_view('request_headers_validate'))
 request_headers_blueprint.add_url_rule('/requestheadersupdatevalidate/', view_func=RequestHeadersUpdateValidata.as_view('request_headers_update_validate'))
+request_headers_blueprint.add_url_rule('/request_headers_value_validate/', view_func=RequestHeadersValueValidata.as_view('request_headers_value_validate'))
 

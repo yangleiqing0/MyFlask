@@ -3,7 +3,7 @@ from app import db
 
 
 class TestCaseScene(db.Model):
-    __tablename__ = 'testcase_sneces'
+    __tablename__ = 'testcase_scenes'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(20), nullable=False)
     description = db.Column(db.String(50))

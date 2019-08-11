@@ -7,6 +7,8 @@
 # import requests
 # ht = requests.get('http://www.woniuxy.com').text
 # print(ht)
-#
-a = 12
-print(a in(None, "None"))
+# #
+# a = 12
+# print(a in(None, "None"))
+# import datetime
+# print(str(datetime.datetime.now().strftime('%Y%m%d%H%M%S')))

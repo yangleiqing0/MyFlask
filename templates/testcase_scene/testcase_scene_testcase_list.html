@@ -20,6 +20,7 @@
                                 {% endfor %}
                             </select>
                             <a id="testcase_add_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="复制测试用例"><i class="fa fa-copy"></i></a>
+                            <a id="testcase_scene_delete_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="删除场景"><i class="fa fa-trash"></i></a>
                         </div>
                     </div>
                     <div id="case_group_{{ testcase_scene.id }}" class="collapse no-padding">
@@ -54,8 +55,16 @@
                     window.location.href = "{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}"
                 }
             })
-
-
+        });
+        $('a[id*="testcase_scene_delete"]').click(function () {
+            let testcase_scene_id = $(this).attr('id').replace('testcase_scene_delete_','');
+            $.ajax({
+                url:'{{ url_for("testcase_scene_blueprint.testcase_scene_delete")}}?testcase_scene_id='+testcase_scene_id,
+                type:'GET',
+                success:function () {
+                    window.location.href = "{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}"
+                }
+            })
         });
     });
     </script>

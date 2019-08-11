@@ -1,4 +1,4 @@
-import json
+import datetime
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
@@ -24,7 +24,7 @@ class TestCaseSceneAdd(MethodView):
         testcase_scene = TestCaseScene(name, description)
         db.session.add(testcase_scene)
         db.session.commit()
-        return render_template('testcase_scene/testcase_scene_testcase_list.html')
+        return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
 
 
 class TestCaseSceneTestCaseList(MethodView):
@@ -43,13 +43,18 @@ class TestCaseSceneTestCaseList(MethodView):
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
 
 
-class TestCaseSceneTestCaseDelete(MethodView):
+class TestCaseSceneDelete(MethodView):
 
     def get(self):
-        id = request.args.get('id', id)
-        testcase_scene = TestCaseScene.query.get(id)
+        testcase_scene_id = request.args.get('testcase_scene_id')
+        testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+        testcases = testcase_scene.testcases
+        for testcase in testcases:
+            db.session.delete(testcase)
+            FrontLogs('删除测试场景 id： %s  关联的测试用例名称 %s' % (testcase_scene_id, testcase.name)).add_to_front_log()
         db.session.delete(testcase_scene)
         db.session.commit()
+        FrontLogs('删除测试场景 id： %s' % testcase_scene_id).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
 
     def post(self):
@@ -62,7 +67,10 @@ class TestCaseSceneTestCaseCopy(MethodView):
         testcase_scene_id = request.args.get('testcase_scene_id')
         testcase_id = request.args.get('testcase_id')
         testcase = TestCases.query.get(testcase_id)
-        db.session.add(TestCases(testcase.name, testcase.url, testcase.data, testcase.regist_variable,
+
+        timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
+        name = testcase.name + timestr
+        db.session.add(TestCases(name, testcase.url, testcase.data, testcase.regist_variable,
                        testcase.regular, testcase.method, testcase.group_id, testcase.request_headers_id,
                        testcase_scene_id))
         db.session.commit()
@@ -86,6 +94,7 @@ class TestCaseSceneAddValidate(MethodView):
 testcase_scene_blueprint.add_url_rule('/testcase_scene_add/', view_func=TestCaseSceneAdd.as_view('testcase_scene_add'))
 testcase_scene_blueprint.add_url_rule('/testcase_scene_copy/', view_func=TestCaseSceneTestCaseCopy.as_view('testcase_scene_copy'))
 testcase_scene_blueprint.add_url_rule('/testcase_scene_testcase_list/', view_func=TestCaseSceneTestCaseList.as_view('testcase_scene_testcase_list'))
-testcase_scene_blueprint.add_url_rule('/testcase_scene_testcase_delete/', view_func=TestCaseSceneTestCaseDelete.as_view('testcase_scene_testcase_delete'))
+testcase_scene_blueprint.add_url_rule('/testcase_scene_delete/', view_func=TestCaseSceneDelete.as_view('testcase_scene_delete'))
+
 testcase_scene_blueprint.add_url_rule('/testcase_scene_add_validate/', view_func=TestCaseSceneAddValidate.as_view('testcase_scene_add_validate'))
 

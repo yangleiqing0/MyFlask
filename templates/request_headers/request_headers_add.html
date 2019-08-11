@@ -4,8 +4,7 @@
             <div class="panel-body" >
                 <form action="{{ url_for('request_headers_blueprint.request_headers_add') }}" id="request_headers_add_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="请求头部名称") }}
-                    {{ macro.form_group_textarea(lable_name="value",blank_name="请求头部的值") }}
-                    {{ macro.form_group(lable_name="description",blank_name="请求头部备注") }}
+                    {{ macro.form_group_textarea(lable_name="value",blank_name="请求头部的值",placeholder_name='{"Content-Type": "application/json;charset=UTF-8"}此类字典格式') }}                    {{ macro.form_group(lable_name="description",blank_name="请求头部备注") }}
                     {{ macro.submit(submit_id="request_headers_add") }}
                 </form>
             </div>
@@ -17,29 +16,29 @@
                     $('#request_headers_add_form').validate({
                         rules: {
                             name: {required: true, minlength: 2, maxlength: 20, remote: '/requestheadersvalidate/'},
-                            value:{required: true},
+                            value:{required: true, remote: '/request_headers_value_validate/'},
                             description: {maxlength: 50},
                         },
                         messages: {
                             name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过20位', remote: '已存在名称'},
-                            value: {required: '不可为空'},
+                            value: {required: '不可为空', remote: '请输入正确的请求头部'},
                             description: {maxlength: '不可超过50位'},
                         }
                     })
                 };
-            $('input').bind('input propertychange', function() {
+            $('input,textarea').bind('input propertychange',function() {
                 validate()
                 });
             $('#request_headers_add').click(function () {
                 $('#request_headers_add_form').validate({
                         rules: {
                             name: {required: true, minlength: 2, maxlength: 20, remote: '/requestheadersvalidate/'},
-                            value:{required: true},
+                            value:{required: true, remote: '/request_headers_value_validate/'},
                             description: {maxlength: 50},
                         },
                         messages: {
                             name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过20位', remote: '已存在名称'},
-                            value: {required: '不可为空'},
+                            value: {required: '不可为空', remote: '请输入正确的请求头部'},
                             description: {maxlength: '不可超过50位'},
                         },
                     submitHandler: function (form) {

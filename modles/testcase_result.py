@@ -9,11 +9,13 @@ class TestCaseResult(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     response_body = db.Column(db.TEXT)
     testcase_test_result = db.Column(db.String(10))
-    testcase_id = db.Column(db.Integer,db.ForeignKey(TestCases.id))
-    testcase_start_time_id = db.Column(db.Integer,db.ForeignKey(TestCaseStartTimes.id))
+    testcase_id = db.Column(db.Integer, db.ForeignKey(TestCases.id))
+    testcase_start_time_id = db.Column(db.Integer, db.ForeignKey(TestCaseStartTimes.id))
     old_sql_value = db.Column(db.TEXT)
     new_sql_value = db.Column(db.TEXT)
     timestamp = db.Column(db.DateTime, index=True)
+
+    testcases = db.relationship('TestCases', backref='testcase_result')
 
     def __init__(self, testcase_id, testcase_start_time_id, response_body, testcase_test_result="测试成功",
                  old_sql_value=None, new_sql_value=None):

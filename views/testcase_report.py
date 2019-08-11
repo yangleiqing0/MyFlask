@@ -4,61 +4,151 @@ from flask import render_template, Blueprint, request, redirect, url_for, send_f
 from modles.variables import Variables
 from modles.testcase_start_times import TestCaseStartTimes
 from modles.testcase_result import TestCaseResult
+from modles.testcase_scene import TestCaseScene
+from modles.testcase import TestCases
 from common.tail_font_log import FrontLogs
 from app import cdb, db, app
 from common.do_report import test_report
 from datetime import datetime
 from common.analysis_params import AnalysisParams
+from common.most_common_method import NullObject
 
 
 testcase_report_blueprint = Blueprint('testcase_report_blueprint', __name__)
+
+
+class EnvMessage:
+
+    def __init__(self, testcase_results, testcase_time_id, testcase_time, testcase_scene_list):
+        self.testcase_scene_list = testcase_scene_list
+        self.test_name = Variables.query.filter(Variables.name == '_TEST_NAME').first().value
+        self.zdbm_version = Variables.query.filter(Variables.name == '_TEST_VERSION').first().value
+        self.test_pl = Variables.query.filter(Variables.name == '_TEST_PL').first().value
+        self.test_net = Variables.query.filter(Variables.name == '_TEST_NET').first().value
+        self.title_name = Variables.query.filter(Variables.name == '_TITLE_NAME').first().value
+        self.fail_sum = self.count_success_testcase_scene()
+        self.test_sum = len(testcase_results) + len(testcase_scene_list)
+        self.test_success = TestCaseResult.query.join(
+            TestCases, TestCaseResult.testcase_id == TestCases.id).filter(TestCaseResult.testcase_test_result == "测试成功",
+            TestCaseResult.testcase_start_time_id == testcase_time_id,
+            TestCases.testcase_scene_id.is_(None)).count() + len(testcase_scene_list)-self.fail_sum
+        self.time_strftime = testcase_time.time_strftime
+        self.score = int(self.test_success * 100 / self.test_sum)
+
+    def count_success_testcase_scene(self):
+        fail_count = 0
+        for testcase_scene in self.testcase_scene_list:
+            for testcase in testcase_scene.testcases:
+                print('testcase.testcase_result: ', testcase)
+                testcase_result = TestCaseResult.query.filter\
+                    (TestCaseResult.testcase_id==testcase.id).first().testcase_test_result
+                if testcase_result == "测试失败":
+                    fail_count += 1
+                    break
+        return fail_count
+
+
+class Test:
+
+    def __init__(self, testcase_result):
+        print('Test :', testcase_result)
+        self.t_name = AnalysisParams().analysis_params(testcase_result[0])
+        print('self.t_name: ', self.t_name)
+        self.url = AnalysisParams().analysis_params(testcase_result[1])
+        self.method = testcase_result[2]
+        self.request_body = AnalysisParams().analysis_params(testcase_result[3])
+        self.response_body = testcase_result[4]
+        self.hope = AnalysisParams().analysis_params(testcase_result[5])
+        self.old_database_value = testcase_result[6]
+        self.new_database_value = testcase_result[7]
+        self.result = testcase_result[8]
+        try:
+            self.scene_id = testcase_result[9]
+        except Exception:
+            pass
+
+
+class Testcaseresult:
+
+    def __init__(self, testcase_time_id, result="testcases"):
+        self.testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
+        print('testcase_time_id: ', testcase_time_id, self.testcase_time)
+
+        if result == 'testcases':
+            testcase_results_query_sql = 'select testcases.name,testcases.url,testcases.method,testcases.data,' \
+                                         'test_case_result.response_body,testcases.hope_result,test_case_result.' \
+                                         'old_sql_value,test_case_result.new_sql_value,test_case_result.' \
+                                         'testcase_test_result from testcases,test_case_result where testcases.id=' \
+                                         'test_case_result.testcase_id and testcases.testcase_scene_id isnull and ' \
+                                         'test_case_result.testcase_start_time_id=%s' \
+                                         % testcase_time_id
+            self.testcase_results = cdb().query_db(testcase_results_query_sql)
+            print('self.testcase_results:', self.testcase_results)
+
+        elif result == 'scene_testcases':
+            testcase_results_query_sql = 'select testcases.name,testcases.url,testcases.method,testcases.data,' \
+                                         'test_case_result.response_body,testcases.hope_result,test_case_result.' \
+                                         'old_sql_value,test_case_result.new_sql_value,test_case_result.' \
+                                         'testcase_test_result ,testcases.testcase_scene_id from testcases,test_case_result where testcases.id=' \
+                                         'test_case_result.testcase_id and testcases.testcase_scene_id not null and ' \
+                                         'test_case_result.testcase_start_time_id=%s' \
+                                         % testcase_time_id
+            self.testcase_results = cdb().query_db(testcase_results_query_sql)
+
+            print('self.testcase_results:', self.testcase_results)
 
 
 class TestCaseReport(MethodView):
 
     def get(self):
         testcase_time_id = request.args.get('testcase_time_id')
+        testcase_results = Testcaseresult(testcase_time_id).testcase_results
         testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
-        print('testcase_time_id: ', testcase_time_id, testcase_time)
-        testcase_results_query_sql = 'select testcases.name,testcases.url,testcases.method,testcases.data,test_case_result.response_body,' \
-                                     ' testcases.hope_result,test_case_result.old_sql_value,test_case_result.new_sql_value,' \
-                                     'test_case_result.testcase_test_result' \
-                                     ' from testcases,test_case_result where testcases.id=test_case_result.testcase_id ' \
-                                     'and test_case_result.testcase_start_time_id=%s' % testcase_time_id
-        testcase_results = cdb().query_db(testcase_results_query_sql)
         print('testcase_results: ', testcase_results, len(testcase_results))
         items = []
         for testcase_result in testcase_results:
-            Test = type('Test', (object,), dict(a=-1))  # 需要创建两次对象  否则共用同一个对象的列表指向
-            t_name = Test.name = AnalysisParams().analysis_params(testcase_result[0])
-            print(Test.name, t_name)
-            Test.url = AnalysisParams().analysis_params(testcase_result[1])
-            Test.method = testcase_result[2]
-            Test.request_body = AnalysisParams().analysis_params(testcase_result[3])
-            Test.response_body = testcase_result[4]
-            Test.hope = AnalysisParams().analysis_params(testcase_result[5])
-            Test.old_database_value = testcase_result[6]
-            Test.new_database_value = testcase_result[7]
-            Test.result = testcase_result[8]
-            items.append(Test())
-        print('items: ', items[0].response_body)
+            items.append(Test(testcase_result))
+        print('items: ', items)
 
-        Allocation = type('Allocation', (object,), dict(a=-1))
-        Allocation.test_name = Variables.query.filter(Variables.name == '_TEST_NAME').first().value
-        Allocation.zdbm_version = Variables.query.filter(Variables.name == '_TEST_VERSION').first().value
-        Allocation.test_pl = Variables.query.filter(Variables.name == '_TEST_PL').first().value
-        Allocation.test_net = Variables.query.filter(Variables.name == '_TEST_NET').first().value
-        Allocation.title_name = Variables.query.filter(Variables.name == '_TITLE_NAME').first().value
-        Allocation.test_sum = len(testcase_results)
-        Allocation.test_success = TestCaseResult.query.filter(TestCaseResult.testcase_test_result == "测试成功",
-                                                              TestCaseResult.testcase_start_time_id == testcase_time_id).count()
-        Allocation.time_strftime = testcase_time.time_strftime
-        Allocation.fail_sum = len(testcase_results) - Allocation.test_success
-        Allocation.score = int(Allocation.test_success * 100 / Allocation.test_sum)
+        testcase_scene_results = Testcaseresult(testcase_time_id, result="scene_testcases").testcase_results
+        testcase_scene_ids = []
+        print('testcase_scene_results: ', testcase_scene_results[0][9], testcase_scene_results, len(testcase_scene_results))
+        testcase_scene_testcases_after_list = []
+        for testcase_scene_result in testcase_scene_results:
+            testcase_scene_ids.append(testcase_scene_result[9])
+            testcase_scene_testcases_after_list.append(Test(testcase_scene_result))
+        testcase_scene_ids = set(testcase_scene_ids)
+        testcase_scene_list = []
+        print('testcase_scene_testcases_after_list:', testcase_scene_testcases_after_list)
+        print('testcase_scene_list: ', testcase_scene_ids)
+        for testcase_scene_id in testcase_scene_ids:
+            print('testcase_scene_id: ', testcase_scene_id)
+            testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+            fail_count = 0
+            for testcase in testcase_scene.testcases:
+                print('testcase_scene_ids testcase: ', testcase)
+                testcase_result = TestCaseResult.query.filter\
+                    (TestCaseResult.testcase_id==testcase.id).first().testcase_test_result
+                print('testcase_scene_ids testcase_result: ', testcase_result)
+                if testcase_result == "测试失败":
+                    fail_count += 1
+            if fail_count == 0:
+                testcase_scene.result = "测试成功"
+            else:
+                testcase_scene.result = "测试失败"
+            testcase_scene_list.append(testcase_scene)
+            testcase_scene_testcases = []
+            for testcase_scene_testcase in testcase_scene_testcases_after_list:
+                if testcase_scene_testcase.scene_id == testcase_scene.id:
+                    testcase_scene_testcases.append(testcase_scene_testcase)
 
-        Allocation()
+                print('testcase_scene_testcases:', testcase_scene_testcases)
+                testcase_scene.test_cases = testcase_scene_testcases
+        print("TestCaseReport testcase_scene_list:", testcase_scene_list, testcase_scene_list[0].result)
+        allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
         FrontLogs('进入测试用例执行页面 执行id: %s' % testcase_time_id).add_to_front_log()
-        return render_template("testcase_report/testcase_report.html", items=items, allocation=Allocation)
+        return render_template("testcase_report/testcase_report.html", items=items, allocation=allocation,
+                               testcase_scene_list=testcase_scene_list)
 
     def post(self):
         testcase_time_id = request.args.get('testcase_time_id')
@@ -74,48 +164,43 @@ class TestCaseReport(MethodView):
         db.session.commit()
         test_report(testcase_time_id)  # 生成测试报告
 
+        testcase_results = Testcaseresult(testcase_time_id).testcase_results
         testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
-        print('testcase_time_id: ', testcase_time_id, testcase_time)
-        testcase_results_query_sql = 'select testcases.name,testcases.url,testcases.method,testcases.data,test_case_result.response_body,' \
-                                     ' testcases.hope_result,test_case_result.old_sql_value,test_case_result.new_sql_value,' \
-                                     'test_case_result.testcase_test_result' \
-                                     ' from testcases,test_case_result where testcases.id=test_case_result.testcase_id ' \
-                                     'and test_case_result.testcase_start_time_id=%s' % testcase_time_id
-        testcase_results = cdb().query_db(testcase_results_query_sql)
         print('testcase_results: ', testcase_results, len(testcase_results))
         items = []
         for testcase_result in testcase_results:
-            Test = type('Test', (object,), dict(a=-1)) #需要创建两次对象  否则共用同一个对象的列表指向
-            t_name = Test.name = AnalysisParams().analysis_params(testcase_result[0])
-            print(Test.name, t_name)
-            Test.url = AnalysisParams().analysis_params(testcase_result[1])
-            Test.method = testcase_result[2]
-            Test.request_body = AnalysisParams().analysis_params(testcase_result[3])
-            Test.response_body = testcase_result[4]
-            Test.hope = AnalysisParams().analysis_params(testcase_result[5])
-            Test.old_database_value = testcase_result[6]
-            Test.new_database_value = testcase_result[7]
-            Test.result = testcase_result[8]
-            items.append(Test())
-        print(items)
+            items.append(Test(testcase_result))
+        print('items: ', items)
 
-        Allocation = type('Allocation', (object,), dict(a=-1))
-        Allocation.test_name = Variables.query.filter(Variables.name == '_TEST_NAME').first().value
-        Allocation.zdbm_version = Variables.query.filter(Variables.name == '_TEST_VERSION').first().value
-        Allocation.test_pl = Variables.query.filter(Variables.name == '_TEST_PL').first().value
-        Allocation.test_net = Variables.query.filter(Variables.name == '_TEST_NET').first().value
-        Allocation.title_name = Variables.query.filter(Variables.name == '_TITLE_NAME').first().value
-        Allocation.test_sum = len(testcase_results)
-        Allocation.test_success = TestCaseResult.query.filter(TestCaseResult.testcase_test_result == "测试成功",
-                                                   TestCaseResult.testcase_start_time_id == testcase_time_id).count()
-        Allocation.time_strftime = testcase_time.time_strftime
-        Allocation.fail_sum = len(testcase_results) - Allocation.test_success
-        Allocation.score = int(Allocation.test_success * 100 / Allocation.test_sum)
+        testcase_scene_results = Testcaseresult(testcase_time_id, result="scene_testcases").testcase_results
+        testcase_scene_ids = []
+        print('testcase_scene_results: ', testcase_scene_results[0][9], testcase_scene_results,
+              len(testcase_scene_results))
+        testcase_scene_testcases_after_list = []
+        for testcase_scene_result in testcase_scene_results:
+            testcase_scene_ids.append(testcase_scene_result[9])
+            testcase_scene_testcases_after_list.append(Test(testcase_scene_result))
+        testcase_scene_ids = set(testcase_scene_ids)
+        testcase_scene_list = []
+        print('testcase_scene_testcases_after_list:', testcase_scene_testcases_after_list)
+        print('testcase_scene_list: ', testcase_scene_ids)
+        for testcase_scene_id in testcase_scene_ids:
+            print('testcase_scene_id: ', testcase_scene_id)
+            testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+            testcase_scene_list.append(testcase_scene)
+            testcase_scene_testcases = []
+            for testcase_scene_testcase in testcase_scene_testcases_after_list:
+                if testcase_scene_testcase.scene_id == testcase_scene.id:
+                    testcase_scene_testcases.append(testcase_scene_testcase)
+                print('testcase_scene_testcases:', testcase_scene_testcases)
+                testcase_scene.test_cases = testcase_scene_testcases
+        print("TestCaseReport testcase_scene_list:", testcase_scene_list)
+        allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
 
-        Allocation()
         FrontLogs('进入测试报告页面 报告id: %s' % testcase_time_id).add_to_front_log()
         # return items, Allocation
-        return render_template("testcase_report/testcase_report.html", items=items, allocation=Allocation)
+        return render_template("testcase_report/testcase_report.html", items=items, allocation=allocation,
+                               testcase_scene_list=testcase_scene_list)
 
 
 class TestCaseReportList(MethodView):
@@ -151,7 +236,7 @@ class TestCaseReportDownLoad(MethodView):
         print('download_path:', download_path)
         dirpath = os.path.join(app.root_path, download_path)  # 这里是下在目录，从工程的根目录写起，比如你要下载static/js里面的js文件，这里就要写“static/js”
         print('dirpath:', dirpath)
-        FrontLogs('下载测试报告 测试报告名称: ' % name).add_to_front_log()
+        FrontLogs('下载测试报告 测试报告名称: %s ' % name).add_to_front_log()
         return send_from_directory(dirpath, name, as_attachment=True)  # as_attachment=True 一定要写，不然会变成打开，而不是下载
 
 

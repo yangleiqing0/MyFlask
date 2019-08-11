@@ -2,66 +2,90 @@
 {% block title %}测试报告{% endblock %}
 {% block content %}
     <div class="panel-body">
-                    <table class="table table-hover">
-                        <tr>
-                            <th>项目名称</th>
-                            <td>{{ allocation.test_name }}</td>
-                            <th>用例总数</th>
-                            <td>{{ allocation.test_sum }}</td>
-                            <th>分数</th>
-                        </tr>
-                        <tr>
-                            <th>项目版本</th>          <!--使用循环的数字作为id -->
-                            <td>{{ allocation.zdbm_version }}</td>
-                            <th>通过总数</th>
-                            <td>{{ allocation.test_success }}</td>
-                            <td rowspan="3" id="score">{{ allocation.score }}</td>
-                        </tr>
-                        <tr>
-                            <th>运行环境</th>          <!--使用循环的数字作为id -->
-                            <td>{{ allocation.test_pl }}</td>
-                            <th>失败总数</th>
-                            <td>{{ allocation.fail_sum }}</td>
-                        </tr>
-                         <tr>
-                            <th>测试网络</th>          <!--使用循环的数字作为id -->
-                            <td>{{ allocation.test_net }}</td>
-                            <th>测试时间</th>
-                            <td>{{ allocation.time_strftime }}</td>
-                        </tr>
-                    </table>
-                    <div class="col-md-12" style="height: 30px"></div>
-                    <table class="table table-hover">
-                    <div class="col-md-offset-10">
-                    </div>
-                        <tr>
-                            <th>ID</th>
-                            <th>用例名称</th>
-                            <th>请求接口</th>
-                            <th>请求方式</th>
-                            <th>请求报文</th>
-                            <th>预期结果</th>
-                            <th>响应报文</th>
-                            <th>数据库原值</th>
-                            <th>数据库现值</th>
-                            <th>测试结果</th>
-                        </tr>
-                        {% for item in items %}
-                        <tr>
-                            <td><a href="#"><span class="badge">{{ loop.index0 }}</span></a></td>          <!--使用循环的数字作为id -->
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.url }}</td>
-                            <td>{{ item.method }}</td>
-                            <td>{{ item.request_body }}</td>
-                            <td>{{ item.hope }}</td>
-                            <td>{{ item.response_body }}</td>
-                            <td>{{ item.old_database_value }}</td>
-                            <td>{{ item.new_database_value }}</td>
-                            <td>{{ item.result }}</td>
-                        </tr>
-                        {% endfor %}
-
-                    </table>
+        <table class="table table-hover">
+            <tr>
+                <th>项目名称</th>
+                <td>{{ allocation.test_name }}</td>
+                <th>用例总数</th>
+                <td>{{ allocation.test_sum }}</td>
+                <th>分数</th>
+            </tr>
+            <tr>
+                <th>项目版本</th>          <!--使用循环的数字作为id -->
+                <td>{{ allocation.zdbm_version }}</td>
+                <th>通过总数</th>
+                <td>{{ allocation.test_success }}</td>
+                <td rowspan="3" id="score">{{ allocation.score }}</td>
+            </tr>
+            <tr>
+                <th>运行环境</th>          <!--使用循环的数字作为id -->
+                <td>{{ allocation.test_pl }}</td>
+                <th>失败总数</th>
+                <td>{{ allocation.fail_sum }}</td>
+            </tr>
+             <tr>
+                <th>测试网络</th>          <!--使用循环的数字作为id -->
+                <td>{{ allocation.test_net }}</td>
+                <th>测试时间</th>
+                <td>{{ allocation.time_strftime }}</td>
+            </tr>
+        </table>
+        <div class="col-md-12" style="height: 30px"></div>
+        <table class="table table-hover">
+            <tr>
+                <th>ID</th>
+                <th>用例名称</th>
+                <th>请求接口</th>
+                <th>请求方式</th>
+                <th>请求报文</th>
+                <th>预期结果</th>
+                <th>响应报文</th>
+                <th>数据库原值</th>
+                <th>数据库现值</th>
+                <th>测试结果</th>
+            </tr>
+            {% for item in items %}
+                <tr>
+                    <td><a href="#"><span class="badge">{{ loop.index0 }}</span></a></td>          <!--使用循环的数字作为id -->
+                    <td>{{ item.t_name }}</td>
+                    <td>{{ item.url }}</td>
+                    <td>{{ item.method }}</td>
+                    <td>{{ item.request_body }}</td>
+                    <td>{{ item.hope }}</td>
+                    <td>{{ item.response_body }}</td>
+                    <td>{{ item.old_database_value }}</td>
+                    <td>{{ item.new_database_value }}</td>
+                    <td>{{ item.result }}</td>
+                </tr>
+            {% endfor %}
+            {% for testcase_scene in testcase_scene_list %}
+                <tbody href="#tasecase_scene_{{ testcase_scene.id }}" data-toggle="collapse">
+                    <tr>
+                        <td colspan="10">
+                            <div class="col-md-1"><span class="badge">{{ loop.index0 }}</span></div>
+                            <div  class="col-md-3" style="text-align: left;margin-left:12px">测试场景：【{{ testcase_scene.name }}】</div>
+                            <div class="col-md-2 col-md-offset-5" style="padding-left:208px">{{testcase_scene.result}}</div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody id="tasecase_scene_{{ testcase_scene.id }}" class="collapse">
+                {% for testcase in testcase_scene.test_cases %}
+                   <tr>
+                        <td><a href="#"><span class="badge">{{ loop.index0 }}</span></a></td>          <!--使用循环的数字作为id -->
+                        <td>{{ testcase.t_name }}</td>
+                        <td>{{ testcase.url }}</td>
+                        <td>{{ testcase.method }}</td>
+                        <td>{{ testcase.request_body }}</td>
+                        <td>{{ testcase.hope }}</td>
+                        <td>{{ testcase.response_body }}</td>
+                        <td>{{ testcase.old_database_value }}</td>
+                        <td>{{ testcase.new_database_value }}</td>
+                        <td>{{ testcase.result }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            {% endfor %}
+        </table>
     </div>
 {% endblock %}
 {% block js %}
