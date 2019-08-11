@@ -55,16 +55,27 @@
                     <td>{{ item.response_body }}</td>
                     <td>{{ item.old_database_value }}</td>
                     <td>{{ item.new_database_value }}</td>
-                    <td>{{ item.result }}</td>
+                    {% if  item.result == "测试成功"%}
+                        <td><span class="badge  badge-pill badge-success">{{ item.result }}</span></td>
+                        {% else %}
+                        <td><span class="badge  badge-pill badge-danger ">{{ item.result }}</span></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
             {% for testcase_scene in testcase_scene_list %}
                 <tbody href="#tasecase_scene_{{ testcase_scene.id }}" data-toggle="collapse">
                     <tr>
                         <td colspan="10">
-                            <div class="col-md-1"><span class="badge">{{ loop.index0 }}</span></div>
-                            <div  class="col-md-3" style="text-align: left;margin-left:12px">测试场景：【{{ testcase_scene.name }}】</div>
-                            <div class="col-md-2 col-md-offset-5" style="padding-left:208px">{{testcase_scene.result}}</div>
+                            <div class="col-md-1" style="margin-left:3px"><span class="badge" style="background-color: #0c0c0c">{{ loop.index0 }}</span></div>
+                            <div  class="col-md-3" style="text-align: left;margin-left:12px" >
+                                <span class="badge badge-pill badge-default" style="background-color: #0c0c0c">测试场景：【{{ testcase_scene.name }}】</span></div>
+                            <div class="col-md-2 col-md-offset-5" style="padding-left:208px">
+                                {% if  testcase_scene.result == "测试成功" %}
+                                    <span class="badge badge-success">{{testcase_scene.result}}</span>
+                                    {% else %}
+                                    <span class="badge badge-danger">{{testcase_scene.result}}</span>
+                                {% endif %}
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -80,7 +91,11 @@
                         <td>{{ testcase.response_body }}</td>
                         <td>{{ testcase.old_database_value }}</td>
                         <td>{{ testcase.new_database_value }}</td>
-                        <td>{{ testcase.result }}</td>
+                        {% if  testcase.result == "测试成功"%}
+                            <td><span class="badge badge-success">{{ testcase.result }}</span></td>
+                            {% else %}
+                            <td><span class="badge badge-danger">{{ testcase.result }}</span></td>
+                        {% endif %}
                     </tr>
                 {% endfor %}
                 </tbody>
@@ -95,7 +110,8 @@
         $('#score').css('vertical-align', 'middle');
         $("td",$(this)).hover(function(){
             $(this).attr('title',$(this).text());
-        })
+        });
+        $('.badge').removeAttr('background-color')
     })
     </script>
 {% endblock %}

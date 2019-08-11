@@ -13,6 +13,22 @@ from common.method_request import MethodRequest
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
 
+class TestCaseLook(MethodView):
+
+    def get(self, id=-1):
+        testcase_id = request.args.get('id', id)
+        print('testcase_id:', testcase_id)
+        testcase = TestCases.query.get(testcase_id)
+        case_groups = CaseGroup.query.all()
+        case_group_id_before = testcase.group_id
+        request_headers_id_before = testcase.request_headers_id
+        request_headerses = RequestHeaders.query.all()
+
+        return render_template('test_case/test_case_look.html', item=testcase, case_groups=case_groups,
+                               request_headers_id_before=request_headers_id_before, case_group_id_before=case_group_id_before,
+                               request_headerses=request_headerses)
+
+
 class TestCastList(MethodView):
 
     def get(self):
@@ -160,7 +176,7 @@ class UpdateTestCase(MethodView):
 
 class DeleteTestCase(MethodView):
 
-    def get(self,id=-1):
+    def get(self, id=-1):
         testcase_scene_id = request.args.get('testcase_scene_id', None)
         delete_test_case_sql = 'delete from testcases where id=?'
         cdb().opeat_db(delete_test_case_sql, (id,))
@@ -213,3 +229,4 @@ testcase_blueprint.add_url_rule('/updatetestcase/<id>/', view_func=UpdateTestCas
 testcase_blueprint.add_url_rule('/testcase_model/<id>/', view_func=ModelTestCase.as_view('test_case_model'))
 testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))
 testcase_blueprint.add_url_rule('/testcaseupdatevalidate/', view_func=TestCaseUpdateValidata.as_view('testcase_update_validate'))
+testcase_blueprint.add_url_rule('/look_test_case/<id>/', view_func=TestCaseLook.as_view('look_test_case'))

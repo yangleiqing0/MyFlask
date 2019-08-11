@@ -19,7 +19,7 @@
                             <th>操作</th>
                         </tr>
                         {% for item in items %}
-                        <tr>
+                        <tr  id="look_test_case_{{ item.id }}">
                             <td><a href="#"><span class="badge">{{ loop.index0 }}</span></a></td> <!--使用循环的数字作为id -->
 
                             <td>
@@ -39,6 +39,7 @@
                             <td>{{ item.regist_variable }}</td>
                             <td>{{ item.regular }}</td>
                             <td>
+                                <a href="{{ url_for('testcase_blueprint.look_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="查询测试用例"><i class="fa fa-search"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>
                                 {% if item.is_model ==0 %}
@@ -52,6 +53,17 @@
                     </table>
                 </div>
                 {{ macro.pagination_widget(pagination, 'testcase_blueprint.test_case_list') }}
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('tr[id*="look_test_case_"]').click(function () {
+                let test_case_id = $(this).attr('id').replace('look_test_case_','');
+                window.location.href = "{{ url_for('testcase_blueprint.look_test_case',id=0)}}?id=" + test_case_id
+            })
+        })
+
+    </script>
 {% endblock %}
 <style>
     th,td{

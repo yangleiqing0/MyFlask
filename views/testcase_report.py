@@ -26,22 +26,22 @@ class EnvMessage:
         self.test_pl = Variables.query.filter(Variables.name == '_TEST_PL').first().value
         self.test_net = Variables.query.filter(Variables.name == '_TEST_NET').first().value
         self.title_name = Variables.query.filter(Variables.name == '_TITLE_NAME').first().value
-        self.fail_sum = self.count_success_testcase_scene()
+        self.fail_sum = self.count_success_testcase_scene(testcase_time_id)
         self.test_sum = len(testcase_results) + len(testcase_scene_list)
         self.test_success = TestCaseResult.query.join(
             TestCases, TestCaseResult.testcase_id == TestCases.id).filter(TestCaseResult.testcase_test_result == "测试成功",
             TestCaseResult.testcase_start_time_id == testcase_time_id,
-            TestCases.testcase_scene_id.is_(None)).count() + len(testcase_scene_list)-self.fail_sum
+            TestCases.testcase_scene_id.is_(None), TestCaseResult.testcase_start_time_id==testcase_time_id).count() + len(testcase_scene_list)-self.fail_sum
         self.time_strftime = testcase_time.time_strftime
         self.score = int(self.test_success * 100 / self.test_sum)
 
-    def count_success_testcase_scene(self):
+    def count_success_testcase_scene(self, testcase_time_id):
         fail_count = 0
         for testcase_scene in self.testcase_scene_list:
             for testcase in testcase_scene.testcases:
                 print('testcase.testcase_result: ', testcase)
                 testcase_result = TestCaseResult.query.filter\
-                    (TestCaseResult.testcase_id==testcase.id).first().testcase_test_result
+                    (TestCaseResult.testcase_id==testcase.id,TestCaseResult.testcase_start_time_id==testcase_time_id).first().testcase_test_result
                 if testcase_result == "测试失败":
                     fail_count += 1
                     break
@@ -127,9 +127,9 @@ class TestCaseReport(MethodView):
             fail_count = 0
             for testcase in testcase_scene.testcases:
                 print('testcase_scene_ids testcase: ', testcase)
-                testcase_result = TestCaseResult.query.filter\
-                    (TestCaseResult.testcase_id==testcase.id).first().testcase_test_result
-                print('testcase_scene_ids testcase_result: ', testcase_result)
+                testcase_result = TestCaseResult.query.filter(TestCaseResult.testcase_id==testcase.id,
+                                                              TestCaseResult.testcase_start_time_id==testcase_time_id).first().testcase_test_result
+                print('testcase_scene_ids testcase_result: ', testcase_result, testcase)
                 if testcase_result == "测试失败":
                     fail_count += 1
             if fail_count == 0:
@@ -141,9 +141,10 @@ class TestCaseReport(MethodView):
             for testcase_scene_testcase in testcase_scene_testcases_after_list:
                 if testcase_scene_testcase.scene_id == testcase_scene.id:
                     testcase_scene_testcases.append(testcase_scene_testcase)
-
                 print('testcase_scene_testcases:', testcase_scene_testcases)
                 testcase_scene.test_cases = testcase_scene_testcases
+            for a in testcase_scene_list:
+                print('测试结果： ', a.result, a)
         print("TestCaseReport testcase_scene_list:", testcase_scene_list, testcase_scene_list[0].result)
         allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
         FrontLogs('进入测试用例执行页面 执行id: %s' % testcase_time_id).add_to_front_log()

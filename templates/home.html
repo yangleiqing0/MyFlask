@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <title>自动化平台</title>
 
-{#    <meta http-equiv="pragma" content="no-cache">#}
-{#    <meta http-equiv="cache-control" content="no-cache">#}
-{#    <meta http-equiv="expires" content="0">#}
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
     <script src="https://cdn.staticfile.org/jquery/3.1.1/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/collapse/jquery.js"></script>   {# 需要这个错误的地址保证下面的链接生效 #}
@@ -20,8 +20,8 @@
     <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.js"></script>
-{#    <script src="{{url_for('static',filename='js/echarts.common.min.js')}}"></script>#}
-{#    <script src="{{url_for('static',filename='js/jquery.min.js')}}"></script>#}
+    <link href="{{url_for('static',filename='css/badge/badge.css')}}?v=1.0.6"  rel="stylesheet">
+
 
 
 </head>
@@ -185,10 +185,13 @@
     <div class="row" style="width: 1300px">
         <div class="col-md-12">
             <div class="panel panel-default">
-                <div class="panel-heading text-center"><h1>
-                    {% block title %}
-                    {% endblock %}
-                </h1></div>
+                <div class="panel-heading text-center" >
+                    <input id="to_back" type="button" class="btn btn-default relative-position" onclick="history.go(-1);scrollTop = 0" value="返回上一步">
+                    <h1>
+                        {% block title %}
+                        {% endblock %}
+                    </h1>
+                </div>
             {%block content%}
             {%endblock%}
                 <div class="panel panel-default col-lg-12" style="float: left">
@@ -236,6 +239,7 @@
 </style>
 <script>
 $(document).ready(function() {
+
     let $fullText = $('.admin-fullText');
         $('#admin-fullscreen').on('click', function() {
             $.AMUI.fullscreen.toggle();
