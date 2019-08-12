@@ -7,7 +7,7 @@ from datetime import datetime
 class TestCases(db.Model):
     __tablename__ = 'testcases'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(30), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     url = db.Column(db.String(300), nullable=False)
     data = db.Column(db.TEXT)
     regist_variable = db.Column(db.String(30))
