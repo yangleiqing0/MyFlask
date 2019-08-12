@@ -46,3 +46,5 @@ app.register_blueprint(testcase_scene_blueprint)
 
 if __name__ == '__main__':
     app.run()
+
+    app.run(host='127.0.0.1', debug=True, threadad=True)

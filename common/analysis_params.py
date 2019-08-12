@@ -1,6 +1,7 @@
 import re
-import json
+from common.rand_name import RangName
 from app import cdb
+
 
 
 class AnalysisParams:
@@ -18,10 +19,12 @@ class AnalysisParams:
             print('analysis_before:', params)
             res = r'\${([^\${}]+)}'
             words = re.findall(re.compile(res), params)
-            print('请求报文：%s, 筛选出的变量: %s' % (params, words))
+            print('需要解析的变量：%s, 筛选出的变量: %s' % (params, words))
             if len(words) == 0:
                 return params
             for word in words:
+                if '随机' in word:
+                    params = RangName(params).rand_str()
                 if (word,) in self.variables:
                     variable_value_query_sql = 'select value from variables where name=?'
                     variable_value = cdb().query_db(variable_value_query_sql, (word,), True)[0]
@@ -29,16 +32,17 @@ class AnalysisParams:
                     if is_change == "headers":
                         params = params.replace('${%s}' % word, '"%s"' % variable_value)
                     params = params.replace('${%s}' % word, variable_value)
+                    print('解析后的参数为:', params, type(params))
+
                 else:
                     continue
-            print('解析后的参数为:', params)
 
     def analysis_headers(self, headers):
         print('header_before:', headers)
         header = headers.replace(' ', '').replace('\n', '').replace('\r', '')
         return header
 
-    # def analysis_boject_value(self, object):
+
 
 
 

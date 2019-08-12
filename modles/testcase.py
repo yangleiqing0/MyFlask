@@ -21,7 +21,7 @@ class TestCases(db.Model):
     timestamp = db.Column(db.DateTime, index=True)
 
     def __init__(self, name, url, data, regist_variable, regular, method, group_id,
-                 request_headers_id,  testcase_scene_id=None, hope_result=None, is_model=0):
+                 request_headers_id,  testcase_scene_id=None, hope_result='', is_model=0):
         self.regist_variable = regist_variable
         self.regular = regular
         self.timestamp = datetime.now()

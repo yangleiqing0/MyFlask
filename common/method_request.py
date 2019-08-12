@@ -6,12 +6,15 @@ class MethodRequest:
     def __init__(self):
         pass
 
-    @staticmethod
-    def request_value(method, url, data, headers):
-        print('请求方法: ', method, url, data, headers)
+    def request_value(self, method, url, data, headers):
+        headers.update({'Connection': 'close'})
+        print('请求方法: ', method, url, data, headers, type(url))
+        requests.adapters.DEFAULT_RETRIES = 51
+        requests.session().keep_alive = False
         try:
             if method.upper() == 'GET':
                 if 'https' in url:
+                    print('True')
                     result = requests.get(url, headers=headers, verify=False).text
                 else:
                     result = requests.get(url, headers=headers).text

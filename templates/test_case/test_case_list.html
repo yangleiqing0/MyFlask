@@ -16,6 +16,7 @@
                             <th>请求方法</th>
                             <th>注册变量</th>
                             <th>正则匹配</th>
+                            <th>预期结果</th>
                             <th>操作</th>
                         </tr>
                         {% for item in items %}
@@ -38,6 +39,7 @@
                             <td> {{ item.method }}</td>
                             <td>{{ item.regist_variable }}</td>
                             <td>{{ item.regular }}</td>
+                            <td>{{ item.hope_result }}</td>
                             <td>
                                 <a href="{{ url_for('testcase_blueprint.look_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="查询测试用例"><i class="fa fa-search"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>

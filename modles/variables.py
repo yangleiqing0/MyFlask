@@ -12,7 +12,7 @@ class Variables(db.Model):
     is_private = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True)
 
-    def __init__(self, name, value, description=None, is_private=0):
+    def __init__(self, name, value, description='', is_private=0):
         self.name = name
         self.value = value
         self.description = description

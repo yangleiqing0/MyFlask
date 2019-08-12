@@ -38,6 +38,7 @@
                     {{ macro.form_group(lable_name="regist_variable",blank_name="注册变量", value=item.regist_variable) }}
                     {{ macro.form_group(lable_name="regular",blank_name="正则匹配", value=item.regular) }}
                     {{ macro.form_group_textarea(lable_name="data",blank_name="请求报文",value=item.data) }}
+                    {{ macro.form_group(lable_name="hope_result",blank_name="预期结果", value=item.hope_result) }}
                 </form>
             </div>
 {% endblock %}
@@ -46,7 +47,8 @@
         $(document).ready(function() {
           $('input,textarea,select').each(function () {
               $(this).attr('disabled','disabled')
-          })
+          });
+          $('#to_back').removeAttr('disabled')
         })
     </script>
 {% endblock %}

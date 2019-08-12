@@ -112,7 +112,7 @@ class TestCaseReport(MethodView):
 
         testcase_scene_results = Testcaseresult(testcase_time_id, result="scene_testcases").testcase_results
         testcase_scene_ids = []
-        print('testcase_scene_results: ', testcase_scene_results[0][9], testcase_scene_results, len(testcase_scene_results))
+        print('testcase_scene_results: ', testcase_scene_results, len(testcase_scene_results))
         testcase_scene_testcases_after_list = []
         for testcase_scene_result in testcase_scene_results:
             testcase_scene_ids.append(testcase_scene_result[9])
@@ -145,7 +145,7 @@ class TestCaseReport(MethodView):
                 testcase_scene.test_cases = testcase_scene_testcases
             for a in testcase_scene_list:
                 print('测试结果： ', a.result, a)
-        print("TestCaseReport testcase_scene_list:", testcase_scene_list, testcase_scene_list[0].result)
+        print("TestCaseReport testcase_scene_list:", testcase_scene_list,)
         allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
         FrontLogs('进入测试用例执行页面 执行id: %s' % testcase_time_id).add_to_front_log()
         return render_template("testcase_report/testcase_report.html", items=items, allocation=allocation,
@@ -175,8 +175,7 @@ class TestCaseReport(MethodView):
 
         testcase_scene_results = Testcaseresult(testcase_time_id, result="scene_testcases").testcase_results
         testcase_scene_ids = []
-        print('testcase_scene_results: ', testcase_scene_results[0][9], testcase_scene_results,
-              len(testcase_scene_results))
+        print('testcase_scene_results: ',testcase_scene_results, len(testcase_scene_results))
         testcase_scene_testcases_after_list = []
         for testcase_scene_result in testcase_scene_results:
             testcase_scene_ids.append(testcase_scene_result[9])

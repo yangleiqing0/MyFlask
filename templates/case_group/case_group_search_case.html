@@ -11,7 +11,7 @@
                             <th>接口url</th>
                             <th>测试数据</th>
                             <th>请求方法</th>
-                            <th>请求结果</th>
+                            <th>预期结果</th>
                             <th>操作</th>
                         </tr>
                         {% for item in items %}
@@ -27,7 +27,7 @@
                             <td>{{ item.url }}</td>
                             <td>{{ item.data }}</td>
                             <td>{{ item.method }}</td>
-                            <td>{{ item.result }}</td>
+                            <td>{{ item.hope_result }}</td>
                             <td>
                                 <a href="{{ url_for('testcase_blueprint.add_test_case') }}" class="btn btn-default btn-xs" title="添加"><i class="fa fa-plus"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="编辑"><i class="fa fa-pencil"></i></a>

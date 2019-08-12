@@ -72,7 +72,7 @@ class TestCaseSceneTestCaseCopy(MethodView):
         name = testcase.name + timestr
         db.session.add(TestCases(name, testcase.url, testcase.data, testcase.regist_variable,
                        testcase.regular, testcase.method, testcase.group_id, testcase.request_headers_id,
-                       testcase_scene_id))
+                       testcase_scene_id, testcase.hope_result))
         db.session.commit()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
 

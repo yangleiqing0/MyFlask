@@ -5,7 +5,7 @@ from flask import render_template, Blueprint, request, redirect, url_for, curren
 from modles.testcase import TestCases
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
-from modles.testcase_scene import TestCaseScene
+from common.rand_name import RangName
 from common.analysis_params import AnalysisParams
 from app import cdb, db, app
 from common.method_request import MethodRequest
@@ -93,6 +93,7 @@ class TestCaseAdd(MethodView):
         print('testcase_scene_id的值：', testcase_scene_id, type(testcase_scene_id))
         headers = json.loads(request_headers)
         print('request_headers_id: %s headers:%s ' % (request_headers_id, headers))
+        hope_result = request.form.get('hope_result')
         if request.form.get('test', 0) == '测试':
             url = AnalysisParams().analysis_params(url)
             result = MethodRequest().request_value(method, url, data, headers)
@@ -104,7 +105,10 @@ class TestCaseAdd(MethodView):
             return '已有相同测试用例名称，请修改'
         else:
             print('testcase_scene_id的值：', testcase_scene_id, type(testcase_scene_id))
-            testcase = TestCases(name, url, data, regist_variable, regular, method, group_id, request_headers_id, testcase_scene_id)
+            testcase = TestCases(
+                name, url, data, regist_variable, regular, method, group_id, 
+                request_headers_id,hope_result=hope_result, 
+                testcase_scene_id=testcase_scene_id)
             db.session.add(testcase)
             db.session.commit()
             FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
@@ -146,6 +150,7 @@ class UpdateTestCase(MethodView):
         request_headers_id = request.form.get('request_headers')
         regist_variable = request.form.get('regist_variable', '')
         regular = request.form.get('regular', '')
+        hope_result = request.form.get('hope_result','')
         id = request.args.get('id', id)
         print('UpdateTestCase: id', id)
         if request.form.get('test', 0) == '测试':
@@ -162,9 +167,9 @@ class UpdateTestCase(MethodView):
             print('UpdataTestCase TEST: 响应报文: %s' % result)
             return '''%s''' % result.replace('<', '').replace('>', '')
         update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=?,group_id=?,' \
-                               'request_headers_id=?,regist_variable=?,regular=? where id=?'
+                               'request_headers_id=?,regist_variable=?,regular=?,hope_result=? where id=?'
         cdb().opeat_db(update_test_case_sql, (name, url, data, method, group_id,
-                                              request_headers_id, regist_variable, regular, id))
+                                              request_headers_id, regist_variable, regular, hope_result,id))
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
         app.logger.info('message:update testcases success, name: %s' % name)
         print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id, len(testcase_scene_id))

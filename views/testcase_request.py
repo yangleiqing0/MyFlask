@@ -1,5 +1,6 @@
 import json
 import re
+from common.rand_name import RangName
 from _datetime import datetime
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, current_app
