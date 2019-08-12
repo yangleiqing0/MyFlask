@@ -17,8 +17,8 @@ class TestCaseResult(db.Model):
 
     testcases = db.relationship('TestCases', backref='testcase_result')
 
-    def __init__(self, testcase_id, testcase_start_time_id, response_body, testcase_test_result="测试成功",
-                 old_sql_value=None, new_sql_value=None):
+    def __init__(self, testcase_id, testcase_start_time_id, response_body, testcase_test_result='',
+                 old_sql_value='', new_sql_value=''):
         self.testcase_id = testcase_id
         self.testcase_start_time_id = testcase_start_time_id
         self.response_body = response_body

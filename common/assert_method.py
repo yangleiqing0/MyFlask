@@ -2,7 +2,7 @@
 
 class AssertMethod:
 
-    def __init__(self, actual_result, hope_result, assertmethod, old_database_value=1,
+    def __init__(self, actual_result, hope_result, old_database_value=1,
                  new_database_value=1, database_assert_method=True):
         print('here', type(database_assert_method),database_assert_method,old_database_value,new_database_value,
               old_database_value==new_database_value
@@ -13,9 +13,11 @@ class AssertMethod:
         self.actual_result = actual_result
         self.hope_result = hope_result
         self.result = None
-        self.assertmethod = assertmethod
+        print('hope_result:', hope_result)
+        self.assertmethod, self.hoperesult = self.hope_result.split(':', 1)
+        print("self.assertmethod: %s, self.hoperesult: %s" % (self.assertmethod, self.hoperesult))
         self.actual_result = str(self.actual_result)
-        # self.assert_database_result()
+        print('self.actual_result: ', self.actual_result)
 
     def assert_database_result(self):
         if self.database_assert_method:
@@ -39,15 +41,16 @@ class AssertMethod:
             self.assert_eq()
 
     def assert_eq(self):
-        if self.actual_result == self.hope_result:    #返回结果与期望结果相等
+        if self.actual_result == self.hoperesult:    #返回结果与期望结果相等
             self.result = '测试成功'
         else:
             self.result = '测试失败'
         return self.result
 
     def assert_in(self):
-        if self.hope_result in self.actual_result:   #期望结果在返回结果中
+        if self.hoperesult in self.actual_result:   #期望结果在返回结果中
             self.result = '测试成功'
         else:
             self.result = '测试失败'
+        print('self.result: ', self.result)
         return self.result

@@ -14,6 +14,7 @@ from common.tail_font_log import FrontLogs
 from app import cdb, db, app
 from common.analysis_params import AnalysisParams
 from common.method_request import MethodRequest
+from common.assert_method import AssertMethod
 
 test_case_request_blueprint = Blueprint('test_case_request_blueprint', __name__)
 
@@ -91,6 +92,7 @@ class TestCaseRequestStart(MethodView):
             url = AnalysisParams().analysis_params(testcase.url)
             data = AnalysisParams().analysis_params(testcase.data)
             method = testcase.method
+            hope_result = AnalysisParams().analysis_params(testcase.hope_result)
             regist_variable = testcase.regist_variable
             regular = testcase.regular
             headers = json.loads(AnalysisParams().analysis_params(testcase.request_headers.value, is_change="headers"))
@@ -99,10 +101,18 @@ class TestCaseRequestStart(MethodView):
             if 'html' in response_body:
                 response_body = '<xmp> %s </xmp>' % response_body
             print('response_body:', response_body)
-            testcase_result = TestCaseResult(test_case_id, testcase_time_id, response_body)
+
+            testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_database_result()
+            # 调用比较的方法判断响应报文是否满足期望
+
+            print('testcase_test_result:', testcase_test_result)
+            testcase_result = TestCaseResult(test_case_id, testcase_time_id, response_body, testcase_test_result)
+            # 测试结果实例化
             db.session.add(testcase_result)
             db.session.commit()
+
             if regist_variable and regular:
+                # 判断是否有注册变量和正则方法，有的话进行获取
                 regist_variable_value = re.compile(regular).findall(response_body)
                 if len(regist_variable_value) > 0:
                     if Variables.query.filter(Variables.name == regist_variable).count() > 0:

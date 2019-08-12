@@ -150,7 +150,7 @@ class UpdateTestCase(MethodView):
         request_headers_id = request.form.get('request_headers')
         regist_variable = request.form.get('regist_variable', '')
         regular = request.form.get('regular', '')
-        hope_result = request.form.get('hope_result','')
+        hope_result = request.form.get('hope_result', '')
         id = request.args.get('id', id)
         print('UpdateTestCase: id', id)
         if request.form.get('test', 0) == '测试':
