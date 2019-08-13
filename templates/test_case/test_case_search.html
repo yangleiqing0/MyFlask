@@ -59,14 +59,16 @@
                             url:{required:true, maxlength:500},
                             description: {maxlength: 50},
                             regist_variable:{maxlength:30},
-                            method:{required:true, maxlength:10}
+                            method:{required:true, maxlength:10},
+                            hope_result:{required:true,remote:'/test_case_hope_result_validate/'}
                         },
                         messages: {
                             name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过50位', remote: '已存在名称'},
                             url:{required:'不可为空', maxlength:'不可超过500位'},
                             description: {maxlength: '不可超过50位'},
                             regist_variable:{maxlength:'不可超过30位'},
-                            method:{required:'不可为空', maxlength:'不可超过10位'}
+                            method:{required:'不可为空', maxlength:'不可超过10位'},
+                            hope_result:{required:'不可为空',remote:'请输入正确的格式'}
                         }
                     })
                 };
@@ -85,14 +87,16 @@
                             url:{required:true, maxlength:500},
                             description: {maxlength: 50},
                             regist_variable:{maxlength:30},
-                            method:{required:true, maxlength:10}
+                            method:{required:true, maxlength:10},
+                            hope_result:{required:true,remote:'/test_case_hope_result_validate/'}
                         },
                         messages: {
                            name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过50位', remote: '已存在名称'},
                             url:{required:'不可为空', maxlength:'不可超过500位'},
                             description: {maxlength: '不可超过50位'},
                             regist_variable:{maxlength:'不可超过30位'},
-                            method:{required:'不可为空', maxlength:'不可超过10位'}
+                            method:{required:'不可为空', maxlength:'不可超过10位'},
+                            hope_result:{required:'不可为空',remote:'请输入正确的格式'}
                         },
                     submitHandler: function (form) {
                         form.submit()

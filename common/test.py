@@ -12,3 +12,8 @@
 # print(a in(None, "None"))
 # import datetime
 # print(str(datetime.datetime.now().strftime('%Y%m%d%H%M%S')))
+import re
+a = '{"code":0,"data":{"user":{"id":56,"createdAt":"2019-08-13T10:49:23.534204197+08:00","updatedAt":"2019-08-13T10:49:23.534204197+08:00","username":"ehYSvD","name":"","mail":"1@q.com","phone":"","enable":true,"isInitialCipher":true}},"errMsg":""}	'
+passent = re.compile(r'\"id\":([^,]+)')
+c = passent.findall(a)[0]
+print(c)

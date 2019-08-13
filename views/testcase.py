@@ -95,6 +95,7 @@ class TestCaseAdd(MethodView):
         print('request_headers_id: %s headers:%s ' % (request_headers_id, headers))
         hope_result = request.form.get('hope_result')
         if request.form.get('test', 0) == '测试':
+            data = RangName(data).rand_str()
             url = AnalysisParams().analysis_params(url)
             result = MethodRequest().request_value(method, url, data, headers)
             return '''%s''' % result.replace('<', '').replace('>', '')
@@ -227,11 +228,30 @@ class TestCaseUpdateValidata(MethodView):
             return jsonify(True)
 
 
+class TestCaseHopeResultValidata(MethodView):
+
+    def get(self):
+        hope_result = request.args.get('hope_result')
+        print('hope_result: ', hope_result)
+        try:
+            com_method, _ = hope_result.split(':', 1)
+            if com_method == "包含":
+                return jsonify(True)
+            else:
+                return jsonify(False)
+        except Exception as e:
+            print(e)
+            return jsonify(False)
+
+
 testcase_blueprint.add_url_rule('/testcaselist/', view_func=TestCastList.as_view('test_case_list'))
 testcase_blueprint.add_url_rule('/addtestcase/', view_func=TestCaseAdd.as_view('add_test_case'))
 testcase_blueprint.add_url_rule('/deletetestcase/<id>/', view_func=DeleteTestCase.as_view('delete_test_case'))
 testcase_blueprint.add_url_rule('/updatetestcase/<id>/', view_func=UpdateTestCase.as_view('update_test_case'))
 testcase_blueprint.add_url_rule('/testcase_model/<id>/', view_func=ModelTestCase.as_view('test_case_model'))
+testcase_blueprint.add_url_rule('/look_test_case/<id>/', view_func=TestCaseLook.as_view('look_test_case'))
+
+
 testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))
 testcase_blueprint.add_url_rule('/testcaseupdatevalidate/', view_func=TestCaseUpdateValidata.as_view('testcase_update_validate'))
-testcase_blueprint.add_url_rule('/look_test_case/<id>/', view_func=TestCaseLook.as_view('look_test_case'))
+testcase_blueprint.add_url_rule('/test_case_hope_result_validate/', view_func=TestCaseHopeResultValidata.as_view('test_case_hope_result_validate'))
