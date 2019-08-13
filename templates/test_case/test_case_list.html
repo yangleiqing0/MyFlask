@@ -21,7 +21,7 @@
                         </tr>
                         {% for item in items %}
                         <tr  id="look_test_case_{{ item.id }}">
-                            <td><a href="#"><span class="badge">{{ loop.index0 }}</span></a></td> <!--使用循环的数字作为id -->
+                            <td><a href="#"><span class="badge">{{ loop.index }}</span></a></td> <!--使用循环的数字作为id -->
 
                             <td>
                                 {% for case_group in case_groups %}

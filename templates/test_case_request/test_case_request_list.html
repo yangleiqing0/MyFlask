@@ -13,7 +13,7 @@
                         </tr>
                         {% for item in items %}
                         <tr>
-                            <td><a href="#"><span class="badge">{{ loop.index0 }}</span></a></td>          <!--使用循环的数字作为id -->
+                            <td><a href="#"><span class="badge">{{ loop.index }}</span></a></td>          <!--使用循环的数字作为id -->
                             <td>{{ item.name }}</td>
                             <td><samp id="response_{{ item.id }}"></samp></td>
                             <td>{{ item.scene_name }}</td>

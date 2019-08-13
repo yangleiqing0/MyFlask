@@ -35,8 +35,7 @@ class TestCastList(MethodView):
         # sql = 'select ROWID,id,name,url,data,result,method,group_id from testcases'
         # tests = cdb().query_db(sql)
         # 过滤有测试用例分组的查询结果
-        testcases = TestCases.query.join(CaseGroup, TestCases.group_id ==
-                                     CaseGroup.id).filter(TestCases.group_id == CaseGroup.id).all()
+        testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None)).all()
         # 获取测试用例分组的列表
         print('testcases: ', testcases)
         for testcase in testcases:

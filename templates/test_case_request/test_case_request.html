@@ -6,19 +6,19 @@
             <div style="float: left" class="col-md-12 no-padding"  >
                         {% for case_group in case_groups %}
                             <div class="btn col-md-12 btn-default no-padding"  >
-                                <div class="col-md-11" href="#case_group_{{ loop.index0 }}" data-toggle="collapse">
+                                <div class="col-md-11" href="#case_group_{{ loop.index }}" data-toggle="collapse">
                                     <span style="margin-left: 120px"><b>{{case_group.name }}</b></span>
                                 </div>
                                  <div class="col-md-1 has_no_padding" style="float: left">
                                      <div class=" has_no_padding" >
-                                         <label style="font-weight: normal" for="case_group_{{ loop.index0 }}_all" class="col-md-8 has_no_padding">全选分组</label>
+                                         <label style="font-weight: normal" for="case_group_{{ loop.index }}_all" class="col-md-8 has_no_padding">全选分组</label>
                                      </div>
                                      <div class="col-md-4 has_no_padding" >
-                                         <input type="checkbox" id="case_group_{{ loop.index0 }}_all" value="case_group_{{ loop.index0 }}_all" name="case_group_{{ loop.index0 }}_all" class="all_checkbox" style="zoom:1.5;width: 20px;margin-top: 1px;">
+                                         <input type="checkbox" id="case_group_{{ loop.index }}_all" value="case_group_{{ loop.index }}_all" name="case_group_{{ loop.index }}_all" class="all_checkbox" style="zoom:1.5;width: 20px;margin-top: 1px;">
                                      </div>
                                 </div>
                             </div>
-                            <div id="case_group_{{ loop.index0 }}" class="collapse no-padding">
+                            <div id="case_group_{{ loop.index }}" class="collapse no-padding">
                                 {% for testcase in case_group.testcases %}
                                      <div class="form-group col-md-4">
                                          {% if case_group.name == '测试场景' %}
