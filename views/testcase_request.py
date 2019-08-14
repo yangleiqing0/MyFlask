@@ -106,7 +106,8 @@ class TestCaseRequestStart(MethodView):
             # 调用比较的方法判断响应报文是否满足期望
 
             print('testcase_test_result:', testcase_test_result)
-            testcase_result = TestCaseResult(test_case_id, testcase_time_id, response_body, testcase_test_result)
+            testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
+                                             testcase_time_id, response_body, testcase_test_result)
             # 测试结果实例化
             db.session.add(testcase_result)
             db.session.commit()

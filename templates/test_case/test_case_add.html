@@ -1,7 +1,7 @@
 {% extends 'home.html' %}
 {% block title %}添加测试用例{% endblock %}
 {% block content %}
-            <div class="panel-body" >
+            <div class="panel-body">
                 <form action="{{ url_for('testcase_blueprint.add_test_case') }}?testcase_scene_id={{ testcase_scene_id }}" id="testcase_add_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="测试用例名称") }}
                     <div class="form-group">

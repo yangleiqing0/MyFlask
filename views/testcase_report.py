@@ -11,7 +11,6 @@ from app import cdb, db, app
 from common.do_report import test_report
 from datetime import datetime
 from common.analysis_params import AnalysisParams
-from common.most_common_method import NullObject
 
 
 testcase_report_blueprint = Blueprint('testcase_report_blueprint', __name__)
@@ -75,8 +74,10 @@ class Testcaseresult:
         print('testcase_time_id: ', testcase_time_id, self.testcase_time)
 
         if result == 'testcases':
-            testcase_results_query_sql = 'select testcases.name,testcases.url,testcases.method,testcases.data,' \
-                                         'test_case_result.response_body,testcases.hope_result,test_case_result.' \
+            testcase_results_query_sql = 'select test_case_result.testcase_name,test_case_result.testcase_url,' \
+                                         'test_case_result.testcase_method,test_case_result.testcase_data,' \
+                                         'test_case_result.response_body,test_case_result.' \
+                                         'testcase_hope_result,test_case_result.' \
                                          'old_sql_value,test_case_result.new_sql_value,test_case_result.' \
                                          'testcase_test_result from testcases,test_case_result where testcases.id=' \
                                          'test_case_result.testcase_id and testcases.testcase_scene_id isnull and ' \
@@ -86,11 +87,14 @@ class Testcaseresult:
             print('self.testcase_results:', self.testcase_results)
 
         elif result == 'scene_testcases':
-            testcase_results_query_sql = 'select testcases.name,testcases.url,testcases.method,testcases.data,' \
-                                         'test_case_result.response_body,testcases.hope_result,test_case_result.' \
-                                         'old_sql_value,test_case_result.new_sql_value,test_case_result.' \
-                                         'testcase_test_result ,testcases.testcase_scene_id from testcases,test_case_result where testcases.id=' \
-                                         'test_case_result.testcase_id and testcases.testcase_scene_id not null and ' \
+            testcase_results_query_sql = 'select test_case_result.testcase_name,test_case_result.testcase_url,' \
+                                         'test_case_result.testcase_method,test_case_result.testcase_data,' \
+                                         'test_case_result.response_body,test_case_result.testcase_hope_result,' \
+                                         'test_case_result.old_sql_value,test_case_result.new_sql_value,' \
+                                         'test_case_result.testcase_test_result,testcases.testcase_scene_id' \
+                                         ' from testcases, test_case_result ' \
+                                         'where testcases.id=test_case_result.testcase_id and ' \
+                                         'testcases.testcase_scene_id not null and ' \
                                          'test_case_result.testcase_start_time_id=%s' \
                                          % testcase_time_id
             self.testcase_results = cdb().query_db(testcase_results_query_sql)
