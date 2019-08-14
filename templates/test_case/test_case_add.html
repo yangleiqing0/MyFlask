@@ -56,7 +56,7 @@ $(document).ready(function() {
         let request_headers_add = window.localStorage.getItem('request_headers_add');
         request_headers_add = JSON.parse(request_headers_add);
          if (case_group_add != null){
-        $('#case_group').val(2)
+        $('#case_group').val(request_headers_add)
     }
         if (request_headers_add != null){
             $('#request_headers').val(request_headers_add)
@@ -87,8 +87,8 @@ $(document).ready(function() {
         validate()
         });
     $('#testcase_add').click(function () {
-        let case_group_id = $("#case_group option:selected").val();
-        let request_headers_id = $("#request_headers option:selected").val();
+        let case_group_id = $("#case_group").val();
+        let request_headers_id = $("#request_headers").val();
         window.localStorage.setItem('case_group_add',case_group_id);
         window.localStorage.setItem('request_headers_add',request_headers_id);
         $('#testcase_add_form').validate({
