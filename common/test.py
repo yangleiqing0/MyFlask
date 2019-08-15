@@ -17,11 +17,13 @@ import re
 # passent = re.compile(r'\"id\":([^,]+)')
 # c = passent.findall(a)[0]
 # print(c)
-a = [1,2,3,4,5]
-a = a[-2:]
-for i in range(len(a)):
-    a[i] += 1
-    print(a[i])
-for a1 in a:
-    a1 += 1
-print(a)
+# a = [1,2,3,4,5]
+# a = a[-2:]
+# for i in range(len(a)):
+#     a[i] += 1
+#     print(a[i])
+# for a1 in a:
+#     a1 += 1
+# print(a)
+a, b = [1, 2]
+print(a,b)

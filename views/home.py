@@ -1,3 +1,5 @@
+# !/usr/bin/env python3
+# encoding: utf-8
 import json
 from logs.config import FRONT_LOGS_FILE, FLASK_LOGS_FILE
 from flask.views import MethodView
@@ -36,15 +38,16 @@ class FrontLog(MethodView):
                 logs.seek(offset, 2)  # seek(offset, 2)表示文件指针：从文件末尾(2)开始向前50个字符(-50)
                 front_logs = logs.readlines()  # 读取文件指针范围内所有行
                 lens = len(front_logs)
+                front_log = []
                 if lens >= 11:  # 判断是否最后至少有两行，这样保证了最后一行是完整的
                     front_logs = front_logs[-10:]
                     for ii in range(10):
-                        front_logs[ii] = front_logs[ii].decode('gbk')
+                        front_log.append(front_logs[ii].decode('gbk'))
                     break
                 offset *= 2
-            front_logs = "<br/>".join(front_logs)
-        print("front_logs: ", len(front_logs), front_logs)
-        return json.dumps({"front_logs": str(front_logs)})
+            front_log = "<br/>".join(front_log)
+        print("front_logs: ", len(front_log), front_log)
+        return json.dumps({"front_log": front_log})
 
 
 class FlaskLog(MethodView):

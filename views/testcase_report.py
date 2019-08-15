@@ -25,12 +25,9 @@ class EnvMessage:
         self.test_pl = Variables.query.filter(Variables.name == '_TEST_PL').first().value
         self.test_net = Variables.query.filter(Variables.name == '_TEST_NET').first().value
         self.title_name = Variables.query.filter(Variables.name == '_TITLE_NAME').first().value
-        self.fail_sum = self.count_success_testcase_scene(testcase_time_id)
+        self.fail_sum = self.count_success_testcase_scene(testcase_time_id) + self.count_testcase_fail(testcase_time_id)
         self.test_sum = len(testcase_results) + len(testcase_scene_list)
-        self.test_success = TestCaseResult.query.join(
-            TestCases, TestCaseResult.testcase_id == TestCases.id).filter(TestCaseResult.testcase_test_result == "测试成功",
-            TestCaseResult.testcase_start_time_id == testcase_time_id,
-            TestCases.testcase_scene_id.is_(None), TestCaseResult.testcase_start_time_id==testcase_time_id).count() + len(testcase_scene_list)-self.fail_sum
+        self.test_success = self.test_sum - self.fail_sum
         self.time_strftime = testcase_time.time_strftime
         self.score = int(self.test_success * 100 / self.test_sum)
 
@@ -39,12 +36,19 @@ class EnvMessage:
         for testcase_scene in self.testcase_scene_list:
             for testcase in testcase_scene.testcases:
                 print('testcase.testcase_result: ', testcase)
-                testcase_result = TestCaseResult.query.filter\
-                    (TestCaseResult.testcase_id==testcase.id,TestCaseResult.testcase_start_time_id==testcase_time_id).first().testcase_test_result
+                testcase_result = TestCaseResult.query.filter(
+                    TestCaseResult.testcase_id==testcase.id, TestCaseResult.testcase_start_time_id==testcase_time_id).first().testcase_test_result
                 if testcase_result == "测试失败":
                     fail_count += 1
                     break
         return fail_count
+
+    @staticmethod
+    def count_testcase_fail(testcase_time_id):
+        count = TestCaseResult.query.join(TestCases, TestCaseResult.testcase_id == TestCases.id).filter(
+            TestCaseResult.testcase_start_time_id == testcase_time_id, TestCases.testcase_scene_id.is_(None),
+            TestCaseResult.testcase_test_result == "测试失败").count()
+        return count
 
 
 class Test:
@@ -221,10 +225,14 @@ class TestCaseReportDelete(MethodView):
     def get(self, id=-1):
         testcase_time_id = request.args.get('id', id)
         testcase_report = TestCaseStartTimes.query.get(testcase_time_id)
+        testcase_results = testcase_report.this_time_testcase_result
         print('testcase_report: ', testcase_report, id)
         db.session.delete(testcase_report)
         db.session.commit()
         try:
+            for testcase_result in testcase_results:
+                db.session.delete(testcase_result)
+                db.session.commit()
             os.remove(testcase_report.filename)
         except FileNotFoundError:
             pass

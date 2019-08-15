@@ -1,14 +1,14 @@
 import datetime
+import json
+import time
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
 from modles.testcase import TestCases
-from modles.case_group import CaseGroup
-from modles.request_headers import RequestHeaders
 from modles.testcase_scene import TestCaseScene
-from common.analysis_params import AnalysisParams
-from app import cdb, db, app
-from common.method_request import MethodRequest
+from app import db
+from common.execute_testcase import to_execute_testcase
+
 
 testcase_scene_blueprint = Blueprint('testcase_scene_blueprint', __name__)
 
@@ -41,6 +41,22 @@ class TestCaseSceneTestCaseList(MethodView):
 
     def post(self):
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
+
+
+class TestCaseSceneRun(MethodView):
+
+    def get(self):
+        testcase_scene_id = request.args.get('testcase_scene_id')
+        testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+        testcases = testcase_scene.testcases
+        testcase_results = []
+        for testcase in testcases:
+            testcase_result = to_execute_testcase(testcase)
+            testcase_results.extend(['【%s】' % testcase.name, testcase_result])
+            time.sleep(1)
+        testcase_results_html = '<br>'.join(testcase_results)
+        print('TestCaseSceneRun: ', json.dumps({'testcase_results': testcase_results_html}))
+        return json.dumps({'testcase_results': testcase_results_html})
 
 
 class TestCaseSceneDelete(MethodView):
@@ -95,6 +111,7 @@ testcase_scene_blueprint.add_url_rule('/testcase_scene_add/', view_func=TestCase
 testcase_scene_blueprint.add_url_rule('/testcase_scene_copy/', view_func=TestCaseSceneTestCaseCopy.as_view('testcase_scene_copy'))
 testcase_scene_blueprint.add_url_rule('/testcase_scene_testcase_list/', view_func=TestCaseSceneTestCaseList.as_view('testcase_scene_testcase_list'))
 testcase_scene_blueprint.add_url_rule('/testcase_scene_delete/', view_func=TestCaseSceneDelete.as_view('testcase_scene_delete'))
+testcase_scene_blueprint.add_url_rule('/testcase_scene_run/', view_func=TestCaseSceneRun.as_view('testcase_scene_run'))
 
 testcase_scene_blueprint.add_url_rule('/testcase_scene_add_validate/', view_func=TestCaseSceneAddValidate.as_view('testcase_scene_add_validate'))
 

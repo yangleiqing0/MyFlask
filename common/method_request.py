@@ -1,6 +1,7 @@
 import requests
 import time
 
+
 class MethodRequest:
 
     def __init__(self):

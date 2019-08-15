@@ -184,7 +184,7 @@
     <div class="container" >
     <div class="row">
         <div class="col-md-12">
-            <div class="panel panel-default">
+            <div class="panel panel-default" id="get_container_height">
                 <div class="panel-heading text-center" >
                     <input id="to_back" type="button" class="btn btn-default relative-position" onclick="history.go(-1);scrollTop = 0" value="返回上一步">
                     <h1>
@@ -204,7 +204,10 @@
     </div>
 </div>
 </div>
+<div class="col-md-2" id="request_body_show" style="background-color:ghostwhite;
+width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 700px;">
 
+</div>
 {% block js %}
 {%endblock%}
 </body>
@@ -245,7 +248,6 @@
 </style>
 <script>
 $(document).ready(function() {
-
     let $fullText = $('.admin-fullText');
         $('#admin-fullscreen').on('click', function() {
             $.AMUI.fullscreen.toggle();
@@ -262,8 +264,8 @@ $(document).ready(function() {
                 url:{{ url_for('home_blueprint.front_logs') }},
                 method:'GET',
                 success:function(response){
-                    let front_logs = JSON.parse(response)["front_logs"];
-                    $("#front_logs").html(front_logs)
+                    let front_log = JSON.parse(response)["front_log"];
+                    $("#front_logs").html(front_log)
                 }
             })
         }

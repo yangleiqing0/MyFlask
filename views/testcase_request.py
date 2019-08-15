@@ -1,10 +1,7 @@
 import json
-import re
-from common.rand_name import RangName
 from _datetime import datetime
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, current_app
-from modles.variables import Variables
+from flask import render_template, Blueprint, request
 from modles.testcase import TestCases
 from modles.testcase_result import TestCaseResult
 from modles.case_group import CaseGroup
@@ -15,6 +12,7 @@ from app import cdb, db, app
 from common.analysis_params import AnalysisParams
 from common.method_request import MethodRequest
 from common.assert_method import AssertMethod
+from common.regist_variables import to_regist_variables
 
 test_case_request_blueprint = Blueprint('test_case_request_blueprint', __name__)
 
@@ -89,18 +87,13 @@ class TestCaseRequestStart(MethodView):
             testcase_time_id = request.form.get('test_case_time_id')
             print('异步请求的test_case_id,testcase_time_id: ', test_case_id, testcase_time_id)
             testcase = TestCases.query.get(test_case_id)
-            url = AnalysisParams().analysis_params(testcase.url)
-            data = AnalysisParams().analysis_params(testcase.data)
+            url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
             method = testcase.method
-            hope_result = AnalysisParams().analysis_params(testcase.hope_result)
             regist_variable = testcase.regist_variable
             regular = testcase.regular
-            headers = json.loads(AnalysisParams().analysis_params(testcase.request_headers.value, is_change="headers"))
+            headers = json.loads(AnalysisParams().analysis_params(testcase.testcase_request_header.value, is_change="headers"))
             print('request_headers:', headers)
-            response_body = MethodRequest().request_value(method, url, data, headers)
-            if 'html' in response_body:
-                response_body = '<xmp> %s </xmp>' % response_body
-            print('response_body:', response_body)
+            response_body = to_regist_variables(method, url, data, headers, regist_variable, regular)
 
             testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_database_result()
             # 调用比较的方法判断响应报文是否满足期望
@@ -111,22 +104,6 @@ class TestCaseRequestStart(MethodView):
             # 测试结果实例化
             db.session.add(testcase_result)
             db.session.commit()
-
-            if regist_variable and regular:
-                # 判断是否有注册变量和正则方法，有的话进行获取
-                regist_variable_value = re.compile(regular).findall(response_body)
-                if len(regist_variable_value) > 0:
-                    if Variables.query.filter(Variables.name == regist_variable).count() > 0:
-                        print('存在此变量时：', Variables.query.filter(Variables.name == regist_variable).first())
-                        Variables.query.filter(Variables.name == regist_variable).first().value = regist_variable_value[0]
-                        db.session.commit()
-                        return response_body
-                    private_variable_value = regist_variable_value[0]
-                    private_variable = Variables(regist_variable, private_variable_value, is_private=1)
-                    db.session.add(private_variable)
-                    db.session.commit()
-                    return response_body
-                return '未成功解析报文 %s ' % response_body
             return response_body
 
 

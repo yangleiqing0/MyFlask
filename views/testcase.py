@@ -9,6 +9,7 @@ from common.rand_name import RangName
 from common.analysis_params import AnalysisParams
 from app import cdb, db, app
 from common.method_request import MethodRequest
+from common.execute_testcase import to_execute_testcase
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -27,6 +28,19 @@ class TestCaseLook(MethodView):
         return render_template('test_case/test_case_look.html', item=testcase, case_groups=case_groups,
                                request_headers_id_before=request_headers_id_before, case_group_id_before=case_group_id_before,
                                request_headerses=request_headerses)
+
+
+class TestCaseRun(MethodView):
+
+    def get(self):
+        testcase_id = request.args.get('testcase_id', 0)
+        testcase = TestCases.query.get(testcase_id)
+        testcase_results = []
+        testcase_result = to_execute_testcase(testcase)
+        testcase_results.extend(['【%s】' % testcase.name, testcase_result])
+        testcase_results_html = '<br>'.join(testcase_results)
+        print('TestCaseRun testcase_results_html', testcase_results_html)
+        return json.dumps({'testcase_result': testcase_results_html})
 
 
 class TestCastList(MethodView):
@@ -96,8 +110,8 @@ class TestCaseAdd(MethodView):
         if request.form.get('test', 0) == '测试':
             data = RangName(data).rand_str()
             url = AnalysisParams().analysis_params(url)
-            result = MethodRequest().request_value(method, url, data, headers)
-            return '''%s''' % result.replace('<', '').replace('>', '')
+            result = MethodRequest().request_value(method, url, data, headers).replace('<', '').replace('>', '')
+            return '''%s''' % result
         query_all_names_sql = 'select name from testcases'
         all_names = cdb().query_db(query_all_names_sql)
         print(all_names)
@@ -153,19 +167,7 @@ class UpdateTestCase(MethodView):
         hope_result = request.form.get('hope_result', '')
         id = request.args.get('id', id)
         print('UpdateTestCase: id', id)
-        if request.form.get('test', 0) == '测试':
-            print('进入测试：')
-            url = AnalysisParams().analysis_params(url)
-            data = AnalysisParams().analysis_params(data.replace('/n', '').replace(' ', ''))
-            print('测试：', name, data, method, url, group_id, request_headers_id, regist_variable, regular, id)
-            request_headers_value_sql = 'select value from request_headers where id=?'
-            query_headers_value = cdb().query_db(request_headers_value_sql, (request_headers_id,), True)[0]
-            print("query_headers_value: ", query_headers_value)
-            headers = json.loads(AnalysisParams().analysis_params(query_headers_value, is_change="headers"))
-            print('UpdataTestCase:headers: ', headers, url, method, data)
-            result = MethodRequest().request_value(method, url, data, headers)
-            print('UpdataTestCase TEST: 响应报文: %s' % result)
-            return '''%s''' % result.replace('<', '').replace('>', '')
+
         update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=?,group_id=?,' \
                                'request_headers_id=?,regist_variable=?,regular=?,hope_result=? where id=?'
         cdb().opeat_db(update_test_case_sql, (name, url, data, method, group_id,
@@ -249,6 +251,7 @@ testcase_blueprint.add_url_rule('/deletetestcase/<id>/', view_func=DeleteTestCas
 testcase_blueprint.add_url_rule('/updatetestcase/<id>/', view_func=UpdateTestCase.as_view('update_test_case'))
 testcase_blueprint.add_url_rule('/testcase_model/<id>/', view_func=ModelTestCase.as_view('test_case_model'))
 testcase_blueprint.add_url_rule('/look_test_case/<id>/', view_func=TestCaseLook.as_view('look_test_case'))
+testcase_blueprint.add_url_rule('/run_test_case/', view_func=TestCaseRun.as_view('run_test_case'))
 
 
 testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))

@@ -4,6 +4,7 @@ from modles.request_headers import RequestHeaders
 from app import db
 from datetime import datetime
 
+
 class TestCases(db.Model):
     __tablename__ = 'testcases'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

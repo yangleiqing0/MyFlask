@@ -32,10 +32,10 @@ submit_type="submit",reset_type="reset",test_value="测试",test_style="visibili
 </div>
 {% endmacro %}
 
-{% macro submit_test(submit_name="提交", submit_id="") %}
+{% macro submit_test(submit_name="提交", submit_id="",test_type="submit") %}
 <div class="control-label col-md-6" >
     <input type="submit" class="btn btn-primary" value="{{ submit_name }}" id="{{ submit_id }}">
-    <input type="submit" class="btn btn-primary" name="test" value="测试" id="update_testcase_test">
+    <input type="{{test_type}}" class="btn btn-primary" name="test" value="测试" id="update_testcase_test">
     <input type="reset" class="btn btn-default" value="重置">
 </div>
 {% endmacro %}

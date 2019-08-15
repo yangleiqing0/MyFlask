@@ -16,7 +16,7 @@ class AnalysisParams:
             params = ""
             return params
         while 1:
-            print('analysis_before:', params)
+            print('analysis_before:', type(params), params)
             res = r'\${([^\${}]+)}'
             words = re.findall(re.compile(res), params)
             print('需要解析的变量：%s, 筛选出的变量: %s' % (params, words))
@@ -37,6 +37,13 @@ class AnalysisParams:
                     print('解析后的参数为:', params, type(params))
             if in_variables_num == 0:
                 return params
+
+    def analysis_more_params(self, *args):
+        new_args = []
+        for arg in args:
+            arg = self.analysis_params(arg)
+            new_args.append(arg)
+        return new_args
 
     def analysis_headers(self, headers):
         print('header_before:', headers)

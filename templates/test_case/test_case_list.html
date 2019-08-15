@@ -17,7 +17,7 @@
                             <th>注册变量</th>
                             <th>正则匹配</th>
                             <th>预期结果</th>
-                            <th>操作</th>
+                            <th style="width:180px">操作</th>
                         </tr>
                         {% for item in items %}
                         <tr  id="look_test_case_{{ item.id }}">
@@ -42,6 +42,7 @@
                             <td>{{ item.hope_result }}</td>
                             <td>
                                 <a href="{{ url_for('testcase_blueprint.look_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="查询测试用例"><i class="fa fa-search"></i></a>
+                                <a id="run_test_case_id_{{ item.id }}" class="btn btn-default btn-xs" title="执行测试用例"><i class="fa fa-play"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
                                 <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>
                                 {% if item.is_model ==0 %}
@@ -59,11 +60,28 @@
 {% block js %}
     <script>
         $(document).ready(function () {
+            $('a[id*="run_test_case_id_"]').click(function () {
+                let testcase_id = $(this).attr('id').replace('run_test_case_id_','');
             $('tr[id*="look_test_case_"]').click(function () {
                 let test_case_id = $(this).attr('id').replace('look_test_case_','');
-                window.location.href = "{{ url_for('testcase_blueprint.look_test_case',id=0)}}?id=" + test_case_id
-            })
-        })
+                if (test_case_id === testcase_id){
+                    $.ajax({
+                    url:'{{ url_for("testcase_blueprint.run_test_case")}}?testcase_id='+testcase_id,
+                    type:'GET',
+                    success:function (response) {
+                        let result = JSON.parse(response)['testcase_result'];
+                        $('#request_body_show').html(result);
+                        testcase_id = 0;
+                    }
+                })
+                }else {
+                       window.location.href = "{{ url_for('testcase_blueprint.look_test_case',id=0)}}?id=" + test_case_id
+                }
+
+            });
+            });
+
+})
 
     </script>
 {% endblock %}

@@ -11,7 +11,7 @@ class RequestHeaders(db.Model):
     description= db.Column(db.String(50))
 
     timestamp = db.Column(db.DateTime, index=True)
-    testcases = db.relationship('TestCases', backref='request_headers')
+    testcases = db.relationship('TestCases', backref='testcase_request_header')
 
     def __init__(self, name, value, description):
         self.name = name

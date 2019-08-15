@@ -39,7 +39,7 @@
                     {{ macro.form_group(lable_name="regular",blank_name="正则匹配", value=item.regular) }}
                     {{ macro.form_group_textarea(lable_name="data",blank_name="请求报文",value=item.data,placeholder_name="可使用如：${随机4}自动在执行的时候生成随机位名称") }}
                     {{ macro.form_group(lable_name="hope_result",blank_name="预期结果", value=item.hope_result) }}
-                    {{ macro.submit_test(submit_id="testcase_update") }}
+                    {{ macro.submit_test(submit_id="testcase_update",test_type="button") }}
                 </form>
             </div>
 {% endblock %}
@@ -47,10 +47,18 @@
     <script>
         $(document).ready(function () {
             $('#update_testcase_test').click(function () {
-                $('form').append({{ macro.form_group(lable_name="test",blank_name="test", value="测试") }})
-            });
-            var validate = function () {
-                 testcase_id = {{ item.id }}
+                $.ajax({
+                    url : '{{ url_for("testcase_blueprint.run_test_case")}}?testcase_id={{item.id}}',
+                    type : "GET",
+                    success : function (response) {
+                        let result = JSON.parse(response)['testcase_result'];
+                        $('#request_body_show').html(result)
+                    }
+                })
+            })
+            ;
+            let validate = function () {
+                    testcase_id = {{ item.id }}
                     $('#testcase_update_form').validate({
                         rules: {
                             name: {
