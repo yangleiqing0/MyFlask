@@ -45,6 +45,6 @@ app.register_blueprint(system_config_blueprint)
 app.register_blueprint(testcase_scene_blueprint)
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0', port='5000')
 
-    app.run(host='127.0.0.1', debug=True, threadad=True)
+    # app.run(host='127.0.0.1', debug=True, threadad=True)

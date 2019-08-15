@@ -1,5 +1,5 @@
 import requests
-
+import time
 
 class MethodRequest:
 
@@ -37,6 +37,7 @@ class MethodRequest:
                 result = "请求方法不正确"
         except Exception as e:
             print(e)
+            time.sleep(0.5)
             result = "解析请求结果失败 : %s" %e
 
         return result

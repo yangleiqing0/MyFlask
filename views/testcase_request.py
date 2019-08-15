@@ -126,7 +126,6 @@ class TestCaseRequestStart(MethodView):
                     db.session.add(private_variable)
                     db.session.commit()
                     return response_body
-
                 return '未成功解析报文 %s ' % response_body
             return response_body
 

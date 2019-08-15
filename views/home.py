@@ -38,8 +38,8 @@ class FrontLog(MethodView):
                 lens = len(front_logs)
                 if lens >= 11:  # 判断是否最后至少有两行，这样保证了最后一行是完整的
                     front_logs = front_logs[-10:]
-                    for i in range(lens):
-                        front_logs[i] = front_logs[i].decode('gbk')
+                    for ii in range(10):
+                        front_logs[ii] = front_logs[ii].decode('gbk')
                     break
                 offset *= 2
             front_logs = "<br/>".join(front_logs)

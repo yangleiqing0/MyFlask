@@ -13,7 +13,15 @@
 # import datetime
 # print(str(datetime.datetime.now().strftime('%Y%m%d%H%M%S')))
 import re
-a = '{"code":0,"data":{"user":{"id":56,"createdAt":"2019-08-13T10:49:23.534204197+08:00","updatedAt":"2019-08-13T10:49:23.534204197+08:00","username":"ehYSvD","name":"","mail":"1@q.com","phone":"","enable":true,"isInitialCipher":true}},"errMsg":""}	'
-passent = re.compile(r'\"id\":([^,]+)')
-c = passent.findall(a)[0]
-print(c)
+# a = '{"code":0,"data":{"user":{"id":56,"createdAt":"2019-08-13T10:49:23.534204197+08:00","updatedAt":"2019-08-13T10:49:23.534204197+08:00","username":"ehYSvD","name":"","mail":"1@q.com","phone":"","enable":true,"isInitialCipher":true}},"errMsg":""}	'
+# passent = re.compile(r'\"id\":([^,]+)')
+# c = passent.findall(a)[0]
+# print(c)
+a = [1,2,3,4,5]
+a = a[-2:]
+for i in range(len(a)):
+    a[i] += 1
+    print(a[i])
+for a1 in a:
+    a1 += 1
+print(a)
