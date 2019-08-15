@@ -56,7 +56,7 @@
 </header>
 <body style="background-color:ghostwhite" >
 <div class="tpl-page-container tpl-page-header-fixed" >
-    <div class="tpl-left-nav tpl-left-nav-hover"  >
+    <div class="tpl-left-nav tpl-left-nav-hover " style="width: 10%">
         <div class="tpl-left-nav-list">
             <ul class="tpl-left-nav-menu ">
                 <li class="tpl-left-nav-item">
@@ -180,8 +180,9 @@
     {%block hello%}
     {%endblock%}
 </div>
-<div class="container">
-    <div class="row" style="width: 1300px">
+<div  class="col-md-8" style="margin-left: 5%" >
+    <div class="container" >
+    <div class="row">
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading text-center" >
@@ -202,6 +203,8 @@
         </div>
     </div>
 </div>
+</div>
+
 {% block js %}
 {%endblock%}
 </body>
@@ -209,6 +212,10 @@
 {% block css %}
 {% endblock %}
 <style>
+    html,body{
+        width: 100%;
+        float: left;
+    }
     table{
         table-layout:fixed;
     }

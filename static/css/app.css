@@ -469,9 +469,9 @@ ul.tpl-dropdown-content li>a.tpl-dropdown-content-message:last-child {
     font-weight: 600;
 }
 
-.tpl-left-nav-list {
-    width: 235px;
-}
+/*.tpl-left-nav-list {*/
+/*    width: 10%;*/
+/*}*/
 
 .tpl-left-nav-item {}
 
