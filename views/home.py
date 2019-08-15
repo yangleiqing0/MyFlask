@@ -35,9 +35,10 @@ class FrontLog(MethodView):
                 """
                 logs.seek(offset, 2)  # seek(offset, 2)表示文件指针：从文件末尾(2)开始向前50个字符(-50)
                 front_logs = logs.readlines()  # 读取文件指针范围内所有行
-                if len(front_logs) >= 11:  # 判断是否最后至少有两行，这样保证了最后一行是完整的
+                lens = len(front_logs)
+                if lens >= 11:  # 判断是否最后至少有两行，这样保证了最后一行是完整的
                     front_logs = front_logs[-10:]
-                    for i in range(len(front_logs)):
+                    for i in range(lens):
                         front_logs[i] = front_logs[i].decode('gbk')
                     break
                 offset *= 2

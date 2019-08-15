@@ -46,6 +46,9 @@
 {% block js %}
     <script>
         $(document).ready(function () {
+            $('#update_testcase_test').click(function () {
+                $('form').append({{ macro.form_group(lable_name="test",blank_name="test", value="测试") }})
+            });
             var validate = function () {
                  testcase_id = {{ item.id }}
                     $('#testcase_update_form').validate({
