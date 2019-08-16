@@ -10,6 +10,7 @@ from common.analysis_params import AnalysisParams
 from app import cdb, db, app
 from common.method_request import MethodRequest
 from common.execute_testcase import to_execute_testcase
+from common.request_get_more_values import request_get_values
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -87,14 +88,11 @@ class TestCaseAdd(MethodView):
 
     def post(self):
         print('要添加的测试用例：', request.form)
-        name = request.form['name']
-        url = request.form.get('url', None)
+        name, url, method, group_id, regist_variable, regular, request_headers_id = request_get_values(
+            'name', 'url', 'method', 'case_group', 'regist_variable', 'regular', 'request_headers')
+
         data = request.form.get('data', None).replace('/n', '').replace(' ', '')
-        method = request.form.get('method', 'default')
-        group_id = request.form.get('case_group')
-        regist_variable = request.form.get('regist_variable', None)
-        regular = request.form.get('regular', None)
-        request_headers_id = request.form.get('request_headers')
+
         request_headers_query_sql = 'select value from request_headers where id=?'
         request_headers = cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0]
         print('TestCaseAdd request_headers before: ', request_headers)
@@ -153,18 +151,10 @@ class UpdateTestCase(MethodView):
                                request_headerses=request_headerses, testcase_scene_id=testcase_scene_id)
 
     def post(self, id=-1):
-        print('UpdateTestCase：request_form: ', request.form)
-        testcase_scene_id = request.args.get('testcase_scene_id', None)
+        name, url, method, data, group_id, request_headers_id, regist_variable, regular, hope_result, testcase_scene_id = \
+            request_get_values('name', 'url', 'method', 'data', 'case_group', 'request_headers',
+                               'regist_variable', 'regular', 'hope_result', 'testcase_scene_id')
         print('UpdateTestCase post:testcase_scene_id ', testcase_scene_id)
-        name = request.form.get('name')
-        url = request.form.get('url')
-        data = request.form.get('data')
-        method = request.form.get('method')
-        group_id = request.form.get('case_group')
-        request_headers_id = request.form.get('request_headers')
-        regist_variable = request.form.get('regist_variable', '')
-        regular = request.form.get('regular', '')
-        hope_result = request.form.get('hope_result', '')
         id = request.args.get('id', id)
         print('UpdateTestCase: id', id)
 

@@ -30,14 +30,17 @@ class TestCaseSceneAdd(MethodView):
 class TestCaseSceneTestCaseList(MethodView):
 
     def get(self):
-        testcase_scenes = TestCaseScene.query.order_by(db.desc(TestCaseScene.timestamp)).all()
-        for testcase_scene in testcase_scenes:
-            testcase_scene.testcases = testcase_scene.testcases
-        print('testcase_scenes:', testcase_scenes)
         model_testcases = TestCases.query.filter(TestCases.is_model == 1).all()
-        FrontLogs('进入测试场景列表页面').add_to_front_log()
+        page = request.args.get('page', 1, type=int)
+        FrontLogs('进入测试场景列表 第%s页' % page).add_to_front_log()
+
+        pagination = TestCaseScene.query.order_by(TestCaseScene.timestamp.desc()).paginate(page, per_page=
+        current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
+        # 返回一个内容对象
+        testcase_scenes = pagination.items
+        print("request_headers_pagination: ", pagination)
         return render_template('testcase_scene/testcase_scene_testcase_list.html', testcase_scenes=testcase_scenes,
-                               model_testcases=model_testcases)
+                               model_testcases=model_testcases, pagination=pagination)
 
     def post(self):
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))

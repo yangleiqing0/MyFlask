@@ -43,13 +43,15 @@
                 {% endfor %}
         </div>
     </div>
+    {{ macro.pagination_widget(pagination, 'testcase_scene_blueprint.testcase_scene_testcase_list') }}
+
 {% endblock %}
 {% block js %}
     <script>
     $(document).ready(function () {
         $('a[id*="testcase_add"]').click(function () {
             let testcase_scene_id = $(this).attr('id').replace('testcase_add_','');
-            let testcase_id = $("#testcase_list_"+testcase_scene_id).val()
+            let testcase_id = $("#testcase_list_"+testcase_scene_id).val();
             $.ajax({
                 url:'{{ url_for("testcase_scene_blueprint.testcase_scene_copy")}}?testcase_scene_id='+testcase_scene_id+"&testcase_id="+testcase_id,
                 type:'GET',

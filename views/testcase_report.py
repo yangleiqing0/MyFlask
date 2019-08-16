@@ -55,16 +55,14 @@ class Test:
 
     def __init__(self, testcase_result):
         print('Test :', testcase_result)
-        self.t_name = AnalysisParams().analysis_params(testcase_result[0])
+
+        self.t_name, self.url, self.request_body, self.hope = AnalysisParams().\
+            analysis_more_params(testcase_result[0], testcase_result[1], testcase_result[3], testcase_result[5])
         print('self.t_name: ', self.t_name)
-        self.url = AnalysisParams().analysis_params(testcase_result[1])
-        self.method = testcase_result[2]
-        self.request_body = AnalysisParams().analysis_params(testcase_result[3])
-        self.response_body = testcase_result[4]
-        self.hope = AnalysisParams().analysis_params(testcase_result[5])
-        self.old_database_value = testcase_result[6]
-        self.new_database_value = testcase_result[7]
-        self.result = testcase_result[8]
+
+        self.method, self.response_body, self.old_database_value, self.new_database_value, self.result \
+            = testcase_result[2], testcase_result[4], testcase_result[6], testcase_result[7], testcase_result[8]
+
         try:
             self.scene_id = testcase_result[9]
         except Exception:
@@ -183,7 +181,7 @@ class TestCaseReport(MethodView):
 
         testcase_scene_results = Testcaseresult(testcase_time_id, result="scene_testcases").testcase_results
         testcase_scene_ids = []
-        print('testcase_scene_results: ',testcase_scene_results, len(testcase_scene_results))
+        print('testcase_scene_results: ', testcase_scene_results, len(testcase_scene_results))
         testcase_scene_testcases_after_list = []
         for testcase_scene_result in testcase_scene_results:
             testcase_scene_ids.append(testcase_scene_result[9])

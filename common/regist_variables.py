@@ -5,7 +5,7 @@ from app import db
 
 
 def to_regist_variables(name, method, url, data, headers, regist_variable='', regular=''):
-    name = name
+    name =name
     response_body = MethodRequest().request_value(method, url, data, headers)
     if 'html' in response_body:
         response_body = '<xmp> %s </xmp>' % response_body

@@ -25,5 +25,11 @@ import re
 # for a1 in a:
 #     a1 += 1
 # print(a)
-a, b = [1, 2]
-print(a,b)
+
+
+class A:
+    pass
+
+a = A()
+a.name ='name123'
+print(a)

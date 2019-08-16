@@ -2,6 +2,7 @@ import json
 from urllib import parse
 from flask.views import MethodView
 from common.tail_font_log import FrontLogs
+from common.request_get_more_values import request_get_values
 from app import cdb, db, app
 from modles.request_headers import RequestHeaders
 from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
@@ -16,9 +17,8 @@ class RequestHeadersAdd(MethodView):
         return render_template('request_headers/request_headers_add.html')
 
     def post(self):
-        name = request.form.get('name')
-        value = request.form.get('value').replace(' ','').replace('\n', '').replace('\r', '')
-        description = request.form.get('description')
+        value = request.form.get('value').replace(' ', '').replace('\n', '').replace('\r', '')
+        name, description = request_get_values('name', 'description')
         request_headers = RequestHeaders(name, value, description)
         db.session.add(request_headers)
         db.session.commit()
@@ -45,8 +45,8 @@ class RequestHeadersList(MethodView):
         page = request.args.get('page', 1, type=int)
         FrontLogs('进入请求头部列表 第%s页' % page).add_to_front_log()
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-        pagination = RequestHeaders.query.order_by(RequestHeaders.timestamp.desc()).paginate(page, per_page=current_app.config[
-            'FLASK_POST_PRE_ARGV'], error_out=False)
+        pagination = RequestHeaders.query.order_by(RequestHeaders.timestamp.desc()).paginate(page, per_page=
+        current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
         # 返回一个内容对象
         request_headerses = pagination.items
         print("request_headers_pagination: ", pagination)
@@ -62,9 +62,7 @@ class RequestHeadersUpdate(MethodView):
         return render_template('request_headers/request_headers_update.html', item=request_headers)
 
     def post(self, id=-1):
-        name = request.form.get('name')
-        value = request.form.get('value')
-        description = request.form.get('description')
+        name, value, description = request_get_values('name', 'value', 'description')
         request_headers_update_sql = 'update request_headers set name=?,value=?,description=? where id=?'
         cdb().opeat_db(request_headers_update_sql, (name, value, description, id))
         FrontLogs('编辑请求头部 name: %s 成功' % name).add_to_front_log()
@@ -97,8 +95,7 @@ class RequestHeadersValidata(MethodView):
 class RequestHeadersUpdateValidata(MethodView):
 
     def get(self):
-        name = request.args.get('name')
-        request_headers_id = request.args.get('case_group_id')
+        name, request_headers_id = request_get_values('name', 'case_group_id')
         request_headers = RequestHeaders.query.filter(RequestHeaders.id != request_headers_id).filter(RequestHeaders.name == name).count()
         if request_headers != 0:
             return jsonify(False)

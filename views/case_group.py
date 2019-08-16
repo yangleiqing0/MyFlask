@@ -4,6 +4,7 @@ from flask import render_template, Blueprint, request, redirect, url_for, curren
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
 from common.tail_font_log import FrontLogs
+from common.request_get_more_values import request_get_values
 from app import cdb, db, app
 
 
@@ -17,9 +18,7 @@ class CaseGroupAdd(MethodView):
         return render_template('case_group/case_group_add.html')
 
     def post(self):
-        name = request.form.get('name')
-        print("name: ", name)
-        description = request.form.get('description')
+        name, description = request_get_values('name', 'description')
         FrontLogs('开始添加测试用例分组 name: %s ' % name).add_to_front_log()
         case_group = CaseGroup(name, description)
         db.session.add(case_group)
@@ -68,8 +67,7 @@ class CaseGroupUpdate(MethodView):
         return render_template('case_group/case_group_update.html', item=case_group)
 
     def post(self, id=-1):
-        name = request.form.get('name')
-        description = request.form.get('description')
+        name, description = request_get_values('name', 'description')
         case_group_update_sql = 'update case_group set name=?,description=? where id=?'
         cdb().opeat_db(case_group_update_sql, (name, description, id))
         FrontLogs('编辑测试用例分组 name:%s 成功' % name).add_to_front_log()
@@ -116,8 +114,7 @@ class CaseGroupValidata(MethodView):
 class CaseGroupUpdateValidata(MethodView):
 
     def get(self):
-        name = request.args.get('name')
-        case_group_id = request.args.get('case_group_id')
+        name, case_group_id = request_get_values('name', 'case_group_id')
         case_group = CaseGroup.query.filter(CaseGroup.id != case_group_id).filter(CaseGroup.name == name).count()
         if case_group != 0:
             return jsonify(False)

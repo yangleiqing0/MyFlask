@@ -2,6 +2,7 @@ from flask.views import MethodView
 from app import cdb, db, app
 from modles.variables import Variables
 from common.tail_font_log import FrontLogs
+from common.request_get_more_values import request_get_values
 from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
 
 
@@ -15,9 +16,7 @@ class VariableAdd(MethodView):
         return render_template('variable/variable_add.html')
 
     def post(self):
-        name = request.form.get('name')
-        value = request.form.get('value')
-        description = request.form.get('description', None)
+        name, value ,description= request_get_values('name', 'value', 'description')
         FrontLogs('开始添加全局变量 name: %s' % name).add_to_front_log()
         variable = Variables(name, value, description=description)
         db.session.add(variable)
@@ -51,9 +50,7 @@ class VariableUpdate(MethodView):
         return render_template('variable/variable_update.html', item=variable)
 
     def post(self, id=-1):
-        name = request.form.get('name')
-        value = request.form.get('value')
-        description = request.form.get('description')
+        name, value ,description= request_get_values('name', 'value', 'description')
         variable_update_sql = 'update variables set name=?,value=?,description=? where id=?'
         cdb().opeat_db(variable_update_sql, (name, value, description, id))
         app.logger.info('message:update variables success, name: %s' % name)
