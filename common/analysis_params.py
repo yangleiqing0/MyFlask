@@ -41,7 +41,7 @@ class AnalysisParams:
     def analysis_more_params(self, *args):
         new_args = []
         for arg in args:
-            arg = self.analysis_params(arg)
+            arg = AnalysisParams().analysis_params(arg)
             new_args.append(arg)
         return new_args
 

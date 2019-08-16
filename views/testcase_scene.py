@@ -53,7 +53,6 @@ class TestCaseSceneRun(MethodView):
         for testcase in testcases:
             testcase_result = to_execute_testcase(testcase)
             testcase_results.extend(['【%s】' % testcase.name, testcase_result])
-            time.sleep(1)
         testcase_results_html = '<br>'.join(testcase_results)
         print('TestCaseSceneRun: ', json.dumps({'testcase_results': testcase_results_html}))
         return json.dumps({'testcase_results': testcase_results_html})

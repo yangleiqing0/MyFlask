@@ -8,7 +8,7 @@ SQLALCHEMY_ECHO = True
 base_dir = os.path.join(os.path.dirname(__file__))
 SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(base_dir, 'db\\test.sqlite')
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-SQLALCHEMY_COMMIT_TEARDOWN = True
+SQLALCHEMY_COMMIT_TEARDOWN = False
 
 
 FLASK_POST_PRE_ARGV = 5

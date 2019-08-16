@@ -10,7 +10,7 @@ from modles.testcase_scene import TestCaseScene
 from common.tail_font_log import FrontLogs
 from app import cdb, db, app
 from common.analysis_params import AnalysisParams
-from common.method_request import MethodRequest
+from common.execute_testcase import to_execute_testcase
 from common.assert_method import AssertMethod
 from common.regist_variables import to_regist_variables
 
@@ -89,12 +89,7 @@ class TestCaseRequestStart(MethodView):
             testcase = TestCases.query.get(test_case_id)
             url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
             method = testcase.method
-            regist_variable = testcase.regist_variable
-            regular = testcase.regular
-            headers = json.loads(AnalysisParams().analysis_params(testcase.testcase_request_header.value, is_change="headers"))
-            print('request_headers:', headers)
-            response_body = to_regist_variables(method, url, data, headers, regist_variable, regular)
-
+            response_body = to_execute_testcase(testcase)
             testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_database_result()
             # 调用比较的方法判断响应报文是否满足期望
 
