@@ -70,7 +70,7 @@
                 if (run_testcase_id === look_test_case_id){
                     $.ajax({
                     url:'{{ url_for("testcase_blueprint.run_test_case")}}?testcase_id='+look_test_case_id,
-                    type:'GET',
+                    type : "POST",
                     success:function (response) {
                         let result = JSON.parse(response)['testcase_result'];
                         $('#request_body_show').css('overflow','scroll').empty().html(result);

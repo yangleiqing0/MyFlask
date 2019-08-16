@@ -48,8 +48,9 @@
         $(document).ready(function () {
             $('#update_testcase_test').click(function () {
                 $.ajax({
-                    url : '{{ url_for("testcase_blueprint.run_test_case")}}?testcase_id={{item.id}}',
-                    type : "GET",
+                    url : '{{ url_for("testcase_blueprint.run_test_case")}}?testcase_id={{item.id}}&testcase_update_run=1',
+                    type : "POST",
+                    data:$('#testcase_update_form').serialize(),
                     success : function (response) {
                         let result = JSON.parse(response)['testcase_result'];
                         $('#request_body_show').css('overflow','scroll').html(result)

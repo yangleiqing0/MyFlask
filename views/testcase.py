@@ -11,6 +11,7 @@ from app import cdb, db, app
 from common.method_request import MethodRequest
 from common.execute_testcase import to_execute_testcase
 from common.request_get_more_values import request_get_values
+from common.most_common_method import NullObject
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -33,9 +34,21 @@ class TestCaseLook(MethodView):
 
 class TestCaseRun(MethodView):
 
-    def get(self):
-        testcase_id = request.args.get('testcase_id', 0)
+    def post(self):
+
+        testcase_id, case_group_id, testcase_add_run, testcase_update_run\
+            = request_get_values('testcase_id', 'case_group_id', 'testcase_add_run', 'testcase_update_run')
         testcase = TestCases.query.get(testcase_id)
+        print('TestCaseRunForm: ', request.form)
+        if testcase_update_run:
+            testcase.name, testcase.url, testcase.data \
+                = request_get_values('name', 'url', 'data')
+        if testcase_add_run:
+            testcase = NullObject()
+            testcase.name, testcase.url, testcase.data, testcase.method, request_headers_id, \
+            testcase.regist_variable, testcase.regular                            \
+                 = request_get_values('name', 'url', 'data', 'method', 'request_headers', 'regist_variable', 'regular')
+            testcase.testcase_request_header = RequestHeaders.query.get(request_headers_id)
         testcase_results = []
         testcase_result = to_execute_testcase(testcase)
         testcase_results.extend(['【%s】' % testcase.name, testcase_result])
