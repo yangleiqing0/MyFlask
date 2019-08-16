@@ -14,10 +14,12 @@ def add_pre_data(key, table="Variavles"):
             db.session.commit()
 
 
-pre_variable = dir(var)
-# 获取var模块的所有属性
-pre_variable = [add_pre_data(key) for key in pre_variable if "__" not in key and key[0].isupper()]
-# 通过列表生成式 过滤首字符非大写，没有__的变量
+def add_pre_data_go():
+
+    pre_variable = dir(var)
+    # 获取var模块的所有属性
+    pre_variable = [add_pre_data(key) for key in pre_variable if "__" not in key and key[0].isupper()]
+    # 通过列表生成式 过滤首字符非大写，没有__的变量
 
 
 

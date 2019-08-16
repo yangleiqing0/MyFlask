@@ -8,7 +8,7 @@ from modles.case_group import CaseGroup
 from modles.testcase_start_times import TestCaseStartTimes
 from modles.testcase_scene import TestCaseScene
 from common.tail_font_log import FrontLogs
-from app import cdb, db, app
+from app import db
 from common.analysis_params import AnalysisParams
 from common.execute_testcase import to_execute_testcase
 from common.assert_method import AssertMethod

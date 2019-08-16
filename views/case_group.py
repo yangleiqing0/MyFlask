@@ -5,7 +5,8 @@ from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
-from app import cdb, db, app
+from app import db
+from common.connect_sqlite import cdb
 
 
 case_group_blueprint = Blueprint('case_group_blueprint',__name__)
@@ -24,7 +25,7 @@ class CaseGroupAdd(MethodView):
         db.session.add(case_group)
         db.session.commit()
         FrontLogs('开始添加测试用例分组 name: %s 成功' % name).add_to_front_log()
-        app.logger.info('message:insert into case_group success, name: %s' % name)
+        # app.logger.info('message:insert into case_group success, name: %s' % name)
         return redirect(url_for('case_group_blueprint.case_group_list'))
 
 
@@ -71,7 +72,7 @@ class CaseGroupUpdate(MethodView):
         case_group_update_sql = 'update case_group set name=?,description=? where id=?'
         cdb().opeat_db(case_group_update_sql, (name, description, id))
         FrontLogs('编辑测试用例分组 name:%s 成功' % name).add_to_front_log()
-        app.logger.info('message:update case_group success, name: %s' % name)
+        # app.logger.info('message:update case_group success, name: %s' % name)
         return redirect(url_for('case_group_blueprint.case_group_list'))
 
 
@@ -81,7 +82,7 @@ class CaseGroupDelete(MethodView):
         delete_case_group_sql = 'delete from case_group where id=?'
         cdb().opeat_db(delete_case_group_sql, (id,))
         FrontLogs('删除测试用例分组 id:%s 成功' % id).add_to_front_log()
-        app.logger.info('message:delete case_group success, id: %s' % id)
+        # app.logger.info('message:delete case_group success, id: %s' % id)
         return redirect(url_for('case_group_blueprint.case_group_list'))
 
 

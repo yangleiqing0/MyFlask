@@ -1,7 +1,6 @@
 import re
 from common.rand_name import RangName
-from app import cdb
-
+from common.connect_sqlite import cdb
 
 
 class AnalysisParams:

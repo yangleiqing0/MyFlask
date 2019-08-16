@@ -2,8 +2,6 @@ import sqlite3
 import config
 
 
-
-
 class cdb:
     def __init__(self):
         self.conn = sqlite3.connect(config.DATABASE_URL)

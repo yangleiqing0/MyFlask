@@ -3,7 +3,8 @@ from urllib import parse
 from flask.views import MethodView
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
-from app import cdb, db, app
+from app import db
+from common.connect_sqlite import cdb
 from modles.request_headers import RequestHeaders
 from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
 
@@ -23,7 +24,7 @@ class RequestHeadersAdd(MethodView):
         db.session.add(request_headers)
         db.session.commit()
         FrontLogs('添加请求头部 name: %s 成功' % name).add_to_front_log()
-        app.logger.info('message:insert into request_headers success, name: %s' % name)
+        # app.logger.info('message:insert into request_headers success, name: %s' % name)
         return redirect(url_for('request_headers_blueprint.request_headers_list'))
 
 
@@ -66,7 +67,7 @@ class RequestHeadersUpdate(MethodView):
         request_headers_update_sql = 'update request_headers set name=?,value=?,description=? where id=?'
         cdb().opeat_db(request_headers_update_sql, (name, value, description, id))
         FrontLogs('编辑请求头部 name: %s 成功' % name).add_to_front_log()
-        app.logger.info('message:update request_headers success, name: %s' % name)
+        # app.logger.info('message:update request_headers success, name: %s' % name)
         return redirect(url_for('request_headers_blueprint.request_headers_list'))
 
 
@@ -77,7 +78,7 @@ class RequestHeadersDelete(MethodView):
         delete_request_headers_sql = 'delete from request_headers where id=?'
         cdb().opeat_db(delete_request_headers_sql, (id,))
         FrontLogs('删除请求头部 id: %s 成功' % id).add_to_front_log()
-        app.logger.info('message:delete request_headers success, id: %s' % id)
+        # app.logger.info('message:delete request_headers success, id: %s' % id)
         return redirect(url_for('request_headers_blueprint.request_headers_list'))
 
 

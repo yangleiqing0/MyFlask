@@ -1,5 +1,6 @@
 from flask.views import MethodView
-from app import cdb, db, app
+from app import db
+from common.connect_sqlite import cdb
 from modles.variables import Variables
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
@@ -22,7 +23,7 @@ class VariableAdd(MethodView):
         db.session.add(variable)
         db.session.commit()
         FrontLogs('添加全局变量 name: %s 成功' % name).add_to_front_log()
-        app.logger.info('message:insert into variables success, name: %s' % name)
+        # app.logger.info('message:insert into variables success, name: %s' % name)
         return redirect(url_for('variables_blueprint.variable_list'))
 
 
@@ -53,7 +54,7 @@ class VariableUpdate(MethodView):
         name, value ,description= request_get_values('name', 'value', 'description')
         variable_update_sql = 'update variables set name=?,value=?,description=? where id=?'
         cdb().opeat_db(variable_update_sql, (name, value, description, id))
-        app.logger.info('message:update variables success, name: %s' % name)
+        # app.logger.info('message:update variables success, name: %s' % name)
         FrontLogs('编辑全局变量 name: %s 成功' % name).add_to_front_log()
         return redirect(url_for('variables_blueprint.variable_list'))
 
@@ -65,7 +66,7 @@ class VariableDelete(MethodView):
         delete_variables_sql = 'delete from variables where id=?'
         cdb().opeat_db(delete_variables_sql, (id,))
         FrontLogs('删除全局变量 id: %s 成功' % id).add_to_front_log()
-        app.logger.info('message:delete variables success, id: %s' % id)
+        # app.logger.info('message:delete variables success, id: %s' % id)
         return redirect(url_for('variables_blueprint.variable_list'))
 
 

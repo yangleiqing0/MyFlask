@@ -16,12 +16,13 @@ testcase_scene_blueprint = Blueprint('testcase_scene_blueprint', __name__)
 class TestCaseSceneAdd(MethodView):
 
     def get(self):
-        return render_template('testcase_scene/testcase_scene_add.html')
+        case_groups_querys_sql = 'select id,name from case_group'
+        case_groups = cdb().query_db(case_groups_querys_sql)
+        return render_template('testcase_scene/testcase_scene_add.html', case_groups=case_groups)
 
     def post(self):
-        name = request.form.get('name')
-        description = request.form.get('description')
-        testcase_scene = TestCaseScene(name, description)
+        name, group_id, description = to_execute_testcase('name', 'case_group', 'description')
+        testcase_scene = TestCaseScene(name, group_id, description)
         db.session.add(testcase_scene)
         db.session.commit()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))

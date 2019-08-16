@@ -7,7 +7,8 @@ from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
 from common.rand_name import RangName
 from common.analysis_params import AnalysisParams
-from app import cdb, db, app
+from app import db
+from common.connect_sqlite import cdb
 from common.method_request import MethodRequest
 from common.execute_testcase import to_execute_testcase
 from common.request_get_more_values import request_get_values
@@ -101,10 +102,10 @@ class TestCaseAdd(MethodView):
 
     def post(self):
         print('要添加的测试用例：', request.form)
-        name, url, method, group_id, regist_variable, regular, request_headers_id = request_get_values(
-            'name', 'url', 'method', 'case_group', 'regist_variable', 'regular', 'request_headers')
-
-        data = request.form.get('data', None).replace('/n', '').replace(' ', '')
+        name, url, method, regist_variable, regular, request_headers_id = request_get_values(
+            'name', 'url', 'method', 'regist_variable', 'regular', 'request_headers')
+        group_id = request.form.get('case_group', None)
+        data = request.form.get('data', '').replace('/n', '').replace(' ', '')
 
         request_headers_query_sql = 'select value from request_headers where id=?'
         request_headers = cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0]
@@ -132,12 +133,12 @@ class TestCaseAdd(MethodView):
             print('testcase_scene_id的值：', testcase_scene_id, type(testcase_scene_id))
             testcase = TestCases(
                 name, url, data, regist_variable, regular, method, group_id, 
-                request_headers_id,hope_result=hope_result, 
+                request_headers_id, hope_result=hope_result,
                 testcase_scene_id=testcase_scene_id)
             db.session.add(testcase)
             db.session.commit()
             FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
-            app.logger.info('message:insert into testcases success, name: %s' % name)
+            # app.logger.info('message:insert into testcases success, name: %s' % name)
             if testcase_scene_id not in(None, "None"):
                 return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
             return redirect(url_for('testcase_blueprint.test_case_list'))
@@ -176,7 +177,7 @@ class UpdateTestCase(MethodView):
         cdb().opeat_db(update_test_case_sql, (name, url, data, method, group_id,
                                               request_headers_id, regist_variable, regular, hope_result,id))
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
-        app.logger.info('message:update testcases success, name: %s' % name)
+        # app.logger.info('message:update testcases success, name: %s' % name)
         print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id, len(testcase_scene_id))
         if testcase_scene_id not in(None, "None"):
             print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id is True,len(testcase_scene_id))
@@ -191,7 +192,7 @@ class DeleteTestCase(MethodView):
         delete_test_case_sql = 'delete from testcases where id=?'
         cdb().opeat_db(delete_test_case_sql, (id,))
         FrontLogs('删除测试用例 id: %s 成功' % id).add_to_front_log()
-        app.logger.info('message:delete testcases success, id: %s' % id)
+        # app.logger.info('message:delete testcases success, id: %s' % id)
         if testcase_scene_id not in(None, "None"):
             return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
         return redirect(url_for('testcase_blueprint.test_case_list'))

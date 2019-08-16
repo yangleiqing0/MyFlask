@@ -3,7 +3,7 @@ from modles.testcase import TestCases
 from modles.testcase_result import TestCaseResult
 from modles.testcase_start_times import TestCaseStartTimes
 from modles.variables import Variables
-from app import cdb
+from common.connect_sqlite import cdb
 from common.analysis_params import AnalysisParams
 
 

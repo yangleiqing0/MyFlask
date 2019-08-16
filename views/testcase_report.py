@@ -7,7 +7,8 @@ from modles.testcase_result import TestCaseResult
 from modles.testcase_scene import TestCaseScene
 from modles.testcase import TestCases
 from common.tail_font_log import FrontLogs
-from app import cdb, db, app
+from app import db
+from common.connect_sqlite import cdb
 from common.do_report import test_report
 from datetime import datetime
 from common.analysis_params import AnalysisParams
@@ -235,7 +236,7 @@ class TestCaseReportDelete(MethodView):
         except FileNotFoundError:
             pass
         FrontLogs('删除测试报告 id: %s 成功' % testcase_time_id).add_to_front_log()
-        app.logger.info('message:delete testcase_report success, id: %s' % id)
+        # app.logger.info('message:delete testcase_report success, id: %s' % id)
         return redirect(url_for('testcase_report_blueprint.testcase_report_list'))
 
 

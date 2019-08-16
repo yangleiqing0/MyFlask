@@ -4,6 +4,17 @@
             <div class="panel-body" >
                 <form action="{{ url_for('testcase_scene_blueprint.testcase_scene_add') }}" id="testcase_scene_add_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="测试用例场景名称") }}
+                    <div class="form-group">
+                        <label for="case_group" class="control-label col-md-4">测试场景分组</label>
+                            <div class="col-md-4">
+                                    <select name="case_group" id="case_group" class="form-control">
+                                        <option value=""></option>
+                                        {% for case_group in case_groups %}
+                                            <option  value="{{ case_group[0] }}">{{ case_group[1] }}</option>
+                                        {% endfor %}
+                                    </select>
+                            </div>
+                    </div>
                     {{ macro.form_group(lable_name="description",blank_name="测试用例场景备注") }}
                     {{ macro.submit(submit_id="testcase_scene_add") }}
                 </form>

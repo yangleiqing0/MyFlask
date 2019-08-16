@@ -9,6 +9,7 @@ class CaseGroup(db.Model):
     description = db.Column(db.String(50))
     timestamp = db.Column(db.DateTime, index=True)
 
+    case_group_testcase_scenes = db.relationship('TestCaseScene', backref='testcase_scene_case_group')
     testcases = db.relationship('TestCases', backref='case_group')
 
     def __init__(self, name, description):
