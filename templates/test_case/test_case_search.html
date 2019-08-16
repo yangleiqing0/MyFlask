@@ -52,7 +52,7 @@
                     type : "GET",
                     success : function (response) {
                         let result = JSON.parse(response)['testcase_result'];
-                        $('#request_body_show').html(result)
+                        $('#request_body_show').css('overflow','scroll').html(result)
                     }
                 })
             })
