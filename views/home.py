@@ -5,7 +5,7 @@ from logs.config import FRONT_LOGS_FILE, FLASK_LOGS_FILE
 from flask.views import MethodView
 from flask import render_template, Blueprint, request
 from app import db
-from common.pre_db_insert_data import add_pre_data_go
+from common.pre_db_insert_data import to_insert_data
 
 home_blueprint = Blueprint('home_blueprint', __name__)
 
@@ -27,8 +27,9 @@ class DbCreatAll(MethodView):
         from modles.testcase_start_times import TestCaseStartTimes
         from modles.testcase_result import TestCaseResult
         from modles.testcase_scene import TestCaseScene
+        from modles.user import User
         db.create_all()
-        add_pre_data_go()
+        to_insert_data()
 
         return '数据库表创建OK'
 

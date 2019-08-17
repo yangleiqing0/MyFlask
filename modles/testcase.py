@@ -1,6 +1,7 @@
 from modles.case_group import CaseGroup
 from modles.testcase_scene import TestCaseScene
 from modles.request_headers import RequestHeaders
+from modles.user import User
 from app import db
 from datetime import datetime
 
@@ -20,9 +21,10 @@ class TestCases(db.Model):
     hope_result = db.Column(db.String(200))
     is_model = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
     def __init__(self, name, url, data, regist_variable, regular, method, group_id,
-                 request_headers_id,  testcase_scene_id=None, hope_result='', is_model=0):
+                 request_headers_id,  testcase_scene_id=None, hope_result='', is_model=0, user_id=None):
         self.regist_variable = regist_variable
         self.regular = regular
         self.timestamp = datetime.now()
@@ -35,12 +37,13 @@ class TestCases(db.Model):
         self.hope_result = hope_result
         self.testcase_scene_id = testcase_scene_id
         self.is_model = is_model
+        self.user_id = user_id
 
     def __repr__(self):
-        return "<TestCase:%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s >" % (
+        return "<TestCase:%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s >" % (
             self.id, self.name, self.url, self.data, self.method,
             self.group_id, self.request_headers_id, self.timestamp, self.regist_variable,
-            self.regular, self.hope_result, self.testcase_scene_id, self.is_model)
+            self.regular, self.hope_result, self.testcase_scene_id, self.is_model, self.user_id)
 
     def to_json(self):
         return dict(id=self.id, name=self.name, url=self.url,
@@ -48,4 +51,4 @@ class TestCases(db.Model):
                     method=self.method, group_id=self.group_id,
                     regular=self.regular, hope_result=self.hope_result,
                     testcase_scene_id=self.testcase_scene_id,
-                    is_model=self.is_model)
+                    is_model=self.is_model, user_id=self.user_id)

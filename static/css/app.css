@@ -351,10 +351,6 @@ ul.tpl-dropdown-content li>a.tpl-dropdown-content-message:last-child {
     padding: 20px 20px 0;
 }
 
-.tpl-page-header-fixed {
-    margin-top: 75px;
-}
-
 .tpl-navbar-collapse {
     width: 235px;
     float: left;

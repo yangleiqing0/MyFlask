@@ -1,6 +1,6 @@
 import os
 
-secret_key = 'asldfwadadw@fwq@#!Eewew'
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 DATABASE_URL = os.path.join(os.path.split(os.path.realpath(__file__))[0],'db\\test.sqlite')
 
