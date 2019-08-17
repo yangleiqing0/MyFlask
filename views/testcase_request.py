@@ -24,8 +24,10 @@ class TestCaseRequest(MethodView):
         # testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None)).all()
         FrontLogs('进入测试用例执行页面').add_to_front_log()
         case_groups = CaseGroup.query.all()
-
+        case_groups_new = []
         for case_group in case_groups:
+            case_group_NullObject = NullObject()
+            case_group_NullObject.name = case_group.name
             testcase_list = []
             testcases = TestCases.query.join(CaseGroup, CaseGroup.id == TestCases.group_id)\
                 .filter(TestCases.testcase_scene_id.is_(None), TestCases.group_id == case_group.id).all()
@@ -44,25 +46,26 @@ class TestCaseRequest(MethodView):
                     testcase_list.append(testcase_scene_NullObject)
             except KeyError:
                 pass
-            case_group.testcase_list = testcase_list
-            print('testcase_list: ', case_group.name, testcase_list)
+
+            case_group_NullObject.testcases = testcase_list
+            case_groups_new.append(case_group_NullObject)
+            print('testcase_list: ', case_group_NullObject.name, testcase_list)
 
         no_case_group = type('no_case_group', (object,), dict(a=-1))
-        case_groups.append(no_case_group)
+        case_groups_new.append(no_case_group)
         no_case_group.testcases = TestCases.query.filter(TestCases.group_id.is_(None), TestCases.testcase_scene_id.is_(None)).all()
         no_case_group.name = "<span style='color: blue'>未分组测试用例</span>"
-        # print('testcase :', testcases)
         print('test_case_request case_groups :', case_groups)
 
         testcase_no_scene_group = type('testcase_scene_group', (object,), dict(a=-1))
-        case_groups.append(testcase_no_scene_group)
+        case_groups_new.append(testcase_no_scene_group)
         testcase_no_scene_group.testcases = TestCaseScene.query.filter(TestCaseScene.group_id.is_(None)).all()
         testcase_no_scene_group.name = "<span style='color: blue'>未分组测试场景</span>"
 
-        for case_group in case_groups:
+        for case_group in case_groups_new:
             print('test_case_request case_group :', case_group.testcases)
 
-        return render_template('test_case_request/test_case_request.html', case_groups=case_groups)
+        return render_template('test_case_request/test_case_request.html', case_groups=case_groups_new)
 
     def post(self):
         print('TestCaseRequest post request.form: ', request.form)
