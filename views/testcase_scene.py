@@ -124,7 +124,7 @@ class TestCaseSceneCopy(MethodView):
         testcase_scene = TestCaseScene.query.get(testcase_scene_id)
         timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
         name = testcase_scene.name + timestr
-        testcase_scene_copy = TestCaseScene(name, testcase_scene.group_id, testcase_scene.description)
+        testcase_scene_copy = TestCaseScene(name, description=testcase_scene.description)
         db.session.add(testcase_scene_copy)
         db.session.commit()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))

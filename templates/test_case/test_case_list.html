@@ -3,8 +3,14 @@
 {% block content %}
                 <div class="panel-body">
                     <table class="table table-hover">
-                    <div class="col-md-offset-10">
-                          <a  href="{{ url_for('testcase_blueprint.add_test_case') }}" title="添加测试用例"><button style="color: black">添加测试用例</button></a>
+                    <div class="col-md-offset-9">
+                          <a  href="{{ url_for('testcase_blueprint.add_test_case') }}?page={{ page }}" title="添加测试用例"><button style="color: black">添加测试用例</button></a>
+                         <select  name="testcase_copy" id="testcase_copy" style="width: 120px;">
+                            {% for model_testcase in model_testcases %}
+                                <option  value="{{ model_testcase.id }}" style="width: 20px">{{ model_testcase.name }}</option>
+                            {% endfor %}
+                        </select>
+                        <a id="testcase_copy_click" class="btn btn-default btn-xs" title="复制测试用例"><i class="fa fa-copy"></i></a>
                     </div>
                         <tr>
                             <th>ID</th>
@@ -43,8 +49,8 @@
                             <td>
                                 <a href="{{ url_for('testcase_blueprint.look_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="查询测试用例"><i class="fa fa-search"></i></a>
                                 <button type="button" id="run_test_case_id_{{ item.id }}" class="btn btn-default btn-xs" title="执行测试用例"><i class="fa fa-play"></i></button>
-                                <a href="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
-                                <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item.id) }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>
+                                <a href="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}?page={{ page }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
+                                <a href="{{ url_for('testcase_blueprint.delete_test_case',id=item.id) }}?page={{ page }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>
                                 {% if item.is_model ==0 %}
                                     <a href="{{ url_for('testcase_blueprint.test_case_model',id=item.id, page=page) }}" class="btn btn-default btn-xs" title="设置为用例模板"><i class="fa fa-file-text-o"></i></a>
                                 {% else %}
@@ -60,30 +66,40 @@
 {% block js %}
     <script>
         $(document).ready(function () {
+                 /**
+              * @return {string}
+              */
+             function GetQueryString(name)
+            {
+                 let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                 let r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+                 if(r != null){
+                     return  unescape(r[2]);
+                 }else {
+                     return '';
+                 }
+            }
+
+            $('a[id="testcase_copy_click"]').click(function () {
+             let page = GetQueryString('page');
+             let copy_testcase_id = $('#testcase_copy').val();
+             window.location.href = '{{ url_for("testcase_blueprint.copy_test_case")}}?testcase_id='+copy_testcase_id+'&page='+page
+        });
+
             $('[id*="run_test_case_id_"]').click(function () {
-                run_test_case_obj = $(this);
+                let run_test_case_obj = $(this);
                 run_test_case_obj.attr("disabled", true);
-                run_testcase_id = run_test_case_obj.attr('id').replace('run_test_case_id_', '');
-            });
-            $('tr[id*="look_test_case_"]').click(function () {
-                look_test_case_id = $(this).attr('id').replace('look_test_case_','');
-                if (run_testcase_id === look_test_case_id){
-                    $.ajax({
-                    url:'{{ url_for("testcase_blueprint.run_test_case")}}?testcase_id='+look_test_case_id,
+                let run_testcase_id = run_test_case_obj.attr('id').replace('run_test_case_id_', '');
+                 $.ajax({
+                    url:'{{ url_for("testcase_blueprint.run_test_case")}}?testcase_id='+run_testcase_id,
                     type : "POST",
                     success:function (response) {
                         let result = JSON.parse(response)['testcase_result'];
                         $('#request_body_show').css('overflow','scroll').empty().html(result);
                     }
                 });
-                }else {
-                       window.location.href = "{{ url_for('testcase_blueprint.look_test_case',id=0)}}?id=" + look_test_case_id
-                }
-                    run_test_case_obj.removeAttr('disabled');
-                    run_testcase_id = 0
+                 run_test_case_obj.removeAttr('disabled');
             });
-
-
 })
 
     </script>

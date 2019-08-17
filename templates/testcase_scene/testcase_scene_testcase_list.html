@@ -4,7 +4,7 @@
     <div class="panel-body no-padding " >
         <div class="col-md-offset-8">
             <a  href="{{ url_for('testcase_scene_blueprint.testcase_scene_add') }}?page={{ page }}" title="添加测试场景"><button style="color: black">添加测试场景</button></a>
-            <select  name="testcase_scene_copy" id="testcase_scene_copy">
+            <select  name="testcase_scene_copy" id="testcase_scene_copy" style="width: 150px;">
                 {% for model_testcase_scene in model_testcase_scenes %}
                     <option  value="{{ model_testcase_scene.id }}" style="width: 20px">{{ model_testcase_scene.name }}</option>
                 {% endfor %}

@@ -14,7 +14,7 @@ class TestCaseScene(db.Model):
 
     testcases = db.relationship('TestCases', backref='testcase_scene')
 
-    def __init__(self, name, group_id, description, is_model=0):
+    def __init__(self, name, group_id=None, description='', is_model=0):
         self.name = name
         self.group_id = group_id
         self.description = description
