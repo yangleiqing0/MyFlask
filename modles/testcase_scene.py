@@ -10,16 +10,19 @@ class TestCaseScene(db.Model):
     description = db.Column(db.String(50))
     group_id = db.Column(db.Integer, db.ForeignKey(CaseGroup.id))
     timestamp = db.Column(db.DateTime, index=True)
+    is_model = db.Column(db.Integer)
+
     testcases = db.relationship('TestCases', backref='testcase_scene')
 
-    def __init__(self, name, group_id, description):
+    def __init__(self, name, group_id, description, is_model=0):
         self.name = name
         self.group_id = group_id
         self.description = description
         self.timestamp = datetime.now()
+        self.is_model = is_model
 
     def __repr__(self):
-        return "<TestCaseScene:%s,%s,%s, %s>" % (self.id, self.name, self.group_id, self.description)
+        return "<TestCaseScene:%s,%s,%s, %s, %s>" % (self.id, self.name, self.group_id, self.description, self.is_model)
 
     def to_json(self):
-        return dict(id=self.id, name=self.name, group_id=self.group_id, description=self.description)
+        return dict(id=self.id, name=self.name, group_id=self.group_id, description=self.description, is_model=self.is_model)

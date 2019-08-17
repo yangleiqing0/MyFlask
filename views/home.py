@@ -30,7 +30,7 @@ class DbCreatAll(MethodView):
         db.create_all()
         add_pre_data_go()
 
-        return 'OK'
+        return '数据库表创建OK'
 
 
 class Test(MethodView):

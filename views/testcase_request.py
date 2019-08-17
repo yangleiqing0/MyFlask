@@ -12,7 +12,8 @@ from app import db
 from common.analysis_params import AnalysisParams
 from common.execute_testcase import to_execute_testcase
 from common.assert_method import AssertMethod
-from common.regist_variables import to_regist_variables
+from common.most_common_method import NullObject
+
 
 test_case_request_blueprint = Blueprint('test_case_request_blueprint', __name__)
 
@@ -20,35 +21,43 @@ test_case_request_blueprint = Blueprint('test_case_request_blueprint', __name__)
 class TestCaseRequest(MethodView):
 
     def get(self):
-        testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None)).all()
+        # testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None)).all()
         FrontLogs('进入测试用例执行页面').add_to_front_log()
         case_groups = CaseGroup.query.all()
-        testcase_list = []
-        for testcase in testcases:
-            testcase.name = AnalysisParams().analysis_params(testcase.name)
-            testcase_list.append(testcase)
+
         for case_group in case_groups:
-            case_group_testcases = case_group.testcases
-            num = 0
-            while num < len(case_group_testcases):
-                if case_group_testcases[num].testcase_scene_id not in (None, "", "None"):
-                    print('remove:', case_group_testcases[num].testcase_scene_id)
-                    del(case_group_testcases[num])
-                else:
-                    num += 1
-            for case_group_testcase in case_group_testcases:
-                case_group_testcase.name = AnalysisParams().analysis_params(case_group_testcase.name)
+            testcase_list = []
+            testcases = TestCases.query.join(CaseGroup, CaseGroup.id == TestCases.group_id)\
+                .filter(TestCases.testcase_scene_id.is_(None), TestCases.group_id == case_group.id).all()
+            for testcase in testcases:
+                testcase_NullObject = NullObject()
+                testcase_NullObject.id = testcase.id
+                testcase_NullObject.name = testcase.name
+                testcase_NullObject.is_testcase_scene = 0
+                testcase_list.append(testcase_NullObject)
+            try:
+                for testcase_scene in case_group.case_group_testcase_scenes:
+                    testcase_scene_NullObject = NullObject()
+                    testcase_scene_NullObject.id = testcase_scene.id
+                    testcase_scene_NullObject.name = testcase_scene.name
+                    testcase_scene_NullObject.is_testcase_scene = 1
+                    testcase_list.append(testcase_scene_NullObject)
+            except KeyError:
+                pass
+            case_group.testcase_list = testcase_list
+            print('testcase_list: ', case_group.name, testcase_list)
+
         no_case_group = type('no_case_group', (object,), dict(a=-1))
         case_groups.append(no_case_group)
-        no_case_group.testcases = TestCases.query.filter(TestCases.group_id == "", TestCases.testcase_scene_id.is_(None)).all()
-        no_case_group.name = "未分组测试用例"
-        print('testcase :', testcases)
+        no_case_group.testcases = TestCases.query.filter(TestCases.group_id.is_(None), TestCases.testcase_scene_id.is_(None)).all()
+        no_case_group.name = "<span style='color: blue'>未分组测试用例</span>"
+        # print('testcase :', testcases)
         print('test_case_request case_groups :', case_groups)
 
-        testcase_scene_group = type('testcase_scene_group', (object,), dict(a=-1))
-        case_groups.append(testcase_scene_group)
-        testcase_scene_group.testcases = TestCaseScene.query.all()
-        testcase_scene_group.name = "测试场景"
+        testcase_no_scene_group = type('testcase_scene_group', (object,), dict(a=-1))
+        case_groups.append(testcase_no_scene_group)
+        testcase_no_scene_group.testcases = TestCaseScene.query.filter(TestCaseScene.group_id.is_(None)).all()
+        testcase_no_scene_group.name = "<span style='color: blue'>未分组测试场景</span>"
 
         for case_group in case_groups:
             print('test_case_request case_group :', case_group.testcases)

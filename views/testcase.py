@@ -84,23 +84,24 @@ class TestCastList(MethodView):
         print("pagination: ", pagination)
         FrontLogs('进入测试用例列表页面 第%s页' % page).add_to_front_log()
         return render_template('test_case/test_case_list.html', pagination=pagination, items=testcaseses, case_groups=case_groups,
-                               request_headers=request_headers)
+                               request_headers=request_headers, page=page)
 
 
 class TestCaseAdd(MethodView):
 
     def get(self):
-        case_groups_querys_sql = 'select id,name from case_group'
-        case_groups = cdb().query_db(case_groups_querys_sql)
+        scene_page = request.args.get('scene_page')
+        case_groups = CaseGroup.query.all()
         testcase_scene_id = request.args.get('testcase_scene_id', None)
         request_headers_querys_sql = 'select id,name from request_headers'
         request_headers = cdb().query_db(request_headers_querys_sql)
         print('request_headers: ', request_headers )
         FrontLogs('进入添加测试用例页面').add_to_front_log()
         return render_template('test_case/test_case_add.html', case_groups=case_groups,
-                               request_headers=request_headers, testcase_scene_id=testcase_scene_id)
+                               request_headers=request_headers, testcase_scene_id=testcase_scene_id, scene_page=scene_page)
 
     def post(self):
+        scene_page = request.args.get('scene_page')
         print('要添加的测试用例：', request.form)
         name, url, method, regist_variable, regular, request_headers_id = request_get_values(
             'name', 'url', 'method', 'regist_variable', 'regular', 'request_headers')
@@ -140,7 +141,7 @@ class TestCaseAdd(MethodView):
             FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
             # app.logger.info('message:insert into testcases success, name: %s' % name)
             if testcase_scene_id not in(None, "None"):
-                return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
+                return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
             return redirect(url_for('testcase_blueprint.test_case_list'))
 
 
@@ -148,6 +149,7 @@ class UpdateTestCase(MethodView):
 
     def get(self, id=-1):
         testcase_scene_id = request.args.get('testcase_scene_id', None)
+        scene_page = request.args.get('scene_page')
         print('UpdateTestCase get:testcase_scene_id ', testcase_scene_id)
         testcase = TestCases.query.filter(TestCases.id == id).first()
         print('testcase.group_id:', testcase.group_id)
@@ -162,15 +164,14 @@ class UpdateTestCase(MethodView):
         FrontLogs('进入编辑测试用例 id: %s 页面' % id).add_to_front_log()
         return render_template('test_case/test_case_search.html', item=testcase, case_groups=case_groups,
                                request_headers_id_before=request_headers_id_before, case_group_id_before=case_group_id_before,
-                               request_headerses=request_headerses, testcase_scene_id=testcase_scene_id)
+                               request_headerses=request_headerses, testcase_scene_id=testcase_scene_id, scene_page=scene_page)
 
     def post(self, id=-1):
-        name, url, method, data, group_id, request_headers_id, regist_variable, regular, hope_result, testcase_scene_id = \
-            request_get_values('name', 'url', 'method', 'data', 'case_group', 'request_headers',
+        scene_page, name, url, method, data, group_id, request_headers_id, regist_variable, regular, hope_result, testcase_scene_id = \
+            request_get_values('scene_page', 'name', 'url', 'method', 'data', 'case_group', 'request_headers',
                                'regist_variable', 'regular', 'hope_result', 'testcase_scene_id')
-        print('UpdateTestCase post:testcase_scene_id ', testcase_scene_id)
+        print('UpdateTestCase post:testcase_scene_id ', testcase_scene_id, scene_page)
         id = request.args.get('id', id)
-        print('UpdateTestCase: id', id)
 
         update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=?,group_id=?,' \
                                'request_headers_id=?,regist_variable=?,regular=?,hope_result=? where id=?'
@@ -181,20 +182,21 @@ class UpdateTestCase(MethodView):
         print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id, len(testcase_scene_id))
         if testcase_scene_id not in(None, "None"):
             print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id is True,len(testcase_scene_id))
-            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
+            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
         return redirect(url_for('testcase_blueprint.test_case_list'))
 
 
 class DeleteTestCase(MethodView):
 
     def get(self, id=-1):
+        scene_page = request.args.get('scene_page')
         testcase_scene_id = request.args.get('testcase_scene_id', None)
         delete_test_case_sql = 'delete from testcases where id=?'
         cdb().opeat_db(delete_test_case_sql, (id,))
         FrontLogs('删除测试用例 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete testcases success, id: %s' % id)
         if testcase_scene_id not in(None, "None"):
-            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list'))
+            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list',page=scene_page))
         return redirect(url_for('testcase_blueprint.test_case_list'))
 
 
@@ -202,12 +204,13 @@ class ModelTestCase(MethodView):
 
     def get(self, id=-1):
         testcase = TestCases.query.get(id)
+        page = request.args.get('page')
         if testcase.is_model == 0:
             testcase.is_model = 1
         else:
             testcase.is_model = 0
         db.session.commit()
-        return redirect(url_for('testcase_blueprint.test_case_list'))
+        return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
 
 class TestCaseValidata(MethodView):

@@ -5,7 +5,7 @@ from common.regist_variables import to_regist_variables
 
 def to_execute_testcase(testcase):
 
-    testcase_request_header = testcase.testcase_request_header  #通过反向引用获得case对应的请求头对象
+    testcase_request_header = testcase.testcase_request_header  # 通过反向引用获得case对应的请求头对象
     testcase_name, testcase_url, testcase_data = AnalysisParams().analysis_more_params(testcase.name, testcase.url, testcase.data)
 
     testcase_request_header_value = AnalysisParams().analysis_params(

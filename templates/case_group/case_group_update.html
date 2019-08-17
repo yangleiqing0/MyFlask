@@ -12,7 +12,7 @@
 {% block js %}
     <script>
         $(document).ready(function () {
-            var validate = function () {
+            let validate = function () {
                     case_group_id = {{ item.id }}
                     $('#case_group_update_form').validate({
                         rules: {

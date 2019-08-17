@@ -2,26 +2,52 @@
 {% block title %}测试场景列表{% endblock %}
 {% block content %}
     <div class="panel-body no-padding " >
-        <div class="col-md-offset-10">
-            <a  href="{{ url_for('testcase_scene_blueprint.testcase_scene_add') }}" title="添加测试场景"><button style="color: black">添加测试场景</button></a>
+        <div class="col-md-offset-8">
+            <a  href="{{ url_for('testcase_scene_blueprint.testcase_scene_add') }}?page={{ page }}" title="添加测试场景"><button style="color: black">添加测试场景</button></a>
+            <select  name="testcase_scene_copy" id="testcase_scene_copy">
+                {% for model_testcase_scene in model_testcase_scenes %}
+                    <option  value="{{ model_testcase_scene.id }}" style="width: 20px">{{ model_testcase_scene.name }}</option>
+                {% endfor %}
+            </select>
+            <a id="testcase_scene_add" class="btn btn-default btn-xs" title="复制场景"><i class="fa fa-copy"></i></a>
         </div>
         <div style="float: left" class="col-md-12 no-padding"  >
                 {% for testcase_scene in testcase_scenes %}
                     <div class="btn col-md-12 btn-default no-padding"  >
-                        <div class="col-md-9" href="#case_group_{{ testcase_scene.id }}" data-toggle="collapse">
+                        <div class="col-md-8" href="#case_group_{{ testcase_scene.id }}" data-toggle="collapse">
                             <div class="col-md-2"><a href="#"><span class="badge" >{{ loop.index }}</span></a></div>
-                            <div class="col-md-10"><span class="badge-color-black" style="margin-left: 120px;">{{testcase_scene.name }}</span></div>
+                            <div class="col-md-10" style="float: left">
+                                {% if testcase_scene.testcase_scene_case_group %}
+                                    <div class="badge-color-black col-md-3" >【{{ testcase_scene.testcase_scene_case_group.name }}】</div>
+                                    <div class="col-md-9">
+                                        <span class="badge-color-black" >
+                                            {{testcase_scene.name }}
+                                        </span>
+                                    </div>
+                                {% else %}
+                                    <div class="badge-color-black col-md-3" ><span style="color: blue">【未分组的测试场景】</span></div>
+                                    <div class="col-md-9"><span class="badge-color-black" >{{testcase_scene.name }}</span></div>
+
+                                {% endif %}
+                                </div>
                         </div>
-                        <div class="col-md-3 has_no_padding" style="float: left">
-                            <a href='{{ url_for("testcase_blueprint.add_test_case")}}?testcase_scene_id={{ testcase_scene.id }}' class="btn btn-default btn-xs" title="添加场景用例"><i class="fa fa-plus"></i></a>
+                        <div class="col-md-4 has_no_padding" style="float: left">
+                            <a href='{{ url_for("testcase_scene_blueprint.testcase_scene_update")}}?testcase_scene_id={{ testcase_scene.id }}&page={{ page }}' class="btn btn-default btn-xs" title="编辑场景"><i class="fa fa-pencil"></i></a>
+                            <a id="testcase_scene_run_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="执行场景"><i class="fa fa-play"></i></a>
+                            <a id="testcase_scene_delete_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="删除场景"><i class="fa fa-trash"></i></a>
+                            {% if testcase_scene.is_model ==0 or testcase_scene.is_model == None %}
+                                <a href="{{ url_for('testcase_scene_blueprint.testcase_scene_model',testcase_scene_id=testcase_scene.id) }}?page={{ page }}" class="btn btn-default btn-xs" title="设置为场景模板"><i class="fa fa-file-text-o"></i></a>
+                            {% else %}
+                                <a href="{{ url_for('testcase_scene_blueprint.testcase_scene_model',testcase_scene_id=testcase_scene.id) }}?page={{ page }}" class="btn btn-default btn-xs" title="取消设置为场景模板"><i class="fa fa-file-text"></i></a>
+                            {% endif %}
+                            <a href='{{ url_for("testcase_blueprint.add_test_case")}}?testcase_scene_id={{ testcase_scene.id }}&scene_page={{ page }}' class="btn btn-default btn-xs" title="添加场景用例"><i class="fa fa-plus"></i></a>
                             <select name="testcase_list" id="testcase_list_{{ testcase_scene.id }}">
                                 {% for model_testcase in model_testcases %}
                                     <option  value="{{ model_testcase.id }}" style="width: 20px">{{ model_testcase.name }}</option>
                                 {% endfor %}
                             </select>
                             <a id="testcase_add_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="复制测试用例"><i class="fa fa-copy"></i></a>
-                            <a id="testcase_scene_run_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="执行测试场景"><i class="fa fa-play"></i></a>
-                            <a id="testcase_scene_delete_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="删除场景"><i class="fa fa-trash"></i></a>
+
                         </div>
                     </div>
                     <div id="case_group_{{ testcase_scene.id }}" class="collapse no-padding">
@@ -32,8 +58,8 @@
                                     <div class="col-md-8"><span>{{ testcase.name }}</span></div>
                                     <div class="col-md-2 col-md-offset-1 has_no_padding">
                                         <a href="{{ url_for('testcase_blueprint.look_test_case',id=testcase.id) }}" class="btn btn-default btn-xs" title="查询测试用例"><i class="fa fa-search"></i></a>
-                                        <a href="{{ url_for('testcase_blueprint.update_test_case',id=testcase.id) }}?testcase_scene_id={{ testcase_scene.id }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
-                                        <a href="{{ url_for('testcase_blueprint.delete_test_case',id=testcase.id) }}?testcase_scene_id={{ testcase_scene.id }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>
+                                        <a href="{{ url_for('testcase_blueprint.update_test_case',id=testcase.id) }}?testcase_scene_id={{ testcase_scene.id }}&scene_page={{ page }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
+                                        <a href="{{ url_for('testcase_blueprint.delete_test_case',id=testcase.id) }}?testcase_scene_id={{ testcase_scene.id }}&scene_page={{ page }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>
                                     </div>
                                  </div>
                             </div>
@@ -50,25 +76,44 @@
     <script>
     $(document).ready(function () {
         $('a[id*="testcase_add"]').click(function () {
+            let scene_page = GetQueryString('page');
             let testcase_scene_id = $(this).attr('id').replace('testcase_add_','');
             let testcase_id = $("#testcase_list_"+testcase_scene_id).val();
             $.ajax({
                 url:'{{ url_for("testcase_scene_blueprint.testcase_scene_copy")}}?testcase_scene_id='+testcase_scene_id+"&testcase_id="+testcase_id,
                 type:'GET',
                 success:function () {
-                    window.location.href = "{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}"
+                    window.location.href = "{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}?page=" + scene_page
                 }
             })
         });
+
+         /**
+          * @return {string}
+          */
+         function GetQueryString(name)
+        {
+             let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+             let r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+             if(r != null){
+                 return  unescape(r[2]);
+             }else {
+                 return '';
+             }
+        }
+
+         $('a[id="testcase_scene_add"]').click(function () {
+             let scene_page = GetQueryString('page');
+             let testcase_scene_id = $('#testcase_scene_copy').val();
+             window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_copy_scene")}}?testcase_scene_id='+testcase_scene_id+'&scene_page='+scene_page
+        });
+
+
         $('a[id*="testcase_scene_delete"]').click(function () {
+            let scene_page = GetQueryString('page');
             let testcase_scene_id = $(this).attr('id').replace('testcase_scene_delete_','');
-            $.ajax({
-                url:'{{ url_for("testcase_scene_blueprint.testcase_scene_delete")}}?testcase_scene_id='+testcase_scene_id,
-                type:'GET',
-                success:function () {
-                    window.location.href = "{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}"
-                }
-            })
+            window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_delete")}}?testcase_scene_id='+testcase_scene_id+'&scene_page='+scene_page
+
         });
 
         $('a[id*="testcase_scene_run"]').click(function () {
