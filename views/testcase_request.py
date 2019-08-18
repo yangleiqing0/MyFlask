@@ -1,12 +1,13 @@
 import json
 from _datetime import datetime
 from flask.views import MethodView
-from flask import render_template, Blueprint, request
+from flask import render_template, Blueprint, request, session
 from modles.testcase import TestCases
 from modles.testcase_result import TestCaseResult
 from modles.case_group import CaseGroup
 from modles.testcase_start_times import TestCaseStartTimes
 from modles.testcase_scene import TestCaseScene
+from modles.user import User
 from common.tail_font_log import FrontLogs
 from app import db
 from common.analysis_params import AnalysisParams
@@ -21,16 +22,19 @@ test_case_request_blueprint = Blueprint('test_case_request_blueprint', __name__)
 class TestCaseRequest(MethodView):
 
     def get(self):
-        # testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None)).all()
+        user_id = session.get('user_id')
+        user = User.query.get(user_id)
+        print('user_id:', user_id)
         FrontLogs('进入测试用例执行页面').add_to_front_log()
-        case_groups = CaseGroup.query.all()
+        case_groups = user.user_case_groups
         case_groups_new = []
         for case_group in case_groups:
             case_group_NullObject = NullObject()
             case_group_NullObject.name = case_group.name
             testcase_list = []
-            testcases = TestCases.query.join(CaseGroup, CaseGroup.id == TestCases.group_id)\
-                .filter(TestCases.testcase_scene_id.is_(None), TestCases.group_id == case_group.id).all()
+            testcases = TestCases.query.join(CaseGroup, CaseGroup.id == TestCases.group_id).filter(
+                TestCases.testcase_scene_id.is_(None), TestCases.group_id == case_group.id, TestCases.user_id == user_id).all()
+            print(' %s testcases_:' % case_group, testcases)
             for testcase in testcases:
                 testcase_NullObject = NullObject()
                 testcase_NullObject.id = testcase.id
@@ -38,7 +42,9 @@ class TestCaseRequest(MethodView):
                 testcase_NullObject.is_testcase_scene = 0
                 testcase_list.append(testcase_NullObject)
             try:
-                for testcase_scene in case_group.case_group_testcase_scenes:
+                case_group_scene = TestCaseScene.query.join(CaseGroup, CaseGroup.id == TestCaseScene.group_id).filter(
+                    TestCaseScene.user_id == user_id, CaseGroup.name == case_group.name).all()
+                for testcase_scene in case_group_scene:
                     testcase_scene_NullObject = NullObject()
                     testcase_scene_NullObject.id = testcase_scene.id
                     testcase_scene_NullObject.name = testcase_scene.name
@@ -47,23 +53,23 @@ class TestCaseRequest(MethodView):
             except KeyError:
                 pass
 
-            case_group_NullObject.testcases = testcase_list
+            case_group_NullObject.testcase_list = testcase_list
             case_groups_new.append(case_group_NullObject)
             print('testcase_list: ', case_group_NullObject.name, testcase_list)
 
         no_case_group = type('no_case_group', (object,), dict(a=-1))
         case_groups_new.append(no_case_group)
-        no_case_group.testcases = TestCases.query.filter(TestCases.group_id.is_(None), TestCases.testcase_scene_id.is_(None)).all()
+        no_case_group.testcases = TestCases.query.filter(
+            TestCases.group_id.in_([None, '']), TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).all()
         no_case_group.name = "<span style='color: blue'>未分组测试用例</span>"
-        print('test_case_request case_groups :', case_groups)
+        print('no_case_group testcases :', no_case_group.testcases)
 
-        testcase_no_scene_group = type('testcase_scene_group', (object,), dict(a=-1))
-        case_groups_new.append(testcase_no_scene_group)
-        testcase_no_scene_group.testcases = TestCaseScene.query.filter(TestCaseScene.group_id.is_(None)).all()
-        testcase_no_scene_group.name = "<span style='color: blue'>未分组测试场景</span>"
-
-        for case_group in case_groups_new:
-            print('test_case_request case_group :', case_group.testcases)
+        no_scene_group = type('testcase_scene_group', (object,), dict(a=-1))
+        case_groups_new.append(no_scene_group)
+        no_scene_group.testcases = TestCaseScene.query.filter(
+            TestCaseScene.group_id.is_(None), TestCaseScene.user_id == user_id).all()
+        no_scene_group.name = "<span style='color: blue'>未分组测试场景</span>"
+        print('no_scene_group.testcases :', no_scene_group.testcases)
 
         return render_template('test_case_request/test_case_request.html', case_groups=case_groups_new)
 
@@ -117,8 +123,9 @@ class TestCaseRequestStart(MethodView):
 class TestCaseTimeGet(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         time_strftime = datetime.now().strftime('%Y%m%d%H%M%S')
-        testcase_time = TestCaseStartTimes(time_strftime=time_strftime)
+        testcase_time = TestCaseStartTimes(time_strftime=time_strftime, user_id=user_id)
         db.session.add(testcase_time)
         db.session.commit()
         print('testcase_time: ', testcase_time)

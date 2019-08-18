@@ -3,10 +3,11 @@ import json
 from common.connect_sqlite import cdb
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
+from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session
 from modles.testcase import TestCases
 from modles.testcase_scene import TestCaseScene
 from modles.case_group import CaseGroup
+from modles.user import User
 from app import db
 from common.request_get_more_values import request_get_values
 from common.execute_testcase import to_execute_testcase
@@ -18,13 +19,16 @@ testcase_scene_blueprint = Blueprint('testcase_scene_blueprint', __name__)
 class TestCaseSceneAdd(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
+        user = User.query.get(user_id)
         page= request_get_values('page')
-        case_groups = CaseGroup.query.all()
+        case_groups = user.user_case_groups
         return render_template('testcase_scene/testcase_scene_add.html', case_groups=case_groups, page=page)
 
     def post(self):
+        user_id = session.get('user_id')
         page, name, group_id, description = request_get_values('page', 'name', 'case_group', 'description')
-        testcase_scene = TestCaseScene(name, group_id, description)
+        testcase_scene = TestCaseScene(name, group_id, description, user_id=user_id)
         db.session.add(testcase_scene)
         db.session.commit()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=page))
@@ -33,9 +37,11 @@ class TestCaseSceneAdd(MethodView):
 class TestCaseSceneUpdate(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
+        user = User.query.get(user_id)
         page= request_get_values('page')
         print('TestCaseSceneUpdate page: ', page)
-        case_groups = CaseGroup.query.all()
+        case_groups = user.user_case_groups
         testcase_scene_id = request.args.get('testcase_scene_id')
         testcase_scene = TestCaseScene.query.get(testcase_scene_id)
         return render_template('testcase_scene/testcase_scene_update.html', testcase_scene=testcase_scene,
@@ -54,12 +60,13 @@ class TestCaseSceneUpdate(MethodView):
 class TestCaseSceneTestCaseList(MethodView):
 
     def get(self):
-        model_testcase_scenes = TestCaseScene.query.filter(TestCaseScene.is_model == 1).all()
-        model_testcases = TestCases.query.filter(TestCases.is_model == 1).all()
+        user_id = session.get('user_id')
+        model_testcase_scenes = TestCaseScene.query.filter(TestCaseScene.is_model == 1, TestCaseScene.user_id == user_id).all()
+        model_testcases = TestCases.query.filter(TestCases.is_model == 1, TestCases.user_id == user_id).all()
         page = request.args.get('page', 1, type=int)
         FrontLogs('进入测试场景列表 第%s页' % page).add_to_front_log()
 
-        pagination = TestCaseScene.query.order_by(TestCaseScene.timestamp.desc()).paginate(page, per_page=
+        pagination = TestCaseScene.query.filter(TestCaseScene.user_id == user_id).order_by(TestCaseScene.timestamp.desc()).paginate(page, per_page=
         current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
         # 返回一个内容对象
         testcase_scenes = pagination.items
@@ -112,7 +119,7 @@ class TestCaseSceneTestCaseCopy(MethodView):
         name = testcase.name + timestr
         db.session.add(TestCases(name, testcase.url, testcase.data, testcase.regist_variable,
                        testcase.regular, testcase.method, testcase.group_id, testcase.request_headers_id,
-                       testcase_scene_id, testcase.hope_result))
+                       testcase_scene_id, testcase.hope_result, user_id=testcase.user_id))
         db.session.commit()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
 
@@ -124,7 +131,7 @@ class TestCaseSceneCopy(MethodView):
         testcase_scene = TestCaseScene.query.get(testcase_scene_id)
         timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
         name = testcase_scene.name + timestr
-        testcase_scene_copy = TestCaseScene(name, description=testcase_scene.description)
+        testcase_scene_copy = TestCaseScene(name, description=testcase_scene.description, user_id=testcase_scene.user_id)
         db.session.add(testcase_scene_copy)
         db.session.commit()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
@@ -146,8 +153,9 @@ class TestCaseSceneModel(MethodView):
 class TestCaseSceneAddValidate(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         name = request.args.get('name')
-        testcase = TestCaseScene.query.filter(TestCaseScene.name == name).count()
+        testcase = TestCaseScene.query.filter(TestCaseScene.name == name, TestCaseScene.user_id == user_id).count()
         if testcase != 0:
             return jsonify(False)
         else:
@@ -157,10 +165,12 @@ class TestCaseSceneAddValidate(MethodView):
 class TestCaseSceneUpdateValidate(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         name = request.args.get('name')
         testcase_scene_id = request.args.get('testcase_scene_id')
         print('TestCaseSceneUpdateValidate:', name, testcase_scene_id)
-        testcase_scene = TestCaseScene.query.filter(TestCaseScene.id != testcase_scene_id).filter(TestCaseScene.name == name).count()
+        testcase_scene = TestCaseScene.query.filter(
+            TestCaseScene.id != testcase_scene_id, TestCaseScene.name == name, TestCaseScene.user_id == user_id).count()
         if testcase_scene != 0:
             return jsonify(False)
         else:

@@ -30,6 +30,7 @@ def create_app():
     from views.system_config import system_config_blueprint
     from views.testcase_scene import testcase_scene_blueprint
     from views.login import login_blueprint
+    from views.user import user_blueprint
 
     app.register_blueprint(testcase_blueprint)
     app.register_blueprint(home_blueprint)
@@ -41,13 +42,16 @@ def create_app():
     app.register_blueprint(system_config_blueprint)
     app.register_blueprint(testcase_scene_blueprint)
     app.register_blueprint(login_blueprint)
+    app.register_blueprint(user_blueprint)
     return app
 
 
 app = create_app()
 
+
 manager = Manager(app)
 # 第一个参数是Flask的实例，第二个参数是Sqlalchemy数据库实例
+
 migrate = Migrate(app, db)
 # manager是Flask-Script的实例，这条语句在flask-Script中添加一个db命令
 manager.add_command('db', MigrateCommand)
@@ -55,15 +59,22 @@ manager.add_command('db', MigrateCommand)
 
 @app.before_request    # 在请求达到视图前执行
 def login_required():
+    print('username: ', session.get('username'), type(session.get('username')))
 
-    if request.path == '/login/':
+    if request.path == '/user_regist/':
+        if session.get('username') != 'admin':
+            return redirect(url_for('testcase_blueprint.test_case_list'))
+
+    if request.path in ('/login/', '/frontlogs/', '/flasklogs/'):
+        return
+    elif 'static' in request.path or 'validate' in request.path:
         return
 
     elif session.get('username'):
         return
 
     else:
-        return redirect(url_for('login_blueprint.login', next=request.url))
+        return redirect(url_for('login_blueprint.login'))
 
 
 from common.pre_db_insert_data import to_insert_data
@@ -71,7 +82,7 @@ from common.pre_db_insert_data import to_insert_data
 
 @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
 def db_create_pre_all():
-
+    session['app_rootpath'] = app.root_path
     from modles.testcase import TestCases
     from modles.case_group import CaseGroup
     from modles.variables import Variables
@@ -81,7 +92,8 @@ def db_create_pre_all():
     from modles.testcase_scene import TestCaseScene
     from modles.user import User
     db.create_all()
-    to_insert_data()
+
+    to_insert_data(user_id=1)
 
 # 数据库迁移方法
 # app.py层控制台执行

@@ -6,7 +6,7 @@ from common.request_get_more_values import request_get_values
 from app import db
 from common.connect_sqlite import cdb
 from modles.request_headers import RequestHeaders
-from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
+from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session
 
 request_headers_blueprint = Blueprint('request_headers_blueprint', __name__)
 
@@ -18,9 +18,10 @@ class RequestHeadersAdd(MethodView):
         return render_template('request_headers/request_headers_add.html')
 
     def post(self):
+        user_id = session.get('user_id')
         value = request.form.get('value').replace(' ', '').replace('\n', '').replace('\r', '')
         name, description = request_get_values('name', 'description')
-        request_headers = RequestHeaders(name, value, description)
+        request_headers = RequestHeaders(name, value, description, user_id)
         db.session.add(request_headers)
         db.session.commit()
         FrontLogs('添加请求头部 name: %s 成功' % name).add_to_front_log()
@@ -31,11 +32,12 @@ class RequestHeadersAdd(MethodView):
 class RequestHeadersList(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         request_headers = RequestHeaders.query.all()
         print('request_headers:', request_headers)
         if request.is_xhr:
-            request_headers_query_sql = 'select id,name from request_headers'
-            request_headerses = cdb().query_db(request_headers_query_sql)
+            request_headers_query_sql = 'select id,name from request_headers where user_id=?'
+            request_headerses = cdb().query_db(request_headers_query_sql, (user_id,))
             request_headers_dict = {}
             for index, request_headers in enumerate(request_headerses):
                 print('request_header:', request_headers)
@@ -46,7 +48,7 @@ class RequestHeadersList(MethodView):
         page = request.args.get('page', 1, type=int)
         FrontLogs('进入请求头部列表 第%s页' % page).add_to_front_log()
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-        pagination = RequestHeaders.query.order_by(RequestHeaders.timestamp.desc()).paginate(page, per_page=
+        pagination = RequestHeaders.query.filter(RequestHeaders.user_id == user_id).order_by(RequestHeaders.timestamp.desc()).paginate(page, per_page=
         current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
         # 返回一个内容对象
         request_headerses = pagination.items
@@ -57,7 +59,8 @@ class RequestHeadersList(MethodView):
 class RequestHeadersUpdate(MethodView):
 
     def get(self, id=-1):
-        id = request.args.get('request_headers_id', id)# 如果有request_headers_id的get请求参数，那么用此参数作为id,否则就用id
+        id = request.args.get('request_headers_id', id)
+        # 如果有request_headers_id的get请求参数，那么用此参数作为id,否则就用id
         FrontLogs('进入修改请求头部 id: %s 页面' % id).add_to_front_log()
         request_headers = RequestHeaders.query.get(id)
         return render_template('request_headers/request_headers_update.html', item=request_headers)
@@ -73,7 +76,7 @@ class RequestHeadersUpdate(MethodView):
 
 class RequestHeadersDelete(MethodView):
 
-    def get(self,id=-1):
+    def get(self, id=-1):
 
         delete_request_headers_sql = 'delete from request_headers where id=?'
         cdb().opeat_db(delete_request_headers_sql, (id,))
@@ -85,8 +88,9 @@ class RequestHeadersDelete(MethodView):
 class RequestHeadersValidata(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         name = request.args.get('name')
-        request_headers = RequestHeaders.query.filter(RequestHeaders.name == name).count()
+        request_headers = RequestHeaders.query.filter(RequestHeaders.name == name, RequestHeaders.user_id == user_id).count()
         if request_headers != 0:
             return jsonify(False)
         else:
@@ -96,8 +100,10 @@ class RequestHeadersValidata(MethodView):
 class RequestHeadersUpdateValidata(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         name, request_headers_id = request_get_values('name', 'case_group_id')
-        request_headers = RequestHeaders.query.filter(RequestHeaders.id != request_headers_id).filter(RequestHeaders.name == name).count()
+        request_headers = RequestHeaders.query.filter(
+            RequestHeaders.id != request_headers_id, RequestHeaders.name == name, RequestHeaders.user_id == user_id).count()
         if request_headers != 0:
             return jsonify(False)
         else:

@@ -1,15 +1,16 @@
 import json
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
+from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
 from app import db
 from common.connect_sqlite import cdb
+from modles.user import User
 
 
-case_group_blueprint = Blueprint('case_group_blueprint',__name__)
+case_group_blueprint = Blueprint('case_group_blueprint', __name__)
 
 
 class CaseGroupAdd(MethodView):
@@ -19,9 +20,10 @@ class CaseGroupAdd(MethodView):
         return render_template('case_group/case_group_add.html')
 
     def post(self):
+        user_id =session.get('user_id')
         name, description = request_get_values('name', 'description')
         FrontLogs('开始添加测试用例分组 name: %s ' % name).add_to_front_log()
-        case_group = CaseGroup(name, description)
+        case_group = CaseGroup(name, description, user_id)
         db.session.add(case_group)
         db.session.commit()
         FrontLogs('开始添加测试用例分组 name: %s 成功' % name).add_to_front_log()
@@ -32,11 +34,13 @@ class CaseGroupAdd(MethodView):
 class CaseGroupList(MethodView):
 
     def get(self):
-        case_groups = CaseGroup.query.all()
+        user_id =session.get('user_id')
+        user = User.query.get(user_id)
+        case_groups = user.user_case_groups
         print('case_groups: ', case_groups)
         if request.is_xhr:
-            case_groups_query_sql = 'select id,name from case_group'
-            case_groups = cdb().query_db(case_groups_query_sql)
+            case_groups_query_sql = 'select id,name from case_group where user_id=?'
+            case_groups = cdb().query_db(case_groups_query_sql, (user_id,))
             case_groups_dict = {}
             for index, case_group in enumerate(case_groups):
                 print('case_group:', case_group)
@@ -48,10 +52,9 @@ class CaseGroupList(MethodView):
             page = request.args.get('page', 1, type=int)
             FrontLogs('进入测试用例分组列表页面 第%s页' % page).add_to_front_log()
             #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-            pagination = CaseGroup.query.order_by(CaseGroup.timestamp.desc()).paginate(page,
-                                                                                       per_page=current_app.config[
-                                                                                           'FLASK_POST_PRE_ARGV'],
-                                                                                    error_out=False)
+            pagination = CaseGroup.query.filter(CaseGroup.user_id == user_id).\
+                order_by(CaseGroup.timestamp.desc()).paginate(
+                page, per_page=current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
             # 返回一个内容对象
             case_groups = pagination.items
             print("pagination: ", pagination)
@@ -90,7 +93,7 @@ class CaseGroupSearchCase(MethodView):
 
     def get(self, id=-1):
         case_group = CaseGroup.query.get(id)
-        print('CaseGroupSearchCase:case_group: ',case_group)
+        print('CaseGroupSearchCase:case_group: ', case_group)
         testcases = case_group.testcases
         print('CaseGroupSearchCase:testcases: ', testcases)
         request_headers = RequestHeaders.query.all()
@@ -104,8 +107,9 @@ class CaseGroupSearchCase(MethodView):
 class CaseGroupValidata(MethodView):
 
     def get(self):
+        user_id =session.get('user_id')
         name = request.args.get('name')
-        case_group = CaseGroup.query.filter(CaseGroup.name == name).count()
+        case_group = CaseGroup.query.filter(CaseGroup.name == name, CaseGroup.user_id == user_id).count()
         if case_group != 0:
             return jsonify(False)
         else:
@@ -115,8 +119,10 @@ class CaseGroupValidata(MethodView):
 class CaseGroupUpdateValidata(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         name, case_group_id = request_get_values('name', 'case_group_id')
-        case_group = CaseGroup.query.filter(CaseGroup.id != case_group_id).filter(CaseGroup.name == name).count()
+        case_group = CaseGroup.query.filter(
+            CaseGroup.id != case_group_id, CaseGroup.name == name, CaseGroup.user_id == user_id).count()
         if case_group != 0:
             return jsonify(False)
         else:

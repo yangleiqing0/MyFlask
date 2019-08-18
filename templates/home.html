@@ -25,15 +25,16 @@
 <body style="background-color:ghostwhite" >
 <div class="tpl-page-container tpl-page-header-fixed" >
     <div class="row">
-            <nav class="navbar navbar-default" role="navigation">
-                <div class="navbar-header">
+            <nav class="navbar navbar-default" role="navigation"
+                 style="padding: 10px 0 10px 0;margin-left: 15px;margin-right: 15px">
+                <div class="navbar-header"  >
                     <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a href="#" class="navbar-brand">PFS 问题反馈系统</a>
+                    <a href="#" class="navbar-brand">自动化接口测试</a>
 
                 </div>
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
@@ -53,29 +54,29 @@
                     </form>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#">Link</a></li>
-                        {% block login_way %}
-                        {% endblock %}
-
-{#                        <li class="dropdown">#}
-{#                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">管理员 <b class="caret"></b></a>#}
-{#                            <ul class="dropdown-menu">#}
-{#                                <li><a href="#">Something else here</a></li>#}
-{#                                <li><a href="#">退出登陆</a></li>#}
-{#                            </ul>#}
-{#                        </li>#}
+                        {% if session.get('username') %}
+                            <li><a href=""><i class="fa fa-user"></i>{{session.get('username')}}</a></li>
+                            <li><a href="{{ url_for('login_blueprint.logout') }}">退出登陆</a></li>
+                        {% elif session.get('username') == None %}
+                            <li><a href="{{ url_for('login_blueprint.login') }}" >请登陆</a></li>
+                        {% endif %}
                     </ul>
                 </div>
             </nav>
         </div>
+
     <div class="panel tpl-left-nav tpl-left-nav-hover panel-default panel-heading " style="width: 10%;">
+        {% if session.get('username') %}
         <div class="tpl-left-nav-list">
             <ul class="tpl-left-nav-menu ">
-                <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('login_blueprint.login') }}" class="nav-link ">
-                        <i class="am-icon-home"></i>
-                        <span>首页</span>
-                    </a>
-                </li>
+                {% if  session.get('username') == 'admin' %}
+                    <li class="tpl-left-nav-item">
+                        <a href="{{ url_for('user_blueprint.user_regist') }}" class="nav-link ">
+                            <i class="am-icon-user"></i>
+                            <span>用户注册</span>
+                        </a>
+                    </li>
+                {% endif %}
                 <li class="tpl-left-nav-item">
                     <a href="#test_case" id="MytestcaseCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
                         <i class="am-icon-key"></i>
@@ -187,7 +188,11 @@
                 </li>
             </ul>
         </div>
+        {% else %}
+            请登录管理员账号注册用户
+        {% endif %}
     </div>
+
     {%block hello%}
     {%endblock%}
 </div>
@@ -205,11 +210,13 @@
                 </div>
             {%block content%}
             {%endblock%}
+            {% if session.get('username') %}
                 <div class="panel panel-default col-lg-12" style="float: left">
                     <div  id="front_logs" class="col-lg-3 logs" style="height: 200px"></div>
                     <div  id="flask_logs" class="col-lg-9 logs" style="height: 200px"></div>
                 </div>
                  <div class="panel-footer" style="clear:both"></div>
+            {% endif %}
              </div>
         </div>
     </div>

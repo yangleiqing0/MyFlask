@@ -2,9 +2,10 @@ import json
 import datetime
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
+from flask import render_template, Blueprint, request, g, redirect, url_for, current_app, jsonify, session
 from modles.testcase import TestCases
 from modles.case_group import CaseGroup
+from modles.user import User
 from modles.request_headers import RequestHeaders
 from common.rand_name import RangName
 from common.analysis_params import AnalysisParams
@@ -62,23 +63,27 @@ class TestCaseRun(MethodView):
 class TestCastList(MethodView):
 
     def get(self):
-        model_testcases = TestCases.query.filter(TestCases.is_model == 1).all()
+        user_id = session.get('user_id')
+        user = User.query.get(user_id)
+        model_testcases = TestCases.query.filter(TestCases.is_model == 1, TestCases.user_id == user_id).all()
         # 过滤有测试用例分组的查询结果
-        testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None)).all()
+        testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).all()
         # 获取测试用例分组的列表
         print('testcases: ', testcases)
         for testcase in testcases:
             testcase.name = AnalysisParams().analysis_params(testcase.name)
             testcase.url = AnalysisParams().analysis_params(testcase.url)
             testcase.data = AnalysisParams().analysis_params(testcase.data)
-        case_groups = CaseGroup.query.all()
+        case_groups = user.user_case_groups
         print('case_groups: ', case_groups)
-        request_headers = RequestHeaders.query.all()
+        request_headers = user.user_request_headers
         print('request_headers: ', request_headers)
         page = request.args.get('page', 1, type=int)
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-        pagination = TestCases.query.filter(TestCases.testcase_scene_id.is_(None)).order_by(TestCases.timestamp.desc()).paginate(page, per_page=current_app.config[
-            'FLASK_POST_PRE_ARGV'], error_out=False)
+        pagination = TestCases.query.filter(
+            TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).order_by\
+            (TestCases.timestamp.desc()).paginate(
+            page, per_page=current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
         # 返回一个内容对象
         testcaseses = pagination.items
         print("pagination: ", pagination)
@@ -90,18 +95,21 @@ class TestCastList(MethodView):
 class TestCaseAdd(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
+        user = User.query.get(user_id)
         page, scene_page = request_get_values('page', 'scene_page')
-        case_groups = CaseGroup.query.all()
+        case_groups = user.user_case_groups
         testcase_scene_id = request.args.get('testcase_scene_id', None)
-        request_headers_querys_sql = 'select id,name from request_headers'
-        request_headers = cdb().query_db(request_headers_querys_sql)
-        print('request_headers: ', request_headers )
+        request_headers_querys_sql = 'select id,name from request_headers where user_id=?'
+        request_headers = cdb().query_db(request_headers_querys_sql, (user_id,))
+        print('request_headers: ', request_headers)
         FrontLogs('进入添加测试用例页面').add_to_front_log()
         return render_template('test_case/test_case_add.html', case_groups=case_groups,
                                request_headers=request_headers, testcase_scene_id=testcase_scene_id,
                                scene_page=scene_page, page=page)
 
     def post(self):
+        user_id = session.get('user_id')
         print('要添加的测试用例：', request.form)
         page, scene_page, name, url, method, regist_variable, regular, request_headers_id = request_get_values(
             'page', 'scene_page', 'name', 'url', 'method', 'regist_variable', 'regular', 'request_headers')
@@ -125,29 +133,26 @@ class TestCaseAdd(MethodView):
             url = AnalysisParams().analysis_params(url)
             result = MethodRequest().request_value(method, url, data, headers).replace('<', '').replace('>', '')
             return '''%s''' % result
-        query_all_names_sql = 'select name from testcases'
-        all_names = cdb().query_db(query_all_names_sql)
-        print(all_names)
-        if (name,) in all_names:
-            return '已有相同测试用例名称，请修改'
-        else:
-            print('testcase_scene_id的值：', testcase_scene_id, type(testcase_scene_id))
-            testcase = TestCases(
-                name, url, data, regist_variable, regular, method, group_id, 
-                request_headers_id, hope_result=hope_result,
-                testcase_scene_id=testcase_scene_id)
-            db.session.add(testcase)
-            db.session.commit()
-            FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
-            # app.logger.info('message:insert into testcases success, name: %s' % name)
-            if testcase_scene_id not in(None, "None"):
-                return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
-            return redirect(url_for('testcase_blueprint.test_case_list', page=page))
+
+        print('testcase_scene_id的值：', testcase_scene_id, type(testcase_scene_id))
+        testcase = TestCases(
+            name, url, data, regist_variable, regular, method, group_id,
+            request_headers_id, hope_result=hope_result,
+            testcase_scene_id=testcase_scene_id, user_id=user_id)
+        db.session.add(testcase)
+        db.session.commit()
+        FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
+        # app.logger.info('message:insert into testcases success, name: %s' % name)
+        if testcase_scene_id not in(None, "None"):
+            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
+        return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
 
 class UpdateTestCase(MethodView):
 
     def get(self, id=-1):
+        user_id = session.get('user_id')
+        user = User.query.get(user_id)
         page = request_get_values('page')
         testcase_scene_id = request.args.get('testcase_scene_id', None)
         scene_page = request.args.get('scene_page')
@@ -155,10 +160,10 @@ class UpdateTestCase(MethodView):
         testcase = TestCases.query.filter(TestCases.id == id).first()
         print('testcase.group_id:', testcase.group_id)
         # 获取测试用例分组的列表
-        case_groups = CaseGroup.query.all()
+        case_groups = user.user_case_groups
         case_group_id_before = testcase.group_id
         request_headers_id_before = testcase.request_headers_id
-        request_headerses = RequestHeaders.query.all()
+        request_headerses = user.user_request_headers
         print('testcase:', testcase)
         print('case_groups :', case_groups)
         print('request_headerses:', request_headerses)
@@ -198,7 +203,8 @@ class TestCaseCopy(MethodView):
         name = testcase_self.name + timestr
         db.session.add(TestCases(name, testcase_self.url, testcase_self.data, testcase_self.regist_variable,
                                  testcase_self.regular, testcase_self.method, testcase_self.group_id,
-                                 testcase_self.request_headers_id, hope_result=testcase_self.hope_result))
+                                 testcase_self.request_headers_id, hope_result=testcase_self.hope_result,
+                                 user_id=testcase_self.user_id))
         db.session.commit()
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
@@ -233,8 +239,9 @@ class ModelTestCase(MethodView):
 class TestCaseValidata(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         name = request.args.get('name')
-        testcase = TestCases.query.filter(TestCases.name == name).count()
+        testcase = TestCases.query.filter(TestCases.name == name, TestCases.user_id == user_id).count()
         if testcase != 0:
             return jsonify(False)
         else:
@@ -244,8 +251,10 @@ class TestCaseValidata(MethodView):
 class TestCaseUpdateValidata(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         name, testcase_id = request_get_values('name', 'testcase_id')
-        testcase = TestCases.query.filter(TestCases.id != testcase_id).filter(TestCases.name == name).count()
+        testcase = TestCases.query.filter(
+            TestCases.id != testcase_id).filter(TestCases.name == name, TestCases.user_id == user_id).count()
         if testcase != 0:
             return jsonify(False)
         else:

@@ -2,9 +2,10 @@ from flask.views import MethodView
 from app import db
 from common.connect_sqlite import cdb
 from modles.variables import Variables
+from modles.user import User
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
-from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify
+from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session
 
 
 variables_blueprint = Blueprint('variables_blueprint', __name__)
@@ -17,9 +18,10 @@ class VariableAdd(MethodView):
         return render_template('variable/variable_add.html')
 
     def post(self):
-        name, value ,description= request_get_values('name', 'value', 'description')
+        user_id = session.get('user_id')
+        name, value, description= request_get_values('name', 'value', 'description')
         FrontLogs('开始添加全局变量 name: %s' % name).add_to_front_log()
-        variable = Variables(name, value, description=description)
+        variable = Variables(name, value, description=description, user_id=user_id)
         db.session.add(variable)
         db.session.commit()
         FrontLogs('添加全局变量 name: %s 成功' % name).add_to_front_log()
@@ -30,17 +32,17 @@ class VariableAdd(MethodView):
 class VariableList(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         # 指定渲染的页数
         page = request.args.get('page', 1, type=int)
         FrontLogs('进入全局变量列表 第%s页' % page).add_to_front_log()
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-        pagination = Variables.query.order_by(Variables.timestamp.desc()).paginate(page, per_page=current_app.config[
+        pagination = Variables.query.filter(Variables.user_id == user_id).order_by(Variables.timestamp.desc()).paginate(page, per_page=current_app.config[
             'FLASK_POST_PRE_ARGV'], error_out=False)
         # 返回一个内容对象
         variables = pagination.items
         print("pagination: ", pagination)
         return render_template('variable/variable_list.html', pagination=pagination, items=variables)
-
 
 
 class VariableUpdate(MethodView):
@@ -51,7 +53,7 @@ class VariableUpdate(MethodView):
         return render_template('variable/variable_update.html', item=variable)
 
     def post(self, id=-1):
-        name, value ,description= request_get_values('name', 'value', 'description')
+        name, value, description= request_get_values('name', 'value', 'description')
         variable_update_sql = 'update variables set name=?,value=?,description=? where id=?'
         cdb().opeat_db(variable_update_sql, (name, value, description, id))
         # app.logger.info('message:update variables success, name: %s' % name)
@@ -59,10 +61,9 @@ class VariableUpdate(MethodView):
         return redirect(url_for('variables_blueprint.variable_list'))
 
 
-
 class VariableDelete(MethodView):
 
-    def get(self,id=-1):
+    def get(self, id=-1):
         delete_variables_sql = 'delete from variables where id=?'
         cdb().opeat_db(delete_variables_sql, (id,))
         FrontLogs('删除全局变量 id: %s 成功' % id).add_to_front_log()
@@ -73,8 +74,9 @@ class VariableDelete(MethodView):
 class VariableValidata(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         name = request.args.get('name')
-        variable = Variables.query.filter(Variables.name == name).count()
+        variable = Variables.query.filter(Variables.name == name, Variables.user_id == user_id).count()
         if variable != 0:
             return jsonify(False)
         else:
@@ -84,9 +86,11 @@ class VariableValidata(MethodView):
 class VariableUpdateValidata(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         name = request.args.get('name')
         variable_id = request.args.get('variable_id')
-        request_headers = Variables.query.filter(Variables.id != variable_id).filter(Variables.name == name).count()
+        request_headers = Variables.query.filter(
+            Variables.id != variable_id, Variables.name == name, Variables.user_id == user_id).count()
         if request_headers != 0:
             return jsonify(False)
         else:

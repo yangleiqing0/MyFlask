@@ -1,6 +1,6 @@
 import os
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, send_from_directory
+from flask import render_template, Blueprint, request, redirect, url_for, send_from_directory, session
 from modles.variables import Variables
 from modles.testcase_start_times import TestCaseStartTimes
 from modles.testcase_result import TestCaseResult
@@ -20,12 +20,13 @@ testcase_report_blueprint = Blueprint('testcase_report_blueprint', __name__)
 class EnvMessage:
 
     def __init__(self, testcase_results, testcase_time_id, testcase_time, testcase_scene_list):
+        user_id = session.get('user_id')
         self.testcase_scene_list = testcase_scene_list
-        self.test_name = Variables.query.filter(Variables.name == '_TEST_NAME').first().value
-        self.zdbm_version = Variables.query.filter(Variables.name == '_TEST_VERSION').first().value
-        self.test_pl = Variables.query.filter(Variables.name == '_TEST_PL').first().value
-        self.test_net = Variables.query.filter(Variables.name == '_TEST_NET').first().value
-        self.title_name = Variables.query.filter(Variables.name == '_TITLE_NAME').first().value
+        self.test_name = Variables.query.filter(Variables.name == '_TEST_NAME', Variables.user_id == user_id).first().value
+        self.zdbm_version = Variables.query.filter(Variables.name == '_TEST_VERSION', Variables.user_id == user_id).first().value
+        self.test_pl = Variables.query.filter(Variables.name == '_TEST_PL', Variables.user_id == user_id).first().value
+        self.test_net = Variables.query.filter(Variables.name == '_TEST_NET', Variables.user_id == user_id).first().value
+        self.title_name = Variables.query.filter(Variables.name == '_TITLE_NAME', Variables.user_id == user_id).first().value
         self.fail_sum = self.count_success_testcase_scene(testcase_time_id) + self.count_testcase_fail(testcase_time_id)
         self.test_sum = len(testcase_results) + len(testcase_scene_list)
         self.test_success = self.test_sum - self.fail_sum
@@ -213,7 +214,9 @@ class TestCaseReport(MethodView):
 class TestCaseReportList(MethodView):
 
     def get(self):
-        testcase_reports = TestCaseStartTimes.query.filter(TestCaseStartTimes.name != "").order_by(TestCaseStartTimes.timestamp.desc()).all()
+        user_id = session.get('user_id')
+        testcase_reports = TestCaseStartTimes.query.filter(
+            TestCaseStartTimes.name != "", TestCaseStartTimes.user_id == user_id).order_by(TestCaseStartTimes.timestamp.desc()).all()
         print('testcase_reports: ', testcase_reports)
         FrontLogs('进入测试报告列表页面').add_to_front_log()
         return render_template('testcase_report/testcase_report_list.html', items=testcase_reports)
@@ -245,7 +248,8 @@ class TestCaseReportDownLoad(MethodView):
     def get(self, name):
         download_path = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == name).first().filename.replace(name, '')
         print('download_path:', download_path)
-        dirpath = os.path.join(app.root_path, download_path)  # 这里是下在目录，从工程的根目录写起，比如你要下载static/js里面的js文件，这里就要写“static/js”
+        dirpath = os.path.join(session.get('app_rootpath'), download_path)
+        # 这里是下在目录，从工程的根目录写起，比如你要下载static/js里面的js文件，这里就要写“static/js”
         print('dirpath:', dirpath)
         FrontLogs('下载测试报告 测试报告名称: %s ' % name).add_to_front_log()
         return send_from_directory(dirpath, name, as_attachment=True)  # as_attachment=True 一定要写，不然会变成打开，而不是下载

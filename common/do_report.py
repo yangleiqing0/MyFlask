@@ -60,7 +60,6 @@ def test_report(testcase_time_id):
     r.test_detail(data, test_sum, len(data))
 
 
-
 class Report:
 
     def get_format(self,wd, option):

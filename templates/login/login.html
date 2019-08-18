@@ -1,10 +1,10 @@
 {% extends 'home.html' %}
-{% block title %}添加测试用例{% endblock %}
+{% block title %}用户登录{% endblock %}
 {% block content %}
    <div class="row">
-        <div class="col-md-6 col-md-offset-3"><div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h4>管理员登录</h4>
+        <div class="col-md-6 col-md-offset-3"><div class="panel panel-primary" style="margin:100px 0 100px 0">
+                <div class="panel-heading" >
+                    <h4>用户登录</h4>
                 </div>
                 <div class="panel-body">
                     <form action="#" method="post" class="form-horizontal">
@@ -47,9 +47,6 @@
                         <div class="form-group">
                             <div class="col-md-4"></div>
                             <input type="submit" value="登录" class="btn btn-default">
-                            <input type="reset" value="重置" class="text-hide">
-                            <input type="reset" value="注册" class="btn btn-default">
-                            <input type="reset" value="重置" class="text-hide">
                             <input type="checkbox" id="autologin" name="autologin">
                             <label for="autologin" ><span style="font-size: 12px;font-weight: normal">自动登录</span></label>
                         </div>
