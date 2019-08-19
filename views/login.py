@@ -2,7 +2,6 @@ from datetime import datetime, timedelta
 from flask.views import MethodView
 from flask import render_template, Blueprint, make_response, redirect, url_for, session, flash
 from common.request_get_more_values import request_get_values
-from app import db
 from common.connect_sqlite import cdb
 from modles.user import User
 
@@ -13,6 +12,7 @@ login_blueprint = Blueprint('login_blueprint', __name__)
 class Login(MethodView):
 
     def get(self):
+
         return render_template('login/login.html')
 
     def post(self):
