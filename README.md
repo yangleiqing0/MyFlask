@@ -18,6 +18,6 @@ a:在启动后，页面进入127.0.0.1:5000后会出现报错，所有的预配�
 
 8：预期结果的格式  如 ：     包含:123          指请求的响应结果包含123数字
 
-i[](https://github.com/yangleiqing0/test/blob/master/20190819154824.png)
+![](https://github.com/yangleiqing0/test/blob/master/20190819154824.png)
 ![](https://github.com/yangleiqing0/test/blob/master/20190819131549.png)
 ![](https://github.com/yangleiqing0/test/blob/master/20190819132150.png)
