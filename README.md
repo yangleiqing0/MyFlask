@@ -16,5 +16,5 @@ a:在启动后，页面进入127.0.0.1:5000后会出现报错，所有的预配�
 
 7：测试用例执行是顺序执行的，暂不支持多线程
 
-i(https://github.com/yangleiqing0/test/blob/master/QQ%E5%9B%BE%E7%89%8720190819132150.png)
-i(https://github.com/yangleiqing0/test/blob/master/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190819131549.png)
+i[](https://github.com/yangleiqing0/test/blob/master/20190819131549.png)
+i[](https://github.com/yangleiqing0/test/blob/master/20190819132150.png)
