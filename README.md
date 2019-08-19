@@ -15,3 +15,6 @@ a:在启动后，页面进入127.0.0.1:5000后会出现报错，所有的预配�
 6：关于全局变量，全局变量的格式按照${ZDBM_IP}中的${变量名}，写在请求中，支持名称/URL/请求报文/请求头部,变量均为全局，尽量不要重名  
 
 7：测试用例执行是顺序执行的，暂不支持多线程
+
+i(https://github.com/yangleiqing0/test/blob/master/QQ%E5%9B%BE%E7%89%8720190819132150.png)
+i(https://github.com/yangleiqing0/test/blob/master/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20190819131549.png)
