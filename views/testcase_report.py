@@ -1,6 +1,7 @@
 import os
+import re
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, send_from_directory, session
+from flask import render_template, Blueprint, request, redirect, url_for, send_from_directory, session, jsonify
 from modles.variables import Variables
 from modles.testcase_start_times import TestCaseStartTimes
 from modles.testcase_result import TestCaseResult
@@ -12,7 +13,8 @@ from common.connect_sqlite import cdb
 from common.do_report import test_report
 from datetime import datetime
 from common.analysis_params import AnalysisParams
-
+from common.send_mail import send_mail
+from common.request_get_more_values import request_get_values
 
 testcase_report_blueprint = Blueprint('testcase_report_blueprint', __name__)
 
@@ -108,8 +110,8 @@ class Testcaseresult:
 
 class TestCaseReport(MethodView):
 
-    def get(self):
-        testcase_time_id = request.args.get('testcase_time_id')
+    def get(self, email=False, testcase_time_id=None):
+        testcase_time_id = request.args.get('testcase_time_id', testcase_time_id)
         testcase_results = Testcaseresult(testcase_time_id).testcase_results
         testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
         print('testcase_results: ', testcase_results, len(testcase_results))
@@ -155,6 +157,8 @@ class TestCaseReport(MethodView):
                 print('测试结果： ', a.result, a)
         print("TestCaseReport testcase_scene_list:", testcase_scene_list,)
         allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
+        if email:
+            return items, allocation, testcase_scene_list
         FrontLogs('进入测试用例执行页面 执行id: %s' % testcase_time_id).add_to_front_log()
         return render_template("testcase_report/testcase_report.html", items=items, allocation=allocation,
                                testcase_scene_list=testcase_scene_list)
@@ -255,11 +259,43 @@ class TestCaseReportDownLoad(MethodView):
         return send_from_directory(dirpath, name, as_attachment=True)  # as_attachment=True 一定要写，不然会变成打开，而不是下载
 
 
+class TestCaseReportSendMail(MethodView):
+
+    def get(self):
+        testcase_time_id = request.args.get('testcase_time_id')
+        return render_template('testcase_report/testcase_report_email_config.html', testcase_time_id=testcase_time_id)
+
+    def post(self):
+        testcase_time_id = request.args.get('testcase_time_id')
+        subject, to_user_list = request_get_values('subject', 'to_user_list')
+        to_user_list = to_user_list.split(',')
+        print('TestCaseReportSendMail testcase_time_id:', testcase_time_id)
+        items, allocation, testcase_scene_list = TestCaseReport().get(email=True, testcase_time_id=testcase_time_id)
+        send_mail(subject, to_user_list, items, allocation, testcase_scene_list)
+        return redirect(url_for('testcase_report_blueprint.testcase_report_list'))
+
+
+class ConfigMailValidate(MethodView):
+
+    def get(self):
+        to_user_list = request_get_values('to_user_list')
+        to_user_list = to_user_list.split(',')
+        all_is_email = True
+        for email in to_user_list:
+            if re.match("^.+\\@(\\[?)[a-zA-Z0-9\\-\\.]+\\.([a-zA-Z]{2,3}|[0-9]{1,3})(\\]?)$", email) is None:
+                all_is_email = False
+        if all_is_email:
+            return jsonify(True)
+        else:
+            return jsonify(False)
+
+
 testcase_report_blueprint.add_url_rule('/testcasereport/', view_func=TestCaseReport.as_view('testcase_report'))
 testcase_report_blueprint.add_url_rule('/testcasereportlist/', view_func=TestCaseReportList.as_view('testcase_report_list'))
 testcase_report_blueprint.add_url_rule('/testcasereportdelete/', view_func=TestCaseReportDelete.as_view('testcase_report_delete'))
 testcase_report_blueprint.add_url_rule('/testcasereportdownload/<path:name>', view_func=TestCaseReportDownLoad.as_view('testcase_report_download'))
 
-
+testcase_report_blueprint.add_url_rule('/testcase_report_sendmail/', view_func=TestCaseReportSendMail.as_view('testcase_report_sendmail'))
+testcase_report_blueprint.add_url_rule('/email_validate/', view_func=ConfigMailValidate.as_view('/email_validate/'))
 
 

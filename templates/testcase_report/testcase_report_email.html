@@ -1,0 +1,243 @@
+<html lang="en">
+    <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+
+<body style="background-color:ghostwhite; " >
+<div  style="width: 100%" >
+    <div class="container" >
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default" id="get_container_height">
+                <div class="panel-heading" style="text-align: center" >
+                    <input id="to_back" type="button" class="btn btn-default relative-position" onclick="history.go(-1);scrollTop = 0" value="返回上一步">
+                    <h1>
+                        测试报告
+                    </h1>
+                </div>
+                <div class="panel-body">
+    <table class="table" style="text-align: center">
+        <tr>
+            <th>项目名称</th>
+            <td>{{ allocation.test_name }}</td>
+            <th>用例总数</th>
+            <td>{{ allocation.test_sum }}</td>
+            <th>分数</th>
+        </tr>
+        <tr>
+            <th>项目版本</th>          <!--使用循环的数字作为id -->
+            <td>{{ allocation.zdbm_version }}</td>
+            <th>通过总数</th>
+            <td>{{ allocation.test_success }}</td>
+            <td rowspan="3" id="score" style="vertical-align: middle;">{{ allocation.score }}</td>
+        </tr>
+        <tr>
+            <th>运行环境</th>          <!--使用循环的数字作为id -->
+            <td>{{ allocation.test_pl }}</td>
+            <th>失败总数</th>
+            <td>{{ allocation.fail_sum }}</td>
+        </tr>
+         <tr>
+            <th>测试网络</th>          <!--使用循环的数字作为id -->
+            <td>{{ allocation.test_net }}</td>
+            <th>测试时间</th>
+            <td>{{ allocation.time_strftime }}</td>
+        </tr>
+    </table>
+    <div class="col-md-12" style="height: 30px"></div>
+    <table class="table table-center" style="text-align: left">
+        <tr>
+            <th>ID</th>
+            <th>用例名称</th>
+            <th style="width: 400px">请求接口</th>
+            <th>请求方式</th>
+            <th>请求报文</th>
+            <th>预期结果</th>
+            <th>响应报文</th>
+            <th>数据库原值</th>
+            <th>数据库现值</th>
+            <th>测试结果</th>
+        </tr>
+        {% for item in items %}
+            <tr >
+                <td><a href="#"><span class="badge">{{ loop.index }}</span></a></td>          <!--使用循环的数字作为id -->
+                <td title="{{ item.t_name }}" >{{ item.t_name }}</td>
+                <td title="{{ item.url }}" >{{ item.url }}</td>
+                <td title="{{ item.method }}">{{ item.method }}</td>
+                <td title="{{ item.request_body }}">{{ item.request_body }}</td>
+                <td title="{{ item.hope }}">{{ item.hope }}</td>
+                <td title="{{ item.response_body }}">{{ item.response_body }}</td>
+                <td title="{{ item.old_database_value }}">{{ item.old_database_value }}</td>
+                <td title="{{ item.new_database_value }}">{{ item.new_database_value }}</td>
+                {% if  item.result == "测试成功"%}
+                    <td title="{{ item.result }}"><span class="badge  badge-pill badge-success">{{ item.result }}</span></td>
+                    {% else %}
+                    <td title="{{ item.result }}"><span class="badge  badge-pill badge-danger ">{{ item.result }}</span></td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        {% for testcase_scene in testcase_scene_list %}
+            <tbody href="#tasecase_scene_{{ testcase_scene.id }}" data-toggle="collapse">
+                <tr>
+                    <td colspan="10" style="text-align: left ">
+                            <div class="col-md-1" style="
+                            margin-left:-15px;display:inline;"><span class="badge" style="background-color: #0c0c0c">{{ loop.index }}</span></div>
+                            <div  class="col-md-3" style="text-align: left;margin-left:25px;display:inline" >
+                                <span class="badge badge-pill badge-default" style="background-color: #0c0c0c">测试场景：【{{ testcase_scene.name }}】</span></div>
+                            <div class="" style="float: right;margin-right:48px;display:inline">
+                                {% if  testcase_scene.result == "测试成功" %}
+                                    <span class="badge badge-success">{{testcase_scene.result}}</span>
+                                    {% else %}
+                                    <span class="badge badge-danger">{{testcase_scene.result}}</span>
+                                {% endif %}
+                            </div>
+                </tr>
+            </tbody>
+            <tbody id="tasecase_scene_{{ testcase_scene.id }}" class="collapse">
+            {% for testcase in testcase_scene.test_cases %}
+               <tr>
+                    <td><a href="#"><span class="badge">{{ loop.index }}</span></a></td>          <!--使用循环的数字作为id -->
+                    <td>{{ testcase.t_name }}</td>
+                    <td>{{ testcase.url }}</td>
+                    <td>{{ testcase.method }}</td>
+                    <td>{{ testcase.request_body }}</td>
+                    <td>{{ testcase.hope }}</td>
+                    <td>{{ testcase.response_body }}</td>
+                    <td>{{ testcase.old_database_value }}</td>
+                    <td>{{ testcase.new_database_value }}</td>
+                    {% if  testcase.result == "测试成功"%}
+                        <td><span class="badge badge-success">{{ testcase.result }}</span></td>
+                        {% else %}
+                        <td><span class="badge badge-danger">{{ testcase.result }}</span></td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        {% endfor %}
+    </table>
+</div>
+                </div>
+        </div>
+    </div>
+</div>
+</div>
+</body>
+</html>
+<style>
+    html,body{
+        width: 100%;
+    }
+    .table-center>tbody>tr>td{
+        text-align: left;
+        max-width: 100px;
+        width:100%;
+        word-break:break-all;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+
+    }
+
+    .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
+    padding: 8px;
+    line-height: 1.42857143;
+    vertical-align: top;
+    border-top: 1px solid #ddd;
+}
+    .container {
+        padding-right: 15px;
+        padding-left: 15px;
+        margin-right: auto;
+        margin-left: auto;
+        width: 100%;
+}
+    .panel-default>.panel-heading {
+    color: #333;
+    background-color: #f5f5f5;
+    border-color: #ddd;
+}
+    .panel-default {
+    border-color: #ddd;
+}
+    .panel {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    {#-webkit-box-shadow: 0 1px 1px rgba(0,0,0,.05);#}
+    box-shadow: 0 1px 1px rgba(0,0,0,.05);
+}
+    .panel-heading {
+    padding: 10px 15px;
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+    .panel-body {
+    padding: 15px;
+}
+    .table {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+    table {
+    table-layout: fixed;
+}
+    tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+    div {
+    display: block;
+
+}
+    .badge {
+    display: inline-block;
+    min-width: 10px;
+    padding: 3px 7px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: middle;
+    background-color: #777;
+    border-radius: 10px;
+}
+    .badge-pill {
+    padding-right: .6em;
+    padding-left: .6em;
+    border-radius: 10rem;
+}
+    .col-md-1 {
+    width: 8.33333333%;
+}
+    .col-md-3 {
+    width: 25%;
+}
+
+.col-md-offset-5 {
+    margin-left: 41.66666667%;
+}
+
+.col-md-2 {
+    width: 16.66666667%;
+}
+    .col-lg-1, .col-lg-10, .col-lg-11, .col-lg-12, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-md-1, .col-md-10, .col-md-11, .col-md-12, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-sm-1, .col-sm-10, .col-sm-11, .col-sm-12, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-xs-1, .col-xs-10, .col-xs-11, .col-xs-12, .col-xs-2, .col-xs-3, .col-xs-4, .col-xs-5, .col-xs-6, .col-xs-7, .col-xs-8, .col-xs-9 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+    .badge-success {
+    color: #fff;
+    background-color: #28a745;
+}
+    .badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+</style>
+
+

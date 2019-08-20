@@ -11,7 +11,7 @@ from modles.user import User
 from app import db
 from common.request_get_more_values import request_get_values
 from common.execute_testcase import to_execute_testcase
-from common.send_mail import send_mail
+
 
 testcase_scene_blueprint = Blueprint('testcase_scene_blueprint', __name__)
 
@@ -19,7 +19,6 @@ testcase_scene_blueprint = Blueprint('testcase_scene_blueprint', __name__)
 class TestCaseSceneAdd(MethodView):
 
     def get(self):
-        send_mail('Test', ['253775405@qq.com', '2243198253@qq.com'])
         user_id = session.get('user_id')
         user = User.query.get(user_id)
         page= request_get_values('page')

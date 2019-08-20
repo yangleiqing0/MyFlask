@@ -6,6 +6,7 @@ from logs.config import file_log_handler, logging
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_mail import Mail
+# flask_mail需要安装0.9.0版本
 
 requests.packages.urllib3.disable_warnings()
 
@@ -108,7 +109,7 @@ def get_app_mail():
                                            Variables.name == '_MAIL_USERNAME').first().value
     MAIL_PASSWORD = Variables.query.filter(Variables.user_id == user_id,
                                            Variables.name == '_MAIL_PASSWORD').first().value
-    MAIL_DEFAULT_SENDER = (MAIL_DEFAULT_SENDER_NAME, MAIL_DEFAULT_SENDER_EMAIL)
+    MAIL_DEFAULT_SENDER = (MAIL_DEFAULT_SENDER_NAME + '<%s>'% MAIL_DEFAULT_SENDER_EMAIL)
     app.config.update(
         MAIL_SERVER=MAIL_SERVER[0],
         MAIL_PORT=465,
@@ -119,7 +120,7 @@ def get_app_mail():
     )
     print('发送邮件的参数:', MAIL_SERVER, type(MAIL_SERVER), MAIL_USERNAME, MAIL_PASSWORD, MAIL_DEFAULT_SENDER, sep='\n')
     mail = Mail(app)
-    return mail
+    return app, mail
 
 
 # 数据库迁移方法

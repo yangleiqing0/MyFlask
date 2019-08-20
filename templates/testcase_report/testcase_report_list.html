@@ -18,6 +18,8 @@
                                 <a href="{{ url_for('testcase_report_blueprint.testcase_report',testcase_time_id=item.id) }}" id="search_report"  class="btn btn-default btn-xs" title="查看测试报告"><i class="fa fa-search"></i></a>
                                 <a href="{{ url_for('testcase_report_blueprint.testcase_report_download',name=item.name) }}" class="btn btn-default btn-xs" title="下载测试报告"><i class="fa fa-download"></i></a>
                                 <a href="{{ url_for('testcase_report_blueprint.testcase_report_delete',id=item.id) }}" class="btn btn-default btn-xs" title="删除测试报告"><i class="fa fa-trash"></i></a>
+                                <a href="{{ url_for('testcase_report_blueprint.testcase_report_sendmail',testcase_time_id=item.id) }}" class="btn btn-default btn-xs" title="邮件发送报告"><i class="fa fa-mail-forward"></i></a>
+
                             </td>
                         </tr>
                         {% endfor %}
