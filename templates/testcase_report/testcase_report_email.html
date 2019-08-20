@@ -43,7 +43,7 @@
         </tr>
     </table>
     <div class="col-md-12" style="height: 30px"></div>
-    <table class="table table-center" style="text-align: left">
+    <table class="table table-center" style="text-align: left;display: block">
         <tr>
             <th>ID</th>
             <th>用例名称</th>
@@ -64,7 +64,7 @@
                 <td title="{{ item.method }}">{{ item.method }}</td>
                 <td title="{{ item.request_body }}">{{ item.request_body }}</td>
                 <td title="{{ item.hope }}">{{ item.hope }}</td>
-                <td title="{{ item.response_body }}">{{ item.response_body }}</td>
+                <td title="{{ item.response_body }}" style=" text-align: left;max-width: 100px;width:100%;word-break:break-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.response_body }}</td>
                 <td title="{{ item.old_database_value }}">{{ item.old_database_value }}</td>
                 <td title="{{ item.new_database_value }}">{{ item.new_database_value }}</td>
                 {% if  item.result == "测试成功"%}

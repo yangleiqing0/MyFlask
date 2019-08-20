@@ -15,6 +15,7 @@ from datetime import datetime
 from common.analysis_params import AnalysisParams
 from common.send_mail import send_mail
 from common.request_get_more_values import request_get_values
+from common.selenium_get_page import ReportImage
 
 testcase_report_blueprint = Blueprint('testcase_report_blueprint', __name__)
 
@@ -262,16 +263,25 @@ class TestCaseReportDownLoad(MethodView):
 class TestCaseReportSendMail(MethodView):
 
     def get(self):
+        report_type = request.args.get('report_type')
         testcase_time_id = request.args.get('testcase_time_id')
+        if report_type == 'phantomjs':
+            print('到了phantomjs')
+            items, allocation, testcase_scene_list = TestCaseReport().get(email=True, testcase_time_id=testcase_time_id)
+            return render_template('testcase_report/testcase_report_email.html', items=items, allocation=allocation,
+                               testcase_scene_list=testcase_scene_list)
         return render_template('testcase_report/testcase_report_email_config.html', testcase_time_id=testcase_time_id)
 
     def post(self):
         testcase_time_id = request.args.get('testcase_time_id')
+        user_id = session.get('user_id')
         subject, to_user_list = request_get_values('subject', 'to_user_list')
         to_user_list = to_user_list.split(',')
         print('TestCaseReportSendMail testcase_time_id:', testcase_time_id)
         items, allocation, testcase_scene_list = TestCaseReport().get(email=True, testcase_time_id=testcase_time_id)
-        send_mail(subject, to_user_list, items, allocation, testcase_scene_list)
+        # send_mail(subject, to_user_list, items, allocation, testcase_scene_list)
+        shot_name = ReportImage(user_id).get_web()
+        send_mail(subject, to_user_list, shot_name=shot_name)
         return redirect(url_for('testcase_report_blueprint.testcase_report_list'))
 
 
