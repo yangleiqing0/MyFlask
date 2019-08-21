@@ -6,7 +6,7 @@ from logs.config import file_log_handler, logging
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_mail import Mail
-# flask_mail需要安装0.9.0版本
+# flask_mail需要安装0.9.1版本
 
 requests.packages.urllib3.disable_warnings()
 

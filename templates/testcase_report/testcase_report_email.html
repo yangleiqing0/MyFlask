@@ -8,7 +8,6 @@
         <div class="col-md-12">
             <div class="panel panel-default" id="get_container_height">
                 <div class="panel-heading" style="text-align: center" >
-                    <input id="to_back" type="button" class="btn btn-default relative-position" onclick="history.go(-1);scrollTop = 0" value="返回上一步">
                     <h1>
                         测试报告
                     </h1>
@@ -82,7 +81,7 @@
                             margin-left:-15px;display:inline;"><span class="badge" style="background-color: #0c0c0c">{{ loop.index }}</span></div>
                             <div  class="col-md-3" style="text-align: left;margin-left:25px;display:inline" >
                                 <span class="badge badge-pill badge-default" style="background-color: #0c0c0c">测试场景：【{{ testcase_scene.name }}】</span></div>
-                            <div class="" style="float: right;margin-right:48px;display:inline">
+                            <div class="" style="float: right;margin-right:0px;display:inline">
                                 {% if  testcase_scene.result == "测试成功" %}
                                     <span class="badge badge-success">{{testcase_scene.result}}</span>
                                     {% else %}

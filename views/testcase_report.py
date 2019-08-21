@@ -274,9 +274,6 @@ class TestCaseReportSendMail(MethodView):
         return render_template('testcase_report/testcase_report_email_config.html', testcase_time_id=testcase_time_id)
 
     def post(self):
-        from app import get_app_mail
-        from threading import Thread
-        app = get_app_mail()
         testcase_time_id = request.args.get('testcase_time_id')
         user_id = session.get('user_id')
         subject, to_user_list = request_get_values('subject', 'to_user_list')
@@ -286,7 +283,7 @@ class TestCaseReportSendMail(MethodView):
         # send_mail(subject, to_user_list, items, allocation, testcase_scene_list)
         # async_send_mail(app = app)
         # shot_name = ReportImage(user_id, testcase_time_id=testcase_time_id).get_web()
-        # fun = Thread(target=send_mail, args=(app, send_mail,'no', subject, to_user_list, user_id, testcase_time_id))
+        # fun = Thread(target=send_mail, args=(app, send_mail,subject, to_user_list, user_id, testcase_time_id))
         # fun.start()
         send_mail(subject, to_user_list, user_id=user_id, testcase_time_id=testcase_time_id)
         return redirect(url_for('testcase_report_blueprint.testcase_report_list'))
