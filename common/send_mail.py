@@ -1,31 +1,33 @@
 from flask_mail import Message
-from flask import render_template, session
+from flask import render_template
 from threading import Thread
 import time
 import os
 from common.selenium_get_page import ReportImage
 from common.temporary_variable import variables
+from modles.testcase_start_times import TestCaseStartTimes
 
 
 def async_send_mail(app, func, func_name='send_image', *args):
-    # »ñ È¡µ±Ç°³ÌĞòµÄÉÏÏÂÎÄ
+    # è· å–å½“å‰ç¨‹åºçš„ä¸Šä¸‹æ–‡
     with app.app_context():
         if func_name == 'send_image':
-            func(message=args[0])  # MailµÄ³ÉÔ±·½·¨send£¨£©
+            func(message=args[0])  # Mailçš„æˆå‘˜æ–¹æ³•sendï¼ˆï¼‰
             os.remove(variables['shot_name'])
         else:
             func()
 
 
-def send_mail(subject, to_user_list, user_id=None, testcase_time_id=None, items=None, allocation=None, testcase_scene_list=None, shot_name=None):
+def send_mail(subject, to_user_list, user_id=None,
+              testcase_time_id=None, items=None, allocation=None, testcase_scene_list=None, shot_name=None):
     from app import get_app_mail
     app, mail = get_app_mail()
     msg = Message(subject, recipients=to_user_list)
     print('send_mail shot_name', shot_name)
     variables.clear()
     if not shot_name:
-        send = Thread(target=async_send_mail, args=(app, ReportImage(user_id, testcase_time_id=testcase_time_id).get_web, 'no'))  # ÊµÀı»¯Ò»¸öÏß³Ì£¬
-        send.start()  # ¿ªÊ¼Ïß³Ì
+        send = Thread(target=async_send_mail, args=(app, ReportImage(user_id, testcase_time_id=testcase_time_id).get_web, 'no'))  # å®ä¾‹åŒ–ä¸€ä¸ªçº¿ç¨‹ï¼Œ
+        send.start()  # å¼€å§‹çº¿ç¨‹
     while 1:
         time.sleep(2)
         try:
@@ -44,14 +46,33 @@ def send_mail(subject, to_user_list, user_id=None, testcase_time_id=None, items=
                     headers=[('Content-ID', 'report_image')])
     msg.html = render_template('testcase_report/testcase_report_email_image.html')
     mail_send = mail.send
-    send = Thread(target=async_send_mail, args=(app, mail_send, 'send_image', msg))  # ÊµÀı»¯Ò»¸öÏß³Ì£¬
-    send.start()  # ¿ªÊ¼Ïß³Ì
-
+    send = Thread(target=async_send_mail, args=(app, mail_send, 'send_image', msg))  # å®ä¾‹åŒ–ä¸€ä¸ªçº¿ç¨‹ï¼Œ
+    send.start()  # å¼€å§‹çº¿ç¨‹
 
     # msg.html = render_template("testcase_report/testcase_report_email.html", items=items, allocation=allocation,
     #                            testcase_scene_list=testcase_scene_list)
-    # send = Thread(target=async_send_mail, args=(mail, app, msg))  # ÊµÀı»¯Ò»¸öÏß³Ì£¬
-    # send.start()  # ¿ªÊ¼Ïß³Ì
+    # send = Thread(target=async_send_mail, args=(mail, app, msg))  # å®ä¾‹åŒ–ä¸€ä¸ªçº¿ç¨‹ï¼Œ
+    # send.start()  # å¼€å§‹çº¿ç¨‹
+
+
+def send_excel(subject, to_user_list, testcase_time_id):
+    from app import get_app_mail
+    app, mail = get_app_mail()
+    testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
+    filename = testcase_time.filename
+    print('send_excel filename', filename)
+    message = Message(subject, recipients=to_user_list, body='è‡ªåŠ¨åŒ–æµ‹è¯•æŠ¥å‘Š : %s' % testcase_time.name)
+    try:
+
+        with open(filename, 'rb') as fp:
+            message.attach(filename=testcase_time.name,
+                           content_type='application/octet-stream',
+                           data=fp.read(), disposition='attachment', headers=None)
+        mail.send(message)
+        return 'å‘é€æˆåŠŸï¼Œè¯·æ³¨æ„æŸ¥æ”¶~'
+    except Exception as e:
+        print(e)
+        return 'å‘é€å¤±è´¥'
 
 
 

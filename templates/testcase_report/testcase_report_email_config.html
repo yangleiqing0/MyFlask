@@ -2,16 +2,36 @@
 {% block title %}配置邮件发送{% endblock %}
 {% block content %}
             <div class="panel-body content-agileits" >
-                <form action="{{ url_for('testcase_report_blueprint.testcase_report_sendmail',testcase_time_id=testcase_time_id) }}" method="POST" id="email_config_form" data-toggle="validator" class="form-horizontal">
+                <form action="#" id="email_config_form" data-toggle="validator" class="form-horizontal">
                     {{ macro.form_group(lable_name="subject",blank_name="邮件标题") }}
                     {{ macro.form_group(lable_name="to_user_list",blank_name="接收人",placeholder_name="多个接收人如：1@qq.com,2@qq.com") }}
-                    {{ macro.submit(submit_id="email_config") }}
+                    <label for="email_method" class="control-label col-md-4">发送邮件方式</label>
+                            <div class="col-md-4">
+                                    <select name="email_method" id="email_method" class="form-control">
+                                        <option value="1">图片</option>
+                                        <option value="2">附件</option>
+                                    </select>
+                            </div>
+                    {{ macro.submit(submit_id="email_config", submit_type="button") }}
                 </form>
             </div>
 {% endblock %}
 {% block js %}
     <script>
         $(document).ready(function () {
+             /**
+          * @return {string}
+          */
+         function GetQueryString(name)
+        {
+             let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+             let r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+             if(r != null){
+                 return  unescape(r[2]);
+             }else {
+                 return '';
+             }
+        }
             var validate = function () {
                     $('#email_config_form').validate({
                         rules: {
@@ -32,11 +52,23 @@
                         },
                         messages: {
                             to_user_list: {required: '不可为空', remote: '邮箱格式不对'}
-                        },
-                    submitHandler: function (form) {
-                        form.submit()
-                    }
-                    })
+                        }
+                    });
+                let testcase_time_id = GetQueryString('testcase_time_id');
+                let subject = $('#subject').val();
+                let to_user_list = $('#to_user_list').val();
+                let email_method = $('#email_method').val();
+                $.ajax({
+                        url: "{{ url_for('testcase_report_blueprint.testcase_report_sendmail')}}?testcase_time_id="+testcase_time_id,
+                        type: "POST",
+                        data:{
+                            "subject":subject,
+                            "email_method":email_method,
+                            "to_user_list":to_user_list,
+
+                        }
+                    });
+                window.location.href = "{{ url_for('testcase_report_blueprint.testcase_report_list') }}"
             })
 });
 
