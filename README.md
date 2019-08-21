@@ -2,8 +2,8 @@
 
 FLASK自动化测试平台：  
 1: 在启动后，页面进入127.0.0.1:5000后会出现报错，所有的预配置数据库和数据此时会去进行创建，再次发起请求即可登陆页面  
-2：由于邮件发送的html格式在邮箱解析可能不兼容，需要图片发送的，需要将MytestFlask/need_software/下windows版本的phantomjs文件放在python路径下，如:C:\Users\NING MEI\AppData\Local\Programs\Python\Python37 
-再把文件目录bin下的 phantomjs.exe  复制到python的  Scripts路径下，即安装完毕
+2：由于邮件发送的html格式在邮箱解析可能不兼容，需要图片发送的，需要将phantomjs文件放在python路径下，如:C:\Users\NING MEI\AppData\Local\Programs\Python\Python37 
+再把文件目录bin下的 phantomjs.exe  复制到python的  Scripts路径下，即安装完毕，由于文件不小，可以自行网上下载，或者联系微信获取
 
 
 1：默认账号admin/admin，只有admin用户可以进行注册用户，每个用户都有自己的配置   

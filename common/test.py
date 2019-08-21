@@ -27,9 +27,20 @@ import re
 # print(a)
 
 
-class A:
-    pass
-
-a = A()
-a.name ='name123'
-print(a)
+# class A:
+#     pass
+#
+# a = A()
+# a.name ='name123'
+#
+# with open(r'D:\PycharmProjects\new Project\MyFlask\common\1566314652.642001screen.png', 'rb') as file:
+#     a = file.read()
+#
+# print(a)
+a = 6
+b=3
+def ha():
+    a = 1
+    print(a)
+    print(b)
+ha()
