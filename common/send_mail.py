@@ -1,6 +1,5 @@
 from flask_mail import Message
 from flask import render_template
-from threading import Thread
 import time
 import os
 from common.selenium_get_page import ReportImage
@@ -26,12 +25,10 @@ def send_mail(subject, to_user_list, user_id=None,
     print('send_mail shot_name', shot_name)
     variables.clear()
     if not shot_name:
-        send = Thread(target=async_send_mail, args=(app, ReportImage(user_id, testcase_time_id=testcase_time_id).get_web, 'no'))  # 实例化一个线程，
-        send.start()  # 开始线程
+        shot_name = ReportImage(user_id, testcase_time_id=testcase_time_id).get_web()
     while 1:
         time.sleep(2)
         try:
-            shot_name = variables['shot_name']
             print('shot_name os :', os.path.exists(shot_name), shot_name)
             if os.path.exists(shot_name):
                 break
@@ -45,14 +42,8 @@ def send_mail(subject, to_user_list, user_id=None,
     msg.attach(filename=shot_name, data=img_data, content_type='application/octet-stream', disposition='inline',
                     headers=[('Content-ID', 'report_image')])
     msg.html = render_template('testcase_report/testcase_report_email_image.html')
-    mail_send = mail.send
-    send = Thread(target=async_send_mail, args=(app, mail_send, 'send_image', msg))  # 实例化一个线程，
-    send.start()  # 开始线程
-
-    # msg.html = render_template("testcase_report/testcase_report_email.html", items=items, allocation=allocation,
-    #                            testcase_scene_list=testcase_scene_list)
-    # send = Thread(target=async_send_mail, args=(mail, app, msg))  # 实例化一个线程，
-    # send.start()  # 开始线程
+    mail.send(message=msg)
+    os.remove(shot_name)
 
 
 def send_excel(subject, to_user_list, testcase_time_id):

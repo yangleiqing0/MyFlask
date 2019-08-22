@@ -20,7 +20,8 @@ class ReportImage:
         shot_name = self.to_report_page()
         self.driver.quit()
         print('get_web shot_name:', shot_name)
-        variables.update({'shot_name': shot_name})
+        # variables.update({'shot_name': shot_name})
+        return shot_name
 
     def to_report_page(self):
         user = User.query.filter(User.id == self.user_id).first()
