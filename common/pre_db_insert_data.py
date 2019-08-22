@@ -41,7 +41,7 @@ def add_pre_user(user_id):
     [add_pre_data(key, table='User', user_id=user_id) for key in pre_user if "__" not in key and key[0].isupper()]
 
 
-def to_insert_data(user_id):
+def to_insert_data(user_id=1):
     add_pre_data_go(user_id=user_id)
     add_pre_user(user_id=user_id)
 

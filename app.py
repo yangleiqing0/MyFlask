@@ -17,6 +17,7 @@ db = SQLAlchemy()
 def create_app():
     app = Flask(__name__)
     app.debug = True
+    app.threaded = True
     app.secret_key = 'asldfwadadw@fwq@#!Eewew'
     app.config.from_object(config)
     db.init_app(app)
@@ -32,6 +33,7 @@ def create_app():
     from views.testcase_scene import testcase_scene_blueprint
     from views.login import login_blueprint
     from views.user import user_blueprint
+    from views.scheduler_job import scheduler_jobs_blueprint
 
     app.register_blueprint(testcase_blueprint)
     app.register_blueprint(home_blueprint)
@@ -44,6 +46,7 @@ def create_app():
     app.register_blueprint(testcase_scene_blueprint)
     app.register_blueprint(login_blueprint)
     app.register_blueprint(user_blueprint)
+    app.register_blueprint(scheduler_jobs_blueprint)
     return app
 
 
@@ -87,6 +90,7 @@ from modles.testcase_start_times import TestCaseStartTimes
 from modles.testcase_result import TestCaseResult
 from modles.testcase_scene import TestCaseScene
 from modles.user import User
+from modles.scheduler_job import SchedulerJobs
 
 
 @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
@@ -132,6 +136,18 @@ def get_app_mail():
 
 # 创建数据库办法   在浏览器路由/db_create_all/
 
+
+from flask_apscheduler import APScheduler
+import time
+
+
+def job_1():  # 一个函数，用来做定时任务的任务。
+    print('hgahaha: ', time.time())
+
+
+scheduler = APScheduler()
+scheduler.add_job('job_1', job_1, trigger='cron', second='*/5')
+# scheduler.start()
 
 if __name__ == '__main__':
 
