@@ -12,9 +12,11 @@ FLASK自动化测试平台：
 4：测试分组 是可以作为测试用例的集合分组，可以包含测试场景，可用于在测试执行页面执行的一类分组  
 5：测试报告生成页面和excel，excel可以下载, 但是excel目前是将所有的测试用例打印出来，后续会添加上测试场景归属  
 6：关于全局变量，全局变量的格式按照${ZDBM_IP}中的${变量名}，写在请求中，支持名称/URL/请求报文/请求头部,变量均为全局，尽量不要重名  
-7：测试用例执行是顺序执行的，暂不支持多线程  
+7：测试用例执行是顺序执行的
 8：预期结果的格式  如 ：     包含:123          指请求的响应结果包含123数字  
 
+需要下载的安装包:flask_apscheduler requests xlsxwriter flask_wtf wtforms flask_sqlalchemy
+flask flask_migrate flask_script flask_mail
 
 ![](https://github.com/yangleiqing0/test/blob/master/20190819154824.png)
 ![](https://github.com/yangleiqing0/test/blob/master/20190819131549.png)

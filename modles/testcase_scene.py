@@ -7,7 +7,7 @@ from modles.user import User
 class TestCaseScene(db.Model):
     __tablename__ = 'testcase_scenes'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(20), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(50))
     group_id = db.Column(db.Integer, db.ForeignKey(CaseGroup.id))
     timestamp = db.Column(db.DateTime, index=True)
