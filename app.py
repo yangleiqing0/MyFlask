@@ -13,9 +13,11 @@ requests.packages.urllib3.disable_warnings()
 logging.getLogger().addHandler(file_log_handler)
 db = SQLAlchemy()
 
+app = Flask(__name__)
+
 
 def create_app():
-    app = Flask(__name__)
+
     app.debug = True
     app.threaded = True
     app.secret_key = 'asldfwadadw@fwq@#!Eewew'
@@ -33,7 +35,7 @@ def create_app():
     from views.testcase_scene import testcase_scene_blueprint
     from views.login import login_blueprint
     from views.user import user_blueprint
-    from views.scheduler_job import scheduler_jobs_blueprint
+    from views.job import job_blueprint
 
     app.register_blueprint(testcase_blueprint)
     app.register_blueprint(home_blueprint)
@@ -46,24 +48,17 @@ def create_app():
     app.register_blueprint(testcase_scene_blueprint)
     app.register_blueprint(login_blueprint)
     app.register_blueprint(user_blueprint)
-    app.register_blueprint(scheduler_jobs_blueprint)
+    app.register_blueprint(job_blueprint)
     return app
 
 
-app = create_app()
-
-
-manager = Manager(app)
-# 第一个参数是Flask的实例，第二个参数是Sqlalchemy数据库实例
-
-migrate = Migrate(app, db)
-# manager是Flask-Script的实例，这条语句在flask-Script中添加一个db命令
-manager.add_command('db', MigrateCommand)
+create_app()
 
 
 @app.before_request    # 在请求达到视图前执行
 def login_required():
-    print('username: ', session.get('username'), type(session.get('username')))
+
+    print('username: ', session.get('username'), request.path, type(session.get('username')))
 
     if request.path == '/user_regist/':
         if session.get('username') != 'admin':
@@ -81,21 +76,28 @@ def login_required():
         return redirect(url_for('login_blueprint.login'))
 
 
-from common.pre_db_insert_data import to_insert_data
-from modles.testcase import TestCases
-from modles.case_group import CaseGroup
-from modles.variables import Variables
-from modles.request_headers import RequestHeaders
-from modles.testcase_start_times import TestCaseStartTimes
-from modles.testcase_result import TestCaseResult
-from modles.testcase_scene import TestCaseScene
-from modles.user import User
-from modles.scheduler_job import SchedulerJobs
+manager = Manager(app)
+# 第一个参数是Flask的实例，第二个参数是Sqlalchemy数据库实例
+
+migrate = Migrate(app, db)
+# manager是Flask-Script的实例，这条语句在flask-Script中添加一个db命令
+manager.add_command('db', MigrateCommand)
 
 
 @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
 def db_create_pre_all():
     session['app_rootpath'] = app.root_path
+
+    from common.pre_db_insert_data import to_insert_data
+    from modles.testcase import TestCases
+    from modles.case_group import CaseGroup
+    from modles.variables import Variables
+    from modles.request_headers import RequestHeaders
+    from modles.testcase_start_times import TestCaseStartTimes
+    from modles.testcase_result import TestCaseResult
+    from modles.testcase_scene import TestCaseScene
+    from modles.user import User
+    from modles.job import Job
 
     db.create_all()
 
@@ -103,6 +105,7 @@ def db_create_pre_all():
 
 
 def get_app_mail():
+    from modles.variables import Variables
     user_id = session.get('user_id')
     MAIL_DEFAULT_SENDER_NAME = Variables.query.filter(
         Variables.user_id == user_id, Variables.name == '_MAIL_DEFAULT_SENDER_NAME').first().value

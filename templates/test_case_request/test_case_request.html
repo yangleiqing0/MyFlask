@@ -23,7 +23,7 @@
                                          {% if case_group.name == "<span style='color: blue'>未分组测试场景</span>" %}
                                              <div class="form-group col-md-4">
                                               <div>
-                                                  <label for="testcase_scene_{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal">{{ testcase.name }}</label>
+                                                  <label for="testcase_scene_{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal"><div class="badge badge-pill badge-primary">【场景】</div>{{ testcase.name }}</label>
                                               </div>
                                               <input  type="checkbox" id="testcase_scene_{{ testcase.id }}" value="{{ testcase.id }}" name="testcase_scene" style="zoom:1.5;width: 20px" >
                                              </div>
@@ -49,7 +49,7 @@
                                          {% else %}
                                              <div class="form-group col-md-4">
                                              <div>
-                                              <label for="testcase_scene{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal"><span style="color: #aaff66">【场景】</span>{{ testcase.name }}</label>
+                                              <label for="testcase_scene{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal"><div class="badge badge-pill badge-primary">【场景】</div>{{ testcase.name }}</label>
                                               </div>
                                               <input  type="checkbox" id="testcase_scene{{ testcase.id }}" value="{{ testcase.id }}" name="testcase_scene" style="zoom:1.5;width: 20px" >
                                              </div>
@@ -63,7 +63,7 @@
         {{ macro.submit(submit_value="确认",submit_id="assign",test_type="button",
         div_class="control-label col-md-7",test_style="",test_value="全选",test_id="all_checkboxes") }}
         <div class="control-label col-md-5">
-            <input  type="button" class="btn btn-primary" value="添加自动化任务" id="scheduler_job_add">
+            <input  type="button" class="btn btn-primary" value="添加为任务" id="job_add">
         </div>
         </form>
     </div>
@@ -104,7 +104,7 @@
             }
 
         });
-        $('#assign').click(function () {
+        $('#assign,#job_add').click(function () {
             let checkVal = [];
             $("input[name*='testcase']:checkbox").each(function() {
                 if ($(this).is(":checked")) {
@@ -115,11 +115,37 @@
             if(checkVal.length === 0){
                 $('#nocheck').html('请选择测试用例');
                 return false
+            }else {
+               let testcase_ids = '';
+                $("input[name='testcase']:checkbox").each(function (j) {
+                   if(j>=0){
+                       if($(this).is(':checked')){
+                          testcase_ids += $(this).val() + ','
+                       }
+                   }
+
+               });
+                let testcase_scene_ids = '';
+                $("input[name='testcase_scene']:checkbox").each(function (j) {
+                   if(j>=0){
+                       if($(this).is(':checked')){
+                          testcase_scene_ids += $(this).val() + ','
+                       }
+                   }
+
+               });
+                $.ajax({
+                url: {{ url_for('job_blueprint.job_add') }},
+                type: "POST",
+                data: {"testcases": testcase_ids,"testcase_scenes":testcase_scene_ids},
+                success: function (response) {
+                    let job_id = JSON.parse(response)['job_id'];
+                    window.location.href="{{ url_for('job_blueprint.job_update') }}?job_id="+ job_id
+
+                }
+            });
             }
         });
-        $('#scheduler_job_add').click(function () {
-              window.location.href="{{ url_for('scheduler_jobs_blueprint.scheduler_job_add') }}"
-        })
     });
     </script>
 
