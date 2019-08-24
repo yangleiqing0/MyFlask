@@ -2,18 +2,59 @@
 {% block title %}编辑任务{% endblock %}
 {% block content %}
             <div class="panel-body" >
-                <form action="{{ url_for('job_blueprint.job_update', job_id=job.id) }}" id="job_update_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
+                <form action="{{ url_for('job_blueprint.job_update', job_id=job.id, page=page) }}" id="job_update_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="任务名称",value=job.name) }}
-                    {{ macro.form_group(lable_name="testcases",blank_name="任务用例",value=job.testcases) }}
-                    {{ macro.form_group(lable_name="testcase_scenes",blank_name="任务场景",value=job.testcase_scenes) }}
-                    {{ macro.form_group(lable_name="description",blank_name="任务备注") }}
+                    {{ macro.form_group(lable_name="testcases",blank_name="任务用例",value="去除勾选即从任务删除",disabled="disabled") }}
+                    <div class="col-md-8 col-md-offset-2" style="float: left">
+                    {% for testcase in job.testcase_list %}
+                        <div class="form-group col-md-4 no-padding" >
+                              <div>
+                              <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="font-weight: normal;text-align: left">{{testcase.name}}</label>
+                              </div>
+                              <input  type="checkbox" id="{{ testcase.id }}" value="{{ testcase.id }}" name="testcase" style="zoom:1.5;width: 20px" checked="checked" >
+                         </div>
+                    {% endfor %}
+                    </div>
+                    {{ macro.form_group(lable_name="testcase_scenes",blank_name="任务场景",value="去除勾选即从任务删除", disabled="disabled") }}
+                    <div class="col-md-8 col-md-offset-2" style="float: left">
+                    {% for testcase_scene in job.testcase_scene_list %}
+                        <div class="form-group col-md-4 no-padding" >
+                              <div>
+                              <label for="testcase_scene_{{ testcase_scene.id }}"  class="dots control-label col-md-8" style="font-weight: normal;text-align: left">{{ testcase_scene.name }}</label>
+                              </div>
+                              <input  type="checkbox" id="testcase_scene_{{ testcase_scene.id }}" value="{{ testcase_scene.id }}" name="testcase_scene" style="zoom:1.5;width: 20px;" checked="checked" >
+                         </div>
+                    {% endfor %}
+                    </div>
+                    {{ macro.form_group(lable_name="description",blank_name="任务备注",value=job.description) }}
+                    <div class="form-group agileinfo wthree w3-agileits agile ">
+                        <label for="male"  class="control-label col-md-4" id="is_start_status">{{ "关闭定时" if job.is_start else "开启定时" }}</label>
+                        <div class="col-md-4">
+                            <input type="checkbox" name="sex" id="male" class="chooseBtn" {{ 'checked' if job.is_start else "" }} />
+                            <label for="male" class="choose-label" style="margin-top: 7px"></label>
+                        </div>
+                        <input type="hidden" name="is_start" id="is_start" value="{{job.is_start}}"/>
+                    </div>
+                    {{ macro.form_group(lable_name="triggers",blank_name="触发器类型",value=job.triggers, placeholder_name="默认：cron") }}
+                    {{ macro.form_group(lable_name="cron",blank_name="cron表达式",value=job.cron, placeholder_name="请输入正确的cron表达式") }}
                     {{ macro.submit(submit_id="job_update") }}
+
+
                 </form>
             </div>
 {% endblock %}
 {% block js %}
     <script>
         $(document).ready(function () {
+            $('#male').click(function () {
+                if($('#male').attr('checked') === "checked"){
+                    $('#is_start').val(1);
+                    $('#is_start_status').text("关闭定时任务")
+                }else {
+                    $('#is_start').val(0);
+                    $('#is_start_status').text("开启定时任务")
+                }
+            });
             var validate = function () {
                     $('#job_update_form').validate({
                         rules: {

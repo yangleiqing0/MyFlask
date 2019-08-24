@@ -37,10 +37,7 @@ import re
 #     a = file.read()
 #
 # print(a)
-a = 6
-b=3
-def ha():
-    a = 1
-    print(a)
-    print(b)
-ha()
+#
+a = ["1"]
+a = ','.join(a)
+print(a, type(a))

@@ -1,11 +1,11 @@
 {% macro form_group(lable_name,blank_name,id_name=lable_name,name_name=lable_name,placeholder_name=blank_name,
 type_name="text",lable_class_name="control-label col-md-4",div_class_name="col-md-4",
-input_name="form-control",value="") %}
+input_name="form-control",value="",disabled="") %}
         <div class="form-group agileinfo wthree w3-agileits agile">
             <label for="{{ lable_name }}" class="{{ lable_class_name }}">{{ blank_name }}</label>
             <div class="{{ div_class_name }}">
                 <input type="{{ type_name }}" class="{{ input_name }}" id="{{ id_name }}" name="{{ name_name }}"
-                       placeholder="{{ placeholder_name }} " value="{{ value }}" >
+                       placeholder="{{ placeholder_name }} " value="{{ value }}" {{ disabled }} >
             </div>
             <div class="help-block with-errors"></div>
         </div>

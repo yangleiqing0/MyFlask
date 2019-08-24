@@ -1,0 +1,60 @@
+{% extends 'home.html' %}
+{% block title %}测试任务列表{% endblock %}
+{% block content %}
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>ID</th>
+                            <th>测试任务名称</th>
+                            <th>测试任务备注</th>
+                            <th >操作</th>
+                        </tr>
+                        {% for job in jobs %}
+                        <tr>
+                            <td><a href="#"><span class="badge">{{ loop.index }}</span></a></td>          <!--使用循环的数字作为id -->
+                            <td>{{ job.name }}</td>
+                            <td>{{ job.description}}</td>
+                            <td>
+
+                                <div style="float: left;width: 100px" >
+                                    <div>
+                                         <label for="male_{{ job.id }}"  class="control-label col-md-8 has_no_padding" id="is_start_status_{{ job.id }}" style="font-weight: normal;zoom: 0.8">{{ "关闭定时" if job.is_start else " 开启定时" }}</label>
+                                        <div class="col-md-4 has_no_padding">
+                                            <input type="checkbox" name="male_{{ job.id }}"  id="male_{{ job.id }}" class="chooseBtn" {{ 'checked' if job.is_start else "" }}/>
+                                            <label style="zoom: 0.7;margin-top: 2px" for="male_{{ job.id }}" class="choose-label"  ></label>
+                                        </div>
+                                    </div>
+                                        <input type="hidden" id="is_start_{{ job.id }}" value="{{job.is_start}}"/>
+                                </div>
+                                 <a href="{{ url_for('job_blueprint.job_update',job_id=job.id, page=page) }}"  class="btn btn-default btn-xs" title="编辑测试任务 "><i class="fa fa-pencil"></i></a>
+{#                                <a href="{{ url_for('case_group_blueprint.case_group_delete',id=item.id) }}" class="btn btn-default btn-xs" title="删除测试用例分组"><i class="fa fa-trash"></i></a>#}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {{ macro.pagination_widget(pagination, 'job_blueprint.job_list') }}
+
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            $('input[name*="male_"]').click(function () {
+                let job_id = $(this).attr('id').replace('male_','');
+                if ($(this).attr('checked') === "checked") {
+                    $('#is_start_'+ job_id ).val(1);
+                    $('#is_start_status_'+ job_id).text("关闭任务")
+                } else {
+                     $('#is_start_'+ job_id ).val(0);
+                    $('#is_start_status_'+ job_id).text("开启任务")
+                }
+                let is_start = $('#is_start_'+ job_id).val();
+                $.ajax({
+                    url: "{{ url_for('job_blueprint.job_scheduler_update') }}?job_id="+job_id+"&is_start=" + is_start,
+                    type: "GET"
+                })
+            });
+
+        });
+    </script>
+{% endblock %}

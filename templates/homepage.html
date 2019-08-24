@@ -1,82 +1,303 @@
-<!DOCTYPE html>
+{% import 'macro.html' as macro %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>自动化测试</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>自动化平台</title>
+
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    <script src="https://cdn.staticfile.org/jquery/3.1.1/jquery.min.js"></script>
     <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/js/collapse/jquery.js"></script>   {# 需要这个错误的地址保证下面的链接生效 #}
+    <script type="text/javascript" src="/static/js/collapse/bootstrap-collapse.js"></script>
+    <link href="{{url_for('static',filename='css/amazeui.min.css')}}"  rel="stylesheet">
+    <link href="{{url_for('static',filename='css/admin.css')}}"  rel="stylesheet">
+    <link href="{{url_for('static',filename='css/app.css')}}"  rel="stylesheet">
+    <link href="{{url_for('static',filename='css/bootstrap.min.css')}}"  rel="stylesheet">
+    <link rel="icon" href="{{url_for('static',filename='img/log.png')}}" type="image/x-icon">
+    <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>
     <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
-    <script src="http://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.js"></script>
+    <link href="{{url_for('static',filename='css/badge/badge.css')}}?v=1.0.6"  rel="stylesheet">
 </head>
-<body>
-<div class="container">
+<body style="background-color:ghostwhite" >
+<div class="tpl-page-container tpl-page-header-fixed" >
+    <div class="row">
+            <nav class="navbar navbar-default" role="navigation"
+                 style="padding: 10px 0 10px 0;margin-left: 15px;margin-right: 15px">
+                <div class="navbar-header"  >
+                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a href="#" class="navbar-brand">自动化接口测试</a>
+
+                </div>
+                <div class="collapse navbar-collapse navbar-ex1-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">反馈管理 <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">问题列表</a></li>
+                                <li><a href="#">详情页面</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <form role="search" class="navbar-form navbar-left">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                        <button type="submit" class="btn btn-default">Submit</button>
+                    </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Link</a></li>
+                        {% if session.get('username') %}
+                            <li><a href=""><i class="fa fa-user"></i>{{session.get('username')}}</a></li>
+                            <li><a href="{{ url_for('login_blueprint.logout') }}">退出登陆</a></li>
+                        {% elif session.get('username') == None %}
+                            <li><a href="{{ url_for('login_blueprint.login') }}" >请登陆</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        </div>
+
+    <div class="panel tpl-left-nav tpl-left-nav-hover panel-default panel-heading " style="width: 10%;">
+        {% if session.get('username') %}
+        <div class="tpl-left-nav-list">
+            <ul class="tpl-left-nav-menu ">
+                {% if  session.get('username') == 'admin' %}
+                    <li class="tpl-left-nav-item">
+                        <a href="{{ url_for('user_blueprint.user_regist') }}" class="nav-link ">
+                            <i class="am-icon-user"></i>
+                            <span>用户注册</span>
+                        </a>
+                    </li>
+                {% endif %}
+                <li class="tpl-left-nav-item">
+                    <a href="#test_case" id="MytestcaseCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
+                        <i class="am-icon-key"></i>
+                        <span>测试用例</span>
+                    </a>
+                </li>
+                <li>
+                    <div id="test_case" class="collapse">
+                        <a href="{{ url_for('testcase_blueprint.test_case_list') }}" class="list-group-item">
+                        <i class="am-icon-search"></i>
+                        <span>测试用例列表</span>
+                        </a>
+                        <a href="{{ url_for('testcase_blueprint.add_test_case') }}" class="list-group-item">
+                        <i class="am-icon-plus"></i>
+                        <span>添加测试用例</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="tpl-left-nav-item">
+                    <a href="#testcase_scene" id="MytestcaseSceneCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
+                        <i class="am-icon-key"></i>
+                        <span>测试场景</span>
+                    </a>
+                </li>
+                <li>
+                    <div id="testcase_scene" class="collapse">
+                        <a href="{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}" class="list-group-item">
+                        <i class="am-icon-search"></i>
+                        <span>测试场景列表</span>
+                        </a>
+                        <a href="{{ url_for('testcase_scene_blueprint.testcase_scene_add') }}" class="list-group-item">
+                        <i class="am-icon-plus"></i>
+                        <span>添加测试场景</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="tpl-left-nav-item">
+                    <a href="#home_case_group" id="MycasegroupCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
+                        <i class="am-icon-key"></i>
+                        <span>用例分组</span>
+                    </a>
+                </li>
+                <li>
+                    <div id="home_case_group" class="collapse">
+                        <a href="{{ url_for('case_group_blueprint.case_group_list')}}" class="list-group-item">
+                        <i class="am-icon-search"></i>
+                        <span>用例分组列表</span>
+                        </a>
+                        <a href="{{ url_for('case_group_blueprint.case_group_add') }}" class="list-group-item">
+                        <i class="am-icon-plus"></i>
+                        <span>添加用例分组</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="tpl-left-nav-item">
+                    <a href="#variable" id="MyvariableCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
+                        <i class="am-icon-key"></i>
+                        <span>全局变量</span>
+                    </a>
+                </li>
+                <li>
+                    <div id="variable" class="collapse">
+                        <a href="{{ url_for('variables_blueprint.variable_list')}}" class="list-group-item">
+                        <i class="am-icon-search"></i>
+                        <span>全局变量列表</span>
+                        </a>
+                        <a href="{{ url_for('variables_blueprint.variable_add') }}" class="list-group-item">
+                        <i class="am-icon-plus"></i>
+                        <span>添加全局变量</span>
+                        </a>
+                    </div>
+                </li>
+                <li class="tpl-left-nav-item">
+                    <a href="#home_request_headers" id="MyrequestheadersCollapse" class="nav-link tpl-left-nav-link-list" data-toggle="collapse">
+                        <i class="am-icon-key"></i>
+                        <span>请求头部</span>
+                    </a>
+                </li>
+                <li>
+                    <div id="home_request_headers" class="collapse">
+                        <a href="{{ url_for('request_headers_blueprint.request_headers_list')}}" class="list-group-item">
+                        <i class="am-icon-search"></i>
+                        <span>请求头部列表</span>
+                        </a>
+                        <a href="{{ url_for('request_headers_blueprint.request_headers_add') }}" class="list-group-item">
+                        <i class="am-icon-plus"></i>
+                        <span>添加请求头部</span>
+                        </a>
+                    </div>
+                </li>
+
+                <li class="tpl-left-nav-item">
+                    <a href="{{ url_for('test_case_request_blueprint.test_case_request') }}" class="nav-link tpl-left-nav-link-list">
+                        <i class="am-icon-key"></i>
+                        <span>测试用例执行</span>
+                    </a>
+                </li>
+                <li class="tpl-left-nav-item">
+                    <a href="{{ url_for('testcase_report_blueprint.testcase_report_list') }}" class="nav-link tpl-left-nav-link-list">
+                        <i class="am-icon-file"></i>
+                        <span>测试报告</span>
+                    </a>
+                </li>
+                <li class="tpl-left-nav-item">
+                    <a href="{{ url_for('system_config_blueprint.email_config') }}" class="nav-link tpl-left-nav-link-list">
+                        <i class="am-icon-file"></i>
+                        <span>系统设置</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        {% else %}
+            请登录管理员账号注册用户
+        {% endif %}
+    </div>
+
+    {%block hello%}
+    {%endblock%}
+</div>
+<div  class="col-md-8" style="margin-left: 5%" >
+    <div class="container" >
     <div class="row">
         <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading text-center"><h1>自动化测试</h1></div>
-                <div class="panel-body">
-                    <table class="table table-hover">
-                        <tr>
-                            <th>选       项</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>
-                                    <a href="{{ url_for('testcase_blueprint.add_test_case') }}">添加测试用例</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>
-                                    <a href="{{ url_for('testcase_blueprint.test_case_list') }}">测试用例列表</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>
-                                    <a href="{{ url_for('case_group_blueprint.add_case_group') }}">用例分组添加</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>
-                                    <a href="{{ url_for('case_group_blueprint.case_group_list') }}">用例分组列表</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>
-                                    <a href="{{ url_for('variables_blueprint.variable_add') }}">添加全局变量</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div>
-                                    <a href="{{ url_for('variables_blueprint.variable_list') }}">全局变量列表</a>
-                                </div>
-                            </td>
-                        </tr>
-                    </table>
+            <div class="panel panel-default" id="get_container_height">
+                <div class="panel-heading text-center" >
+                    <input id="to_back" type="button" class="btn btn-default relative-position" onclick="history.go(-1);scrollTop = 0" value="返回上一步">
+                    <h1>
+                        {% block title %}
+                        {% endblock %}
+                    </h1>
                 </div>
-            </div>
+            {%block content%}
+            {%endblock%}
+            {% if session.get('username') %}
+                <div class="panel panel-default col-lg-12" style="float: left">
+                    <div  id="front_logs" class="col-lg-3 logs" style="height: 200px"></div>
+                    <div  id="flask_logs" class="col-lg-9 logs" style="height: 200px"></div>
+                </div>
+                 <div class="panel-footer" style="clear:both"></div>
+            {% endif %}
+             </div>
         </div>
     </div>
 </div>
+</div>
+<div class="col-md-2" id="request_body_show" style="background-color:ghostwhite;
+width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 700px;">
+</div>
+{% block js %}
+{%endblock%}
 </body>
 </html>
+{% block css %}
+{% endblock %}
 <style>
-    th,td{
-        text-align: center;
+    html,body{
+        width: 100%;
+        float: left;
     }
-    a{
-        font-size: 22px;
+    table{
+        table-layout:fixed;
+    }
+    xmp{
+        height: 40px
+    ;
+    }
+    {# 最大宽度100px  居中   超过宽度后自动隐藏... #}
+    table > tbody > tr > th,td,
+    .dots{
+        text-align: center;
+        max-width: 100px;
+        width:100%;
+        word-break:break-all;   {# 不换行  #}
+        white-space:nowrap;      {# 不换行  #}
+        overflow:hidden;
+        text-overflow:ellipsis;
+    }
+
+
+    .logs{
+        overflow:hidden;
+    }
+    td{
+    vertical-align: center;
     }
 </style>
+<script>
+$(document).ready(function() {
+    let $fullText = $('.admin-fullText');
+        $('#admin-fullscreen').on('click', function() {
+            $.AMUI.fullscreen.toggle();
+        });
+    {#  动态在td 标签上悬浮时设置title属性为当前标签的test内容 #}
+    $("td",$(this)).hover(function(){
+        $(this).attr('title',$(this).text());
+    });
+    $(".dots",$(this)).hover(function(){
+        $(this).attr('title',$(this).text());
+    });
+    function auto_front_logs(){
+            $.ajax({
+                url:{{ url_for('home_blueprint.front_logs') }},
+                method:'GET',
+                success:function(response){
+                    let front_log = JSON.parse(response)["front_log"];
+                    $("#front_logs").html(front_log)
+                }
+            })
+        }
+    function auto_flask_logs(){
+            $.ajax({
+                url:{{ url_for('home_blueprint.flask_logs') }},
+                method:'GET',
+                success:function(response){
+                    let flask_logs = JSON.parse(response)["flask_logs"];
+                    $("#flask_logs").html(flask_logs)
+                }
+            })
+    }
+        window.setTimeout(auto_front_logs, 2);
+        window.setTimeout(auto_flask_logs, 1);
+});
+
+</script>

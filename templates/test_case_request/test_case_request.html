@@ -23,14 +23,14 @@
                                          {% if case_group.name == "<span style='color: blue'>未分组测试场景</span>" %}
                                              <div class="form-group col-md-4">
                                               <div>
-                                                  <label for="testcase_scene_{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal"><div class="badge badge-pill badge-primary">【场景】</div>{{ testcase.name }}</label>
+                                                  <label for="testcase_scene_{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal;text-align: left"><div class="badge badge-pill badge-primary">【场景】</div>{{ testcase.name }}</label>
                                               </div>
                                               <input  type="checkbox" id="testcase_scene_{{ testcase.id }}" value="{{ testcase.id }}" name="testcase_scene" style="zoom:1.5;width: 20px" >
                                              </div>
                                          {% elif  case_group.name == "<span style='color: blue'>未分组测试用例</span>" %}
                                              <div class="form-group col-md-4">
                                               <div>
-                                              <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal">{{ testcase.name }}</label>
+                                              <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal;text-align: left">{{ testcase.name }}</label>
                                               </div>
                                               <input  type="checkbox" id="{{ testcase.id }}" value="{{ testcase.id }}" name="testcase" style="zoom:1.5;width: 20px" >
                                              </div>
@@ -42,14 +42,14 @@
                                          {% if testcase.is_testcase_scene == 0 %}
                                              <div class="form-group col-md-4">
                                               <div>
-                                              <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal">{{ testcase.name }}</label>
+                                              <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal;text-align: left">{{ testcase.name }}</label>
                                               </div>
                                               <input  type="checkbox" id="{{ testcase.id }}" value="{{ testcase.id }}" name="testcase" style="zoom:1.5;width: 20px" >
                                              </div>
                                          {% else %}
                                              <div class="form-group col-md-4">
                                              <div>
-                                              <label for="testcase_scene{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal"><div class="badge badge-pill badge-primary">【场景】</div>{{ testcase.name }}</label>
+                                              <label for="testcase_scene{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal;text-align: left"><div class="badge badge-pill badge-primary">【场景】</div>{{ testcase.name }}</label>
                                               </div>
                                               <input  type="checkbox" id="testcase_scene{{ testcase.id }}" value="{{ testcase.id }}" name="testcase_scene" style="zoom:1.5;width: 20px" >
                                              </div>
@@ -104,7 +104,20 @@
             }
 
         });
-        $('#assign,#job_add').click(function () {
+        $('#assign').click(function () {
+             let checkVal = [];
+            $("input[name*='testcase']:checkbox").each(function() {
+                if ($(this).is(":checked")) {
+                    let s= $(this).val();
+                    checkVal.push(s);
+                }
+            });
+            if(checkVal.length === 0){
+                $('#nocheck').html('请选择测试用例');
+                return false
+            }
+        });
+        $('#job_add').click(function () {
             let checkVal = [];
             $("input[name*='testcase']:checkbox").each(function() {
                 if ($(this).is(":checked")) {
@@ -155,16 +168,7 @@
     input[type="checkbox"]{
         margin-top: 7px;
     }
-    .no-padding{
-        text-align: center;
-        padding: 8px;
-        margin: 0
-    }
-    .has_no_padding{
-        text-align: center;
-        padding: 0;
-        margin: 0;
-    }
+
     .all_checkbox{
         margin-top: 0;
         padding-bottom: inherit;

@@ -13,11 +13,18 @@ class Job(db.Model):
     description = db.Column(db.String(50))
     timestamp = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    triggers = db.Column(db.String(50))
+    cron = db.Column(db.String(50))
+    is_start = db.Column(db.Integer)
 
-    def __init__(self, testcases='', testcase_scenes='',  description='',user_id=None):
+    def __init__(self, testcases='', testcase_scenes='',  description='', user_id=None,
+                 triggers='cron', cron='', is_start=0):
         self.name = '任务' + str(datetime.now())[:19]
         self.testcases = testcases
         self.testcase_scenes = testcase_scenes
         self.description = description
         self.user_id = user_id
         self.timestamp = datetime.now()
+        self.triggers = triggers
+        self.cron = cron
+        self.is_start = is_start
