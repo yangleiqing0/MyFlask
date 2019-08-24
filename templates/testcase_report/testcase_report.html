@@ -66,15 +66,18 @@
                 <tbody href="#tasecase_scene_{{ testcase_scene.id }}" data-toggle="collapse">
                     <tr>
                         <td colspan="10">
-                            <div class="col-md-1" style="margin-left:3px"><span class="badge" style="background-color: #0c0c0c">{{ loop.index }}</span></div>
-                            <div  class="col-md-3" style="text-align: left;margin-left:12px" >
+                            <div class="col-md-1" style="margin-left:0;padding-left: 0"><span class="badge" style="background-color: #0c0c0c">{{ loop.index }}</span></div>
+                            <div  class="col-md-3" style="text-align: left;" >
                                 <span class="badge badge-pill badge-default" style="background-color: #0c0c0c">测试场景：【{{ testcase_scene.name }}】</span></div>
-                            <div class="col-md-2 col-md-offset-5" style="padding-left:180px; size: 1.2">
-                                {% if  testcase_scene.result == "测试成功" %}
+                            <div class="col-md-2 col-md-offset-6">
+                            <div class="col-md-offset-5" style="margin-left: 73px">
+                                    {% if  testcase_scene.result == "测试成功" %}
                                     <span class="badge badge-success">{{testcase_scene.result}}</span>
                                     {% else %}
                                     <span class="badge badge-danger">{{testcase_scene.result}}</span>
-                                {% endif %}
+                                    {% endif %}
+                            </div>
+
                             </div>
                         </td>
                     </tr>

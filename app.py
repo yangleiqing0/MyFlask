@@ -6,6 +6,8 @@ from logs.config import file_log_handler, logging
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_mail import Mail
+from flask_apscheduler import APScheduler
+from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
 # flask_mail需要安装0.9.1版本
 
 requests.packages.urllib3.disable_warnings()
@@ -138,19 +140,27 @@ def get_app_mail():
 # 不要随便手段改字段内容，容易导致自动扩展数据库字段时候失败
 
 # 创建数据库办法   在浏览器路由/db_create_all/
-
-
-from flask_apscheduler import APScheduler
-import time
-
-
-def job_1():  # 一个函数，用来做定时任务的任务。
-    print('hgahaha: ', time.time())
+def my_listener(event):
+    if event.exception:
+        print('任务出错了！！！！！！')
+    else:
+        print('任务照常运行...')
 
 
 scheduler = APScheduler()
-scheduler.add_job('job_1', job_1, trigger='cron', second='*/5')
-# scheduler.start()
+scheduler.add_listener(my_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
+
+
+def my_listener(event):
+    if event.exception:
+        print('任务出错了！！！！！！')
+    else:
+        print('任务照常运行...')
+
+
+def return_app():
+    return app
+
 
 if __name__ == '__main__':
 

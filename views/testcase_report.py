@@ -166,17 +166,8 @@ class TestCaseReport(MethodView):
 
     def post(self):
         testcase_time_id = request.args.get('testcase_time_id')
-        time_strftime = datetime.now().strftime('%Y%m%d%H%M%S')
-        testcase_report_name = Variables.query.filter(Variables.name =="_TEST_REPORT_EXCEL_NAME").first().value + "_" + \
-                               time_strftime + ".xlsx"
-        REPORT_FILE_PATH = Variables.query.filter(Variables.name == "_REPORT_FILE_PATH").first().value
-        Filename = REPORT_FILE_PATH + testcase_report_name
-        print("Filename: ", Filename)
-        test_case_start_time = TestCaseStartTimes().query.get(testcase_time_id)
-        test_case_start_time.filename = Filename
-        test_case_start_time.name = testcase_report_name
-        db.session.commit()
-        test_report(testcase_time_id)  # 生成测试报告
+          # 生成测试报告
+        get_report(testcase_time_id)
 
         testcase_results = Testcaseresult(testcase_time_id).testcase_results
         testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
@@ -214,6 +205,20 @@ class TestCaseReport(MethodView):
         # return items, Allocation
         return render_template("testcase_report/testcase_report.html", items=items, allocation=allocation,
                                testcase_scene_list=testcase_scene_list)
+
+
+def get_report(testcase_time_id):
+    time_strftime = datetime.now().strftime('%Y%m%d%H%M%S')
+    testcase_report_name = Variables.query.filter(Variables.name == "_TEST_REPORT_EXCEL_NAME").first().value + "_" + \
+                           time_strftime + ".xlsx"
+    REPORT_FILE_PATH = Variables.query.filter(Variables.name == "_REPORT_FILE_PATH").first().value
+    Filename = REPORT_FILE_PATH + testcase_report_name
+    print("Filename: ", Filename)
+    test_case_start_time = TestCaseStartTimes().query.get(testcase_time_id)
+    test_case_start_time.filename = Filename
+    test_case_start_time.name = testcase_report_name
+    db.session.commit()
+    test_report(testcase_time_id)
 
 
 class TestCaseReportList(MethodView):

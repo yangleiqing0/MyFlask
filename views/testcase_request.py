@@ -1,7 +1,7 @@
 import json
 from _datetime import datetime
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, session
+from flask import render_template, Blueprint, request, session, current_app
 from modles.testcase import TestCases
 from modles.testcase_result import TestCaseResult
 from modles.case_group import CaseGroup
@@ -98,31 +98,37 @@ class TestCaseRequest(MethodView):
 
 class TestCaseRequestStart(MethodView):
 
-    def post(self):
-        if request.is_xhr:
+    def post(self, request_is_xhr=None):
+        if request.is_xhr or request_is_xhr:
             print(request.args)
-            test_case_id = request.form.get('id')
+            test_case_id = request.form.get('testcase_id')
             testcase_time_id = request.form.get('test_case_time_id')
             print('异步请求的test_case_id,testcase_time_id: ', test_case_id, testcase_time_id)
-            testcase = TestCases.query.get(test_case_id)
-            url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
-            method = testcase.method
-            response_body = to_execute_testcase(testcase)
-            testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_database_result()
-            # 调用比较的方法判断响应报文是否满足期望
-
-            print('testcase_test_result:', testcase_test_result)
-            testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
-                                             testcase_time_id, response_body, testcase_test_result)
-            # 测试结果实例化
-            db.session.add(testcase_result)
-            db.session.commit()
+            response_body = post_testcase(test_case_id, testcase_time_id)
             return response_body
+
+
+def post_testcase(test_case_id, testcase_time_id):
+    testcase = TestCases.query.get(test_case_id)
+    url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
+    method = testcase.method
+    response_body = to_execute_testcase(testcase)
+    testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_database_result()
+    # 调用比较的方法判断响应报文是否满足期望
+
+    print('testcase_test_result:', testcase_test_result)
+    testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
+                                     testcase_time_id, response_body, testcase_test_result)
+    # 测试结果实例化
+    db.session.add(testcase_result)
+    db.session.commit()
+    return response_body
 
 
 class TestCaseTimeGet(MethodView):
 
     def get(self):
+        print('current_app.name: ', current_app.name)
         user_id = session.get('user_id')
         time_strftime = datetime.now().strftime('%Y%m%d%H%M%S')
         testcase_time = TestCaseStartTimes(time_strftime=time_strftime, user_id=user_id)
