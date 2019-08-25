@@ -1,6 +1,7 @@
 #coding=utf-8
 from datetime import datetime
 from app import db
+from modles.mail import Mail
 from modles.user import User
 
 
@@ -16,9 +17,10 @@ class Job(db.Model):
     triggers = db.Column(db.String(50))
     cron = db.Column(db.String(50))
     is_start = db.Column(db.Integer)
+    mail_id = db.Column(db.Integer, db.ForeignKey(Mail.id))
 
     def __init__(self, testcases='', testcase_scenes='',  description='', user_id=None,
-                 triggers='cron', cron='', is_start=0):
+                 triggers='cron', cron='', is_start=0, mail_id=None):
         self.name = '任务' + str(datetime.now())[:19]
         self.testcases = testcases
         self.testcase_scenes = testcase_scenes
@@ -28,3 +30,4 @@ class Job(db.Model):
         self.triggers = triggers
         self.cron = cron
         self.is_start = is_start
+        self.mail_id = mail_id

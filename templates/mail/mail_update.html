@@ -1,0 +1,66 @@
+{% extends 'home.html' %}
+{% block title %}修改邮件配置{% endblock %}
+{% block content %}
+            <div class="panel-body content-agileits" >
+                <form action="{{ url_for('mail_blueprint.mail_update', mail_id=mail.id) }}" method="post" id="email_update_form" data-toggle="validator" class="form-horizontal">
+                    {{ macro.form_group(lable_name="name",blank_name="邮件名称",placeholder_name="仅用来分别不同的邮件配置",value=mail.name) }}
+                    {{ macro.form_group(lable_name="subject",blank_name="邮件标题",placeholder_name="发送邮件的标题",value=mail.subject) }}
+                    {{ macro.form_group(lable_name="to_user_list",blank_name="接收人",placeholder_name="多个接收人如：1@qq.com,2@qq.com",value=mail.to_user_list) }}
+                    <label for="email_method" class="control-label col-md-4">发送邮件方式</label>
+                            <div class="col-md-4">
+                                    <select name="email_method" id="email_method" class="form-control">
+                                        <option value="1" {{"selected" if mail.email_method ==1 else "" }}>图片</option>
+                                        <option value="2" {{"selected" if mail.email_method ==2 else "" }}>附件</option>
+                                    </select>
+                            </div>
+                    {{ macro.submit(submit_id="email_update") }}
+                </form>
+            </div>
+{% endblock %}
+{% block js %}
+    <script>
+        $(document).ready(function () {
+            let validate = function () {
+                mail_id = {{ mail.id }}
+                    $('#email_update_form').validate({
+                        rules: {
+                            name: {required: true, minlength:2,  maxlength:50, remote: {
+                                url: '/email_name_update_validate/',
+                                data:{"mail_id":mail_id}
+                                }
+                                },
+                            to_user_list: {required: true, remote: '/email_validate/'}
+                        },
+                        messages: {
+                            name: {required: '不可为空', minlength:'长度最少2位',  maxlength:'不可超过50位', remote: '已存在名称'},
+                            to_user_list: {required: '不可为空', remote: '邮箱格式不对'}
+                        }
+                    })
+                };
+            $('input').bind('input propertychange', function() {
+                validate()
+                });
+            $('#email_update').click(function () {
+                $('#email_update_form').validate({
+                        rules: {
+                            name: {required: true, minlength:2,  maxlength:50, remote: {
+                                url: '/email_name_update_validate/',
+                                data:{"mail_id":mail_id}
+                                }
+                                },
+
+                            to_user_list: {required: true, remote: '/email_validate/'}
+                        },
+                        messages: {
+                            name: {required: '不可为空', minlength:'长度最少2位',  maxlength:'不可超过50位', remote: '已存在名称'},
+                            to_user_list: {required: '不可为空', remote: '邮箱格式不对'}
+                        },
+                        submitHandler: function (form) {
+                        form.submit()
+                    }
+                    });
+            })
+});
+
+    </script>
+{% endblock %}

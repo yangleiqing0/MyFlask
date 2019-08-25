@@ -79,55 +79,61 @@
                 {% endif %}
                 <li class="tpl-left-nav-item">
                      <a href="{{ url_for('testcase_blueprint.test_case_list') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-search"></i>
+                        <i class="am-icon-book"></i>
                         <span>测试用例</span>
                         </a>
                 </li>
                 <li class="tpl-left-nav-item">
                         <a href="{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-search"></i>
+                        <i class="am-icon-briefcase"></i>
                         <span>测试场景</span>
                         </a>
                 </li>
                 <li class="tpl-left-nav-item">
                         <a href="{{ url_for('case_group_blueprint.case_group_list')}}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-search"></i>
+                        <i class="am-icon-group"></i>
                         <span>用例分组</span>
                         </a>
                 </li>
                 <li class="tpl-left-nav-item">
                         <a href="{{ url_for('variables_blueprint.variable_list')}}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-search"></i>
+                        <i class="am-icon-database"></i>
                         <span>全局变量</span>
                         </a>
                 </li>
                 <li class="tpl-left-nav-item">
                         <a href="{{ url_for('request_headers_blueprint.request_headers_list')}}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-search"></i>
+                        <i class="am-icon-mortar-board"></i>
                         <span>请求头部</span>
                         </a>
                 </li>
                 <li class="tpl-left-nav-item">
                     <a href="{{ url_for('test_case_request_blueprint.test_case_request') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-key"></i>
+                        <i class="am-icon-play"></i>
                         <span>测试用例执行</span>
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
                     <a href="{{ url_for('testcase_report_blueprint.testcase_report_list') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-file"></i>
+                        <i class="am-icon-table"></i>
                         <span>测试报告</span>
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
                     <a href="{{ url_for('job_blueprint.job_list') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-file"></i>
+                        <i class="am-icon-tasks"></i>
                         <span>测试任务</span>
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
+                    <a href="{{ url_for('mail_blueprint.mail_list') }}" class="nav-link tpl-left-nav-link-list">
+                        <i class="am-icon-envelope"></i>
+                        <span>邮件设置</span>
+                    </a>
+                </li>
+                <li class="tpl-left-nav-item">
                     <a href="{{ url_for('system_config_blueprint.email_config') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-file"></i>
+                        <i class="am-icon-cog"></i>
                         <span>系统设置</span>
                     </a>
                 </li>

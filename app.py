@@ -1,14 +1,16 @@
 import requests
 import config
+import os
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, request, session, redirect, url_for
-from logs.config import file_log_handler, logging
+from logs.config import file_log_handler, logging, FLASK_LOGS_FILE, FRONT_LOGS_FILE
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_mail import Mail
 from flask_apscheduler import APScheduler
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
 # flask_mail需要安装0.9.1版本
+
 
 requests.packages.urllib3.disable_warnings()
 
@@ -19,7 +21,6 @@ app = Flask(__name__)
 
 
 def create_app():
-
     app.debug = True
     app.threaded = True
     app.secret_key = 'asldfwadadw@fwq@#!Eewew'
@@ -38,6 +39,7 @@ def create_app():
     from views.login import login_blueprint
     from views.user import user_blueprint
     from views.job import job_blueprint
+    from views.emai import mail_blueprint
 
     app.register_blueprint(testcase_blueprint)
     app.register_blueprint(home_blueprint)
@@ -51,6 +53,7 @@ def create_app():
     app.register_blueprint(login_blueprint)
     app.register_blueprint(user_blueprint)
     app.register_blueprint(job_blueprint)
+    app.register_blueprint(mail_blueprint)
     return app
 
 
@@ -60,7 +63,7 @@ create_app()
 @app.before_request    # 在请求达到视图前执行
 def login_required():
 
-    print('username: ', session.get('username'), request.path, type(session.get('username')))
+    # print('username: ', session.get('username'), request.path, type(session.get('username')))
 
     if request.path == '/user_regist/':
         if session.get('username') != 'admin':
@@ -89,7 +92,7 @@ manager.add_command('db', MigrateCommand)
 @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
 def db_create_pre_all():
     session['app_rootpath'] = app.root_path
-
+    from views.job import init_scheduler
     from common.pre_db_insert_data import to_insert_data
     from modles.testcase import TestCases
     from modles.case_group import CaseGroup
@@ -100,6 +103,7 @@ def db_create_pre_all():
     from modles.testcase_scene import TestCaseScene
     from modles.user import User
     from modles.job import Job
+    from modles.mail import Mail
 
     db.create_all()
 
@@ -147,8 +151,33 @@ def my_listener(event):
         print('任务照常运行...')
 
 
+@app.before_first_request
+def init_flask_log():
+    with open(FLASK_LOGS_FILE, 'w+') as f:
+        f.write('#coding=utf-8\n')
+    with open(FRONT_LOGS_FILE, 'w+') as f:
+        f.writelines(['#coding=utf-8\n',
+                      '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n',
+                      '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n',
+                      '欢迎使用自动化测试平台\n', '联系QQ253775405\n', '微信15155492421\n', 'github地址\n',
+                      'https://github.com/yangleiqing0/MyFlask.git\n', '遇到任何bug请直接联系我\n',
+                      '接定制任务\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n',
+                      ])
+
+
 scheduler = APScheduler()
+
 scheduler.add_listener(my_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
+scheduler.start()
+
+
+@app.before_first_request
+def init_scheduler_job():
+    from modles.job import Job
+    from views.job import scheduler_job
+    jobs = Job.query.filter(Job.is_start == 1).all()
+    for job in jobs:
+        scheduler_job(job, scheduler)
 
 
 def my_listener(event):

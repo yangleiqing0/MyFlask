@@ -7,6 +7,7 @@
                             <th>ID</th>
                             <th>测试任务名称</th>
                             <th>测试任务备注</th>
+                            <th>测试任务cron</th>
                             <th >操作</th>
                         </tr>
                         {% for job in jobs %}
@@ -14,20 +15,21 @@
                             <td><a href="#"><span class="badge">{{ loop.index }}</span></a></td>          <!--使用循环的数字作为id -->
                             <td>{{ job.name }}</td>
                             <td>{{ job.description}}</td>
+                            <td>{{ job.cron}}</td>
                             <td>
 
-                                <div style="float: left;width: 100px" >
+                                <div style="float: left;width: 100px;margin-top: 3px" >
                                     <div>
                                          <label for="male_{{ job.id }}"  class="control-label col-md-8 has_no_padding" id="is_start_status_{{ job.id }}" style="font-weight: normal;zoom: 0.8">{{ "关闭定时" if job.is_start else " 开启定时" }}</label>
                                         <div class="col-md-4 has_no_padding">
-                                            <input type="checkbox" name="male_{{ job.id }}"  id="male_{{ job.id }}" class="chooseBtn" {{ 'checked' if job.is_start else "" }}/>
+                                            <input type="checkbox" name="male_{{ job.id }}"  id="male_{{ job.id }}" class="chooseBtn" {{ 'checked' if job.is_start==1 else "" }}/>
                                             <label style="zoom: 0.7;margin-top: 2px" for="male_{{ job.id }}" class="choose-label"  ></label>
                                         </div>
                                     </div>
                                         <input type="hidden" id="is_start_{{ job.id }}" value="{{job.is_start}}"/>
                                 </div>
                                  <a href="{{ url_for('job_blueprint.job_update',job_id=job.id, page=page) }}"  class="btn btn-default btn-xs" title="编辑测试任务 "><i class="fa fa-pencil"></i></a>
-{#                                <a href="{{ url_for('case_group_blueprint.case_group_delete',id=item.id) }}" class="btn btn-default btn-xs" title="删除测试用例分组"><i class="fa fa-trash"></i></a>#}
+                                 <a href="{{ url_for('job_blueprint.job_delete',job_id=job.id, page=page) }}" class="btn btn-default btn-xs" title="删除测试任务"><i class="fa fa-trash"></i></a>
                             </td>
                         </tr>
                         {% endfor %}

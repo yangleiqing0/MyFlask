@@ -30,13 +30,23 @@
                     <div class="form-group agileinfo wthree w3-agileits agile ">
                         <label for="male"  class="control-label col-md-4" id="is_start_status">{{ "关闭定时" if job.is_start else "开启定时" }}</label>
                         <div class="col-md-4">
-                            <input type="checkbox" name="sex" id="male" class="chooseBtn" {{ 'checked' if job.is_start else "" }} />
+                            <input type="checkbox" name="sex" id="male" class="chooseBtn" {{ 'checked' if job.is_start==1 else "" }} />
                             <label for="male" class="choose-label" style="margin-top: 7px"></label>
                         </div>
                         <input type="hidden" name="is_start" id="is_start" value="{{job.is_start}}"/>
                     </div>
                     {{ macro.form_group(lable_name="triggers",blank_name="触发器类型",value=job.triggers, placeholder_name="默认：cron") }}
-                    {{ macro.form_group(lable_name="cron",blank_name="cron表达式",value=job.cron, placeholder_name="请输入正确的cron表达式") }}
+                    {{ macro.form_group(lable_name="cron",blank_name="cron表达式:(只支持每天几点几分几秒)",value=job.cron, placeholder_name="请输入正确的cron表达式") }}
+                    <div class="form-group">
+                        <label for="email" class="control-label col-md-4">邮件配置</label>
+                            <div class="col-md-4">
+                                <select name="email" id="email" class="form-control">
+                                    {% for mail in mails %}
+                                        <option  value="{{ mail.id }}" {{ "selected" if mail.id == job.mail_id  }}>{{ mail.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                    </div>
                     {{ macro.submit(submit_id="job_update") }}
 
 

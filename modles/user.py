@@ -15,6 +15,7 @@ class User(db.Model):
     user_request_headers = db.relationship('RequestHeaders', backref='request_headers_user')
     user_testcase_start_times = db.relationship('TestCaseStartTimes', backref='testcase_start_time_user')
     user_jobs = db.relationship('Job', backref='job_user')
+    user_mails = db.relationship('Mail', backref='mail_user')
 
     def __init__(self, username, password):
         self.username = username

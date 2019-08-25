@@ -66,7 +66,7 @@ class FrontLog(MethodView):
                     break
                 offset *= 2
             front_log = "<br/>".join(front_log)
-        print("front_logs: ", len(front_log), front_log)
+        # print("front_logs: ", len(front_log), front_log)
         return json.dumps({"front_log": front_log})
 
 
@@ -76,7 +76,6 @@ class FlaskLog(MethodView):
         with open(FLASK_LOGS_FILE) as logs:
             flask_logs = logs.readlines()
             flask_logs = "<br/>".join(flask_logs[len(flask_logs)-9:])
-        print(flask_logs[len(flask_logs)-9:], "flask_logs: ", flask_logs)
         return json.dumps({"flask_logs": str(flask_logs)})
 
 

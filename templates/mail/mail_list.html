@@ -1,0 +1,34 @@
+{% extends 'home.html' %}
+{% block title %}邮件配置列表{% endblock %}
+{% block content %}
+                <div class="panel-body">
+                    <table class="table table-hover">
+                    <div class="col-md-offset-10">
+                          <a  href="{{ url_for('mail_blueprint.mail_add') }}" title="添加邮件配置"><button style="color: black">添加邮件配置</button></a>
+                    </div>
+                        <tr>
+                            <th>ID</th>
+                            <th>邮件名称</th>
+                            <th>邮件主题</th>
+                            <th>邮件接收人</th>
+                            <th>邮件方式</th>
+                            <th >操作</th>
+                        </tr>
+                        {% for mail in mails %}
+                        <tr>
+                            <td><a href="#"><span class="badge">{{ loop.index }}</span></a></td>          <!--使用循环的数字作为id -->
+                            <td>{{ mail.name }}</td>
+                            <td>{{ mail.subject}}</td>
+                            <td>{{ mail.to_user_list}}</td>
+                            <td>{{ "图片" if mail.email_method==1 else "附件"}}</td>
+                            <td>
+                                <a href="{{ url_for('mail_blueprint.mail_update',mail_id=mail.id) }}" class="btn btn-default btn-xs" title="编辑邮件配置"><i class="fa fa-pencil"></i></a>
+                                <a href="{{ url_for('mail_blueprint.mail_delete',mail_id=mail.id) }}" class="btn btn-default btn-xs" title="删除邮件配置"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                {{ macro.pagination_widget(pagination, 'mail_blueprint.mail_list') }}
+
+{% endblock %}

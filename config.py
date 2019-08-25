@@ -12,6 +12,7 @@ SQLALCHEMY_COMMIT_TEARDOWN = False
 
 
 FLASK_POST_PRE_ARGV = 5
+
 # 这个配置将来会被禁用,设置为True或者False可以解除警告信息,建议设置False
 
 EXCEL_TO_HTML_PATH = 'templates/reports/'
