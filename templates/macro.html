@@ -7,7 +7,7 @@ input_name="form-control",value="",disabled="") %}
                 <input type="{{ type_name }}" class="{{ input_name }}" id="{{ id_name }}" name="{{ name_name }}"
                        placeholder="{{ placeholder_name }} " value="{{ value }}" {{ disabled }} >
             </div>
-            <div class="help-block with-errors"></div>
+{#            <div class="help-block with-errors" style="color: red"></div>#}
         </div>
 {% endmacro %}
 
@@ -67,7 +67,7 @@ submit_type="submit",reset_type="reset",test_value="测试",test_style="visibili
 {% endmacro %}
 
 
-{% macro render_field(field) %}
+    {% macro render_field(field) %}
     <tr>
         <td>{{ field.label }}</td>
         <td>{{ field(**kwargs) }}</td>

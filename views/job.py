@@ -2,7 +2,7 @@
 from datetime import datetime
 import json
 from flask.views import MethodView
-from flask import render_template, Blueprint, redirect, url_for, session, request, current_app
+from flask import render_template, Blueprint, redirect, url_for, session, request, current_app, jsonify
 from common.request_get_more_values import request_get_values
 from common.send_mail import send_excel, send_mail
 from common.tail_font_log import FrontLogs
@@ -130,12 +130,29 @@ class JobList(MethodView):
         return render_template('job/job_list.html', pagination=pagination, jobs=jobs, page=page)
 
 
+class JobUpdateValidate(MethodView):
+
+    def get(self):
+        user_id = session.get('user_id')
+        name = request.args.get('name')
+        job_id = request.args.get('job_id')
+        print('TestCaseSceneUpdateValidate:', name, job_id)
+        job = Job.query.filter(
+            Job.id != job_id, Job.name == name, Job.user_id == user_id).count()
+        if job != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
 job_blueprint.add_url_rule('/job_add/', view_func=JobAdd.as_view('job_add'))
 job_blueprint.add_url_rule('/job_update/', view_func=JobUpdate.as_view('job_update'))
 job_blueprint.add_url_rule('/job_list/', view_func=JobList.as_view('job_list'))
 job_blueprint.add_url_rule('/job_delete/', view_func=JobDelete.as_view('job_delete'))
 
 job_blueprint.add_url_rule('/job_scheduler_update/', view_func=JobSchedulerUpdate.as_view('job_scheduler_update'))
+
+job_blueprint.add_url_rule('/job_update_validate/', view_func=JobUpdateValidate.as_view('job_update_validate'))
 
 
 def scheduler_job(job, scheduler=None, cron_change=None):

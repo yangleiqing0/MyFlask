@@ -187,6 +187,9 @@ width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 7
         width: 100%;
         float: left;
     }
+    .error{
+        color: red;
+    }
     table{
         table-layout:fixed;
     }
@@ -210,10 +213,11 @@ width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 7
         text-align: left;
         max-width: 190px;
         width:100%;
-        word-break:break-all;   {# 不换行  #}
-        white-space:nowrap;      {# 不换行  #}
+        word-break:break-all;
+        white-space:nowrap;
         overflow:hidden;
         text-overflow:ellipsis;
+        {#height: 30px;#}
     }
     .form-horizontal .form-group {
     margin-right: 0;
@@ -265,13 +269,19 @@ width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 7
 </style>
 <script>
 $(document).ready(function() {
+
     let $fullText = $('.admin-fullText');
         $('#admin-fullscreen').on('click', function() {
             $.AMUI.fullscreen.toggle();
         });
     {#  动态在td 标签上悬浮时设置title属性为当前标签的test内容 #}
-    $("td",$(this)).hover(function(){
-        $(this).attr('title',$(this).text());
+    $("td",$(this)).hover(function () {
+       $(this).attr('title',$(this).text())
+    }, function () {
+        $(this).removeAttr('title')
+    });
+     $("td").on("click",function() {
+            $('#request_body_show').text($(this).text())
     });
     $(".dots",$(this)).hover(function(){
         $(this).attr('title',$(this).text());
