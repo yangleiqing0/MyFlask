@@ -29,6 +29,7 @@ class TestCaseLook(MethodView):
         case_group_id_before = testcase.group_id
         request_headers_id_before = testcase.request_headers_id
         request_headerses = RequestHeaders.query.all()
+        FrontLogs('查看测试用例 name: %s ' % testcase.name).add_to_front_log()
 
         return render_template('test_case/test_case_look.html', item=testcase, case_groups=case_groups,
                                request_headers_id_before=request_headers_id_before, case_group_id_before=case_group_id_before,
@@ -57,6 +58,7 @@ class TestCaseRun(MethodView):
         testcase_results.extend(['【%s】' % testcase.name, testcase_result])
         testcase_results_html = '<br>'.join(testcase_results)
         print('TestCaseRun testcase_results_html', testcase_results_html)
+        FrontLogs('执行测试用例 name: %s ' % testcase.name).add_to_front_log()
         return json.dumps({'testcase_result': testcase_results_html})
 
 
@@ -206,6 +208,7 @@ class TestCaseCopy(MethodView):
                                  testcase_self.request_headers_id, hope_result=testcase_self.hope_result,
                                  user_id=testcase_self.user_id))
         db.session.commit()
+        FrontLogs('复制测试用例 name: %s 为模板成功' % testcase_self.name).add_to_front_log()
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
 
@@ -230,8 +233,10 @@ class ModelTestCase(MethodView):
         page = request.args.get('page')
         if testcase.is_model == 0:
             testcase.is_model = 1
+            FrontLogs('设置测试用例 name: %s 为模板成功' % testcase.name).add_to_front_log()
         else:
             testcase.is_model = 0
+            FrontLogs('取消设置测试用例 name: %s 为模板成功' % testcase.name).add_to_front_log()
         db.session.commit()
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 

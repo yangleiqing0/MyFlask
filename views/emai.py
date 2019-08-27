@@ -29,6 +29,7 @@ class MailAdd(MethodView):
         mail = Mail(name, subject, user_id, to_user_list, email_method)
         db.session.add(mail)
         db.session.commit()
+        FrontLogs('添加邮件配置 name: %s 成功' % name).add_to_front_log()
         return redirect(url_for('mail_blueprint.mail_list'))
 
 
@@ -37,6 +38,7 @@ class MailUpdate(MethodView):
     def get(self):
         mail_id = request_get_values('mail_id')
         mail = Mail.query.get(mail_id)
+        FrontLogs('进入编辑邮件配置 name: %s 页面' % mail.name).add_to_front_log()
         return render_template('mail/mail_update.html', mail=mail)
 
     def post(self):
@@ -49,6 +51,7 @@ class MailUpdate(MethodView):
         mail.to_user_list = to_user_list
         mail.email_method =email_method
         db.session.commit()
+        FrontLogs('编辑邮件配置 name: %s 页面成功' % name).add_to_front_log()
         return redirect(url_for('mail_blueprint.mail_list'))
 
 
@@ -73,6 +76,7 @@ class MailDelete(MethodView):
         mail = Mail.query.get(mail_id)
         db.session.delete(mail)
         db.session.commit()
+        FrontLogs('删除邮件配置 name: %s 成功' % mail.name).add_to_front_log()
         return redirect(url_for('mail_blueprint.mail_list'))
 
 

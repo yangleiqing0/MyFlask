@@ -1,3 +1,5 @@
+#coding=utf-8
+from common.tail_font_log import FrontLogs
 from modles.user import User
 from flask.views import MethodView
 from flask import render_template, Blueprint, g, make_response, redirect, url_for, session, flash, jsonify
@@ -11,6 +13,7 @@ user_blueprint = Blueprint('user_blueprint', __name__)
 class UserRegist(MethodView):
 
     def get(self):
+        FrontLogs('进入添加用户页面').add_to_front_log()
         return render_template('user/user_regist.html')
 
     def post(self):
@@ -20,6 +23,7 @@ class UserRegist(MethodView):
         db.session.commit()
         new_user = User.query.filter(User.username == username).first().id
         add_pre_data_go(new_user)
+        FrontLogs('添加用户 name : %s 成功 ' % username).add_to_front_log()
         return redirect(url_for('login_blueprint.login'))
 
 

@@ -53,6 +53,7 @@ class JobUpdate(MethodView):
         if len(testcase_scenes_ids) > 0:
             for testcase_scene_id in eval(testcase_scenes_ids):
                 job.testcase_scene_list.append(TestCaseScene.query.get(testcase_scene_id))
+        FrontLogs('进入编辑任务 name 页面: %s ' % job.name).add_to_front_log()
         return render_template('job/job_update.html', job=job, page=page, mails=mails)
 
     def post(self):
@@ -86,6 +87,7 @@ class JobUpdate(MethodView):
             scheduler_job(job)
         else:
             scheduler_job(job, cron_change=1)
+        FrontLogs('编辑任务 name 成功: %s ' % name).add_to_front_log()
         return redirect(url_for('job_blueprint.job_list', page=page))
 
 
@@ -183,8 +185,8 @@ def scheduler_job(job, scheduler=None, cron_change=None):
                 except Exception as e:
                     print(e, '无此任务', job.name)
             scheduler.add_job(id=scheduler_job_id, func=auto_send_mail,
-                                  trigger=job.triggers, hour=cron[0], minute=cron[1],
-                                  second=cron[2], args=(job, mail))
+                                  trigger=job.triggers, hour=cron[2], minute=cron[1],
+                                  second=cron[0], args=(job, mail))
             print('get_jobs:', scheduler.get_jobs(), scheduler.get_job(scheduler_job_id))
 
             print(scheduler.get_job('scheduler_job_id'))

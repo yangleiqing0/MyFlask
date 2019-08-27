@@ -23,6 +23,7 @@ class TestCaseSceneAdd(MethodView):
         user = User.query.get(user_id)
         page= request_get_values('page')
         case_groups = user.user_case_groups
+        FrontLogs('进入测试场景添加页面').add_to_front_log()
         return render_template('testcase_scene/testcase_scene_add.html', case_groups=case_groups, page=page)
 
     def post(self):
@@ -31,6 +32,7 @@ class TestCaseSceneAdd(MethodView):
         testcase_scene = TestCaseScene(name, group_id, description, user_id=user_id)
         db.session.add(testcase_scene)
         db.session.commit()
+        FrontLogs('添加测试场景 name： %s 成功' % testcase_scene.name).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=page))
 
 
@@ -44,6 +46,7 @@ class TestCaseSceneUpdate(MethodView):
         case_groups = user.user_case_groups
         testcase_scene_id = request.args.get('testcase_scene_id')
         testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+        FrontLogs('进入编辑测试场景 name： %s 页面' % testcase_scene.name).add_to_front_log()
         return render_template('testcase_scene/testcase_scene_update.html', testcase_scene=testcase_scene,
                                case_groups=case_groups, page=page)
 
@@ -54,6 +57,7 @@ class TestCaseSceneUpdate(MethodView):
         testcase_scene.name, testcase_scene.group_id, testcase_scene.description = request_get_values('name', 'case_group', 'description')
 
         db.session.commit()
+        FrontLogs('编辑测试场景 name： %s 成功' % testcase_scene.name).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=page))
 
 
@@ -88,6 +92,7 @@ class TestCaseSceneRun(MethodView):
             testcase_results.extend(['【%s】' % testcase.name, testcase_result])
         testcase_results_html = '<br>'.join(testcase_results)
         print('TestCaseSceneRun: ', json.dumps({'testcase_results': testcase_results_html}))
+        FrontLogs('执行测试场景 name： %s ' % testcase_scene.name).add_to_front_log()
         return json.dumps({'testcase_results': testcase_results_html})
 
 
@@ -121,6 +126,7 @@ class TestCaseSceneTestCaseCopy(MethodView):
                        testcase.regular, testcase.method, testcase.group_id, testcase.request_headers_id,
                        testcase_scene_id, testcase.hope_result, user_id=testcase.user_id))
         db.session.commit()
+        FrontLogs('复制场景测试用例 name： %s 成功' % testcase.name).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
 
 
@@ -134,6 +140,7 @@ class TestCaseSceneCopy(MethodView):
         testcase_scene_copy = TestCaseScene(name, description=testcase_scene.description, user_id=testcase_scene.user_id)
         db.session.add(testcase_scene_copy)
         db.session.commit()
+        FrontLogs('复制测试场景 name： %s 成功' % testcase_scene.name).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
 
 
@@ -144,8 +151,10 @@ class TestCaseSceneModel(MethodView):
         page = request.args.get('page')
         if testcase_scene.is_model == 0 or testcase_scene.is_model is None:
             testcase_scene.is_model = 1
+            FrontLogs('设置测试场景 name： %s 作为模板成功' % testcase_scene.name).add_to_front_log()
         else:
             testcase_scene.is_model = 0
+            FrontLogs('取消设置测试场景 name： %s 作为模板成功' % testcase_scene.name).add_to_front_log()
         db.session.commit()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=page))
 

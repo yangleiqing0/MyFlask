@@ -3,14 +3,26 @@
 {% block content %}
                 <div class="panel-body">
                     <table class="table table-hover">
-                    <div class="col-md-offset-9">
-                          <a  href="{{ url_for('testcase_blueprint.add_test_case') }}?page={{ page }}" title="添加测试用例"><button style="color: black">添加测试用例</button></a>
-                         <select  name="testcase_copy" id="testcase_copy" style="width: 120px;">
-                            {% for model_testcase in model_testcases %}
-                                <option  value="{{ model_testcase.id }}" style="width: 20px">{{ model_testcase.name }}</option>
-                            {% endfor %}
-                        </select>
-                        <a id="testcase_copy_click" class="btn btn-default btn-xs" title="复制测试用例"><i class="fa fa-copy"></i></a>
+                    <div class="col-md-12">
+                        <div class="col-md-5">
+                        <form role="search" class="navbar-form">
+                            <div class="form-group col-md-8">
+                                <input type="text" class="form-control" placeholder="Search">
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        </form>
+                    </div>
+                        <div class="col-md-offset-8">
+                            <div class="form-group col-md-12" style="margin-top: 7px">
+                                <a  href="{{ url_for('testcase_blueprint.add_test_case') }}?page={{ page }}" title="添加测试用例"><button class="btn btn-default" style="color: black">添加测试用例</button></a>
+                             <select class="btn btn-default" name="testcase_copy" id="testcase_copy" style="width: 120px;height: 34px">
+                                {% for model_testcase in model_testcases %}
+                                    <option  value="{{ model_testcase.id }}" style="width: 20px">{{ model_testcase.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <a id="testcase_copy_click" class="btn btn-default btn-xs" title="复制测试用例" style="height: 34px"><i class="fa fa-copy fa-title-size"></i></a>
+                            </div>
+                        </div>
                     </div>
                         <tr>
                             <th>ID</th>
