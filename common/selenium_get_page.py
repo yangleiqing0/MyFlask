@@ -12,6 +12,7 @@ class ReportImage:
         self.testcase_time_id = testcase_time_id
         self.driver = webdriver.PhantomJS()
         self.driver.maximize_window()
+        self.driver.implicitly_wait(10)
         self.start_time = time.time()
         self.user_id = user_id
 

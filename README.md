@@ -16,8 +16,12 @@ FLASK自动化测试平台：
 8：预期结果的格式  如 ：     包含:123          指请求的响应结果包含123数字  
 
 需要下载的安装包:flask_apscheduler requests xlsxwriter flask_wtf wtforms flask_sqlalchemy
-flask flask_migrate flask_script flask_mail
+flask flask_migrate flask_script flask_mail flask_apscheduler
 
 ![](https://github.com/yangleiqing0/test/blob/master/20190819154824.png)
 ![](https://github.com/yangleiqing0/test/blob/master/20190819131549.png)
 ![](https://github.com/yangleiqing0/test/blob/master/20190819132150.png)
+
+windows下：commons/tail_font_log.py的 with open(FRONT_LOGS_FILE, 'a', encoding='gbk') as logs: encoding='gbk'
+
+linux下：commons/tail_font_log.py的 with open(FRONT_LOGS_FILE, 'a', encoding='gbk') as logs: encoding='utf-8'

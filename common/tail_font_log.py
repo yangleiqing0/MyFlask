@@ -8,5 +8,5 @@ class FrontLogs:
 
     def add_to_front_log(self):
 
-        with open(FRONT_LOGS_FILE, 'a') as logs:
+        with open(FRONT_LOGS_FILE, 'a', encoding='gbk') as logs:
             logs.write(self.content+'\n')
