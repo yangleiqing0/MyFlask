@@ -180,13 +180,6 @@ def init_scheduler_job():
         scheduler_job(job, scheduler)
 
 
-def my_listener(event):
-    if event.exception:
-        print('任务出错了！！！！！！')
-    else:
-        print('任务照常运行...')
-
-
 def return_app():
     return app
 

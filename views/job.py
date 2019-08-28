@@ -174,7 +174,7 @@ def scheduler_job(job, scheduler=None, cron_change=None):
         if job.is_start == 1:
             cron = job.cron.split(' ')
             print(cron)
-            if len(cron) !=3:
+            if len(cron) !=6:
                 print('cron表达式不正确', job.name)
                 return
             if cron_change:
@@ -185,7 +185,8 @@ def scheduler_job(job, scheduler=None, cron_change=None):
                 except Exception as e:
                     print(e, '无此任务', job.name)
             scheduler.add_job(id=scheduler_job_id, func=auto_send_mail,
-                                  trigger=job.triggers, hour=cron[2], minute=cron[1],
+                                  trigger=job.triggers, year=cron[5], month=cron[4],
+                              day=cron[3], hour=cron[2], minute=cron[1],
                                   second=cron[0], args=(job, mail))
             print('get_jobs:', scheduler.get_jobs(), scheduler.get_job(scheduler_job_id))
 
