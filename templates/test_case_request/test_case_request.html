@@ -6,8 +6,14 @@
             <div style="float: left" class="col-md-12 no-padding"  >
                         {% for case_group in case_groups %}
                             <div class="btn col-md-12 btn-default no-padding"  >
-                                <div class="col-md-11" href="#case_group_{{ loop.index }}" data-toggle="collapse">
-                                    <span style="margin-left: 120px"><b>{{case_group.name | safe }}</b></span>
+                                <div class="col-md-11" style="float: left" href="#case_group_{{ loop.index }}" data-toggle="collapse">
+                                    <div class="col-md-11">
+                                        <span style="margin-left: 120px"><b>{{case_group.name | safe }}</b></span>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <div class="badge" style="background-color: rgba(84,128,191,0.35)">{{ case_group.testcases.__len__()+ case_group.testcase_list.__len__() }}</div>
+                                    </div>
+
                                 </div>
                                  <div class="col-md-1 has_no_padding" style="float: left">
                                      <div class=" has_no_padding" >
