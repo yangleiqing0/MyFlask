@@ -34,10 +34,13 @@ class VariableList(MethodView):
     def get(self):
         user_id = session.get('user_id')
         # 指定渲染的页数
+        variable_search = request_get_values('variable_search')
         page = request.args.get('page', 1, type=int)
         FrontLogs('进入全局变量列表 第%s页' % page).add_to_front_log()
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-        pagination = Variables.query.filter(Variables.user_id == user_id).order_by(Variables.timestamp.desc()).paginate(page, per_page=current_app.config[
+        pagination = Variables.query.filter(Variables.name.like(
+                "%"+variable_search+"%") if variable_search is not None else "", Variables.user_id == user_id).\
+            order_by(Variables.timestamp.desc()).paginate(page, per_page=current_app.config[
             'FLASK_POST_PRE_ARGV'], error_out=False)
         # 返回一个内容对象
         variables = pagination.items

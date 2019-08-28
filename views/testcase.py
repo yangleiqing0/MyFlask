@@ -66,6 +66,7 @@ class TestCastList(MethodView):
 
     def get(self):
         user_id = session.get('user_id')
+        testcase_search = request_get_values('testcase_search')
         user = User.query.get(user_id)
         model_testcases = TestCases.query.filter(TestCases.is_model == 1, TestCases.user_id == user_id).all()
         # 过滤有测试用例分组的查询结果
@@ -82,7 +83,8 @@ class TestCastList(MethodView):
         print('request_headers: ', request_headers)
         page = request.args.get('page', 1, type=int)
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-        pagination = TestCases.query.filter(
+        pagination = TestCases.query.filter(TestCases.name.like(
+                "%"+testcase_search+"%") if testcase_search is not None else "", 
             TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).order_by\
             (TestCases.timestamp.desc()).paginate(
             page, per_page=current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)

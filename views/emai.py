@@ -58,10 +58,12 @@ class MailUpdate(MethodView):
 class MailList(MethodView):
     def get(self):
         user_id = session.get('user_id')
+        mail_search = request_get_values('mail_search')
         page = request.args.get('page', 1, type=int)
         FrontLogs('进入邮件配置列表页面 第%s页' % page).add_to_front_log()
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-        pagination = Mail.query.filter(Mail.user_id == user_id). \
+        pagination = Mail.query.filter(Mail.name.like(
+                "%"+mail_search+"%") if mail_search is not None else "", Mail.user_id == user_id). \
             order_by(Mail.timestamp.desc()).paginate(
             page, per_page=current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
         # 返回一个内容对象

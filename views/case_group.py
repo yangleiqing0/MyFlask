@@ -35,6 +35,7 @@ class CaseGroupList(MethodView):
 
     def get(self):
         user_id =session.get('user_id')
+        case_group_search = request_get_values('case_group_search')
         user = User.query.get(user_id)
         case_groups = user.user_case_groups
         print('case_groups: ', case_groups)
@@ -52,7 +53,9 @@ class CaseGroupList(MethodView):
             page = request.args.get('page', 1, type=int)
             FrontLogs('进入测试用例分组列表页面 第%s页' % page).add_to_front_log()
             #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-            pagination = CaseGroup.query.filter(CaseGroup.user_id == user_id).\
+
+            pagination = CaseGroup.query.filter(CaseGroup.name.like(
+                "%"+case_group_search+"%") if case_group_search is not None else "", CaseGroup.user_id == user_id).\
                 order_by(CaseGroup.timestamp.desc()).paginate(
                 page, per_page=current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
             # 返回一个内容对象

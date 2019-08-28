@@ -225,7 +225,9 @@ class TestCaseReportList(MethodView):
 
     def get(self):
         user_id = session.get('user_id')
-        testcase_reports = TestCaseStartTimes.query.filter(
+        testcase_report_search = request_get_values('testcase_report_search')
+        testcase_reports = TestCaseStartTimes.query.filter(TestCaseStartTimes.name.like(
+                "%"+testcase_report_search+"%") if testcase_report_search is not None else "",
             TestCaseStartTimes.name != "", TestCaseStartTimes.user_id == user_id).order_by(TestCaseStartTimes.timestamp.desc()).all()
         print('testcase_reports: ', testcase_reports)
         FrontLogs('进入测试报告列表页面').add_to_front_log()
