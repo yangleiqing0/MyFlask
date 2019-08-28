@@ -91,7 +91,7 @@
                 </li>
                 <li class="tpl-left-nav-item">
                         <a href="{{ url_for('variables_blueprint.variable_list')}}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-database am-icon-fw"></i>
+                        <i class="am-icon-cubes am-icon-fw"></i>
                         <span>全局变量</span>
                         </a>
                 </li>
@@ -102,9 +102,15 @@
                         </a>
                 </li>
                 <li class="tpl-left-nav-item">
+                        <a href="{{ url_for('mysql_blueprint.mysql_list')}}" class="nav-link tpl-left-nav-link-list">
+                        <i class="am-icon-database am-icon-fw"></i>
+                        <span>数据库配置</span>
+                        </a>
+                </li>
+                <li class="tpl-left-nav-item">
                     <a href="{{ url_for('test_case_request_blueprint.test_case_request') }}" class="nav-link tpl-left-nav-link-list">
                         <i class="am-icon-play am-icon-fw"></i>
-                        <span>测试用例执行</span>
+                        <span>测试执行</span>
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">

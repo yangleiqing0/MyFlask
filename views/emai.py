@@ -51,7 +51,7 @@ class MailUpdate(MethodView):
         mail.to_user_list = to_user_list
         mail.email_method =email_method
         db.session.commit()
-        FrontLogs('编辑邮件配置 name: %s 页面成功' % name).add_to_front_log()
+        FrontLogs('编辑邮件配置 name: %s 成功' % name).add_to_front_log()
         return redirect(url_for('mail_blueprint.mail_list'))
 
 

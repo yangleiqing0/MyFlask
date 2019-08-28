@@ -2,7 +2,7 @@ import os
 
 
 basedir = os.path.abspath(os.path.dirname(__file__))
-DATABASE_URL = os.path.join(os.path.split(os.path.realpath(__file__))[0],'db\\test.sqlite')
+DATABASE_URL = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'db\\test.sqlite')
 
 SQLALCHEMY_ECHO = True
 base_dir = os.path.join(os.path.dirname(__file__))

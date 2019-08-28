@@ -40,6 +40,7 @@ def create_app():
     from views.user import user_blueprint
     from views.job import job_blueprint
     from views.emai import mail_blueprint
+    from views.mysql import mysql_blueprint
 
     app.register_blueprint(testcase_blueprint)
     app.register_blueprint(home_blueprint)
@@ -54,6 +55,7 @@ def create_app():
     app.register_blueprint(user_blueprint)
     app.register_blueprint(job_blueprint)
     app.register_blueprint(mail_blueprint)
+    app.register_blueprint(mysql_blueprint)
     return app
 
 
@@ -104,6 +106,7 @@ def db_create_pre_all():
     from modles.user import User
     from modles.job import Job
     from modles.mail import Mail
+    from modles.database import Mysql
 
     db.create_all()
 

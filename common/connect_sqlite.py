@@ -5,6 +5,7 @@ import config
 class cdb:
     def __init__(self):
         self.conn = sqlite3.connect(config.DATABASE_URL)
+        self.cur = self.re = self.result = None
 
     def db_cur(self):
         return self.conn.cursor()
