@@ -8,7 +8,7 @@ flask flask_migrate flask_script flask_mail flask_apscheduler requests flask_sql
 
 3：如果是windows的pycharm，需要将运行时的环境变量设置为Flask环境运行, 命令行的话在app.py目录打开cmd执行python -m flask run -h 0.0.0.0 -p 9000，
 如果是linux上部署，需要linux下：commons/tail_font_log.py的 with open(FRONT_LOGS_FILE, 'a', encoding='gbk') as logs:
-行里改为encoding='utf-8',将db下的test.sqlite 执行命令mv test.sqlite db\\test.sqlite再mv ..(linux和windows路径问题导致),
+行里改为encoding='utf-8',将db下的test.sqlite 执行命令mv test.sqlite db\\\test.sqlite再mv ..(linux和windows路径问题导致),
 再在app.py层级执行python -m flask run -h 0.0.0.0 -p 9000
 
 4：由于邮件发送的html格式在邮箱解析可能不兼容，需要图片发送的，需要将phantomjs文件放在python路径下，如:C:\Users\NING MEI\AppData\Local\Programs\Python\Python37 

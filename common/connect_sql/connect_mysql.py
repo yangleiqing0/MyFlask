@@ -1,26 +1,32 @@
+# encoding=utf-8
 import pymysql
 
 
 class ConnMysql:
 
     def __init__(self, host, port, user, password, db_name):
+        print('ConnMysql:', host, port, user, password, db_name)
         self.db = pymysql.connect(host=host, port=port, user=user,
                                   passwd=password, db=db_name, charset='utf8')
 
     def select_mysql(self, sql):
+        print('sql:', sql)
+        if not sql:
+            return 'sql璇彞涓嶅彲涓虹┖'
         cur = self.db.cursor()
         cur.execute(sql)
         r = cur.fetchall()
-        if r == ():
-            return '查询结果为空',
-        return r[0]
+        print('ConnMysql result:', r)
+        cur.close()
+        return r
 
     def operate_mysql(self, sql):
         cur = self.db.cursor()
         cur.execute(sql)
+        self.db.commit()
+        cur.close()
 
     def __del__(self):
-        self.db.commit()
         self.db.close()
 
 

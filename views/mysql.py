@@ -1,10 +1,12 @@
-#coding=utf-8
+# coding=utf-8
+import json
 from flask.views import MethodView
 from flask import render_template, Blueprint, redirect, url_for, session, request, current_app, jsonify
 from common.request_get_more_values import request_get_values
 from common.tail_font_log import FrontLogs
 from modles.database import Mysql
 from common.analysis_params import AnalysisParams
+from common.connect_sql.connect_mysql import ConnMysql
 from app import db
 
 
@@ -72,6 +74,22 @@ class MysqlList(MethodView):
         return render_template('database/mysql_list.html', pagination=pagination, mysqls=mysqls)
 
 
+class MysqlRun(MethodView):
+
+    def post(self):
+        mysql_id, sql = request_get_values('mysql_id', 'sql')
+        print('MysqlRun:', sql)
+        mysql = Mysql.query.get(mysql_id)
+        host, port, db_name, user, password = AnalysisParams().analysis_more_params(
+            mysql.ip, mysql.port, mysql.db_name, mysql.user, mysql.password)
+        try:
+            old_result = ConnMysql(host, int(port), user, password, db_name).select_mysql(sql)
+            return json.dumps(str(old_result))
+        except Exception as e:
+            print(e)
+            return json.dumps(str(e))
+
+
 class MysqlDelete(MethodView):
 
     def get(self):
@@ -112,6 +130,8 @@ mysql_blueprint.add_url_rule('/mysql_add/', view_func=MysqlAdd.as_view('mysql_ad
 mysql_blueprint.add_url_rule('/mysql_update/', view_func=MysqlUpdate.as_view('mysql_update'))
 mysql_blueprint.add_url_rule('/mysql_list/', view_func=MysqlList.as_view('mysql_list'))
 mysql_blueprint.add_url_rule('/mysql_delete/', view_func=MysqlDelete.as_view('mysql_delete'))
+
+mysql_blueprint.add_url_rule('/mysql_run/', view_func=MysqlRun.as_view('mysql_run'))
 
 mysql_blueprint.add_url_rule('/mysql_name_validate/', view_func=MysqlNameValidate.as_view('mysql_name_validate'))
 mysql_blueprint.add_url_rule('/mysql_name_update_validate/', view_func=MysqlNameUpdateValidate.as_view('mysql_name_update_validate'))

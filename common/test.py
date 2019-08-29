@@ -38,6 +38,11 @@ import re
 #
 # print(a)
 #
-a = ["1"]
-a = ','.join(a)
-print(a, type(a))
+# a = ["1"]
+# a = ','.join(a)
+# print(a, type(a))
+number = '134243'
+number_list = list(map(int, list(number)))
+number_list.sort()
+number_list = ''.join([str(i) for i in number_list])
+print('排序后的数字列表为：%s' % number_list)

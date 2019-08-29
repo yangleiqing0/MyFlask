@@ -6,6 +6,7 @@ from flask import render_template, Blueprint, request, g, redirect, url_for, cur
 from modles.testcase import TestCases
 from modles.case_group import CaseGroup
 from modles.user import User
+from modles.database import Mysql
 from modles.request_headers import RequestHeaders
 from common.rand_name import RangName
 from common.analysis_params import AnalysisParams
@@ -101,6 +102,11 @@ class TestCaseAdd(MethodView):
     def get(self):
         user_id = session.get('user_id')
         user = User.query.get(user_id)
+        mysqls = Mysql.query.all()
+        for mysql in mysqls:
+            mysql.ip, mysql.port, mysql.name, mysql.user, mysql.password = AnalysisParams().analysis_more_params(
+                mysql.ip, mysql.port, mysql.name, mysql.user, mysql.password
+            )
         page, scene_page = request_get_values('page', 'scene_page')
         case_groups = user.user_case_groups
         testcase_scene_id = request.args.get('testcase_scene_id', None)
@@ -110,7 +116,7 @@ class TestCaseAdd(MethodView):
         FrontLogs('进入添加测试用例页面').add_to_front_log()
         return render_template('test_case/test_case_add.html', case_groups=case_groups,
                                request_headers=request_headers, testcase_scene_id=testcase_scene_id,
-                               scene_page=scene_page, page=page)
+                               scene_page=scene_page, page=page, mysqls=mysqls)
 
     def post(self):
         user_id = session.get('user_id')

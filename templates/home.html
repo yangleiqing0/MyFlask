@@ -291,7 +291,7 @@ $(document).ready(function() {
         $(this).removeAttr('title')
     });
      $("td").on("click",function() {
-            $('#request_body_show').text($(this).text())
+            $('#request_body_show').css('overflow','scroll').text($(this).text())
     });
     $(".dots",$(this)).hover(function(){
         $(this).attr('title',$(this).text());
