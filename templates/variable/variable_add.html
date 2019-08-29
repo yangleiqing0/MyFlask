@@ -16,7 +16,7 @@
             var validate = function () {
                     $('#variable_add_form').validate({
                         rules: {
-                            name: {required: true, minlength: 2, maxlength: 50, remote: '/variablevalidate/'},
+                            name: {required: true, minlength: 2, maxlength: 50, remote: '/variable_validate/'},
                             value:{required: true},
                             description: {maxlength: 50},
                         },
@@ -33,7 +33,7 @@
             $('#variable_add').click(function () {
                 $('#variable_add_form').validate({
                         rules: {
-                            name: {required: true, minlength: 2, maxlength: 50, remote: '/variablevalidate/'},
+                            name: {required: true, minlength: 2, maxlength: 50, remote: '/variable_validate/'},
                             value:{required: true},
                             description: {maxlength: 50},
                         },

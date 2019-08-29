@@ -24,10 +24,15 @@ class TestCases(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     old_sql = db.Column(db.String(200))
     new_sql = db.Column(db.String(200))
+    old_sql_regist_variable = db.Column(db.String(200))
+    new_sql_regist_variable = db.Column(db.String(200))
+    old_sql_hope_result = db.Column(db.String(200))
+    new_sql_hope_result = db.Column(db.String(200))
 
     def __init__(self, name, url, data, regist_variable, regular, method, group_id,
                  request_headers_id,  testcase_scene_id=None, hope_result='', is_model=0, user_id=None,
-                 old_sql='', new_sql=''):
+                 old_sql='', new_sql='', old_sql_regist_variable='', new_sql_regist_variable='',
+                 old_sql_hope_result='', new_sql_hope_result=''):
         self.regist_variable = regist_variable
         self.regular = regular
         self.timestamp = datetime.now()
@@ -43,6 +48,10 @@ class TestCases(db.Model):
         self.user_id = user_id
         self.old_sql = old_sql
         self.new_sql = new_sql
+        self.old_sql_regist_variable = old_sql_regist_variable
+        self.new_sql_regist_variable = new_sql_regist_variable
+        self.old_sql_hope_result = old_sql_hope_result
+        self.new_sql_hope_result = new_sql_hope_result
 
     def __repr__(self):
         return "<TestCase:%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s >" % (

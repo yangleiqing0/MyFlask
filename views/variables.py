@@ -2,6 +2,7 @@ from flask.views import MethodView
 from app import db
 from common.connect_sqlite import cdb
 from modles.variables import Variables
+from modles.testcase import TestCases
 from modles.user import User
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
@@ -78,8 +79,85 @@ class VariableValidata(MethodView):
 
     def get(self):
         user_id = session.get('user_id')
-        name = request.args.get('name')
-        variable = Variables.query.filter(Variables.name == name, Variables.user_id == user_id).count()
+        regist_variable, name =request_get_values('regist_variable', 'name')
+        if regist_variable:
+            variable = Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).count()
+            if variable != 0:
+                return jsonify(False)
+            else:
+                return jsonify(True)
+        else:
+            variable = Variables.query.filter(Variables.name == name, Variables.user_id == user_id).count()
+            if variable != 0:
+                return jsonify(False)
+            else:
+                return jsonify(True)
+
+
+class OldSqlVariableValidata(MethodView):
+
+    def get(self):
+        user_id = session.get('user_id')
+        old_sql_regist_variable = request_get_values('old_sql_regist_variable')
+        if not old_sql_regist_variable:
+            return jsonify(True)
+        variable = Variables.query.filter(Variables.name == old_sql_regist_variable, Variables.user_id == user_id).count()
+        if variable != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
+class NewSqlVariableValidata(MethodView):
+
+    def get(self):
+        user_id = session.get('user_id')
+        new_sql_regist_variable = request_get_values('new_sql_regist_variable')
+        if not new_sql_regist_variable:
+            return jsonify(True)
+        variable = Variables.query.filter(Variables.name == new_sql_regist_variable,
+                                          Variables.user_id == user_id).count()
+        if variable != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
+class OldSqlVariableUpdateValidata(MethodView):
+
+    def get(self):
+        user_id = session.get('user_id')
+        old_sql_regist_variable, testcase_id = request_get_values('old_sql_regist_variable', 'testcase_id')
+        print('OldSqlVariableUpdateValidata:', old_sql_regist_variable, testcase_id)
+        testcase = TestCases.query.get(testcase_id)
+        if not old_sql_regist_variable:
+            return jsonify(True)
+        var = Variables.query.filter(Variables.name == testcase.old_sql_regist_variable).first()
+        print('OldSqlVariableUpdateValidata var:', var, var.id)
+        if not var:
+            return jsonify(True)
+        variable = Variables.query.filter(
+            Variables.id != var.id, Variables.name == old_sql_regist_variable, Variables.user_id == user_id).count()
+        if variable != 0:
+            return jsonify(False)
+        else:
+            return jsonify(True)
+
+
+class NewSqlVariableUpdateValidata(MethodView):
+
+    def get(self):
+        user_id = session.get('user_id')
+        new_sql_regist_variable, testcase_id = request_get_values('new_sql_regist_variable', 'testcase_id')
+        testcase = TestCases.query.get(testcase_id)
+        print('new_sql_regist_variable:', new_sql_regist_variable)
+        if not new_sql_regist_variable:
+            return jsonify(True)
+        var = Variables.query.filter(Variables.name == testcase.new_sql_regist_variable).first()
+        if not var:
+            return jsonify(True)
+        variable = Variables.query.filter(
+            Variables.id != var.id, Variables.name == new_sql_regist_variable, Variables.user_id == user_id).count()
         if variable != 0:
             return jsonify(False)
         else:
@@ -92,9 +170,9 @@ class VariableUpdateValidata(MethodView):
         user_id = session.get('user_id')
         name = request.args.get('name')
         variable_id = request.args.get('variable_id')
-        request_headers = Variables.query.filter(
+        variables = Variables.query.filter(
             Variables.id != variable_id, Variables.name == name, Variables.user_id == user_id).count()
-        if request_headers != 0:
+        if variables != 0:
             return jsonify(False)
         else:
             return jsonify(True)
@@ -105,5 +183,9 @@ variables_blueprint.add_url_rule('/variablelist/', view_func=VariableList.as_vie
 variables_blueprint.add_url_rule('/variableupdate/<id>/', view_func=VariableUpdate.as_view('variable_update'))
 variables_blueprint.add_url_rule('/variabledelete/<id>/', view_func=VariableDelete.as_view('variable_delete'))
 
-variables_blueprint.add_url_rule('/variablevalidate/', view_func=VariableValidata.as_view('variable_validate'))
+variables_blueprint.add_url_rule('/variable_validate/', view_func=VariableValidata.as_view('variable_validate'))
 variables_blueprint.add_url_rule('/variableupdatevalidate/', view_func=VariableUpdateValidata.as_view('variable_update_validate'))
+variables_blueprint.add_url_rule('/old_sql_regist_variable/', view_func=OldSqlVariableValidata.as_view('old_sql_regist_variable'))
+variables_blueprint.add_url_rule('/new_sql_regist_variable/', view_func=NewSqlVariableValidata.as_view('new_sql_regist_variable'))
+variables_blueprint.add_url_rule('/old_sql_regist_update_variable/', view_func=OldSqlVariableUpdateValidata.as_view('old_sql_regist_update_variable'))
+variables_blueprint.add_url_rule('/new_sql_regist_update_variable/', view_func=NewSqlVariableUpdateValidata.as_view('new_sql_regist_update_variable'))

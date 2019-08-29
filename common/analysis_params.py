@@ -38,10 +38,15 @@ class AnalysisParams:
                 return params
 
     def analysis_more_params(self, *args):
+        if len(args) == 1:
+            arg = AnalysisParams().analysis_params(*args)
+            return arg
+
         new_args = []
         for arg in args:
             arg = AnalysisParams().analysis_params(arg)
             new_args.append(arg)
+
         return new_args
 
     def analysis_headers(self, headers):

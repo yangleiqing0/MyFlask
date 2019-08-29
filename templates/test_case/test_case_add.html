@@ -3,7 +3,7 @@
 {% block content %}
             <div class="panel-body">
                 <form action="{{ url_for('testcase_blueprint.add_test_case') }}?testcase_scene_id={{ testcase_scene_id }}&page={{ page }}&scene_page={{ scene_page }}" id="testcase_add_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
-                    {{ macro.form_group(lable_name="name",blank_name="测试用例名称") }}
+                    {{ macro.form_group(lable_name="name",blank_name="测试用例名称**",placeholder_name="必填") }}
                     <div class="form-group">
                         <label for="case_group" class="control-label col-md-4">测试用例分组</label>
                             <div class="col-md-4">
@@ -22,7 +22,7 @@
                             </div>
                     </div>
                     <div class="form-group">
-                        <label for="request_headers" class="control-label col-md-4">请求头部</label>
+                        <label for="request_headers" class="control-label col-md-4">请求头部**</label>
                             <div class="col-md-4">
                                     <select name="request_headers" id="request_headers" class="form-control">
                                         {% for request_header in request_headers %}
@@ -37,12 +37,12 @@
                                 <a id="refresh_request_headers_list" class="btn btn-default btn-xs" title="刷新请求头部列表"><i class="fa fa-refresh"></i></a>
                             </div>
                     </div>
-                    {{ macro.form_group(lable_name="method",blank_name="请求方式") }}
-                    {{ macro.form_group(lable_name="url",blank_name="请求接口") }}
+                    {{ macro.form_group(lable_name="method",blank_name="请求方式**",placeholder_name="必填") }}
+                    {{ macro.form_group(lable_name="url",blank_name="请求接口**",placeholder_name="必填") }}
                     {{ macro.form_group(lable_name="regist_variable",blank_name="注册变量") }}
                     {{ macro.form_group(lable_name="regular",blank_name="正则匹配") }}
                     {{ macro.form_group_textarea(lable_name="data",blank_name="请求报文",placeholder_name="可使用如：${随机4}自动在执行的时候生成随机位名称") }}
-                    {{ macro.form_group(lable_name="hope_result",blank_name="预期结果",placeholder_name="如：  包含:username(暂时只支持包含)") }}
+                    {{ macro.form_group(lable_name="hope_result",blank_name="预期结果**",placeholder_name="范例：  包含:username(暂时只支持包含),必填") }}
                      <div class="form-group">
                         <label for="old_sql" class="control-label col-md-4">前置数据库查询语句</label>
                             <div class="col-md-4">
@@ -59,6 +59,8 @@
                             </div>
                         </div>
                     </div>
+                    {{ macro.form_group(lable_name="old_sql_regist_variable",blank_name="前置数据库注册变量") }}
+                    {{ macro.form_group(lable_name="old_sql_hope_result",blank_name="前置数据库预期结果") }}
                      <div class="form-group">
                         <label for="new_sql" class="control-label col-md-4">后置数据库查询语句</label>
                             <div class="col-md-4">
@@ -75,6 +77,8 @@
                             </div>
                         </div>
                     </div>
+                    {{ macro.form_group(lable_name="new_sql_regist_variable",blank_name="后置数据库注册变量") }}
+                    {{ macro.form_group(lable_name="new_sql_hope_result",blank_name="后置数据库预期结果") }}
                     {{ macro.submit_test(submit_id="testcase_add",test_type="button") }}
                 </form>
             </div>
@@ -110,21 +114,30 @@ $(document).ready(function() {
     let validate = function () {
         $('#testcase_add_form').validate({
             rules: {
-                name: {required: true, minlength: 2, maxlength: 50, remote: '/testcasevalidate/'},
-                url:{required:true, maxlength:500},
-                description: {maxlength: 50},
-                regist_variable:{maxlength:30},
-                method:{required:true, maxlength:10},
-                hope_result:{required:true,remote:'/test_case_hope_result_validate/'}
-            },
-            messages: {
-                name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过50位', remote: '已存在名称'},
-                url:{required:'不可为空', maxlength:'不可超过500位'},
-                description: {maxlength: '不可超过50位'},
-                regist_variable:{maxlength:'不可超过30位'},
-                method:{required:'不可为空', maxlength:'不可超过10位'},
-                hope_result:{required:'不可为空',remote:'请输入正确的格式'}
-            }
+                    name: {required: true, minlength: 2, maxlength: 50, remote: '/testcasevalidate/'},
+                    value:{required: true},
+                    description: {maxlength: 50},
+                    regist_variable:{maxlength:30, remote:'/variable_validate/'},
+                    method:{required:true, maxlength:10},
+                    hope_result:{required:true,remote:'/test_case_hope_result_validate/'},
+                    old_sql_regist_variable:{remote: {
+                        url:'/old_sql_regist_variable/',
+                        data:{
+                            testcase_id: testcase_id
+                        }
+                        }},
+                    new_sql_regist_variable:{remote: '/new_sql_regist_variable/'},
+                },
+                messages: {
+                    name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过50位', remote: '已存在名称'},
+                    value: {required: '不可为空'},
+                    description: {maxlength: '不可超过50位'},
+                    regist_variable:{maxlength:'不可超过30位',remote:'变量名已存在'},
+                    method:{required:'不可为空', maxlength:'不可超过10位'},
+                    hope_result:{required:'不可为空',remote:'请输入正确的格式'},
+                    old_sql_regist_variable:{remote: '变量名已存在'},
+                    new_sql_regist_variable:{remote: '变量名已存在'},
+                }
         })
     };
     $('input').bind('input propertychange', function() {
@@ -140,17 +153,21 @@ $(document).ready(function() {
                     name: {required: true, minlength: 2, maxlength: 50, remote: '/testcasevalidate/'},
                     value:{required: true},
                     description: {maxlength: 50},
-                    regist_variable:{maxlength:30},
+                    regist_variable:{maxlength:30, remote:'/variable_validate/'},
                     method:{required:true, maxlength:10},
-                    hope_result:{required:true,remote:'/test_case_hope_result_validate/'}
+                    hope_result:{required:true,remote:'/test_case_hope_result_validate/'},
+                    old_sql_regist_variable:{remote: '/old_sql_regist_variable/'},
+                    new_sql_regist_variable:{remote: '/new_sql_regist_variable/'},
                 },
                 messages: {
                     name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过50位', remote: '已存在名称'},
                     value: {required: '不可为空'},
                     description: {maxlength: '不可超过50位'},
-                    regist_variable:{maxlength:'不可超过30位'},
+                    regist_variable:{maxlength:'不可超过30位',remote:'变量名已存在'},
                     method:{required:'不可为空', maxlength:'不可超过10位'},
-                    hope_result:{required:'不可为空',remote:'请输入正确的格式'}
+                    hope_result:{required:'不可为空',remote:'请输入正确的格式'},
+                    old_sql_regist_variable:{remote: '变量名已存在'},
+                    new_sql_regist_variable:{remote: '变量名已存在'},
                 },
             submitHandler: function (form) {
                 form.submit()

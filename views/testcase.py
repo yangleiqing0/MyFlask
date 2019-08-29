@@ -17,6 +17,7 @@ from common.method_request import MethodRequest
 from common.execute_testcase import to_execute_testcase
 from common.request_get_more_values import request_get_values
 from common.most_common_method import NullObject
+from modles.variables import Variables
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -34,7 +35,8 @@ class TestCaseLook(MethodView):
         FrontLogs('查看测试用例 name: %s ' % testcase.name).add_to_front_log()
 
         return render_template('test_case/test_case_look.html', item=testcase, case_groups=case_groups,
-                               request_headers_id_before=request_headers_id_before, case_group_id_before=case_group_id_before,
+                               request_headers_id_before=request_headers_id_before,
+                               case_group_id_before=case_group_id_before,
                                request_headerses=request_headerses)
 
 
@@ -42,18 +44,18 @@ class TestCaseRun(MethodView):
 
     def post(self):
 
-        testcase_id, case_group_id, testcase_add_run, testcase_update_run\
+        testcase_id, case_group_id, testcase_add_run, testcase_update_run \
             = request_get_values('testcase_id', 'case_group_id', 'testcase_add_run', 'testcase_update_run')
         testcase = TestCases.query.get(testcase_id)
         print('TestCaseRunForm: ', request.form)
         if testcase_update_run:
-            testcase.name, testcase.url, testcase.data, testcase.method\
+            testcase.name, testcase.url, testcase.data, testcase.method \
                 = request_get_values('name', 'url', 'data', 'method')
         if testcase_add_run:
             testcase = NullObject()
             testcase.name, testcase.url, testcase.data, testcase.method, request_headers_id, \
-            testcase.regist_variable, testcase.regular                            \
-                 = request_get_values('name', 'url', 'data', 'method', 'request_headers', 'regist_variable', 'regular')
+            testcase.regist_variable, testcase.regular \
+                = request_get_values('name', 'url', 'data', 'method', 'request_headers', 'regist_variable', 'regular')
             testcase.testcase_request_header = RequestHeaders.query.get(request_headers_id)
         testcase_results = []
         testcase_result, regist_variable_value = to_execute_testcase(testcase)
@@ -87,15 +89,17 @@ class TestCastList(MethodView):
         page = request.args.get('page', 1, type=int)
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
         pagination = TestCases.query.filter(TestCases.name.like(
-                "%"+testcase_search+"%") if testcase_search is not None else "", 
-            TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).order_by\
+            "%" + testcase_search + "%") if testcase_search is not None else "",
+                                            TestCases.testcase_scene_id.is_(None),
+                                            TestCases.user_id == user_id).order_by \
             (TestCases.timestamp.desc()).paginate(
             page, per_page=current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
         # 返回一个内容对象
         testcaseses = pagination.items
         print("pagination: ", pagination)
         FrontLogs('进入测试用例列表页面 第%s页' % page).add_to_front_log()
-        return render_template('test_case/test_case_list.html', pagination=pagination, items=testcaseses, case_groups=case_groups,
+        return render_template('test_case/test_case_list.html', pagination=pagination, items=testcaseses,
+                               case_groups=case_groups,
                                request_headers=request_headers, page=page, model_testcases=model_testcases)
 
 
@@ -123,9 +127,12 @@ class TestCaseAdd(MethodView):
     def post(self):
         user_id = session.get('user_id')
         print('要添加的测试用例：', request.form)
-        page, scene_page, name, url, method, regist_variable, regular, request_headers_id, old_sql, new_sql = \
+        page, scene_page, name, url, method, regist_variable, regular, request_headers_id, old_sql, new_sql, \
+        old_sql_regist_variable, new_sql_regist_variable, old_sql_hope_result, new_sql_hope_result = \
             request_get_values('page', 'scene_page', 'name', 'url', 'method',
-                               'regist_variable', 'regular', 'request_headers', 'old_sql', 'new_sql')
+                               'regist_variable', 'regular', 'request_headers', 'old_sql', 'new_sql',
+                               'old_sql_regist_variable', 'new_sql_regist_variable', 'old_sql_hope_result',
+                               'new_sql_hope_result')
         group_id = request.form.get('case_group', None)
         data = request.form.get('data', '').replace('/n', '').replace(' ', '')
 
@@ -151,12 +158,20 @@ class TestCaseAdd(MethodView):
         testcase = TestCases(
             name, url, data, regist_variable, regular, method, group_id,
             request_headers_id, hope_result=hope_result,
-            testcase_scene_id=testcase_scene_id, user_id=user_id, old_sql=old_sql, new_sql=new_sql)
+            testcase_scene_id=testcase_scene_id, user_id=user_id, old_sql=old_sql, new_sql=new_sql,
+            old_sql_regist_variable=old_sql_regist_variable, new_sql_regist_variable=new_sql_regist_variable,
+            old_sql_hope_result=old_sql_hope_result, new_sql_hope_result=new_sql_hope_result)
+        if old_sql_regist_variable:
+            old_variable = Variables(old_sql_regist_variable, '', user_id=user_id)
+            db.session.add(old_variable)
+        if new_sql_regist_variable:
+            new_variable = Variables(new_sql_regist_variable, '', user_id=user_id)
+            db.session.add(new_variable)
         db.session.add(testcase)
         db.session.commit()
         FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:insert into testcases success, name: %s' % name)
-        if testcase_scene_id not in(None, "None"):
+        if testcase_scene_id not in (None, "None"):
             return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
@@ -169,9 +184,7 @@ class UpdateTestCase(MethodView):
         page = request_get_values('page')
         mysqls = Mysql.query.filter(Mysql.user_id == user_id).all()
         for mysql in mysqls:
-            mysql.ip, mysql.port, mysql.name, mysql.user, mysql.password = AnalysisParams().analysis_more_params(
-                mysql.ip, mysql.port, mysql.name, mysql.user, mysql.password
-            )
+            mysql.name = AnalysisParams().analysis_params(mysql.name)
         testcase_scene_id = request.args.get('testcase_scene_id', None)
         scene_page = request.args.get('scene_page')
         print('UpdateTestCase get:testcase_scene_id ', testcase_scene_id)
@@ -187,26 +200,33 @@ class UpdateTestCase(MethodView):
         print('request_headerses:', request_headerses)
         FrontLogs('进入编辑测试用例 id: %s 页面' % id).add_to_front_log()
         return render_template('test_case/test_case_search.html', item=testcase, case_groups=case_groups,
-                               request_headers_id_before=request_headers_id_before, case_group_id_before=case_group_id_before,
+                               request_headers_id_before=request_headers_id_before,
+                               case_group_id_before=case_group_id_before,
                                request_headerses=request_headerses, testcase_scene_id=testcase_scene_id,
                                scene_page=scene_page, page=page, mysqls=mysqls)
 
     def post(self, id=-1):
-        page, scene_page, name, url, method, data, group_id, request_headers_id, regist_variable, regular, hope_result, \
-        testcase_scene_id, old_sql, new_sql = \
-            request_get_values('page', 'scene_page', 'name', 'url', 'method', 'data', 'case_group', 'request_headers',
-                               'regist_variable', 'regular', 'hope_result', 'testcase_scene_id', 'old_sql', 'new_sql')
+        page, scene_page, name, url, method, data, group_id, request_headers_id, regist_variable, regular \
+            , hope_result, testcase_scene_id, old_sql, new_sql, old_sql_regist_variable, new_sql_regist_variable, \
+            old_sql_hope_result, new_sql_hope_result = request_get_values(
+            'page', 'scene_page', 'name', 'url', 'method', 'data', 'case_group', 'request_headers', 'regist_variable',
+            'regular', 'hope_result', 'testcase_scene_id', 'old_sql', 'new_sql', 'old_sql_regist_variable',
+            'new_sql_regist_variable', 'old_sql_hope_result', 'new_sql_hope_result')
         print('UpdateTestCase post:testcase_scene_id ', testcase_scene_id, scene_page)
         id = request.args.get('id', id)
         update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=?,group_id=?,' \
-                               'request_headers_id=?,regist_variable=?,regular=?,hope_result=?,old_sql=?,new_sql=? where id=?'
+                               'request_headers_id=?,regist_variable=?,regular=?,hope_result=?,' \
+                               'old_sql=?,new_sql=?,old_sql_regist_variable=?,new_sql_regist_variable=?,' \
+                               'old_sql_hope_result=?, new_sql_hope_result=? where id=?'
         cdb().opeat_db(update_test_case_sql, (name, url, data, method, group_id,
-                                              request_headers_id, regist_variable, regular, hope_result, old_sql, new_sql, id))
+                                              request_headers_id, regist_variable, regular, hope_result, old_sql,
+                                              new_sql, old_sql_regist_variable, new_sql_regist_variable,
+                                               old_sql_hope_result, new_sql_hope_result, id))
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:update testcases success, name: %s' % name)
         print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id, len(testcase_scene_id))
-        if testcase_scene_id not in(None, "None"):
-            print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id is True,len(testcase_scene_id))
+        if testcase_scene_id not in (None, "None"):
+            print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id is True, len(testcase_scene_id))
             return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
@@ -237,8 +257,8 @@ class DeleteTestCase(MethodView):
         cdb().opeat_db(delete_test_case_sql, (id,))
         FrontLogs('删除测试用例 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete testcases success, id: %s' % id)
-        if testcase_scene_id not in(None, "None"):
-            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list',page=scene_page))
+        if testcase_scene_id not in (None, "None"):
+            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
 
@@ -307,7 +327,8 @@ testcase_blueprint.add_url_rule('/look_test_case/<id>/', view_func=TestCaseLook.
 testcase_blueprint.add_url_rule('/run_test_case/', view_func=TestCaseRun.as_view('run_test_case'))
 testcase_blueprint.add_url_rule('/copy_test_case/', view_func=TestCaseCopy.as_view('copy_test_case'))
 
-
 testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))
-testcase_blueprint.add_url_rule('/testcaseupdatevalidate/', view_func=TestCaseUpdateValidata.as_view('testcase_update_validate'))
-testcase_blueprint.add_url_rule('/test_case_hope_result_validate/', view_func=TestCaseHopeResultValidata.as_view('test_case_hope_result_validate'))
+testcase_blueprint.add_url_rule('/testcaseupdatevalidate/',
+                                view_func=TestCaseUpdateValidata.as_view('testcase_update_validate'))
+testcase_blueprint.add_url_rule('/test_case_hope_result_validate/',
+                                view_func=TestCaseHopeResultValidata.as_view('test_case_hope_result_validate'))
