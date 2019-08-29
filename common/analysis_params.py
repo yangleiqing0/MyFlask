@@ -50,8 +50,5 @@ class AnalysisParams:
         return header
 
 
-
-
-
 if __name__ == '__main__':
     AnalysisParams().analysis_params('{btest{A}{B}{C}hhh')

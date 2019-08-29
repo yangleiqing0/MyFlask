@@ -12,7 +12,7 @@ def to_execute_testcase(testcase):
     testcase_request_header_value = AnalysisParams().analysis_params(
         testcase_request_header.value, is_change='headers')
     print('请求的url:%s 请求的headers:%s' % (testcase_url, testcase_request_header_value))
-    testcase_result = to_regist_variables(testcase_name, testcase.method, testcase_url, testcase_data,
+    testcase_result, regist_variable_value = to_regist_variables(testcase_name, testcase.method, testcase_url, testcase_data,
                                           json.loads(testcase_request_header_value),
                                           testcase.regist_variable, testcase.regular)
-    return testcase_result
+    return testcase_result, regist_variable_value

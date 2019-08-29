@@ -112,7 +112,7 @@ def post_testcase(test_case_id, testcase_time_id):
     testcase = TestCases.query.get(test_case_id)
     url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
     method = testcase.method
-    response_body = to_execute_testcase(testcase)
+    response_body, regist_variable_value = to_execute_testcase(testcase)
     testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_database_result()
     # 调用比较的方法判断响应报文是否满足期望
 

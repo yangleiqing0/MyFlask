@@ -90,7 +90,7 @@ class TestCaseSceneRun(MethodView):
         testcases = testcase_scene.testcases
         testcase_results = []
         for testcase in testcases:
-            testcase_result = to_execute_testcase(testcase)
+            testcase_result, regist_variable_value = to_execute_testcase(testcase)
             testcase_results.extend(['【%s】' % testcase.name, testcase_result])
         testcase_results_html = '<br>'.join(testcase_results)
         print('TestCaseSceneRun: ', json.dumps({'testcase_results': testcase_results_html}))
