@@ -1,3 +1,4 @@
+# encoding=utf-8
 import json
 import datetime
 from common.tail_font_log import FrontLogs
@@ -46,8 +47,8 @@ class TestCaseRun(MethodView):
         testcase = TestCases.query.get(testcase_id)
         print('TestCaseRunForm: ', request.form)
         if testcase_update_run:
-            testcase.name, testcase.url, testcase.data \
-                = request_get_values('name', 'url', 'data')
+            testcase.name, testcase.url, testcase.data, testcase.method\
+                = request_get_values('name', 'url', 'data', 'method')
         if testcase_add_run:
             testcase = NullObject()
             testcase.name, testcase.url, testcase.data, testcase.method, request_headers_id, \
@@ -58,7 +59,7 @@ class TestCaseRun(MethodView):
         testcase_result = to_execute_testcase(testcase)
         testcase_results.extend(['【%s】' % testcase.name, testcase_result])
         testcase_results_html = '<br>'.join(testcase_results)
-        print('TestCaseRun testcase_results_html', testcase_results_html)
+        # print('TestCaseRun testcase_results_html', testcase_results_html.encode('utf-8').decode('gbk'))
         FrontLogs('执行测试用例 name: %s ' % testcase.name).add_to_front_log()
         return json.dumps({'testcase_result': testcase_results_html})
 
@@ -121,14 +122,15 @@ class TestCaseAdd(MethodView):
     def post(self):
         user_id = session.get('user_id')
         print('要添加的测试用例：', request.form)
-        page, scene_page, name, url, method, regist_variable, regular, request_headers_id = request_get_values(
-            'page', 'scene_page', 'name', 'url', 'method', 'regist_variable', 'regular', 'request_headers')
+        page, scene_page, name, url, method, regist_variable, regular, request_headers_id, old_sql, new_sql = \
+            request_get_values('page', 'scene_page', 'name', 'url', 'method',
+                               'regist_variable', 'regular', 'request_headers', 'old_sql', 'new_sql')
         group_id = request.form.get('case_group', None)
         data = request.form.get('data', '').replace('/n', '').replace(' ', '')
 
         request_headers_query_sql = 'select value from request_headers where id=?'
         request_headers = cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0]
-        print('TestCaseAdd request_headers before: ', request_headers)
+        print('TestCaseAdd request_headers before: ', request_headers, method)
         request_headers = AnalysisParams().analysis_params(request_headers, is_change="headers")
         print('TestCaseAdd request_headers: ', request_headers)
         testcase_scene_id = request.args.get('testcase_scene_id', None)
@@ -148,7 +150,7 @@ class TestCaseAdd(MethodView):
         testcase = TestCases(
             name, url, data, regist_variable, regular, method, group_id,
             request_headers_id, hope_result=hope_result,
-            testcase_scene_id=testcase_scene_id, user_id=user_id)
+            testcase_scene_id=testcase_scene_id, user_id=user_id, old_sql=old_sql, new_sql=new_sql)
         db.session.add(testcase)
         db.session.commit()
         FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
@@ -164,6 +166,11 @@ class UpdateTestCase(MethodView):
         user_id = session.get('user_id')
         user = User.query.get(user_id)
         page = request_get_values('page')
+        mysqls = Mysql.query.filter(Mysql.user_id == user_id).all()
+        for mysql in mysqls:
+            mysql.ip, mysql.port, mysql.name, mysql.user, mysql.password = AnalysisParams().analysis_more_params(
+                mysql.ip, mysql.port, mysql.name, mysql.user, mysql.password
+            )
         testcase_scene_id = request.args.get('testcase_scene_id', None)
         scene_page = request.args.get('scene_page')
         print('UpdateTestCase get:testcase_scene_id ', testcase_scene_id)
@@ -181,19 +188,19 @@ class UpdateTestCase(MethodView):
         return render_template('test_case/test_case_search.html', item=testcase, case_groups=case_groups,
                                request_headers_id_before=request_headers_id_before, case_group_id_before=case_group_id_before,
                                request_headerses=request_headerses, testcase_scene_id=testcase_scene_id,
-                               scene_page=scene_page, page=page)
+                               scene_page=scene_page, page=page, mysqls=mysqls)
 
     def post(self, id=-1):
-        page, scene_page, name, url, method, data, group_id, request_headers_id, regist_variable, regular, hope_result, testcase_scene_id = \
+        page, scene_page, name, url, method, data, group_id, request_headers_id, regist_variable, regular, hope_result, \
+        testcase_scene_id, old_sql, new_sql = \
             request_get_values('page', 'scene_page', 'name', 'url', 'method', 'data', 'case_group', 'request_headers',
-                               'regist_variable', 'regular', 'hope_result', 'testcase_scene_id')
+                               'regist_variable', 'regular', 'hope_result', 'testcase_scene_id', 'old_sql', 'new_sql')
         print('UpdateTestCase post:testcase_scene_id ', testcase_scene_id, scene_page)
         id = request.args.get('id', id)
-
         update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=?,group_id=?,' \
-                               'request_headers_id=?,regist_variable=?,regular=?,hope_result=? where id=?'
+                               'request_headers_id=?,regist_variable=?,regular=?,hope_result=?,old_sql=?,new_sql=? where id=?'
         cdb().opeat_db(update_test_case_sql, (name, url, data, method, group_id,
-                                              request_headers_id, regist_variable, regular, hope_result,id))
+                                              request_headers_id, regist_variable, regular, hope_result, old_sql, new_sql, id))
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:update testcases success, name: %s' % name)
         print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id, len(testcase_scene_id))

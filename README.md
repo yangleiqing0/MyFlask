@@ -1,15 +1,15 @@
 微信：15155492421
 
 安装过程：
-1：下载https://github.com/yangleiqing0/MyFlask.git  
+1：下载https://github.com/yangleiqing0/MyFlask.git,首次刷新如果是空白页面重新刷新下即可 
 
 2：需要下载的安装包:flask_apscheduler requests xlsxwriter flask_wtf wtforms flask_sqlalchemy
 flask flask_migrate flask_script flask_mail flask_apscheduler requests flask_sqlalchemy selenium  
 
-3：如果是windows的pycharm，需要将运行时的环境变量设置为Flask环境运行, 命令行的话在app.py目录打开cmd执行python -m flask run -h 0.0.0.0 -p 9000，
+3：如果是windows的pycharm，需要将运行时的环境变量设置为Flask环境运行, 命令行的话在app.py目录打开cmd执行python -m flask run -h 0.0.0.0 -p 5000，
 如果是linux上部署，需要linux下：commons/tail_font_log.py的 with open(FRONT_LOGS_FILE, 'a', encoding='gbk') as logs:
 行里改为encoding='utf-8',将db下的test.sqlite 执行命令mv test.sqlite db\\\test.sqlite再mv ..(linux和windows路径问题导致),
-再在app.py层级执行python -m flask run -h 0.0.0.0 -p 9000
+再在app.py层级执行python -m flask run -h 0.0.0.0 -p 5000
 
 4：由于邮件发送的html格式在邮箱解析可能不兼容，需要图片发送的，需要将phantomjs文件放在python路径下，如:C:\Users\NING MEI\AppData\Local\Programs\Python\Python37 
 再把文件目录bin下的 phantomjs.exe  复制到python的  Scripts路径下，即安装完毕，由于文件不小，可以自行网上下载，或者联系微信获取,linux相同

@@ -22,9 +22,12 @@ class TestCases(db.Model):
     is_model = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    old_sql = db.Column(db.String(200))
+    new_sql = db.Column(db.String(200))
 
     def __init__(self, name, url, data, regist_variable, regular, method, group_id,
-                 request_headers_id,  testcase_scene_id=None, hope_result='', is_model=0, user_id=None):
+                 request_headers_id,  testcase_scene_id=None, hope_result='', is_model=0, user_id=None,
+                 old_sql='', new_sql=''):
         self.regist_variable = regist_variable
         self.regular = regular
         self.timestamp = datetime.now()
@@ -38,6 +41,8 @@ class TestCases(db.Model):
         self.testcase_scene_id = testcase_scene_id
         self.is_model = is_model
         self.user_id = user_id
+        self.old_sql = old_sql
+        self.new_sql = new_sql
 
     def __repr__(self):
         return "<TestCase:%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s >" % (

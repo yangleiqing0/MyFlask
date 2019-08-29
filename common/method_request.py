@@ -1,3 +1,4 @@
+# encoding=utf-8
 import requests
 import time
 
@@ -6,7 +7,7 @@ class MethodRequest:
 
     def __init__(self):
         pass
-
+    
     def request_value(self, method, url, data, headers):
         headers.update({'Connection': 'close'})
         print('请求方法: ', method, url, data, headers, type(url))

@@ -1,3 +1,4 @@
+# encoding=utf-8
 import json
 from common.analysis_params import AnalysisParams
 from common.regist_variables import to_regist_variables

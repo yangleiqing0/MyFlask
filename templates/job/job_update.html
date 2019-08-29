@@ -56,17 +56,8 @@
 {% block js %}
     <script>
         $(document).ready(function () {
-            $('#male').click(function () {
-                if($('#male').attr('checked') === "checked"){
-                    $('#is_start').val(1);
-                    $('#is_start_status').text("关闭定时任务")
-                }else {
-                    $('#is_start').val(0);
-                    $('#is_start_status').text("开启定时任务")
-                }
-            });
+            job_id = {{ job.id }};
             var validate = function () {
-                    job_id = {{ job.id }}
                     $('#job_update_form').validate({
                         rules: {
                             name: {required: true, minlength: 2, maxlength: 50, remote:{
@@ -99,6 +90,20 @@
                         form.submit()
                     }
                     })
+            });
+            $('#male').click(function () {
+                if ($('#male').attr('checked') === "checked") {
+                    $('#is_start').val(1);
+                    $('#is_start_status').text("关闭定时任务")
+                } else {
+                    $('#is_start').val(0);
+                    $('#is_start_status').text("开启定时任务")
+                }
+                let is_start = $('#is_start').val();
+                $.ajax({
+                    url: "{{ url_for('job_blueprint.job_scheduler_update') }}?job_id=" + job_id + "&is_start=" + is_start,
+                    type: "GET"
+                });
             })
 });
 

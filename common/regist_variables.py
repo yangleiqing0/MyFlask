@@ -1,3 +1,4 @@
+# coding=utf-8
 import re
 from modles.variables import Variables
 from common.method_request import MethodRequest
@@ -9,7 +10,7 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
     response_body = MethodRequest().request_value(method, url, data, headers)
     if 'html' in response_body:
         response_body = '<xmp> %s </xmp>' % response_body
-    print('response_body:', response_body)
+    # print('response_body:', response_body.encode('utf-8').decode('gbk'))
     if regist_variable and regular:
         # 判断是否有注册变量和正则方法，有的话进行获取
         regist_variable_value = re.compile(regular).findall(response_body)

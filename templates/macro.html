@@ -26,7 +26,7 @@ textarea_class_name="form-control",textarea_style="resize: vertical;min-height: 
 
 
 {% macro submit(submit_value="提交",reset_value="重置",test_type="hidden",
-div_class="control-label col-md-6",div_style="",submit_id="",test_id="",reset_id="",
+div_class="control-label col-md-6",div_style="margin-left:75px",submit_id="",test_id="",reset_id="",
 submit_type="submit",reset_type="reset",test_value="测试",test_style="visibility: hidden;") %}
 <div class="{{ div_class }}" style="{{ div_style }}">
         <input type="{{ submit_type }}" class="btn btn-primary" style="" value="{{ submit_value }}" id="{{ submit_id }}">
@@ -35,8 +35,9 @@ submit_type="submit",reset_type="reset",test_value="测试",test_style="visibili
 </div>
 {% endmacro %}
 
-{% macro submit_test(submit_name="提交", submit_id="",test_type="submit") %}
-<div class="control-label col-md-6" >
+{% macro submit_test(submit_name="提交", submit_id="",test_type="submit",
+div_style="margin-left:108px") %}
+<div class="control-label col-md-6" style="{{ div_style }}" >
     <input type="submit" class="btn btn-primary" value="{{ submit_name }}" id="{{ submit_id }}">
     <input type="{{test_type}}" class="btn btn-primary" name="test" value="测试" id="update_testcase_test">
     <input type="reset" class="btn btn-default" value="重置">
