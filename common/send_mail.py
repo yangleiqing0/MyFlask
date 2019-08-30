@@ -3,7 +3,6 @@ from flask import render_template
 import time
 import os
 from common.selenium_get_page import ReportImage
-from common.temporary_variable import variables
 from modles.testcase_start_times import TestCaseStartTimes
 
 
@@ -12,7 +11,6 @@ def async_send_mail(app, func, func_name='send_image', *args):
     with app.app_context():
         if func_name == 'send_image':
             func(message=args[0])  # Mail的成员方法send（）
-            os.remove(variables['shot_name'])
         else:
             func()
 
@@ -23,7 +21,6 @@ def send_mail(subject, to_user_list, user_id=None,
     app, mail = get_app_mail()
     msg = Message(subject, recipients=to_user_list)
     print('send_mail shot_name', shot_name)
-    variables.clear()
     if not shot_name:
         shot_name = ReportImage(user_id, testcase_time_id=testcase_time_id).get_web()
     while 1:

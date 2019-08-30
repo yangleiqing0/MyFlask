@@ -120,12 +120,7 @@ $(document).ready(function() {
                     regist_variable:{maxlength:30, remote:'/variable_validate/'},
                     method:{required:true, maxlength:10},
                     hope_result:{required:true,remote:'/test_case_hope_result_validate/'},
-                    old_sql_regist_variable:{remote: {
-                        url:'/old_sql_regist_variable/',
-                        data:{
-                            testcase_id: testcase_id
-                        }
-                        }},
+                    old_sql_regist_variable:{remote:'/old_sql_regist_variable/'},
                     new_sql_regist_variable:{remote: '/new_sql_regist_variable/'},
                 },
                 messages: {
