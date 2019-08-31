@@ -14,7 +14,7 @@ from common.analysis_params import AnalysisParams
 from common.execute_testcase import to_execute_testcase
 from common.assert_method import AssertMethod
 from common.most_common_method import NullObject
-
+from views.mysql import mysqlrun
 
 test_case_request_blueprint = Blueprint('test_case_request_blueprint', __name__)
 
@@ -113,12 +113,26 @@ def post_testcase(test_case_id, testcase_time_id):
     url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
     method = testcase.method
     response_body, regist_variable_value = to_execute_testcase(testcase)
-    testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_database_result()
+    testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_method()
+    if testcase.old_sql and testcase.old_sql_id and testcase.old_sql_regist_variable:
+        old_sql_value = mysqlrun(mysql_id=testcase.old_sql_id, sql=testcase.old_sql, regist_variable=testcase.old_sql_regist_variable, is_request=False)
+        old_sql_value_result = AssertMethod(actual_result=old_sql_value, hope_result=testcase.old_sql_hope_result).assert_method()
+    else:
+        old_sql_value = old_sql_value_result = ''
+    if testcase.new_sql and testcase.new_sql_id and testcase.new_sql_regist_variable:
+        new_sql_value = mysqlrun(mysql_id=testcase.new_sql_id, sql=testcase.new_sql,
+                                 regist_variable=testcase.new_sql_regist_variable, is_request=False)
+        new_sql_value_result = AssertMethod(actual_result=new_sql_value, hope_result=testcase.new_sql_hope_result).assert_method()
+
+    else:
+        new_sql_value = new_sql_value_result = ''
     # 调用比较的方法判断响应报文是否满足期望
 
     print('testcase_test_result:', testcase_test_result)
     testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
-                                     testcase_time_id, response_body, testcase_test_result)
+                                     testcase_time_id, response_body, testcase_test_result, old_sql_value=old_sql_value,
+                                     new_sql_value=new_sql_value, old_sql_value_result=old_sql_value_result,
+                                     new_sql_value_result=new_sql_value_result)
     # 测试结果实例化
     db.session.add(testcase_result)
     db.session.commit()

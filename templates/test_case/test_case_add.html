@@ -213,6 +213,7 @@ $(document).ready(function() {
         });
     $('button[id*="run_mysql"]').click(function () {
         let name = $(this).attr('id').replace('run_mysql_','');
+        let regist_variable = $('#' + name + '_sql_regist_variable').val();
         let mysql_id = $('#' + name + '_mysql').val();
         let sql = $('#' + name + '_sql').val();
         $.ajax({
@@ -220,7 +221,8 @@ $(document).ready(function() {
             type:"POST",
             data:{
                 "mysql_id": mysql_id,
-                "sql": sql
+                "sql": sql,
+                "regist_variable":regist_variable
             },
             success: function (response) {
                 let result = JSON.parse(response);

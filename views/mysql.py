@@ -8,7 +8,7 @@ from modles.database import Mysql
 from common.analysis_params import AnalysisParams
 from common.connect_sql.connect_mysql import ConnMysql
 from app import db
-
+from modles.variables import Variables
 
 mysql_blueprint = Blueprint('mysql_blueprint', __name__)
 
@@ -74,20 +74,38 @@ class MysqlList(MethodView):
         return render_template('database/mysql_list.html', pagination=pagination, mysqls=mysqls)
 
 
+def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True):
+    print('MysqlRun:', sql, regist_variable)
+    mysql = Mysql.query.get(mysql_id)
+    host, port, db_name, user, password = AnalysisParams().analysis_more_params(
+        mysql.ip, mysql.port, mysql.db_name, mysql.user, mysql.password)
+    try:
+        result = ConnMysql(host, int(port), user, password, db_name, sql).select_mysql()
+        if regist_variable:
+            if Variables.query.filter(Variables.name == regist_variable).count() > 0:
+                Variables.query.filter(Variables.name == regist_variable).first().value = str(result)
+            else:
+                variable = Variables(regist_variable, str(result), is_private=1, user_id=session.get('user_id'))
+                db.session.add(variable)
+            db.session.commit()
+            if is_request:
+                result = '【查询结果】<br>' + str(result) + '<br>【注册变量名】 【' + regist_variable + '】<br>' + str(result)
+            else:
+                return result
+        else:
+            result = '【查询结果】<br>' + str(result) + '<br>【未注册变量】'
+        return json.dumps(result)
+    except Exception as e:
+        print(e)
+        return json.dumps(str(e))
+
+
 class MysqlRun(MethodView):
 
     def post(self):
-        mysql_id, sql = request_get_values('mysql_id', 'sql')
-        print('MysqlRun:', sql)
-        mysql = Mysql.query.get(mysql_id)
-        host, port, db_name, user, password = AnalysisParams().analysis_more_params(
-            mysql.ip, mysql.port, mysql.db_name, mysql.user, mysql.password)
-        try:
-            old_result = ConnMysql(host, int(port), user, password, db_name).select_mysql(sql)
-            return json.dumps(str(old_result))
-        except Exception as e:
-            print(e)
-            return json.dumps(str(e))
+        mysql_id, sql, regist_variable = request_get_values('mysql_id', 'sql', 'regist_variable')
+        result = mysqlrun(mysql_id, sql, regist_variable)
+        return result
 
 
 class MysqlDelete(MethodView):

@@ -46,13 +46,16 @@
         <tr>
             <th>ID</th>
             <th>用例名称</th>
-            <th style="width: 400px">请求接口</th>
+            <th>请求接口</th>
             <th>请求方式</th>
             <th>请求报文</th>
             <th>预期结果</th>
             <th>响应报文</th>
+            <th>响应验证</th>
             <th>数据库原值</th>
+            <th>原值验证</th>
             <th>数据库现值</th>
+            <th>现值验证</th>
             <th>测试结果</th>
         </tr>
         {% for item in items %}
@@ -64,24 +67,27 @@
                 <td title="{{ item.request_body }}">{{ item.request_body }}</td>
                 <td title="{{ item.hope }}">{{ item.hope }}</td>
                 <td title="{{ item.response_body }}" style=" text-align: left;max-width: 100px;width:100%;word-break:break-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.response_body }}</td>
+                <td title="{{ item.result }}">{{ item.result }}</td>
                 <td title="{{ item.old_database_value }}">{{ item.old_database_value }}</td>
+                <td title="{{ item.old_sql_value_result }}">{{ item.old_sql_value_result }}</td>
                 <td title="{{ item.new_database_value }}">{{ item.new_database_value }}</td>
-                {% if  item.result == "测试成功"%}
-                    <td title="{{ item.result }}"><span class="badge  badge-pill badge-success">{{ item.result }}</span></td>
-                    {% else %}
-                    <td title="{{ item.result }}"><span class="badge  badge-pill badge-danger ">{{ item.result }}</span></td>
+                <td title="{{ item.new_sql_value_result }}">{{ item.new_sql_value_result }}</td>
+                {% if  item.result == "失败" or item.old_sql_value_result == "测试失败" or item.new_sql_value_result == "测试失败"%}
+                    <td title="{{ item.result }}"><span class="badge  badge-pill badge-danger ">测试失败</span></td>
+                {% else %}
+                    <td title="{{ item.result }}"><span class="badge  badge-pill badge-success">测试成功</span></td>
                 {% endif %}
             </tr>
         {% endfor %}
         {% for testcase_scene in testcase_scene_list %}
             <tbody href="#tasecase_scene_{{ testcase_scene.id }}" data-toggle="collapse">
                 <tr>
-                    <td colspan="10" style="text-align: left ">
+                    <td colspan="13" style="text-align: left ">
                             <div class="col-md-1" style="
                             margin-left:-15px;display:inline;"><span class="badge" style="background-color: #0c0c0c">{{ loop.index }}</span></div>
                             <div  class="col-md-3" style="text-align: left;margin-left:25px;display:inline" >
                                 <span class="badge badge-pill badge-default" style="background-color: #0c0c0c">测试场景：【{{ testcase_scene.name }}】</span></div>
-                            <div class="" style="float: right;margin-right:18px;display:inline">
+                            <div class="" style="float: right;margin-right:20px;display:inline">
                                 {% if  testcase_scene.result == "测试成功" %}
                                     <span class="badge badge-success">{{testcase_scene.result}}</span>
                                     {% else %}
@@ -93,19 +99,22 @@
             <tbody id="tasecase_scene_{{ testcase_scene.id }}" class="collapse">
             {% for testcase in testcase_scene.test_cases %}
                <tr>
-                    <td><a href="#"><span class="badge">{{ loop.index }}</span></a></td>          <!--使用循环的数字作为id -->
+                    <td></td>          <!--使用循环的数字作为id -->
                     <td>{{ testcase.t_name }}</td>
                     <td>{{ testcase.url }}</td>
                     <td>{{ testcase.method }}</td>
                     <td>{{ testcase.request_body }}</td>
                     <td>{{ testcase.hope }}</td>
                     <td>{{ testcase.response_body }}</td>
+                    <td>{{ testcase.result }}</td>
                     <td>{{ testcase.old_database_value }}</td>
+                    <td>{{ testcase.old_sql_value_result }}</td>
                     <td>{{ testcase.new_database_value }}</td>
-                    {% if  testcase.result == "测试成功"%}
-                        <td><span class="badge badge-success">{{ testcase.result }}</span></td>
+                    <td>{{ testcase.new_sql_value_result }}</td>
+                    {% if  testcase.result == "测试失败" or testcase.old_sql_value_result == "测试失败" or testcase.new_sql_value_result == "测试失败"%}
+                        <td><span class="badge  badge-pill badge-warning" style="background-color: rgba(255,0,0,0.18)">测试失败</span></td>
                         {% else %}
-                        <td><span class="badge badge-danger">{{ testcase.result }}</span></td>
+                        <td><span class="badge  badge-pill badge-success" style="background-color: rgba(52,151,43,0.35)">测试成功</span></td>
                     {% endif %}
                 </tr>
             {% endfor %}
@@ -127,7 +136,6 @@
     .table-center>tbody>tr>td{
         text-align: left;
         max-width: 100px;
-        width:100%;
         word-break:break-all;
         white-space:nowrap;
         overflow:hidden;

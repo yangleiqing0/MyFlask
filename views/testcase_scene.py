@@ -126,7 +126,11 @@ class TestCaseSceneTestCaseCopy(MethodView):
         name = testcase.name + timestr
         db.session.add(TestCases(name, testcase.url, testcase.data, testcase.regist_variable,
                        testcase.regular, testcase.method, testcase.group_id, testcase.request_headers_id,
-                       testcase_scene_id, testcase.hope_result, user_id=testcase.user_id))
+                       testcase_scene_id, testcase.hope_result, user_id=testcase.user_id, old_sql=testcase.old_sql,
+                                 new_sql=testcase.old_sql, old_sql_regist_variable=testcase.old_sql_regist_variable,
+                                 new_sql_regist_variable=testcase.new_sql_regist_variable, old_sql_hope_result=testcase.old_sql_hope_result,
+                                 new_sql_hope_result=testcase.new_sql_hope_result, old_sql_id=testcase.old_sql_id,
+                                 new_sql_id=testcase.new_sql_id))
         db.session.commit()
         FrontLogs('复制场景测试用例 name： %s 成功' % testcase.name).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))

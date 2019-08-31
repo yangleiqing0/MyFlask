@@ -28,11 +28,13 @@ class TestCases(db.Model):
     new_sql_regist_variable = db.Column(db.String(200))
     old_sql_hope_result = db.Column(db.String(200))
     new_sql_hope_result = db.Column(db.String(200))
+    old_sql_id = db.Column(db.Integer)
+    new_sql_id = db.Column(db.Integer)
 
     def __init__(self, name, url, data, regist_variable, regular, method, group_id,
                  request_headers_id,  testcase_scene_id=None, hope_result='', is_model=0, user_id=None,
                  old_sql='', new_sql='', old_sql_regist_variable='', new_sql_regist_variable='',
-                 old_sql_hope_result='', new_sql_hope_result=''):
+                 old_sql_hope_result='', new_sql_hope_result='', old_sql_id=None, new_sql_id=None):
         self.regist_variable = regist_variable
         self.regular = regular
         self.timestamp = datetime.now()
@@ -52,6 +54,8 @@ class TestCases(db.Model):
         self.new_sql_regist_variable = new_sql_regist_variable
         self.old_sql_hope_result = old_sql_hope_result
         self.new_sql_hope_result = new_sql_hope_result
+        self.old_sql_id = old_sql_id
+        self.new_sql_id = new_sql_id
 
     def __repr__(self):
         return "<TestCase:%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s, %s >" % (

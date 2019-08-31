@@ -22,11 +22,12 @@
     <script src="https://cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.js"></script>
     <link href="{{url_for('static',filename='css/badge/badge.css')}}?v=1.0.6"  rel="stylesheet">
 </head>
-<body style="background-color:ghostwhite" >
-<div class="tpl-page-container tpl-page-header-fixed" >
-    <div class="row">
+<body style="background-color:ghostwhite;"  >
+<div class="tpl-page-container tpl-page-header-fixed" style="padding-top: 0">
+    <div style="height: 20px;width: 100%;background-color:ghostwhite;"></div>
+    <div class="row" >
             <nav class="navbar navbar-default" role="navigation"
-                 style="padding: 10px 0 10px 0;margin-left: 15px;margin-right: 15px">
+                 style="padding: 10px 0 10px 0;margin:0 15px 0 15px">
                 <div class="navbar-header"  >
                     <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-ex1-collapse">
                         <span class="sr-only">Toggle navigation</span>
@@ -58,8 +59,8 @@
                 </div>
             </nav>
         </div>
-
-    <div class="panel tpl-left-nav tpl-left-nav-hover panel-default panel-heading " style="width: 10%;background-color: rgba(248,248,248,0.42);">
+    <div style="height: 20px;width: 100%;"></div>
+    <div class="panel tpl-left-nav tpl-left-nav-hover panel-default panel-heading " style="width: 10%;background-color: rgba(248,248,248,0.42);position:fixed">
         {% if session.get('username') %}
         <div class="tpl-left-nav-list">
             <ul class="tpl-left-nav-menu ">
@@ -143,11 +144,14 @@
             请登录管理员账号注册用户
         {% endif %}
     </div>
-
+    <div class="col-md-2 col-md-offset-10" id="request_body_show" style="background-color:ghostwhite;
+    width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 700px;position:fixed">
+    </div>
     {%block hello%}
     {%endblock%}
 </div>
-<div  class="col-md-8" style="margin-left: 5%" >
+
+<div  class="col-md-8 col-md-offset-2" style="margin-top: 112px">
     <div class="container" >
     <div class="row">
         <div class="col-md-12">
@@ -173,9 +177,7 @@
     </div>
 </div>
 </div>
-<div class="col-md-2" id="request_body_show" style="background-color:ghostwhite;
-width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 700px;">
-</div>
+
 {% block js %}
 {%endblock%}
 </body>
@@ -186,6 +188,11 @@ width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 7
     html,body{
         width: 100%;
         float: left;
+    }
+    .tpl-page-header-fixed{
+        position: fixed;
+        width: 100%;
+        z-index: 888;
     }
     .fa{
         zoom:1.3
@@ -285,12 +292,12 @@ $(document).ready(function() {
             $.AMUI.fullscreen.toggle();
         });
     {#  动态在td 标签上悬浮时设置title属性为当前标签的test内容 #}
-    $("td",$(this)).hover(function () {
+    $("td,th",$(this)).hover(function () {
        $(this).attr('title',$(this).text())
     }, function () {
         $(this).removeAttr('title')
     });
-     $("td").on("click",function() {
+     $("td,th").on("click",function() {
             $('#request_body_show').css('overflow','scroll').text($(this).text())
     });
     $(".dots",$(this)).hover(function(){

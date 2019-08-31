@@ -1,6 +1,7 @@
 import os
 import re
 from flask.views import MethodView
+from sqlalchemy import or_
 from flask import render_template, Blueprint, request, redirect, url_for, send_from_directory, session, jsonify
 from modles.variables import Variables
 from modles.testcase_start_times import TestCaseStartTimes
@@ -40,10 +41,10 @@ class EnvMessage:
         fail_count = 0
         for testcase_scene in self.testcase_scene_list:
             for testcase in testcase_scene.testcases:
-                print('testcase.testcase_result: ', testcase)
                 testcase_result = TestCaseResult.query.filter(
-                    TestCaseResult.testcase_id==testcase.id, TestCaseResult.testcase_start_time_id==testcase_time_id).first().testcase_test_result
-                if testcase_result == "测试失败":
+                    TestCaseResult.testcase_id==testcase.id, TestCaseResult.testcase_start_time_id==testcase_time_id).first()
+                print('testcase.testcase_result: ', testcase_result)
+                if testcase_result.testcase_test_result == "测试失败" or testcase_result.old_sql_value_result == "测试失败" or testcase_result.new_sql_value_result == "测试失败":
                     fail_count += 1
                     break
         return fail_count
@@ -52,7 +53,8 @@ class EnvMessage:
     def count_testcase_fail(testcase_time_id):
         count = TestCaseResult.query.join(TestCases, TestCaseResult.testcase_id == TestCases.id).filter(
             TestCaseResult.testcase_start_time_id == testcase_time_id, TestCases.testcase_scene_id.is_(None),
-            TestCaseResult.testcase_test_result == "测试失败").count()
+            or_(TestCaseResult.testcase_test_result == "测试失败", TestCaseResult.old_sql_value_result == "测试失败",
+                TestCaseResult.new_sql_value_result == "测试失败")).count()
         return count
 
 
@@ -65,11 +67,13 @@ class Test:
             analysis_more_params(testcase_result[0], testcase_result[1], testcase_result[3], testcase_result[5])
         print('self.t_name: ', self.t_name)
 
-        self.method, self.response_body, self.old_database_value, self.new_database_value, self.result \
-            = testcase_result[2], testcase_result[4], testcase_result[6], testcase_result[7], testcase_result[8]
+        self.method, self.response_body, self.old_database_value, self.new_database_value, self.result, \
+        self.old_sql_value_result, self.new_sql_value_result \
+            = testcase_result[2], testcase_result[4], testcase_result[6], testcase_result[7], testcase_result[8], \
+        testcase_result[9], testcase_result[10]
 
         try:
-            self.scene_id = testcase_result[9]
+            self.scene_id = testcase_result[11]
         except Exception:
             pass
 
@@ -86,7 +90,8 @@ class Testcaseresult:
                                          'test_case_result.response_body,test_case_result.' \
                                          'testcase_hope_result,test_case_result.' \
                                          'old_sql_value,test_case_result.new_sql_value,test_case_result.' \
-                                         'testcase_test_result from testcases,test_case_result where testcases.id=' \
+                                         'testcase_test_result,test_case_result.old_sql_value_result,test_case_result.new_sql_value_result' \
+                                         ' from testcases,test_case_result where testcases.id=' \
                                          'test_case_result.testcase_id and testcases.testcase_scene_id isnull and ' \
                                          'test_case_result.testcase_start_time_id=%s' \
                                          % testcase_time_id
@@ -98,7 +103,8 @@ class Testcaseresult:
                                          'test_case_result.testcase_method,test_case_result.testcase_data,' \
                                          'test_case_result.response_body,test_case_result.testcase_hope_result,' \
                                          'test_case_result.old_sql_value,test_case_result.new_sql_value,' \
-                                         'test_case_result.testcase_test_result,testcases.testcase_scene_id' \
+                                         'test_case_result.testcase_test_result,test_case_result.old_sql_value_result,' \
+                                         'test_case_result.new_sql_value_result,testcases.testcase_scene_id' \
                                          ' from testcases, test_case_result ' \
                                          'where testcases.id=test_case_result.testcase_id and ' \
                                          'testcases.testcase_scene_id not null and ' \
@@ -113,51 +119,7 @@ class TestCaseReport(MethodView):
 
     def get(self, email=False, testcase_time_id=None):
         testcase_time_id = request.args.get('testcase_time_id', testcase_time_id)
-        testcase_results = Testcaseresult(testcase_time_id).testcase_results
-        testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
-        print('testcase_results: ', testcase_results, len(testcase_results))
-        items = []
-        for testcase_result in testcase_results:
-            items.append(Test(testcase_result))
-        print('items: ', items)
-
-        testcase_scene_results = Testcaseresult(testcase_time_id, result="scene_testcases").testcase_results
-        testcase_scene_ids = []
-        print('testcase_scene_results: ', testcase_scene_results, len(testcase_scene_results))
-        testcase_scene_testcases_after_list = []
-        for testcase_scene_result in testcase_scene_results:
-            testcase_scene_ids.append(testcase_scene_result[9])
-            testcase_scene_testcases_after_list.append(Test(testcase_scene_result))
-        testcase_scene_ids = set(testcase_scene_ids)
-        testcase_scene_list = []
-        print('testcase_scene_testcases_after_list:', testcase_scene_testcases_after_list)
-        print('testcase_scene_list: ', testcase_scene_ids)
-        for testcase_scene_id in testcase_scene_ids:
-            print('testcase_scene_id: ', testcase_scene_id)
-            testcase_scene = TestCaseScene.query.get(testcase_scene_id)
-            fail_count = 0
-            for testcase in testcase_scene.testcases:
-                print('testcase_scene_ids testcase: ', testcase)
-                testcase_result = TestCaseResult.query.filter(TestCaseResult.testcase_id==testcase.id,
-                                                              TestCaseResult.testcase_start_time_id==testcase_time_id).first().testcase_test_result
-                print('testcase_scene_ids testcase_result: ', testcase_result, testcase)
-                if testcase_result == "测试失败":
-                    fail_count += 1
-            if fail_count == 0:
-                testcase_scene.result = "测试成功"
-            else:
-                testcase_scene.result = "测试失败"
-            testcase_scene_list.append(testcase_scene)
-            testcase_scene_testcases = []
-            for testcase_scene_testcase in testcase_scene_testcases_after_list:
-                if testcase_scene_testcase.scene_id == testcase_scene.id:
-                    testcase_scene_testcases.append(testcase_scene_testcase)
-                print('testcase_scene_testcases:', testcase_scene_testcases)
-                testcase_scene.test_cases = testcase_scene_testcases
-            for a in testcase_scene_list:
-                print('测试结果： ', a.result, a)
-        print("TestCaseReport testcase_scene_list:", testcase_scene_list,)
-        allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
+        items, allocation, testcase_scene_list = get_env_message(testcase_time_id)
         if email:
             return items, allocation, testcase_scene_list
         FrontLogs('进入测试用例执行页面 执行id: %s' % testcase_time_id).add_to_front_log()
@@ -168,26 +130,8 @@ class TestCaseReport(MethodView):
         testcase_time_id = request.args.get('testcase_time_id')
           # 生成测试报告
         get_report(testcase_time_id)
-
-        testcase_results = Testcaseresult(testcase_time_id).testcase_results
-        testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
-        print('testcase_results: ', testcase_results, len(testcase_results))
-        items = []
-        for testcase_result in testcase_results:
-            items.append(Test(testcase_result))
-        print('items: ', items)
-
-        testcase_scene_results = Testcaseresult(testcase_time_id, result="scene_testcases").testcase_results
-        testcase_scene_ids = []
-        print('testcase_scene_results: ', testcase_scene_results, len(testcase_scene_results))
-        testcase_scene_testcases_after_list = []
-        for testcase_scene_result in testcase_scene_results:
-            testcase_scene_ids.append(testcase_scene_result[9])
-            testcase_scene_testcases_after_list.append(Test(testcase_scene_result))
-        testcase_scene_ids = set(testcase_scene_ids)
-        testcase_scene_list = []
-        print('testcase_scene_testcases_after_list:', testcase_scene_testcases_after_list)
-        print('testcase_scene_list: ', testcase_scene_ids)
+        testcase_scene_ids, testcase_scene_list, testcase_scene_testcases_after_list, testcase_results, testcase_time, items = get_testcase_scene_message(
+            testcase_time_id)
         for testcase_scene_id in testcase_scene_ids:
             print('testcase_scene_id: ', testcase_scene_id)
             testcase_scene = TestCaseScene.query.get(testcase_scene_id)
@@ -207,6 +151,59 @@ class TestCaseReport(MethodView):
                                testcase_scene_list=testcase_scene_list)
 
 
+def get_testcase_scene_message(testcase_time_id):
+    testcase_results = Testcaseresult(testcase_time_id).testcase_results
+    testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
+    print('testcase_results: ', testcase_results, len(testcase_results))
+    items = []
+    for testcase_result in testcase_results:
+        items.append(Test(testcase_result))
+    print('items: ', items)
+    testcase_scene_results = Testcaseresult(testcase_time_id, result="scene_testcases").testcase_results
+    testcase_scene_ids = []
+    print('testcase_scene_results: ', testcase_scene_results, len(testcase_scene_results))
+    testcase_scene_testcases_after_list = []
+    for testcase_scene_result in testcase_scene_results:
+        testcase_scene_ids.append(testcase_scene_result[11])
+        testcase_scene_testcases_after_list.append(Test(testcase_scene_result))
+    testcase_scene_ids = set(testcase_scene_ids)
+    testcase_scene_list = []
+    print('testcase_scene_testcases_after_list:', testcase_scene_testcases_after_list)
+    print('testcase_scene_list: ', testcase_scene_ids)
+    return testcase_scene_ids, testcase_scene_list, testcase_scene_testcases_after_list, testcase_results, testcase_time, items
+
+
+def get_env_message(testcase_time_id):
+    testcase_scene_ids, testcase_scene_list, testcase_scene_testcases_after_list, testcase_results, testcase_time, items = get_testcase_scene_message(testcase_time_id)
+    for testcase_scene_id in testcase_scene_ids:
+        print('testcase_scene_id: ', testcase_scene_id)
+        testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+        fail_count = 0
+        for testcase in testcase_scene.testcases:
+            print('testcase_scene_ids testcase: ', testcase)
+            testcase_result = TestCaseResult.query.filter(TestCaseResult.testcase_id==testcase.id,
+                                                          TestCaseResult.testcase_start_time_id==testcase_time_id).first()
+            print('testcase_scene_ids testcase_result: ', testcase_result, testcase)
+            if testcase_result.testcase_test_result == "测试失败" or testcase_result.old_sql_value_result == "测试失败" or testcase_result.new_sql_value_result == "测试失败":
+                fail_count += 1
+        if fail_count == 0:
+            testcase_scene.result = "测试成功"
+        else:
+            testcase_scene.result = "测试失败"
+        testcase_scene_list.append(testcase_scene)
+        testcase_scene_testcases = []
+        for testcase_scene_testcase in testcase_scene_testcases_after_list:
+            if testcase_scene_testcase.scene_id == testcase_scene.id:
+                testcase_scene_testcases.append(testcase_scene_testcase)
+            print('testcase_scene_testcases:', testcase_scene_testcases)
+            testcase_scene.test_cases = testcase_scene_testcases
+        for a in testcase_scene_list:
+            print('测试结果： ', a.result, a)
+    print("TestCaseReport testcase_scene_list:", testcase_scene_list,)
+    allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
+    return items, allocation, testcase_scene_list
+
+
 def get_report(testcase_time_id):
     time_strftime = datetime.now().strftime('%Y%m%d%H%M%S')
     testcase_report_name = Variables.query.filter(Variables.name == "_TEST_REPORT_EXCEL_NAME").first().value + "_" + \
@@ -218,7 +215,8 @@ def get_report(testcase_time_id):
     test_case_start_time.filename = Filename
     test_case_start_time.name = testcase_report_name
     db.session.commit()
-    test_report(testcase_time_id)
+    _, allocation, testcase_scene_list = get_env_message(testcase_time_id)
+    test_report(testcase_time_id, allocation, testcase_scene_list)
 
 
 class TestCaseReportList(MethodView):
@@ -237,20 +235,23 @@ class TestCaseReportList(MethodView):
 class TestCaseReportDelete(MethodView):
 
     def get(self, id=-1):
-        testcase_time_id = request.args.get('id', id)
-        testcase_report = TestCaseStartTimes.query.get(testcase_time_id)
-        testcase_results = testcase_report.this_time_testcase_result
-        print('testcase_report: ', testcase_report, id)
-        db.session.delete(testcase_report)
-        db.session.commit()
         try:
-            for testcase_result in testcase_results:
-                db.session.delete(testcase_result)
-                db.session.commit()
-            os.remove(testcase_report.filename)
-        except FileNotFoundError:
-            pass
-        FrontLogs('删除测试报告 id: %s 成功' % testcase_time_id).add_to_front_log()
+            testcase_time_id = request.args.get('id', id)
+            testcase_report = TestCaseStartTimes.query.get(testcase_time_id)
+            testcase_results = testcase_report.this_time_testcase_result
+            print('testcase_report: ', testcase_report, id)
+            db.session.delete(testcase_report)
+            db.session.commit()
+            try:
+                for testcase_result in testcase_results:
+                    db.session.delete(testcase_result)
+                    db.session.commit()
+                os.remove(testcase_report.filename)
+            except FileNotFoundError:
+                pass
+            FrontLogs('删除测试报告 id: %s 成功' % testcase_time_id).add_to_front_log()
+        except AttributeError as e:
+            print(e)
         # app.logger.info('message:delete testcase_report success, id: %s' % id)
         return redirect(url_for('testcase_report_blueprint.testcase_report_list'))
 

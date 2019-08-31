@@ -26,8 +26,19 @@ class TestCaseLook(MethodView):
 
     def get(self, id=-1):
         testcase_id = request.args.get('id', id)
+        user_id = session.get('user_id')
         print('testcase_id:', testcase_id)
         testcase = TestCases.query.get(testcase_id)
+        if testcase.old_sql_id:
+            old_mysql = Mysql.query.get(testcase.old_sql_id)
+            old_mysql.name = AnalysisParams().analysis_params(old_mysql.name)
+        else:
+            old_mysql = ''
+        if testcase.new_sql_id:
+            new_mysql = Mysql.query.get(testcase.new_sql_id)
+            new_mysql.name = AnalysisParams().analysis_params(new_mysql.name)
+        else:
+            new_mysql = ''
         case_groups = CaseGroup.query.all()
         case_group_id_before = testcase.group_id
         request_headers_id_before = testcase.request_headers_id
@@ -37,7 +48,7 @@ class TestCaseLook(MethodView):
         return render_template('test_case/test_case_look.html', item=testcase, case_groups=case_groups,
                                request_headers_id_before=request_headers_id_before,
                                case_group_id_before=case_group_id_before,
-                               request_headerses=request_headerses)
+                               request_headerses=request_headerses, old_mysql=old_mysql, new_mysql=new_mysql)
 
 
 class TestCaseRun(MethodView):
@@ -128,11 +139,12 @@ class TestCaseAdd(MethodView):
         user_id = session.get('user_id')
         print('要添加的测试用例：', request.form)
         page, scene_page, name, url, method, regist_variable, regular, request_headers_id, old_sql, new_sql, \
-        old_sql_regist_variable, new_sql_regist_variable, old_sql_hope_result, new_sql_hope_result = \
+        old_sql_regist_variable, new_sql_regist_variable, old_sql_hope_result, new_sql_hope_result, old_mysql_id, \
+        new_mysql_id = \
             request_get_values('page', 'scene_page', 'name', 'url', 'method',
                                'regist_variable', 'regular', 'request_headers', 'old_sql', 'new_sql',
                                'old_sql_regist_variable', 'new_sql_regist_variable', 'old_sql_hope_result',
-                               'new_sql_hope_result')
+                               'new_sql_hope_result', 'old_mysql', 'new_mysql')
         group_id = request.form.get('case_group', None)
         data = request.form.get('data', '').replace('/n', '').replace(' ', '')
 
@@ -160,13 +172,9 @@ class TestCaseAdd(MethodView):
             request_headers_id, hope_result=hope_result,
             testcase_scene_id=testcase_scene_id, user_id=user_id, old_sql=old_sql, new_sql=new_sql,
             old_sql_regist_variable=old_sql_regist_variable, new_sql_regist_variable=new_sql_regist_variable,
-            old_sql_hope_result=old_sql_hope_result, new_sql_hope_result=new_sql_hope_result)
-        if old_sql_regist_variable:
-            old_variable = Variables(old_sql_regist_variable, '', user_id=user_id)
-            db.session.add(old_variable)
-        if new_sql_regist_variable:
-            new_variable = Variables(new_sql_regist_variable, '', user_id=user_id)
-            db.session.add(new_variable)
+            old_sql_hope_result=old_sql_hope_result, new_sql_hope_result=new_sql_hope_result, old_mysql_id=old_mysql_id,
+            new_mysql_id=new_mysql_id)
+        add_regist_variable(old_sql_regist_variable, new_sql_regist_variable, user_id)
         db.session.add(testcase)
         db.session.commit()
         FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
@@ -208,20 +216,23 @@ class UpdateTestCase(MethodView):
     def post(self, id=-1):
         page, scene_page, name, url, method, data, group_id, request_headers_id, regist_variable, regular \
             , hope_result, testcase_scene_id, old_sql, new_sql, old_sql_regist_variable, new_sql_regist_variable, \
-            old_sql_hope_result, new_sql_hope_result = request_get_values(
+            old_sql_hope_result, new_sql_hope_result, old_mysql_id, new_mysql_id = request_get_values(
             'page', 'scene_page', 'name', 'url', 'method', 'data', 'case_group', 'request_headers', 'regist_variable',
             'regular', 'hope_result', 'testcase_scene_id', 'old_sql', 'new_sql', 'old_sql_regist_variable',
-            'new_sql_regist_variable', 'old_sql_hope_result', 'new_sql_hope_result')
+            'new_sql_regist_variable', 'old_sql_hope_result', 'new_sql_hope_result', 'old_mysql', 'new_mysql')
         print('UpdateTestCase post:testcase_scene_id ', testcase_scene_id, scene_page)
         id = request.args.get('id', id)
+        user_id = session.get('user_id')
+        update_regist_variable(id, old_sql_regist_variable, new_sql_regist_variable, user_id)
         update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=?,group_id=?,' \
                                'request_headers_id=?,regist_variable=?,regular=?,hope_result=?,' \
                                'old_sql=?,new_sql=?,old_sql_regist_variable=?,new_sql_regist_variable=?,' \
-                               'old_sql_hope_result=?, new_sql_hope_result=? where id=?'
+                               'old_sql_hope_result=?, new_sql_hope_result=?, old_sql_id=?, new_sql_id=? where id=?'
         cdb().opeat_db(update_test_case_sql, (name, url, data, method, group_id,
                                               request_headers_id, regist_variable, regular, hope_result, old_sql,
                                               new_sql, old_sql_regist_variable, new_sql_regist_variable,
-                                               old_sql_hope_result, new_sql_hope_result, id))
+                                               old_sql_hope_result, new_sql_hope_result, old_mysql_id, new_mysql_id, id))
+
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:update testcases success, name: %s' % name)
         print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id, len(testcase_scene_id))
@@ -242,7 +253,11 @@ class TestCaseCopy(MethodView):
         db.session.add(TestCases(name, testcase_self.url, testcase_self.data, testcase_self.regist_variable,
                                  testcase_self.regular, testcase_self.method, testcase_self.group_id,
                                  testcase_self.request_headers_id, hope_result=testcase_self.hope_result,
-                                 user_id=testcase_self.user_id))
+                                 user_id=testcase_self.user_id, old_sql=testcase_self.old_sql,
+                                 new_sql=testcase_self.old_sql, old_sql_regist_variable=testcase_self.old_sql_regist_variable,
+                                 new_sql_regist_variable=testcase_self.new_sql_regist_variable, old_sql_hope_result=testcase_self.old_sql_hope_result,
+                                 new_sql_hope_result=testcase_self.new_sql_hope_result,old_sql_id=testcase_self.old_sql_id,
+                                 new_sql_id=testcase_self.new_sql_id))
         db.session.commit()
         FrontLogs('复制测试用例 name: %s 为模板成功' % testcase_self.name).add_to_front_log()
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
@@ -332,3 +347,23 @@ testcase_blueprint.add_url_rule('/testcaseupdatevalidate/',
                                 view_func=TestCaseUpdateValidata.as_view('testcase_update_validate'))
 testcase_blueprint.add_url_rule('/test_case_hope_result_validate/',
                                 view_func=TestCaseHopeResultValidata.as_view('test_case_hope_result_validate'))
+
+
+def add_regist_variable(old_sql_regist_variable, new_sql_regist_variable, user_id):
+    if old_sql_regist_variable:
+        old_variable = Variables(old_sql_regist_variable, '', user_id=user_id, is_private=1)
+        db.session.add(old_variable)
+    if new_sql_regist_variable:
+        new_variable = Variables(new_sql_regist_variable, '', user_id=user_id, is_private=1)
+        db.session.add(new_variable)
+
+
+def update_regist_variable(testcase_id, old_sql_regist_variable, new_sql_regist_variable, user_id):
+    testcase = TestCases.query.get(testcase_id)
+    if testcase.old_sql_regist_variable:
+        Variables.query.filter(Variables.name == testcase.old_sql_regist_variable,
+                               Variables.user_id == user_id).first().name = old_sql_regist_variable
+    if testcase.new_sql_regist_variable:
+        Variables.query.filter(Variables.name == testcase.new_sql_regist_variable,
+                               Variables.user_id == user_id).first().name = new_sql_regist_variable
+    db.session.commit()

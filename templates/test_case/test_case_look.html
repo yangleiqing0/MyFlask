@@ -39,6 +39,36 @@
                     {{ macro.form_group(lable_name="regular",blank_name="正则匹配", value=item.regular) }}
                     {{ macro.form_group_textarea(lable_name="data",blank_name="请求报文",value=item.data) }}
                     {{ macro.form_group(lable_name="hope_result",blank_name="预期结果", value=item.hope_result) }}
+                    <div class="form-group">
+                        <label for="old_sql" class="control-label col-md-4">前置数据库查询语句</label>
+                            <div class="col-md-4">
+                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="old_sql" name="old_sql" placeholder="前置数据库查询语句" >{{ item.old_sql }}</textarea>
+                        </div>
+                         <div class="col-md-4" style="height: 34px">
+                            <div class="form-group col-md-12" style="padding-left: 0">
+                             <select class="btn btn-default" name="old_mysql" id="old_mysql" style="width: 120px;height: 34px">
+                                <option value="{{ old_mysql.id if old_mysql }}" style="width: 20px">{{ old_mysql.name if old_mysql }}</option>
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+                    {{ macro.form_group(lable_name="old_sql_regist_variable",blank_name="前置数据库注册变量", value=item.old_sql_regist_variable) }}
+                    {{ macro.form_group(lable_name="old_sql_hope_result",blank_name="前置数据库预期结果", value=item.old_sql_hope_result) }}
+                     <div class="form-group">
+                        <label for="new_sql" class="control-label col-md-4">后置数据库查询语句</label>
+                            <div class="col-md-4">
+                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="new_sql" name="new_sql" placeholder="后置数据库查询语句" >{{ item.new_sql }}</textarea>
+                        </div>
+                        <div class="col-md-4" style="height: 34px">
+                            <div class="form-group col-md-12" style="padding-left: 0">
+                             <select class="btn btn-default" name="new_mysql" id="new_mysql" style="width: 120px;height: 34px">
+                                    <option value="{{ new_mysql.id if new_mysql }}" style="width: 20px">{{ new_mysql.name if new_mysql }}</option>
+                            </select>
+                            </div>
+                        </div>
+                    </div>
+                    {{ macro.form_group(lable_name="new_sql_regist_variable",blank_name="后置数据库注册变量", value=item.new_sql_regist_variable) }}
+                    {{ macro.form_group(lable_name="new_sql_hope_result",blank_name="后置数据库预期结果",  value=item.new_sql_hope_result) }}
                 </form>
             </div>
 {% endblock %}

@@ -41,5 +41,8 @@ import re
 # a = ["1"]
 # a = ','.join(a)
 # print(a, type(a))
-headers = {}
-data={}
+headers = {'a': 1}
+data=1
+b = []
+b.extend([headers, data])
+print(b)
