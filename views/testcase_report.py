@@ -3,11 +3,14 @@ import re
 from flask.views import MethodView
 from sqlalchemy import or_
 from flask import render_template, Blueprint, request, redirect, url_for, send_from_directory, session, jsonify
+
+from modles.testcase_scene_result import TestCaseSceneResult
 from modles.variables import Variables
 from modles.testcase_start_times import TestCaseStartTimes
 from modles.testcase_result import TestCaseResult
 from modles.testcase_scene import TestCaseScene
 from modles.testcase import TestCases
+from modles.time_message import TimeMessage
 from common.tail_font_log import FrontLogs
 from app import db
 from common.connect_sqlite import cdb
@@ -26,16 +29,21 @@ class EnvMessage:
     def __init__(self, testcase_results, testcase_time_id, testcase_time, testcase_scene_list):
         user_id = session.get('user_id')
         self.testcase_scene_list = testcase_scene_list
-        self.test_name = Variables.query.filter(Variables.name == '_TEST_NAME', Variables.user_id == user_id).first().value
-        self.zdbm_version = Variables.query.filter(Variables.name == '_TEST_VERSION', Variables.user_id == user_id).first().value
+        self.test_name = Variables.query.filter(Variables.name == '_TEST_NAME',
+                                                Variables.user_id == user_id).first().value
+        self.zdbm_version = Variables.query.filter(Variables.name == '_TEST_VERSION',
+                                                   Variables.user_id == user_id).first().value
         self.test_pl = Variables.query.filter(Variables.name == '_TEST_PL', Variables.user_id == user_id).first().value
-        self.test_net = Variables.query.filter(Variables.name == '_TEST_NET', Variables.user_id == user_id).first().value
-        self.title_name = Variables.query.filter(Variables.name == '_TITLE_NAME', Variables.user_id == user_id).first().value
+        self.test_net = Variables.query.filter(Variables.name == '_TEST_NET',
+                                               Variables.user_id == user_id).first().value
+        self.title_name = Variables.query.filter(Variables.name == '_TITLE_NAME',
+                                                 Variables.user_id == user_id).first().value
         self.fail_sum = self.count_success_testcase_scene(testcase_time_id) + self.count_testcase_fail(testcase_time_id)
         self.test_sum = len(testcase_results) + len(testcase_scene_list)
         self.test_success = self.test_sum - self.fail_sum
         self.time_strftime = testcase_time.time_strftime
         self.score = int(self.test_success * 100 / self.test_sum)
+        print('EnvMessage:', self.fail_sum, self.test_sum )
 
     def count_success_testcase_scene(self, testcase_time_id):
         fail_count = 0
@@ -119,31 +127,42 @@ class TestCaseReport(MethodView):
 
     def get(self, email=False, testcase_time_id=None):
         testcase_time_id = request.args.get('testcase_time_id', testcase_time_id)
-        items, allocation, testcase_scene_list = get_env_message(testcase_time_id)
+        testcase_results = Testcaseresult(testcase_time_id).testcase_results
+        items = []
+        for testcase_result in testcase_results:
+            items.append(Test(testcase_result))
+        allocation = TimeMessage.query.filter(TimeMessage.time_id == testcase_time_id).first()
+        testcase_scene_list = TestCaseSceneResult.query.filter(TestCaseSceneResult.time_id == testcase_time_id).all()
+        for testcase_scene in testcase_scene_list:
+            testcase_scene.test_cases = TestCaseResult.query.filter(TestCaseResult.scene_id == testcase_scene.scene_id, TestCaseResult.testcase_start_time_id == testcase_time_id).all()
+
         if email:
             return items, allocation, testcase_scene_list
-        FrontLogs('进入测试用例执行页面 执行id: %s' % testcase_time_id).add_to_front_log()
+        FrontLogs('进入测试报告页面 报告id: %s' % testcase_time_id).add_to_front_log()
         return render_template("testcase_report/testcase_report.html", items=items, allocation=allocation,
                                testcase_scene_list=testcase_scene_list)
 
     def post(self):
         testcase_time_id = request.args.get('testcase_time_id')
-          # 生成测试报告
+        # 生成测试报告
         get_report(testcase_time_id)
         testcase_scene_ids, testcase_scene_list, testcase_scene_testcases_after_list, testcase_results, testcase_time, items = get_testcase_scene_message(
             testcase_time_id)
         for testcase_scene_id in testcase_scene_ids:
-            print('testcase_scene_id: ', testcase_scene_id)
             testcase_scene = TestCaseScene.query.get(testcase_scene_id)
             testcase_scene_list.append(testcase_scene)
             testcase_scene_testcases = []
             for testcase_scene_testcase in testcase_scene_testcases_after_list:
                 if testcase_scene_testcase.scene_id == testcase_scene.id:
                     testcase_scene_testcases.append(testcase_scene_testcase)
-                print('testcase_scene_testcases:', testcase_scene_testcases)
                 testcase_scene.test_cases = testcase_scene_testcases
-        print("TestCaseReport testcase_scene_list:", testcase_scene_list)
         allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
+        print('allocation:', allocation.fail_sum)
+        time_message = TimeMessage(allocation.test_name, allocation.zdbm_version, allocation.test_pl, allocation.test_net,
+                                   allocation.title_name, allocation.fail_sum, allocation.test_sum, allocation.test_success,
+                                   allocation.time_strftime, allocation.score, testcase_time_id)
+        db.session.add(time_message)
+        db.session.commit()
 
         FrontLogs('进入测试报告页面 报告id: %s' % testcase_time_id).add_to_front_log()
         # return items, Allocation
@@ -153,38 +172,30 @@ class TestCaseReport(MethodView):
 
 def get_testcase_scene_message(testcase_time_id):
     testcase_results = Testcaseresult(testcase_time_id).testcase_results
-    testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
-    print('testcase_results: ', testcase_results, len(testcase_results))
     items = []
     for testcase_result in testcase_results:
         items.append(Test(testcase_result))
-    print('items: ', items)
+    testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
     testcase_scene_results = Testcaseresult(testcase_time_id, result="scene_testcases").testcase_results
     testcase_scene_ids = []
-    print('testcase_scene_results: ', testcase_scene_results, len(testcase_scene_results))
     testcase_scene_testcases_after_list = []
     for testcase_scene_result in testcase_scene_results:
         testcase_scene_ids.append(testcase_scene_result[11])
         testcase_scene_testcases_after_list.append(Test(testcase_scene_result))
     testcase_scene_ids = set(testcase_scene_ids)
     testcase_scene_list = []
-    print('testcase_scene_testcases_after_list:', testcase_scene_testcases_after_list)
-    print('testcase_scene_list: ', testcase_scene_ids)
     return testcase_scene_ids, testcase_scene_list, testcase_scene_testcases_after_list, testcase_results, testcase_time, items
 
 
 def get_env_message(testcase_time_id):
     testcase_scene_ids, testcase_scene_list, testcase_scene_testcases_after_list, testcase_results, testcase_time, items = get_testcase_scene_message(testcase_time_id)
     for testcase_scene_id in testcase_scene_ids:
-        print('testcase_scene_id: ', testcase_scene_id)
         testcase_scene = TestCaseScene.query.get(testcase_scene_id)
         fail_count = 0
         for testcase in testcase_scene.testcases:
-            print('testcase_scene_ids testcase: ', testcase)
             testcase_result = TestCaseResult.query.filter(TestCaseResult.testcase_id==testcase.id,
                                                           TestCaseResult.testcase_start_time_id==testcase_time_id).first()
-            print('testcase_scene_ids testcase_result: ', testcase_result, testcase)
-            if testcase_result.testcase_test_result == "测试失败" or testcase_result.old_sql_value_result == "测试失败" or testcase_result.new_sql_value_result == "测试失败":
+            if testcase_result.result == "测试失败":
                 fail_count += 1
         if fail_count == 0:
             testcase_scene.result = "测试成功"
@@ -195,11 +206,7 @@ def get_env_message(testcase_time_id):
         for testcase_scene_testcase in testcase_scene_testcases_after_list:
             if testcase_scene_testcase.scene_id == testcase_scene.id:
                 testcase_scene_testcases.append(testcase_scene_testcase)
-            print('testcase_scene_testcases:', testcase_scene_testcases)
             testcase_scene.test_cases = testcase_scene_testcases
-        for a in testcase_scene_list:
-            print('测试结果： ', a.result, a)
-    print("TestCaseReport testcase_scene_list:", testcase_scene_list,)
     allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
     return items, allocation, testcase_scene_list
 
@@ -210,7 +217,6 @@ def get_report(testcase_time_id):
                            time_strftime + ".xlsx"
     REPORT_FILE_PATH = Variables.query.filter(Variables.name == "_REPORT_FILE_PATH").first().value
     Filename = REPORT_FILE_PATH + testcase_report_name
-    print("Filename: ", Filename)
     test_case_start_time = TestCaseStartTimes().query.get(testcase_time_id)
     test_case_start_time.filename = Filename
     test_case_start_time.name = testcase_report_name
@@ -239,9 +245,22 @@ class TestCaseReportDelete(MethodView):
             testcase_time_id = request.args.get('id', id)
             testcase_report = TestCaseStartTimes.query.get(testcase_time_id)
             testcase_results = testcase_report.this_time_testcase_result
+            testcase_scene_results = TestCaseSceneResult.query.filter(TestCaseSceneResult.time_id == testcase_time_id).all()
+            env = TimeMessage.query.filter(TimeMessage.time_id == testcase_time_id).first()
             print('testcase_report: ', testcase_report, id)
             db.session.delete(testcase_report)
+            try:
+                db.session.delete(env)
+            except Exception as e:
+                pass
             db.session.commit()
+            try:
+                for testcase_scene_result in testcase_scene_results:
+                    db.session.delete(testcase_scene_result)
+                    db.session.commit()
+            except Exception as e:
+                print(e)
+                pass
             try:
                 for testcase_result in testcase_results:
                     db.session.delete(testcase_result)

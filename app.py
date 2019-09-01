@@ -107,6 +107,8 @@ def db_create_pre_all():
     from modles.job import Job
     from modles.mail import Mail
     from modles.database import Mysql
+    from modles.testcase_scene_result import TestCaseSceneResult
+    from modles.time_message import TimeMessage
 
     db.create_all()
 

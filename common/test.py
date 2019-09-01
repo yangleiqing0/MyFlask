@@ -41,8 +41,10 @@ import re
 # a = ["1"]
 # a = ','.join(a)
 # print(a, type(a))
-headers = {'a': 1}
-data=1
-b = []
-b.extend([headers, data])
-print(b)
+headers = {'a': 1, 'b': 2}
+headers.pop('a')
+print(headers)
+# data=1
+# b = []
+# b.extend([headers, data])
+# print(b)

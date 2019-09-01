@@ -129,10 +129,14 @@ def post_testcase(test_case_id, testcase_time_id):
     # 调用比较的方法判断响应报文是否满足期望
 
     print('testcase_test_result:', testcase_test_result)
+    if testcase_test_result == "测试失败" or old_sql_value_result == "测试失败" or new_sql_value_result == "测试失败":
+        test_result = "测试失败"
+    else:
+        test_result = "测试成功"
     testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
                                      testcase_time_id, response_body, testcase_test_result, old_sql_value=old_sql_value,
                                      new_sql_value=new_sql_value, old_sql_value_result=old_sql_value_result,
-                                     new_sql_value_result=new_sql_value_result)
+                                     new_sql_value_result=new_sql_value_result, result=test_result, scene_id=testcase.testcase_scene_id)
     # 测试结果实例化
     db.session.add(testcase_result)
     db.session.commit()

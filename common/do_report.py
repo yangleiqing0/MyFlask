@@ -1,20 +1,35 @@
 import xlsxwriter
+
+from app import db
 from modles.testcase_start_times import TestCaseStartTimes
 from modles.testcase_scene import TestCaseScene
+from modles.testcase_scene_result import TestCaseSceneResult
 from common.connect_sqlite import cdb
 from common.analysis_params import AnalysisParams
 
 
 def test_report(testcase_time_id, allocation, testcase_scene_list):
     data = []
+    testcase_scene_count_dict = {}
+    for testcase_scene in testcase_scene_list:
+        testcase_scene_count_dict.update({'testcase_scene_' + str(testcase_scene.name): testcase_scene})
+
     testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
+    testcase_scene_counts_sql = 'select testcase_scenes.name, count(*),testcase_scenes.id from test_case_start_times,test_case_result,testcases,testcase_scenes where test_case_start_times.id=' \
+    'test_case_result.testcase_start_time_id and testcases.id=test_case_result.testcase_id and testcases.testcase_scene_id=testcase_scenes.id ' \
+    'and test_case_start_times.id=%s and testcases.testcase_scene_id is not null group by testcases.testcase_scene_id' % testcase_time_id
+
+    testcase_scene_counts = cdb().query_db(testcase_scene_counts_sql)
+    print('testcase_scene_counts count:', testcase_scene_counts)
+    for testcase_scene_count in testcase_scene_counts:
+        testcase_scene_count_dict.update({testcase_scene_count[0]: [testcase_scene_count[1], testcase_scene_count[2]]})
+
     testcase_results_query_sql = 'select testcases.name,testcases.url,testcases.method,testcases.data,test_case_result.response_body,' \
                                  ' testcases.hope_result,test_case_result.old_sql_value,test_case_result.new_sql_value,' \
                                  'test_case_result.testcase_test_result,test_case_result.old_sql_value_result,test_case_result.new_sql_value_result,' \
                                  'testcases.testcase_scene_id,testcases.old_sql_hope_result,testcases.new_sql_hope_result from testcases,test_case_result where testcases.id=test_case_result.testcase_id ' \
                                  'and test_case_result.testcase_start_time_id=%s' % testcase_time_id
     testcase_results = cdb().query_db(testcase_results_query_sql)
-    print('testcase_results: ', testcase_results, len(testcase_results))
     for testcase_result in testcase_results:
         if testcase_result[11]:
             testcase_scene_name = TestCaseScene.query.get(testcase_result[11]).name
@@ -32,7 +47,7 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
             t_result = "测试失败"
         else:
             t_result = "测试成功"
-        print('testcase_result: ', testcase_result)
+        # print('testcase_result: ', testcase_result)
         content = {"t_name": t_name,
                    "t_url": t_url,
                    "t_method": t_method,
@@ -48,7 +63,6 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
                    "t_testcase_result": t_result,
                    "t_old_sql_hope": testcase_result[12],
                    "t_new_sql_hope": testcase_result[13]
-
                    }
         data.append(content)
     data = data[::-1]
@@ -57,9 +71,9 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
     data_re = {"test_sum": allocation.test_sum, "test_success": allocation.test_success, "test_failed": allocation.fail_sum,
                "test_date": allocation.time_strftime}
     r = Report()
-    print("data_re", data_title, data_re, allocation.time_strftime, filename)
+    # print("data_re", data_title, data_re, allocation.time_strftime, filename)
     r.init(data_title, data_re, int(allocation.test_success * 100 / allocation.test_sum), title_name=allocation.title_name, filename=filename)
-    r.test_detail(data, len(data), len(data), testcase_scene_list)
+    r.test_detail(data, len(data), len(data), testcase_scene_count_dict, testcase_time_id)
 
 
 class Report:
@@ -153,7 +167,7 @@ class Report:
         chart1.set_style(10)
         wos.insert_chart('A9', chart1, {'x_offset': 25, 'y_offset': 10})
 
-    def test_detail(self, data, tmp, row, testcase_scene_list):
+    def test_detail(self, data, tmp, row, testcase_scene_count_dict, testcase_time_id):
 
         # 设置列行的宽高
         self.worksheet2.set_column("A:A", 16)
@@ -193,7 +207,7 @@ class Report:
         self.write_center(self.worksheet2, "P2", '场景结果', self.workbook)
 
         temp = tmp+2
-        last_time_data = {}
+
         for item in data:
             self.write_center(self.worksheet2,"A"+str(temp), item["t_name"], self.workbook)
             self.write_center(self.worksheet2,"B"+str(temp), item["t_url"], self.workbook)
@@ -212,32 +226,34 @@ class Report:
                 self.write_center(self.worksheet2, "N" + str(temp), item["t_testcase_result"], self.workbook, color='red')
             else:
                 self.write_center(self.worksheet2, "N" + str(temp), item["t_testcase_result"], self.workbook)
-            self.write_center(self.worksheet2, "O" + str(temp), item["t_testcase_scene"], self.workbook)
-            if last_time_data and last_time_data["t_testcase_scene"]:
-                if item["t_testcase_scene"] == last_time_data["t_testcase_scene"]:
-                    self.worksheet2.merge_range('%s:%s' % ("O" + str(temp+1), "O" + str(temp)), item["t_testcase_scene"], self.get_format_center(self.workbook))
-                    if item["t_testcase_result"] == "测试失败" or last_time_data["t_testcase_result"] == "测试失败":
-                        self.worksheet2.merge_range('%s:%s' % ("P" + str(temp + 1), "P" + str(temp)),
-                                                    "测试失败", self.get_format_center(self.workbook,  color='red'))
+            if item['t_testcase_scene']:
+                if testcase_scene_count_dict.get(item['t_testcase_scene'], None):
+                    testcase_scene_count = testcase_scene_count_dict[item['t_testcase_scene']][0]
+                    testcase_scene = testcase_scene_count_dict['testcase_scene_' + item['t_testcase_scene']]
+                    self.worksheet2.merge_range('%s:%s' % ("O" + str(temp - testcase_scene_count + 1), "O" + str(temp)),
+                                                 item["t_testcase_scene"], self.get_format_center(self.workbook))
+                    testcase_scene_result = TestCaseSceneResult(testcase_scene_count_dict[item['t_testcase_scene']][1],
+                                                                item['t_testcase_scene'],
+                                                                testcase_scene_count, testcase_scene.result, testcase_time_id)
+                    db.session.add(testcase_scene_result)
+                    if testcase_scene.result == '测试失败':
+                        self.worksheet2.merge_range('%s:%s' % ("P" + str(temp - testcase_scene_count + 1), "P" + str(temp)),
+                             "测试失败", self.get_format_center(self.workbook,  color='red'))
                     else:
-                        self.worksheet2.merge_range('%s:%s' % ("P" + str(temp + 1), "P" + str(temp)),
-                                                    "测试成功", self.get_format_center(self.workbook))
-                else:
-                    if item["t_testcase_result"] == "测试失败":
-                        self.write_center(self.worksheet2, "P" + str(temp), item["t_testcase_result"],
-                                          self.workbook, color='red')
-                    else:
-                        self.write_center(self.worksheet2, "P" + str(temp), item["t_testcase_result"],
-                                          self.workbook)
+                        self.worksheet2.merge_range('%s:%s' % ("P" + str(temp - testcase_scene_count + 1), "P" + str(temp)),
+                             "测试成功", self.get_format_center(self.workbook))
+                    testcase_scene_count_dict.pop(item['t_testcase_scene'])
             else:
+                self.write_center(self.worksheet2, "O" + str(temp), item["t_testcase_scene"], self.workbook)
                 if item["t_testcase_result"] == "测试失败":
                     self.write_center(self.worksheet2, "P" + str(temp), item["t_testcase_result"],
                                       self.workbook, color='red')
                 else:
                     self.write_center(self.worksheet2, "P" + str(temp), item["t_testcase_result"],
                                       self.workbook)
+
             temp = temp-1
-            last_time_data = item
+        db.session.commit()
 
         self.worksheet.hide_gridlines(2)    # 隐藏网格线
         self.worksheet2.hide_gridlines(2)   # 隐藏网格线

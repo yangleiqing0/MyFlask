@@ -80,7 +80,7 @@
             </tr>
         {% endfor %}
         {% for testcase_scene in testcase_scene_list %}
-            <tbody href="#tasecase_scene_{{ testcase_scene.id }}" data-toggle="collapse">
+            <tbody href="#tasecase_scene_{{ testcase_scene.scene_id }}" data-toggle="collapse">
                 <tr>
                     <td colspan="13" style="text-align: left ">
                             <div class="col-md-1" style="
@@ -96,22 +96,22 @@
                             </div>
                 </tr>
             </tbody>
-            <tbody id="tasecase_scene_{{ testcase_scene.id }}" class="collapse">
+            <tbody id="tasecase_scene_{{ testcase_scene.scene_id }}" class="collapse">
             {% for testcase in testcase_scene.test_cases %}
                <tr>
                     <td></td>          <!--使用循环的数字作为id -->
-                    <td>{{ testcase.t_name }}</td>
-                    <td>{{ testcase.url }}</td>
-                    <td>{{ testcase.method }}</td>
-                    <td>{{ testcase.request_body }}</td>
-                    <td>{{ testcase.hope }}</td>
+                     <td>{{ testcase.testcase_name }}</td>
+                    <td>{{ testcase.testcase_url }}</td>
+                    <td>{{ testcase.testcase_method }}</td>
+                    <td>{{ testcase.testcase_data }}</td>
+                    <td>{{ testcase.testcase_hope_result }}</td>
                     <td>{{ testcase.response_body }}</td>
-                    <td>{{ testcase.result }}</td>
-                    <td>{{ testcase.old_database_value }}</td>
+                    <td>{{ testcase.test_result }}</td>
+                    <td>{{ testcase.old_sql_value }}</td>
                     <td>{{ testcase.old_sql_value_result }}</td>
-                    <td>{{ testcase.new_database_value }}</td>
+                    <td>{{ testcase.new_sql_value }}</td>
                     <td>{{ testcase.new_sql_value_result }}</td>
-                    {% if  testcase.result == "测试失败" or testcase.old_sql_value_result == "测试失败" or testcase.new_sql_value_result == "测试失败"%}
+                    {% if  testcase.result == "测试失败"%}
                         <td><span class="badge  badge-pill badge-warning" style="background-color: rgba(255,0,0,0.18)">测试失败</span></td>
                         {% else %}
                         <td><span class="badge  badge-pill badge-success" style="background-color: rgba(52,151,43,0.35)">测试成功</span></td>

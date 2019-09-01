@@ -16,18 +16,20 @@ class TestCaseResult(db.Model):
     response_body = db.Column(db.TEXT)
     testcase_test_result = db.Column(db.String(10))
     testcase_id = db.Column(db.Integer, db.ForeignKey(TestCases.id))
+    scene_id = db.Column(db.Integer)
     testcase_start_time_id = db.Column(db.Integer, db.ForeignKey(TestCaseStartTimes.id))
     old_sql_value = db.Column(db.TEXT)
     new_sql_value = db.Column(db.TEXT)
     timestamp = db.Column(db.DateTime, index=True)
     old_sql_value_result = db.Column(db.String(10))
     new_sql_value_result = db.Column(db.String(10))
+    result = db.Column(db.String(10))
 
     testcases = db.relationship('TestCases', backref='testcase_result')
 
     def __init__(self, testcase_id, testcase_name,  testcase_url, testcase_data, testcase_method, testcase_hope_result,
                  testcase_start_time_id, response_body, testcase_test_result='',
-                 old_sql_value='', new_sql_value='', old_sql_value_result='', new_sql_value_result=''):
+                 old_sql_value='', new_sql_value='', old_sql_value_result='', new_sql_value_result='', result='', scene_id=''):
         self.testcase_id = testcase_id
         self.testcase_name = testcase_name
         self.testcase_url = testcase_url
@@ -42,6 +44,8 @@ class TestCaseResult(db.Model):
         self.new_sql_value = new_sql_value
         self.old_sql_value_result = old_sql_value_result
         self.new_sql_value_result = new_sql_value_result
+        self.result = result
+        self.scene_id = scene_id
 
     def __repr__(self):
         return '<测试用例执行结果 {} {} {} {} {} {}{} {} {} {} {} {}>'.format(self.response_body,
