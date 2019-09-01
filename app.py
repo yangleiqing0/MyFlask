@@ -2,7 +2,7 @@ import requests
 import config
 import os
 from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, request, session, redirect, url_for
+from flask import Flask, request, session, redirect, url_for, render_template
 from logs.config import file_log_handler, logging, FLASK_LOGS_FILE, FRONT_LOGS_FILE
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
@@ -81,6 +81,14 @@ def login_required():
 
     else:
         return redirect(url_for('login_blueprint.login'))
+
+
+@app.errorhandler(404)
+# 当发生404错误时，会被该路由匹配
+def handle_404_error(err_msg):
+    """自定义的异常处理函数"""
+    # 这个函数的返回值就是前端用户看到的最终结果 (404错误页面)
+    return render_template('exception/404.html', err_msg=err_msg)
 
 
 manager = Manager(app)
