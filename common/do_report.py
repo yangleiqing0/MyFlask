@@ -61,8 +61,8 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
                    "t_new_sql_value_result": testcase_result[10],
                    "t_testcase_scene": testcase_scene_name,
                    "t_testcase_result": t_result,
-                   "t_old_sql_hope": testcase_result[12],
-                   "t_new_sql_hope": testcase_result[13]
+                   "t_old_sql_hope": AnalysisParams().analysis_params(testcase_result[12]),
+                   "t_new_sql_hope": AnalysisParams().analysis_params(testcase_result[13])
                    }
         data.append(content)
     data = data[::-1]

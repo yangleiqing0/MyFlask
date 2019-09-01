@@ -4,10 +4,9 @@ class AssertMethod:
 
     def __init__(self, actual_result, hope_result):
         self.actual_result = actual_result
-        self.hope_result = hope_result
         self.result = None
         print('hope_result:', hope_result)
-        self.assertmethod, self.hoperesult = self.hope_result.split(':', 1)
+        self.assertmethod, self.hoperesult = hope_result.split(':', 1)
         print("self.assertmethod: %s, self.hoperesult: %s" % (self.assertmethod, self.hoperesult))
         self.actual_result = str(self.actual_result)
         print('self.actual_result: ', self.actual_result)
@@ -20,7 +19,7 @@ class AssertMethod:
         return result
 
     def assert_eq(self):
-        if self.actual_result == self.hoperesult:    #返回结果与期望结果相等
+        if self.actual_result == self.hoperesult:    # 返回结果与期望结果相等
             self.result = '测试成功'
         else:
             self.result = '测试失败'
