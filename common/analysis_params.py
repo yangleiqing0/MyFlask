@@ -27,7 +27,7 @@ class AnalysisParams:
                     params = RangName(params).rand_str()
                 if (word,) in self.variables:
                     in_variables_num += 1
-                    variable_value_query_sql = 'select value from variables where name=?'
+                    variable_value_query_sql = 'select value from variables where name=%s'
                     variable_value = cdb().query_db(variable_value_query_sql, (word,), True)[0]
                     print('variable_value: ${%s}' % word, variable_value)
                     if is_change == "headers":

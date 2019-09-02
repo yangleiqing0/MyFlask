@@ -3,6 +3,7 @@ from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session
 from modles.case_group import CaseGroup
 from modles.request_headers import RequestHeaders
+from modles.testcase import TestCases
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
 from app import db
@@ -40,7 +41,7 @@ class CaseGroupList(MethodView):
         case_groups = user.user_case_groups
         print('case_groups: ', case_groups)
         if request.is_xhr:
-            case_groups_query_sql = 'select id,name from case_group where user_id=?'
+            case_groups_query_sql = 'select id,name from case_group where user_id=%s'
             case_groups = cdb().query_db(case_groups_query_sql, (user_id,))
             case_groups_dict = {}
             for index, case_group in enumerate(case_groups):
@@ -75,7 +76,7 @@ class CaseGroupUpdate(MethodView):
 
     def post(self, id=-1):
         name, description = request_get_values('name', 'description')
-        case_group_update_sql = 'update case_group set name=?,description=? where id=?'
+        case_group_update_sql = 'update case_group set name=%s,description=%s where id=%s'
         cdb().opeat_db(case_group_update_sql, (name, description, id))
         FrontLogs('编辑测试用例分组 name:%s 成功' % name).add_to_front_log()
         # app.logger.info('message:update case_group success, name: %s' % name)
@@ -85,7 +86,7 @@ class CaseGroupUpdate(MethodView):
 class CaseGroupDelete(MethodView):
 
     def get(self,id=-1):
-        delete_case_group_sql = 'delete from case_group where id=?'
+        delete_case_group_sql = 'delete from case_group where id=%s'
         cdb().opeat_db(delete_case_group_sql, (id,))
         FrontLogs('删除测试用例分组 id:%s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete case_group success, id: %s' % id)
@@ -95,9 +96,10 @@ class CaseGroupDelete(MethodView):
 class CaseGroupSearchCase(MethodView):
 
     def get(self, id=-1):
+        user_id = session.get('user_id')
         case_group = CaseGroup.query.get(id)
         print('CaseGroupSearchCase:case_group: ', case_group)
-        testcases = case_group.testcases
+        testcases = TestCases.query.filter(TestCases.group_id == id, TestCases.user_id == user_id, TestCases.testcase_scene_id is None).all()
         print('CaseGroupSearchCase:testcases: ', testcases)
         request_headers = RequestHeaders.query.all()
         print('CaseGroupSearchCase:request_headers: ', request_headers)

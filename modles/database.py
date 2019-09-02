@@ -17,7 +17,7 @@ class Mysql(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     user = db.Column(db.String(50))
     password = db.Column(db.String(50))
-    db_name = db.Column(db.Integer)
+    db_name = db.Column(db.String(50))
 
     def __init__(self, name, ip,  port, user, password, db_name, description='', user_id=None):
         self.name = name

@@ -9,12 +9,11 @@ class TestCaseScene(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
     description = db.Column(db.String(50))
-    group_id = db.Column(db.Integer, db.ForeignKey(CaseGroup.id))
+    group_id = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True)
     is_model = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
-    testcases = db.relationship('TestCases', backref='testcase_scene')
 
     def __init__(self, name, group_id=None, description='', is_model=0, user_id=None):
         self.name = name

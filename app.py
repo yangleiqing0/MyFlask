@@ -119,8 +119,7 @@ def db_create_pre_all():
     from modles.time_message import TimeMessage
 
     db.create_all()
-
-    to_insert_data(user_id=1)
+    to_insert_data()
 
 
 def get_app_mail():

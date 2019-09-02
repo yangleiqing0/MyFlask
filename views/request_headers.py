@@ -37,7 +37,7 @@ class RequestHeadersList(MethodView):
         request_headers = RequestHeaders.query.all()
         print('request_headers:', request_headers)
         if request.is_xhr:
-            request_headers_query_sql = 'select id,name from request_headers where user_id=?'
+            request_headers_query_sql = 'select id,name from request_headers where user_id=%s'
             request_headerses = cdb().query_db(request_headers_query_sql, (user_id,))
             request_headers_dict = {}
             for index, request_headers in enumerate(request_headerses):
@@ -69,7 +69,7 @@ class RequestHeadersUpdate(MethodView):
 
     def post(self, id=-1):
         name, value, description = request_get_values('name', 'value', 'description')
-        request_headers_update_sql = 'update request_headers set name=?,value=?,description=? where id=?'
+        request_headers_update_sql = 'update request_headers set name=%s,value=%s,description=%s where id=%s'
         cdb().opeat_db(request_headers_update_sql, (name, value, description, id))
         FrontLogs('编辑请求头部 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:update request_headers success, name: %s' % name)
@@ -80,7 +80,7 @@ class RequestHeadersDelete(MethodView):
 
     def get(self, id=-1):
 
-        delete_request_headers_sql = 'delete from request_headers where id=?'
+        delete_request_headers_sql = 'delete from request_headers where id=%s'
         cdb().opeat_db(delete_request_headers_sql, (id,))
         FrontLogs('删除请求头部 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete request_headers success, id: %s' % id)

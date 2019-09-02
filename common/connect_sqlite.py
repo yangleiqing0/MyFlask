@@ -1,26 +1,29 @@
-import sqlite3
-import config
+import pymysql
+from config import host, port, root, pwd, db
 
 
 class cdb:
+    # def __init__(self):
+    #     self.conn = sqlite3.connect(config.DATABASE_URL)
+    #     self.cur = self.re = self.result = None
+
     def __init__(self):
-        self.conn = sqlite3.connect(config.DATABASE_URL)
-        self.cur = self.re = self.result = None
+        self.conn = pymysql.connect(host, root, pwd, db, port, charset='utf8mb4')
 
     def db_cur(self):
         return self.conn.cursor()
 
-    def query_db(self, sql, params=None, one=False):
+    def query_db(self, sql, params='', one=False):
         try:
             self.cur = self.db_cur()
             if params:
-                self.re = self.cur.execute(sql, params)
+                self.cur.execute(sql, params)
             else:
-                self.re = self.cur.execute(sql)
+                self.cur.execute(sql)
             if one:
-                self.result = self.re.fetchone()
+                self.result = self.cur.fetchone()
             else:
-                self.result = self.re.fetchall()
+                self.result = self.cur.fetchall()
             return self.result
         finally:
             self.cur.close()

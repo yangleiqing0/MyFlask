@@ -127,7 +127,7 @@ class TestCaseAdd(MethodView):
         page, scene_page = request_get_values('page', 'scene_page')
         case_groups = user.user_case_groups
         testcase_scene_id = request.args.get('testcase_scene_id', None)
-        request_headers_querys_sql = 'select id,name from request_headers where user_id=?'
+        request_headers_querys_sql = 'select id,name from request_headers where user_id=%s'
         request_headers = cdb().query_db(request_headers_querys_sql, (user_id,))
         print('request_headers: ', request_headers)
         FrontLogs('进入添加测试用例页面').add_to_front_log()
@@ -148,7 +148,7 @@ class TestCaseAdd(MethodView):
         group_id = request.form.get('case_group', None)
         data = request.form.get('data', '').replace('/n', '').replace(' ', '')
 
-        request_headers_query_sql = 'select value from request_headers where id=?'
+        request_headers_query_sql = 'select value from request_headers where id=%s'
         request_headers = cdb().query_db(request_headers_query_sql, (request_headers_id,), True)[0]
         print('TestCaseAdd request_headers before: ', request_headers, method)
         request_headers = AnalysisParams().analysis_params(request_headers, is_change="headers")
@@ -224,10 +224,10 @@ class UpdateTestCase(MethodView):
         id = request.args.get('id', id)
         user_id = session.get('user_id')
         update_regist_variable(id, old_sql_regist_variable, new_sql_regist_variable, user_id)
-        update_test_case_sql = 'update testcases set name=?,url=?,data=?,method=?,group_id=?,' \
-                               'request_headers_id=?,regist_variable=?,regular=?,hope_result=?,' \
-                               'old_sql=?,new_sql=?,old_sql_regist_variable=?,new_sql_regist_variable=?,' \
-                               'old_sql_hope_result=?, new_sql_hope_result=?, old_sql_id=?, new_sql_id=? where id=?'
+        update_test_case_sql = 'update testcases set name=%s,url=%s,data=%s,method=%s,group_id=%s,' \
+                               'request_headers_id=%s,regist_variable=%s,regular=%s,hope_result=%s,' \
+                               'old_sql=%s,new_sql=%s,old_sql_regist_variable=%s,new_sql_regist_variable=%s,' \
+                               'old_sql_hope_result=%s, new_sql_hope_result=%s, old_sql_id=%s, new_sql_id=%s where id=%s'
         cdb().opeat_db(update_test_case_sql, (name, url, data, method, group_id,
                                               request_headers_id, regist_variable, regular, hope_result, old_sql,
                                               new_sql, old_sql_regist_variable, new_sql_regist_variable,
@@ -268,7 +268,7 @@ class DeleteTestCase(MethodView):
     def get(self, id=-1):
         page, scene_page = request_get_values('page', 'scene_page')
         testcase_scene_id = request.args.get('testcase_scene_id', None)
-        delete_test_case_sql = 'delete from testcases where id=?'
+        delete_test_case_sql = 'delete from testcases where id=%s'
         cdb().opeat_db(delete_test_case_sql, (id,))
         FrontLogs('删除测试用例 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete testcases success, id: %s' % id)

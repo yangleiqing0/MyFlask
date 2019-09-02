@@ -64,7 +64,7 @@ class VariableUpdate(MethodView):
 
     def post(self, id=-1):
         name, value, description= request_get_values('name', 'value', 'description')
-        variable_update_sql = 'update variables set name=?,value=?,description=? where id=?'
+        variable_update_sql = 'update variables set name=%s,value=%s,description=%s where id=%s'
         cdb().opeat_db(variable_update_sql, (name, value, description, id))
         # app.logger.info('message:update variables success, name: %s' % name)
         FrontLogs('编辑全局变量 name: %s 成功' % name).add_to_front_log()
@@ -74,7 +74,7 @@ class VariableUpdate(MethodView):
 class VariableDelete(MethodView):
 
     def get(self, id=-1):
-        delete_variables_sql = 'delete from variables where id=?'
+        delete_variables_sql = 'delete from variables where id=%s'
         cdb().opeat_db(delete_variables_sql, (id,))
         FrontLogs('删除全局变量 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete variables success, id: %s' % id)

@@ -17,7 +17,7 @@ class Login(MethodView):
 
     def post(self):
         username, password = request_get_values('username', 'password')
-        user_query_sql = 'select password from users where username=?'
+        user_query_sql = 'select password from users where username=%s'
         pwd = cdb().query_db(user_query_sql, (username,), True)
         if pwd and password == pwd[0]:
             user = User.query.filter(User.username == username).first()
