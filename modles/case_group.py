@@ -11,7 +11,10 @@ class CaseGroup(db.Model):
     timestamp = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
-    def __init__(self, name, description, user_id=None):
+    case_group_testcase_scenes = db.relationship('TestCaseScene', backref='testcase_scene_case_group')
+    testcases = db.relationship('TestCases', backref='case_group')
+
+    def __init__(self, name, description='', user_id=1):
         self.name = name
         self.description = description
         self.user_id = user_id

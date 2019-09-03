@@ -14,8 +14,8 @@ class Mail(db.Model):
     to_user_list = db.Column(db.String(50))
     email_method = db.Column(db.Integer)
 
-    def __init__(self, name='', subject='', user_id=None,
-                 to_user_list='', email_method=0):
+    def __init__(self, name='', subject='', user_id=1,
+                 to_user_list='', email_method=1):
         self.name = name
         self.subject = subject
         self.to_user_list = to_user_list

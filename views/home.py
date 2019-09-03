@@ -19,15 +19,6 @@ class Home(MethodView):
 class DbCreatAll(MethodView):
 
     def get(self):
-
-        from modles.testcase import TestCases
-        from modles.case_group import CaseGroup
-        from modles.variables import Variables
-        from modles.request_headers import RequestHeaders
-        from modles.testcase_start_times import TestCaseStartTimes
-        from modles.testcase_result import TestCaseResult
-        from modles.testcase_scene import TestCaseScene
-        from modles.user import User
         db.create_all()
         to_insert_data()
 

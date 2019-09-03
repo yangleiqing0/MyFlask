@@ -102,23 +102,11 @@ manager.add_command('db', MigrateCommand)
 @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
 def db_create_pre_all():
     session['app_rootpath'] = app.root_path
-    from views.job import init_scheduler
-    from common.pre_db_insert_data import to_insert_data
-    from modles.testcase import TestCases
-    from modles.case_group import CaseGroup
-    from modles.variables import Variables
-    from modles.request_headers import RequestHeaders
-    from modles.testcase_start_times import TestCaseStartTimes
-    from modles.testcase_result import TestCaseResult
-    from modles.testcase_scene import TestCaseScene
-    from modles.user import User
-    from modles.job import Job
-    from modles.mail import Mail
-    from modles.database import Mysql
-    from modles.testcase_scene_result import TestCaseSceneResult
-    from modles.time_message import TimeMessage
 
     db.create_all()
+
+    from views.job import init_scheduler
+    from common.pre_db_insert_data import to_insert_data
     to_insert_data()
 
 

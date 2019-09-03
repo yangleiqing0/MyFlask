@@ -100,7 +100,7 @@ class Testcaseresult:
                                          'old_sql_value,test_case_result.new_sql_value,test_case_result.' \
                                          'testcase_test_result,test_case_result.old_sql_value_result,test_case_result.new_sql_value_result' \
                                          ' from testcases,test_case_result where testcases.id=' \
-                                         'test_case_result.testcase_id and testcases.testcase_scene_id isnull and ' \
+                                         'test_case_result.testcase_id and testcases.testcase_scene_id is Null and ' \
                                          'test_case_result.testcase_start_time_id=%s' \
                                          % testcase_time_id
             self.testcase_results = cdb().query_db(testcase_results_query_sql)
@@ -115,7 +115,7 @@ class Testcaseresult:
                                          'test_case_result.new_sql_value_result,testcases.testcase_scene_id' \
                                          ' from testcases, test_case_result ' \
                                          'where testcases.id=test_case_result.testcase_id and ' \
-                                         'testcases.testcase_scene_id not null and ' \
+                                         'testcases.testcase_scene_id is not NULL and ' \
                                          'test_case_result.testcase_start_time_id=%s' \
                                          % testcase_time_id
             self.testcase_results = cdb().query_db(testcase_results_query_sql)

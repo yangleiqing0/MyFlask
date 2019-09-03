@@ -11,7 +11,6 @@ from modles.mail import Mail
 from modles.testcase import TestCases
 from modles.testcase_scene import TestCaseScene
 from modles.testcase_start_times import TestCaseStartTimes
-from modles.user import User
 from app import db
 from views.testcase_report import get_report
 from views.testcase_request import post_testcase

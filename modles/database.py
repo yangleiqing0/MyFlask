@@ -19,7 +19,7 @@ class Mysql(db.Model):
     password = db.Column(db.String(50))
     db_name = db.Column(db.String(50))
 
-    def __init__(self, name, ip,  port, user, password, db_name, description='', user_id=None):
+    def __init__(self, name, ip,  port, user, password, db_name, description='', user_id=1):
         self.name = name
         self.ip = ip
         self.port = port

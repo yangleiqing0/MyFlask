@@ -1,0 +1,13 @@
+flask_apscheduler
+requests
+xlsxwriter
+flask_wtf
+wtforms
+flask_sqlalchemy
+flask flask_migrate
+flask_script
+flask_mail
+flask_apscheduler
+requests
+flask_sqlalchemy
+selenium

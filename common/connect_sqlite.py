@@ -1,3 +1,4 @@
+# encoding=utf-8
 import pymysql
 from config import host, port, root, pwd, db
 
@@ -15,6 +16,7 @@ class cdb:
 
     def query_db(self, sql, params='', one=False):
         try:
+            print('执行sql:', sql)
             self.cur = self.db_cur()
             if params:
                 self.cur.execute(sql, params)

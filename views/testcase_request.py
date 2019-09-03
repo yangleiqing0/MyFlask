@@ -57,20 +57,6 @@ class TestCaseRequest(MethodView):
             case_groups_new.append(case_group_NullObject)
             print('testcase_list: ', case_group_NullObject.name, testcase_list)
 
-        no_case_group = type('no_case_group', (object,), dict(a=-1))
-        case_groups_new.append(no_case_group)
-        no_case_group.testcases = TestCases.query.filter(
-            TestCases.group_id.in_([None, '']), TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).all()
-        no_case_group.name = "<span style='color: blue'>未分组测试用例</span>"
-        print('no_case_group testcases :', no_case_group.testcases)
-
-        no_scene_group = type('testcase_scene_group', (object,), dict(a=-1))
-        case_groups_new.append(no_scene_group)
-        no_scene_group.testcases = TestCaseScene.query.filter(
-            TestCaseScene.group_id.is_(None), TestCaseScene.user_id == user_id).all()
-        no_scene_group.name = "<span style='color: blue'>未分组测试场景</span>"
-        print('no_scene_group.testcases :', no_scene_group.testcases)
-
         return render_template('test_case_request/test_case_request.html', case_groups=case_groups_new)
 
     def post(self):

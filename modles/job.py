@@ -17,10 +17,10 @@ class Job(db.Model):
     triggers = db.Column(db.String(50))
     cron = db.Column(db.String(50))
     is_start = db.Column(db.Integer)
-    mail_id = db.Column(db.Integer)
+    mail_id = db.Column(db.Integer, db.ForeignKey(Mail.id))
 
     def __init__(self, testcases='', testcase_scenes='',  description='', user_id=1,
-                 triggers='cron', cron='', is_start=0, mail_id=None):
+                 triggers='cron', cron='', is_start=0, mail_id=1):
         self.name = '任务' + str(datetime.now())[:19]
         self.testcases = testcases
         self.testcase_scenes = testcase_scenes

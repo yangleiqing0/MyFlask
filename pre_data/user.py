@@ -1,3 +1,3 @@
 Admin = ('admin', 'admin')
-Sytem = ('system', 'system')
+System = ('system', 'system')
 

@@ -1,7 +1,8 @@
 微信：15155492421
 
 安装过程：
-1：下载https://github.com/yangleiqing0/MyFlask.git,首次刷新如果是空白页面重新刷新下即可 
+1：下载https://github.com/yangleiqing0/MyFlask.git,首次刷新如果是空白页面重新刷新下即可
+2: mysql分支支持以mysql作为存储，需要在config.py中设置配置信息 
 
 2：需要下载的安装包:flask_apscheduler requests xlsxwriter flask_wtf wtforms flask_sqlalchemy
 flask flask_migrate flask_script flask_mail flask_apscheduler requests flask_sqlalchemy selenium  

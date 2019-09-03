@@ -15,9 +15,9 @@ class TestCases(db.Model):
     regist_variable = db.Column(db.String(30))
     regular = db.Column(db.TEXT)
     method = db.Column(db.String(10), nullable=False)
-    group_id = db.Column(db.Integer)
+    group_id = db.Column(db.Integer, db.ForeignKey(CaseGroup.id))
     request_headers_id = db.Column(db.Integer, db.ForeignKey(RequestHeaders.id))
-    testcase_scene_id = db.Column(db.Integer)
+    testcase_scene_id = db.Column(db.Integer, db.ForeignKey(TestCaseScene.id))
     hope_result = db.Column(db.String(200))
     is_model = db.Column(db.Integer)
     timestamp = db.Column(db.DateTime, index=True)
@@ -31,8 +31,8 @@ class TestCases(db.Model):
     old_sql_id = db.Column(db.Integer)
     new_sql_id = db.Column(db.Integer)
 
-    def __init__(self, name, url, data, regist_variable, regular, method, group_id,
-                 request_headers_id,  testcase_scene_id=None, hope_result='', is_model=0, user_id=None,
+    def __init__(self, name, url, data, regist_variable, regular, method, group_id=1,
+                 request_headers_id=1,  testcase_scene_id=1, hope_result='', is_model=0, user_id=1,
                  old_sql='', new_sql='', old_sql_regist_variable='', new_sql_regist_variable='',
                  old_sql_hope_result='', new_sql_hope_result='', old_sql_id=None, new_sql_id=None):
         self.regist_variable = regist_variable
