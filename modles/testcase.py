@@ -32,7 +32,7 @@ class TestCases(db.Model):
     new_sql_id = db.Column(db.Integer)
 
     def __init__(self, name, url, data, regist_variable, regular, method, group_id=1,
-                 request_headers_id=1,  testcase_scene_id=1, hope_result='', is_model=0, user_id=1,
+                 request_headers_id=1,  testcase_scene_id=None, hope_result='', is_model=0, user_id=1,
                  old_sql='', new_sql='', old_sql_regist_variable='', new_sql_regist_variable='',
                  old_sql_hope_result='', new_sql_hope_result='', old_sql_id=None, new_sql_id=None):
         self.regist_variable = regist_variable

@@ -256,7 +256,7 @@ class TestCaseCopy(MethodView):
                                  user_id=testcase_self.user_id, old_sql=testcase_self.old_sql,
                                  new_sql=testcase_self.old_sql, old_sql_regist_variable=testcase_self.old_sql_regist_variable,
                                  new_sql_regist_variable=testcase_self.new_sql_regist_variable, old_sql_hope_result=testcase_self.old_sql_hope_result,
-                                 new_sql_hope_result=testcase_self.new_sql_hope_result,old_sql_id=testcase_self.old_sql_id,
+                                 new_sql_hope_result=testcase_self.new_sql_hope_result, old_sql_id=testcase_self.old_sql_id,
                                  new_sql_id=testcase_self.new_sql_id))
         db.session.commit()
         FrontLogs('复制测试用例 name: %s 为模板成功' % testcase_self.name).add_to_front_log()
