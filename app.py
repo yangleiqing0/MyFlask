@@ -61,8 +61,8 @@ def create_app():
 
 
 def create_db():
-    # sql = 'drop database if EXISTS flasktest'
-    # ConnMysql(config.host, config.port, config.root, config.pwd, '', sql).operate_mysql()
+    sql = 'drop database if EXISTS flasktest'
+    ConnMysql(config.host, config.port, config.root, config.pwd, '', sql).operate_mysql()
     sql2 = 'create database IF NOT EXISTS flasktest'
     ConnMysql(config.host, config.port, config.root, config.pwd, '', sql2).operate_mysql()
 

@@ -33,6 +33,7 @@ class VariableAdd(MethodView):
 class VariableList(MethodView):
 
     def get(self):
+        from common.data.dynamic_variable import get_page
         user_id = session.get('user_id')
         # 指定渲染的页数
         variable_search = request_get_values('variable_search')
@@ -42,13 +43,11 @@ class VariableList(MethodView):
         if variable_search:
             pagination = Variables.query.filter(Variables.user_id == user_id, Variables.name.like(
                 "%" + variable_search + "%")). \
-                order_by(Variables.timestamp.desc()).paginate(page, per_page=current_app.config[
-                'FLASK_POST_PRE_ARGV'], error_out=False)
+                order_by(Variables.timestamp.desc()).paginate(page, per_page=next(get_page), error_out=False)
         else:
             pagination = Variables.query.filter(Variables.user_id == user_id,
                                                 Variables.is_private ==0).\
-                order_by(Variables.timestamp.desc()).paginate(page, per_page=current_app.config[
-                'FLASK_POST_PRE_ARGV'], error_out=False)
+                order_by(Variables.timestamp.desc()).paginate(page, per_page=next(get_page), error_out=False)
         # 返回一个内容对象
         variables = pagination.items
         print("pagination: ", pagination)

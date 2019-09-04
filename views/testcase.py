@@ -98,13 +98,14 @@ class TestCastList(MethodView):
         request_headers = user.user_request_headers
         print('request_headers: ', request_headers)
         page = request.args.get('page', 1, type=int)
+        from common.data.dynamic_variable import get_page
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
         pagination = TestCases.query.filter(TestCases.name.like(
             "%" + testcase_search + "%") if testcase_search is not None else "",
                                             TestCases.testcase_scene_id.is_(None),
                                             TestCases.user_id == user_id).order_by \
             (TestCases.timestamp.desc()).paginate(
-            page, per_page=current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
+            page, per_page=next(get_page), error_out=False)
         # 返回一个内容对象
         testcaseses = pagination.items
         print("pagination: ", pagination)

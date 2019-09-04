@@ -56,6 +56,7 @@ class MysqlUpdate(MethodView):
 
 class MysqlList(MethodView):
     def get(self):
+        from common.data.dynamic_variable import get_page
         user_id = session.get('user_id')
         mysql_search = request_get_values('mysql_search')
         page = request.args.get('page', 1, type=int)
@@ -64,7 +65,7 @@ class MysqlList(MethodView):
         pagination = Mysql.query.filter(Mysql.name.like(
                 "%"+mysql_search+"%") if mysql_search is not None else "", Mysql.user_id == user_id). \
             order_by(Mysql.timestamp.desc()).paginate(
-            page, per_page=current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
+            page, per_page=next(get_page), error_out=False)
         # 返回一个内容对象
         mysqls = pagination.items
         for mysql in mysqls:

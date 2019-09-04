@@ -64,6 +64,7 @@ class TestCaseSceneUpdate(MethodView):
 class TestCaseSceneTestCaseList(MethodView):
 
     def get(self):
+        from common.data.dynamic_variable import get_page
         user_id = session.get('user_id')
         testcase_scene_search = request_get_values('testcase_scene_search')
         model_testcase_scenes = TestCaseScene.query.filter(TestCaseScene.is_model == 1, TestCaseScene.user_id == user_id).all()
@@ -73,7 +74,7 @@ class TestCaseSceneTestCaseList(MethodView):
 
         pagination = TestCaseScene.query.filter(TestCaseScene.name.like(
                 "%"+testcase_scene_search+"%") if testcase_scene_search is not None else "", TestCaseScene.user_id == user_id).order_by(TestCaseScene.timestamp.desc()).paginate(page, per_page=
-        current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
+        next(get_page), error_out=False)
         # 返回一个内容对象
         testcase_scenes = pagination.items
         print("request_headers_pagination: ", pagination)
@@ -88,6 +89,8 @@ class TestCaseSceneRun(MethodView):
         testcase_scene_id = request.args.get('testcase_scene_id')
         testcase_scene = TestCaseScene.query.get(testcase_scene_id)
         testcases = testcase_scene.testcases
+        if not testcases:
+            return json.dumps({'testcase_results': "场景未存在用例"})
         testcase_results = []
         for testcase in testcases:
             testcase_result, regist_variable_value = to_execute_testcase(testcase)

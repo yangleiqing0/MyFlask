@@ -1,6 +1,6 @@
 import os
 
-host = '192.168.12.50.'
+host = '192.168.1.11'
 port = 3333
 db = 'flasktest'
 root = 'root'
@@ -15,8 +15,6 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://{}:{}@{}:{}/{}?charset=utf8mb4'.forma
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_COMMIT_TEARDOWN = False
 
-
-FLASK_POST_PRE_ARGV = 6
 
 # 这个配置将来会被禁用,设置为True或者False可以解除警告信息,建议设置False
 

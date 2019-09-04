@@ -119,6 +119,7 @@ class JobSchedulerUpdate(MethodView):
 class JobList(MethodView):
 
     def get(self):
+        from common.data.dynamic_variable import get_page
         user_id = session.get('user_id')
         page = request.args.get('page', 1, type=int)
         job_search = request_get_values('job_search')
@@ -127,7 +128,7 @@ class JobList(MethodView):
         pagination = Job.query.filter(Job.name.like(
                 "%"+job_search+"%") if job_search is not None else "", Job.user_id == user_id). \
             order_by(Job.timestamp.desc()).paginate(
-            page, per_page=current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
+            page, per_page=next(get_page), error_out=False)
         # 返回一个内容对象
         jobs = pagination.items
         return render_template('job/job_list.html', pagination=pagination, jobs=jobs, page=page)

@@ -57,6 +57,7 @@ class MailUpdate(MethodView):
 
 class MailList(MethodView):
     def get(self):
+        from common.data.dynamic_variable import get_page
         user_id = session.get('user_id')
         mail_search = request_get_values('mail_search')
         page = request.args.get('page', 1, type=int)
@@ -65,7 +66,7 @@ class MailList(MethodView):
         pagination = Mail.query.filter(Mail.name.like(
                 "%"+mail_search+"%") if mail_search is not None else "", Mail.user_id == user_id). \
             order_by(Mail.timestamp.desc()).paginate(
-            page, per_page=current_app.config['FLASK_POST_PRE_ARGV'], error_out=False)
+            page, per_page=next(get_page), error_out=False)
         # 返回一个内容对象
         mails = pagination.items
         return render_template('mail/mail_list.html', pagination=pagination, mails=mails)

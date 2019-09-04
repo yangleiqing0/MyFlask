@@ -85,5 +85,7 @@ def to_insert_data(user_id=1):
     add_pre_data_go(user_id=user_id)
 
 
+
+
 # if __name__ == '__main__':
 #     add_pre_user()
