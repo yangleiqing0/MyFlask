@@ -8,6 +8,7 @@ class TestCaseStartTimes(BaseModel, db.Model):
     __tablename__ = 'test_case_start_times'
     filename = db.Column(db.String(200))
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
+    time_strftime = db.Column(db.String(40))
 
     this_time_testcase_result = db.relationship('TestCaseResult', backref='test_case_which_time')
 

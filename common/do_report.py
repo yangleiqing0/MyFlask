@@ -17,7 +17,7 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
     testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
     testcase_scene_counts_sql = 'select testcase_scenes.name, count(*),testcase_scenes.id from test_case_start_times,test_case_result,testcases,testcase_scenes where test_case_start_times.id=' \
     'test_case_result.testcase_start_time_id and testcases.id=test_case_result.testcase_id and testcases.testcase_scene_id=testcase_scenes.id ' \
-    'and test_case_start_times.id=%s and testcases.testcase_scene_id is not null group by testcases.testcase_scene_id' % testcase_time_id
+    'and test_case_start_times.id=%s and testcases.testcase_scene_id is not Null group by testcases.testcase_scene_id' % testcase_time_id
 
     testcase_scene_counts = cdb().query_db(testcase_scene_counts_sql)
     print('testcase_scene_counts count:', testcase_scene_counts)
