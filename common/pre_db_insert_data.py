@@ -27,7 +27,7 @@ def add_pre_data(key, user_id, table=None):
     if "Variavles" in table:
         if Variables.query.filter(Variables.name == "%s" % var_name, Variables.user_id == user_id).count() == 0:
             print('Variables.query.filter user_id:', user_id)
-            instance = Variables(var_name, eval(key), user_id=user_id)
+            instance = Variables(var_name, *eval(key), user_id=user_id)
             db.session.add(instance)
             db.session.commit()
 
