@@ -20,3 +20,5 @@ class TestGroup(BaseModel, db.Model):
     def __init__(self, name, description=''):
         super().__init__(name)
         self.description = description
+
+

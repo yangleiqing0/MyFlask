@@ -139,8 +139,8 @@ class TestCaseAdd(MethodView):
         user_id = session.get('user_id')
         print('要添加的测试用例：', request.form)
         page, scene_page, name, url, method, regist_variable, regular, request_headers_id, old_sql, new_sql, \
-        old_sql_regist_variable, new_sql_regist_variable, old_sql_hope_result, new_sql_hope_result, old_mysql_id, \
-        new_mysql_id = \
+            old_sql_regist_variable, new_sql_regist_variable, old_sql_hope_result, new_sql_hope_result, old_sql_id, \
+            new_sql_id = \
             request_get_values('page', 'scene_page', 'name', 'url', 'method',
                                'regist_variable', 'regular', 'request_headers', 'old_sql', 'new_sql',
                                'old_sql_regist_variable', 'new_sql_regist_variable', 'old_sql_hope_result',
@@ -167,13 +167,17 @@ class TestCaseAdd(MethodView):
             return '''%s''' % result
 
         print('testcase_scene_id的值：', testcase_scene_id, type(testcase_scene_id))
+        if not old_sql_id:
+            old_sql_id = None
+
+        if not new_sql_id:
+            new_sql_id = None
         testcase = TestCases(
             name, url, data, regist_variable, regular, method, group_id,
-            request_headers_id, hope_result=hope_result,
-            testcase_scene_id=testcase_scene_id, user_id=user_id, old_sql=old_sql, new_sql=new_sql,
+            request_headers_id, testcase_scene_id, hope_result, user_id=user_id, old_sql=old_sql, new_sql=new_sql,
             old_sql_regist_variable=old_sql_regist_variable, new_sql_regist_variable=new_sql_regist_variable,
-            old_sql_hope_result=old_sql_hope_result, new_sql_hope_result=new_sql_hope_result, old_mysql_id=old_mysql_id,
-            new_mysql_id=new_mysql_id)
+            old_sql_hope_result=old_sql_hope_result, new_sql_hope_result=new_sql_hope_result, old_sql_id=old_sql_id,
+            new_sql_id=new_sql_id)
         add_regist_variable(old_sql_regist_variable, new_sql_regist_variable, user_id)
         db.session.add(testcase)
         db.session.commit()
@@ -216,22 +220,29 @@ class UpdateTestCase(MethodView):
     def post(self, id=-1):
         page, scene_page, name, url, method, data, group_id, request_headers_id, regist_variable, regular \
             , hope_result, testcase_scene_id, old_sql, new_sql, old_sql_regist_variable, new_sql_regist_variable, \
-            old_sql_hope_result, new_sql_hope_result, old_mysql_id, new_mysql_id = request_get_values(
+            old_sql_hope_result, new_sql_hope_result, old_sql_id, new_sql_id = request_get_values(
             'page', 'scene_page', 'name', 'url', 'method', 'data', 'case_group', 'request_headers', 'regist_variable',
             'regular', 'hope_result', 'testcase_scene_id', 'old_sql', 'new_sql', 'old_sql_regist_variable',
             'new_sql_regist_variable', 'old_sql_hope_result', 'new_sql_hope_result', 'old_mysql', 'new_mysql')
         print('UpdateTestCase post:testcase_scene_id ', testcase_scene_id, scene_page)
         id = request.args.get('id', id)
         user_id = session.get('user_id')
+
+        if not old_sql_id:
+            old_sql_id = None
+
+        if not new_sql_id:
+            new_sql_id = None
         update_regist_variable(id, old_sql_regist_variable, new_sql_regist_variable, user_id)
         update_test_case_sql = 'update testcases set name=%s,url=%s,data=%s,method=%s,group_id=%s,' \
                                'request_headers_id=%s,regist_variable=%s,regular=%s,hope_result=%s,' \
                                'old_sql=%s,new_sql=%s,old_sql_regist_variable=%s,new_sql_regist_variable=%s,' \
-                               'old_sql_hope_result=%s, new_sql_hope_result=%s, old_sql_id=%s, new_sql_id=%s where id=%s'
+                               'old_sql_hope_result=%s, new_sql_hope_result=%s, old_sql_id=%s, ' \
+                               'new_sql_id=%s where id=%s'
         cdb().opeat_db(update_test_case_sql, (name, url, data, method, group_id,
                                               request_headers_id, regist_variable, regular, hope_result, old_sql,
                                               new_sql, old_sql_regist_variable, new_sql_regist_variable,
-                                               old_sql_hope_result, new_sql_hope_result, old_mysql_id, new_mysql_id, id))
+                                               old_sql_hope_result, new_sql_hope_result, old_sql_id, new_sql_id, id))
 
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:update testcases success, name: %s' % name)

@@ -8,7 +8,6 @@
                         <label for="case_group" class="control-label col-md-4">测试场景分组</label>
                             <div class="col-md-4">
                                     <select name="case_group" id="case_group" class="form-control">
-                                        <option value=""></option>
                                         {% for case_group in case_groups %}
                                             <option  value="{{ case_group.id }}">{{ case_group.name }}</option>
                                         {% endfor %}

@@ -60,10 +60,14 @@ def create_app():
     return app
 
 
-sql = 'drop database if EXISTS flasktest'
-ConnMysql(config.host, config.port, config.root, config.pwd, '', sql).operate_mysql()
-sql2 = 'create database IF NOT EXISTS flasktest'
-ConnMysql(config.host, config.port, config.root, config.pwd, '', sql2).operate_mysql()
+def create_db():
+    # sql = 'drop database if EXISTS flasktest'
+    # ConnMysql(config.host, config.port, config.root, config.pwd, '', sql).operate_mysql()
+    sql2 = 'create database IF NOT EXISTS flasktest'
+    ConnMysql(config.host, config.port, config.root, config.pwd, '', sql2).operate_mysql()
+
+
+# create_db()
 
 create_app()
 
@@ -94,7 +98,13 @@ def login_required():
 def handle_404_error(err_msg):
     """自定义的异常处理函数"""
     # 这个函数的返回值就是前端用户看到的最终结果 (404错误页面)
-    return render_template('exception/404.html', err_msg=err_msg)
+    return render_template('exception/404.html', err_msg=err_msg, mes=404)
+
+
+@app.errorhandler(500)
+def handle_500_error(err_msg):
+
+    return render_template('exception/404.html', err_msg=err_msg, mes=500)
 
 
 manager = Manager(app)

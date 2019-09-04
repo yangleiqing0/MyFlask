@@ -9,6 +9,8 @@ class cdb:
     #     self.cur = self.re = self.result = None
 
     def __init__(self):
+        self.cur = None
+        self.result = None
         self.conn = pymysql.connect(host, root, pwd, db, port, charset='utf8mb4')
 
     def db_cur(self):
@@ -37,4 +39,5 @@ class cdb:
             self.cur.execute(sql, params)
             self.conn.commit()
         finally:
+            self.cur.close()
             self.conn.close()
