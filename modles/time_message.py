@@ -1,10 +1,10 @@
 from app import db
 from modles.variables import Variables
 from modles.testcase_start_times import TestCaseStartTimes
-from flask import session
+from . import Base
 
 
-class TimeMessage(db.Model):
+class TimeMessage(Base, db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     test_name = db.Column(db.String(100))
@@ -23,6 +23,7 @@ class TimeMessage(db.Model):
     start_time = db.relationship('TestCaseStartTimes', backref='time_scene_mes')
 
     def __init__(self, test_name, zdbm_version, test_pl, test_net, title_name, fail_sum, test_sum, test_success, time_strftime, score, time_id):
+        super().__init__()
         self.test_name = test_name
         self.zdbm_version = zdbm_version
         self.test_pl = test_pl

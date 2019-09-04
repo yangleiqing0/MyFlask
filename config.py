@@ -1,6 +1,6 @@
 import os
 
-host = '192.168.1.11'
+host = '192.168.12.50.'
 port = 3333
 db = 'flasktest'
 root = 'root'

@@ -1,13 +1,12 @@
-from datetime import datetime
 from app import db
+from . import Base
 
 
-class User(db.Model):
+class User(Base, db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(10), nullable=False)
     password = db.Column(db.String(10), nullable=False)
-    timestamp = db.Column(db.DateTime, index=True)
 
     user_testcase_scenes = db.relationship('TestCaseScene', backref='testcase_scene_user')
     user_testcases = db.relationship('TestCases', backref='testcase_user')
@@ -19,9 +18,9 @@ class User(db.Model):
     user_mysqls = db.relationship('Mysql', backref='mysql_user')
 
     def __init__(self, username, password):
+        super().__init__()
         self.username = username
         self.password = password
-        self.timestamp = datetime.now()
 
     def __repr__(self):
         return "<CaseGroup:%s,%s,%s>" % (self.id, self.username, self.password)

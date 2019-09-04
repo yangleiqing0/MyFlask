@@ -3,13 +3,11 @@ from modles.testcase_scene import TestCaseScene
 from modles.request_headers import RequestHeaders
 from modles.user import User
 from app import db
-from datetime import datetime
+from . import BaseModel
 
 
-class TestCases(db.Model):
+class TestCases(BaseModel, db.Model):
     __tablename__ = 'testcases'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50), nullable=False)
     url = db.Column(db.String(300), nullable=False)
     data = db.Column(db.TEXT)
     regist_variable = db.Column(db.String(30))
@@ -20,7 +18,6 @@ class TestCases(db.Model):
     testcase_scene_id = db.Column(db.Integer, db.ForeignKey(TestCaseScene.id))
     hope_result = db.Column(db.String(200))
     is_model = db.Column(db.Integer)
-    timestamp = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     old_sql = db.Column(db.String(200))
     new_sql = db.Column(db.String(200))
@@ -35,10 +32,9 @@ class TestCases(db.Model):
                  request_headers_id=1,  testcase_scene_id=None, hope_result='', is_model=0, user_id=1,
                  old_sql='', new_sql='', old_sql_regist_variable='', new_sql_regist_variable='',
                  old_sql_hope_result='', new_sql_hope_result='', old_sql_id=None, new_sql_id=None):
+        super().__init__(name)
         self.regist_variable = regist_variable
         self.regular = regular
-        self.timestamp = datetime.now()
-        self.name = name
         self.url = url
         self.data = data
         self.method = method

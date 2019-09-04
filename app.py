@@ -8,6 +8,7 @@ from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_mail import Mail
 from flask_apscheduler import APScheduler
+from common.connect_sql.connect_mysql import ConnMysql
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
 # flask_mail需要安装0.9.1版本
 
@@ -59,6 +60,11 @@ def create_app():
     return app
 
 
+sql = 'drop database if EXISTS flasktest'
+ConnMysql(config.host, config.port, config.root, config.pwd, '', sql).operate_mysql()
+sql2 = 'create database IF NOT EXISTS flasktest'
+ConnMysql(config.host, config.port, config.root, config.pwd, '', sql2).operate_mysql()
+
 create_app()
 
 
@@ -102,7 +108,20 @@ manager.add_command('db', MigrateCommand)
 @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
 def db_create_pre_all():
     session['app_rootpath'] = app.root_path
-
+    from modles.test import TestGroup
+    from modles.testcase import TestCases
+    from modles.case_group import CaseGroup
+    from modles.variables import Variables
+    from modles.request_headers import RequestHeaders
+    from modles.testcase_start_times import TestCaseStartTimes
+    from modles.testcase_result import TestCaseResult
+    from modles.testcase_scene import TestCaseScene
+    from modles.user import User
+    from modles.job import Job
+    from modles.mail import Mail
+    from modles.database import Mysql
+    from modles.testcase_scene_result import TestCaseSceneResult
+    from modles.time_message import TimeMessage
     db.create_all()
 
     from views.job import init_scheduler

@@ -9,9 +9,12 @@ class ConnMysql:
         print('ConnMysql:', host, port, user, password, db_name, sql)
         self.db = pymysql.connect(host=host, port=port, user=user,
                                   passwd=password, db=db_name, charset='utf8')
-        if sql:
-            sql = AnalysisParams().analysis_params(sql)
-        self.sql = sql
+        if db_name:
+            if sql:
+                sql = AnalysisParams().analysis_params(sql)
+            self.sql = sql
+        else:
+            self.sql = sql
 
     def select_mysql(self):
         if not self.sql:
@@ -30,9 +33,9 @@ class ConnMysql:
             return r[0]
         return r
 
-    def operate_mysql(self, sql):
+    def operate_mysql(self):
         cur = self.db.cursor()
-        cur.execute(sql)
+        cur.execute(self.sql)
         self.db.commit()
         cur.close()
 

@@ -1,26 +1,21 @@
 from app import db
-from datetime import datetime
 from modles.user import User
+from . import BaseModel
 
 
-class TestCaseStartTimes(db.Model):
+class TestCaseStartTimes(BaseModel, db.Model):
 
     __tablename__ = 'test_case_start_times'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    name = db.Column(db.String(50))
     filename = db.Column(db.String(200))
-    time_strftime = db.Column(db.String(40))
-    timestamp = db.Column(db.DateTime, index=True)
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
 
     this_time_testcase_result = db.relationship('TestCaseResult', backref='test_case_which_time')
 
     def __init__(self, time_strftime='', filename='', name='', user_id=1):
+        super().__init__(name)
         self.time_strftime = time_strftime
         self.filename = filename
-        self.name = name
         self.user_id = user_id
-        self.timestamp = datetime.now()
 
     def __repr__(self):
         return '<测试用例执行次数{} {} {} {} {} {}>' . format(

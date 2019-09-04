@@ -1,10 +1,10 @@
 from app import db
-from datetime import datetime
 from modles.testcase import TestCases
 from modles.testcase_start_times import TestCaseStartTimes
+from . import Base
 
 
-class TestCaseResult(db.Model):
+class TestCaseResult(Base, db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     testcase_name = db.Column(db.String(50), nullable=False)
@@ -20,7 +20,6 @@ class TestCaseResult(db.Model):
     testcase_start_time_id = db.Column(db.Integer, db.ForeignKey(TestCaseStartTimes.id))
     old_sql_value = db.Column(db.TEXT)
     new_sql_value = db.Column(db.TEXT)
-    timestamp = db.Column(db.DateTime, index=True)
     old_sql_value_result = db.Column(db.String(10))
     new_sql_value_result = db.Column(db.String(10))
     result = db.Column(db.String(10))
@@ -30,6 +29,7 @@ class TestCaseResult(db.Model):
     def __init__(self, testcase_id, testcase_name,  testcase_url, testcase_data, testcase_method, testcase_hope_result,
                  testcase_start_time_id, response_body, testcase_test_result='',
                  old_sql_value='', new_sql_value='', old_sql_value_result='', new_sql_value_result='', result='', scene_id=''):
+        super().__init__()
         self.testcase_id = testcase_id
         self.testcase_name = testcase_name
         self.testcase_url = testcase_url
@@ -39,7 +39,6 @@ class TestCaseResult(db.Model):
         self.testcase_start_time_id = testcase_start_time_id
         self.response_body = response_body
         self.testcase_test_result = testcase_test_result
-        self.timestamp = datetime.now()
         self.old_sql_value = old_sql_value
         self.new_sql_value = new_sql_value
         self.old_sql_value_result = old_sql_value_result
