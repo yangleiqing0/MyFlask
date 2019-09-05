@@ -83,20 +83,13 @@ class TestCastList(MethodView):
     def get(self):
         user_id = session.get('user_id')
         testcase_search = request_get_values('testcase_search')
+        show_var = Variables.query.filter(Variables.name == '_VAR_IS_SHOW').first().value
         user = User.query.get(user_id)
         model_testcases = TestCases.query.filter(TestCases.is_model == 1, TestCases.user_id == user_id).all()
-        # 过滤有测试用例分组的查询结果
-        testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).all()
-        # 获取测试用例分组的列表
-        print('testcases: ', testcases)
-        for testcase in testcases:
-            testcase.name = AnalysisParams().analysis_params(testcase.name)
-            testcase.url = AnalysisParams().analysis_params(testcase.url)
-            testcase.data = AnalysisParams().analysis_params(testcase.data)
+
         case_groups = user.user_case_groups
-        print('case_groups: ', case_groups)
         request_headers = user.user_request_headers
-        print('request_headers: ', request_headers)
+
         page = request.args.get('page', 1, type=int)
         from common.data.dynamic_variable import get_page
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
@@ -108,6 +101,13 @@ class TestCastList(MethodView):
             page, per_page=next(get_page), error_out=False)
         # 返回一个内容对象
         testcaseses = pagination.items
+        if show_var:
+            if show_var.isdigit():
+                if eval(show_var):
+                    for testcase in testcaseses:
+                        testcase.name, testcase.url, testcase.data = AnalysisParams().analysis_more_params(
+                            testcase.name, testcase.url, testcase.data, not_repeat=True)
+
         print("pagination: ", pagination)
         FrontLogs('进入测试用例列表页面 第%s页' % page).add_to_front_log()
         return render_template('test_case/test_case_list.html', pagination=pagination, items=testcaseses,

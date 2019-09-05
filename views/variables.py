@@ -43,14 +43,16 @@ class VariableList(MethodView):
         if variable_search:
             pagination = Variables.query.filter(Variables.user_id == user_id, Variables.name.like(
                 "%" + variable_search + "%")). \
-                order_by(Variables.timestamp.desc()).paginate(page, per_page=next(get_page), error_out=False)
+                order_by(Variables.timestamp.desc()).paginate(1, per_page=next(get_page), error_out=False)
         else:
             pagination = Variables.query.filter(Variables.user_id == user_id,
                                                 Variables.is_private ==0).\
-                order_by(Variables.timestamp.desc()).paginate(page, per_page=next(get_page), error_out=False)
+                order_by(Variables.id.desc()).paginate(page, per_page=next(get_page), error_out=False)
+        # 如果以创建时间进行排序，同一个时间内的个数大于设置的每页显示数，在每次进行筛选的时候都会不能显示超过显示数的
+        # 相同时间记录的对象
         # 返回一个内容对象
         variables = pagination.items
-        print("pagination: ", pagination)
+        print("pagination: ", pagination, variables)
         return render_template('variable/variable_list.html', pagination=pagination, items=variables)
 
 

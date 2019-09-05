@@ -61,13 +61,13 @@ def create_app():
 
 
 def create_db():
-    sql = 'drop database if EXISTS flasktest'
-    ConnMysql(config.host, config.port, config.root, config.pwd, '', sql).operate_mysql()
+    # sql = 'drop database if EXISTS flasktest'
+    # ConnMysql(config.host, config.port, config.root, config.pwd, '', sql).operate_mysql()
     sql2 = 'create database IF NOT EXISTS flasktest'
     ConnMysql(config.host, config.port, config.root, config.pwd, '', sql2).operate_mysql()
 
 
-# create_db()
+create_db()
 
 create_app()
 
@@ -76,7 +76,6 @@ create_app()
 def login_required():
 
     # print('username: ', session.get('username'), request.path, type(session.get('username')))
-
     if request.path == '/user_regist/':
         if session.get('username') != 'admin':
             return redirect(url_for('testcase_blueprint.test_case_list'))
@@ -103,7 +102,6 @@ def handle_404_error(err_msg):
 
 @app.errorhandler(500)
 def handle_500_error(err_msg):
-
     return render_template('exception/404.html', err_msg=err_msg, mes=500)
 
 
