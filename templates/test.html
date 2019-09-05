@@ -1,0 +1,54 @@
+ <button id="btn_alert">弹出测试</button>
+    <div id="cm_layer">
+        <div class="custom-layer" id="layer-content">
+        <p>Lorem ipsum dolor sit amet, consecteturllit anim id est laborum.</p>
+       <p>Lorem ipsum dolor sit amet, consecteturllit anim id est laborum.</p>
+   </div>
+  </div>
+<script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>
+ <style>
+     .custom-layer{
+     width: 80%;
+     padding: 10px;
+     -webkit-border-radius: 10px;
+     -moz-border-radius: 10px;
+     border-radius: 10px;
+     font: 16px "Microsoft YaHei UI";
+     background: #fff;
+}
+ </style>
+ <script>
+     function alertMCLayer(layerStr, activeStr) {
+         let oLayer = $(layerStr);
+
+         $('#layer-content').
+         //触发弹出蒙层
+         $(activeStr).on('click', function () {
+             oLayer.css({
+                 'display': 'flex',
+                 'display': '-webkit-flex',
+             })
+         });
+         let layer_height = window.innerHeight + 'px';
+         oLayer.css({
+             'position': 'fixed',
+             'left': '0',
+             'top': '0',
+             'width': '100%',
+             'height': layer_height,
+             'background': 'rgba(0,0,0,0.7)',
+             'display': 'none',
+             'justify-content': 'center',
+             'align-items': 'center',
+         });
+         oLayer.find('div').on('click', function (event) {
+             event.stopPropagation();//取消事件冒泡，点击外层时才会弹出    })
+             oLayer.on('click', function () {
+                 $(this).css('display', 'none');
+             })
+         });
+     }
+     $(function(){
+    alertMCLayer('#cm_layer','#btn_alert');
+  })
+ </script>

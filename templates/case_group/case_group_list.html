@@ -12,17 +12,29 @@
                                 <button type="submit" class="btn btn-default">Submit</button>
                             </form>
                         </div>
-                        <div class="col-md-offset-10">
+                        <div class="col-md-offset-11">
                             <div class="form-group col-md-8" style="margin-top: 7px">
-                              <a  href="{{ url_for('case_group_blueprint.case_group_add') }}" title="添加测试用例分组"><button class="btn btn-default " style="color: black">添加测试用例分组</button></a>
+                              <a  href="{{ url_for('case_group_blueprint.case_group_add') }}"><button class="btn btn-default " style="color: black">添加</button></a>
                             </div>
+                                <button id="btn_alert">弹出测试</button>
+                                    <div id="cm_layer">
+                                        <div class="custom-layer">
+                                            <div id="layer-content">
+                                            </div>
+                                            <div class="col-md-12">
+                                                <div style="text-align:center">
+                                                    <button id="layer-sub" type="button" class="btn btn-primary" style="margin-bottom: 0">确定</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                         </div>
                     </div>
                         <tr>
                             <th>ID</th>
                             <th>测试用例分组名称</th>
                             <th>测试用例分组备注</th>
-                            <th >操作</th>
+                            <th>操作</th>
                         </tr>
                         {% for item in items %}
                         <tr>
@@ -40,4 +52,76 @@
                 </div>
                 {{ macro.pagination_widget(pagination, 'case_group_blueprint.case_group_list') }}
 
+{% endblock %}
+{% block css %}
+<style>
+    .custom-layer{
+     width: 60%;
+     padding: 10px;
+     -webkit-border-radius: 10px;
+     -moz-border-radius: 10px;
+     border-radius: 10px;
+     font: 16px "Microsoft YaHei UI";
+     background: #fff;
+     float: left;
+}
+</style>
+{% endblock %}
+{% block js %}
+
+    <script>
+    $(document).ready(function () {
+        let cons = [];
+        $('th').each(function () {
+            $('#layer-content').append(
+                "<div class=\"form-group col-md-4 no-padding\" >\n" +
+                "                              <div class=\"col-md-9\">\n" +
+                "                              <label for=" + $(this).text() + "class=\"dots control-label col-md-8\" style=\"font-weight: normal;text-align: left\">" + $(this).text() + "</label>\n" +
+                "                              </div>\n" +
+                "                              <div class=\"col-md-3\">        " +
+                "                              <input   type=\"checkbox\" id=" + $(this).text() + " value=" + $(this).text() + " name=\"layer-th\" style=\"zoom:1.5;width: 20px\" checked=\"checked\" >\n" +
+                "                              </div>" +
+                "                         </div>");
+        });
+
+        function alertMCLayer(layerStr, activeStr) {
+         let oLayer = $(layerStr);
+
+         //触发弹出蒙层
+         $(activeStr).on('click', function () {
+             oLayer.css({
+                 'display': 'flex',
+                 'display': '-webkit-flex',
+             })
+         });
+         oLayer.css({
+             'position': 'fixed',
+             'left': '0',
+             'top': '0',
+             'width': '100%',
+             'height': '100%',
+             'background': 'rgba(0,0,0,0.7)',
+             'display': 'none',
+             'justify-content': 'center',
+             'align-items': 'center',
+             'z-index':999
+         });
+         $('#layer-sub').click(function () {
+                 $('#cm_layer').css('display','none');
+                 $('input[name="layer-th"]').each(function () {
+                     let text = $(this).get(0).value;
+                    if($(this).attr('checked') != 'checked'){
+                       $('th:contains(' + text +')').css('width','0')
+                    }else {
+                        $('th:contains(' + text +')').css('width','100%')
+                    }
+                 });
+
+             })
+     }
+     $(function(){
+        alertMCLayer('#cm_layer','#btn_alert');
+      })
+    })
+    </script>
 {% endblock %}

@@ -14,7 +14,7 @@
                     </div>
                         <div class="col-md-offset-8">
                             <div class="form-group col-md-12" style="margin-top: 7px">
-                                <a  href="{{ url_for('testcase_blueprint.add_test_case') }}?page={{ page }}" title="添加测试用例"><button class="btn btn-default" style="color: black">添加测试用例</button></a>
+                                <a  href="{{ url_for('testcase_blueprint.add_test_case') }}?page={{ page }}" title="添加"><button class="btn btn-default" style="color: black">添加测试用例</button></a>
                              <select class="btn btn-default" name="testcase_copy" id="testcase_copy" style="width: 120px;height: 34px">
                                 {% for model_testcase in model_testcases %}
                                     <option  value="{{ model_testcase.id }}" style="width: 20px">{{ model_testcase.name }}</option>
