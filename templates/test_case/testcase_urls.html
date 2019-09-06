@@ -1,0 +1,19 @@
+{% extends 'home.html' %}
+{% block title %}测试接口列表{% endblock %}
+{% block content %}
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>ID</th>
+                            <th>测试用例接口</th>
+                        </tr>
+                        {% for testcases_url in testcases_urls %}
+                        <tr>
+                            <td><a href="#"><span class="badge">{{ loop.index }}</span></a></td>          <!--使用循环的数字作为id -->
+                            <td>{{ testcases_url }}</td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+{% endblock %}
+
