@@ -11,7 +11,7 @@
                                         <span style="margin-left: 120px"><b>{{case_group.name | safe }}</b></span>
                                     </div>
                                     <div class="col-md-1">
-                                        <div class="badge" style="background-color: rgba(43,129,230,0.74)">{{ case_group.testcases.__len__()+ case_group.testcase_list.__len__() }}</div>
+                                        <div class="badge" style="background-color: #337ab7">{{ case_group.testcases.__len__()+ case_group.testcase_list.__len__() }}</div>
                                     </div>
 
                                 </div>
@@ -36,7 +36,7 @@
                                          {% else %}
                                              <div class="form-group col-md-4">
                                              <div>
-                                              <label for="testcase_scene{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal;text-align: left"><div class="badge badge-pill badge-primary">【场景】</div>{{ testcase.name }}</label>
+                                              <label for="testcase_scene{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal;text-align: left"><div class="badge badge-pill badge-primary" style="background-color: #337ab7">【场景】</div>{{ testcase.name }}</label>
                                               </div>
                                               <input  type="checkbox" id="testcase_scene{{ testcase.id }}" value="{{ testcase.id }}" name="testcase_scene" style="zoom:1.5;width: 20px" >
                                              </div>

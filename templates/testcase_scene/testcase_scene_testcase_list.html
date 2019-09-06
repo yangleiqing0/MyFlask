@@ -43,13 +43,14 @@
                                         </span>
                                     </div>
                                 {% else %}
-                                    <div class="badge-color-black col-md-3" ><span style="color: blue">【未分组的测试场景】</span></div>
+                                    <div class="badge-color-black col-md-3" ><span style="color: #337ab7">【未分组的测试场景】</span></div>
                                     <div class="col-md-9"><span class="badge-color-black" >{{testcase_scene.name }}</span></div>
 
                                 {% endif %}
                                 </div>
                         </div>
                         <div class="col-md-4 has_no_padding" style="float: left">
+                            <div class="badge badge-primary" style="background-color: #337ab7;">{{ testcase_scene.testcases.__len__() }}</div>
                             <a href='{{ url_for("testcase_scene_blueprint.testcase_scene_update")}}?testcase_scene_id={{ testcase_scene.id }}&page={{ page }}' class="btn btn-default btn-xs" title="编辑场景"><i class="fa fa-pencil"></i></a>
                             <a id="testcase_scene_run_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="执行场景"><i class="fa fa-play"></i></a>
                             <a id="testcase_scene_delete_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="删除场景"><i class="fa fa-trash"></i></a>
@@ -72,7 +73,7 @@
                         {% for testcase in testcase_scene.testcases %}
                             <div class="col-md-12 has_no_padding">
                                 <div class="btn btn-default col-md-6 col-md-offset-3" style="margin-bottom: 0">
-                                    <div class="col-md-2"><a href="#"><span class="badge" style="background-color: #777">{{ loop.index }}</span></a></div>
+{#                                    <div class="col-md-2"><a href="#"><span class="badge" style="background-color: #777">{{ loop.index }}</span></a></div>#}
                                     <div class="col-md-8"><span>{{ testcase.name }}</span></div>
                                     <div class="col-md-2 col-md-offset-1 has_no_padding">
                                         <a href="{{ url_for('testcase_blueprint.look_test_case',id=testcase.id) }}" class="btn btn-default btn-xs" title="查询测试用例"><i class="fa fa-search"></i></a>
@@ -168,6 +169,7 @@
         margin-top: 8px;
         padding-bottom: inherit;
     }
+
 
 </style>
 {% endblock %}
