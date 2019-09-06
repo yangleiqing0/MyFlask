@@ -86,9 +86,10 @@ class CaseGroupUpdate(MethodView):
 
 class CaseGroupDelete(MethodView):
 
-    def get(self,id=-1):
-        delete_case_group_sql = 'delete from case_group where id=%s'
-        cdb().opeat_db(delete_case_group_sql, (id,))
+    def get(self, id=-1):
+        case_group = CaseGroup.query.get(id)
+        db.session.delete(case_group)
+        db.session.commit()
         FrontLogs('删除测试用例分组 id:%s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete case_group success, id: %s' % id)
         return redirect(url_for('case_group_blueprint.case_group_list'))
@@ -100,7 +101,7 @@ class CaseGroupSearchCase(MethodView):
         user_id = session.get('user_id')
         case_group = CaseGroup.query.get(id)
         print('CaseGroupSearchCase:case_group: ', case_group)
-        testcases = TestCases.query.filter(TestCases.group_id == id, TestCases.user_id == user_id, TestCases.testcase_scene_id is None).all()
+        testcases = TestCases.query.filter(TestCases.group_id == id, TestCases.user_id == user_id, TestCases.testcase_scene_id.is_(None)).all()
         print('CaseGroupSearchCase:testcases: ', testcases)
         request_headers = RequestHeaders.query.all()
         print('CaseGroupSearchCase:request_headers: ', request_headers)

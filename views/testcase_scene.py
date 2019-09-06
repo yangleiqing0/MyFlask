@@ -126,7 +126,11 @@ class TestCaseSceneTestCaseCopy(MethodView):
         testcase = TestCases.query.get(testcase_id)
 
         timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
-        name = testcase.name + timestr
+        if len(testcase.name) > 30:
+            name = testcase.name[:21] + timestr
+        else:
+            name = testcase.name + timestr
+
         db.session.add(TestCases(name, testcase.url, testcase.data, testcase.regist_variable,
                        testcase.regular, testcase.method, testcase.group_id, testcase.request_headers_id,
                        testcase_scene_id, testcase.hope_result, user_id=testcase.user_id, old_sql=testcase.old_sql,
@@ -145,7 +149,11 @@ class TestCaseSceneCopy(MethodView):
         scene_page, testcase_scene_id = request_get_values('scene_page', 'testcase_scene_id')
         testcase_scene = TestCaseScene.query.get(testcase_scene_id)
         timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
-        name = testcase_scene.name + timestr
+
+        if len(testcase_scene.name) > 30:
+            name = testcase_scene.name[:21] + timestr
+        else:
+            name = testcase_scene.name + timestr
         testcase_scene_copy = TestCaseScene(name, description=testcase_scene.description, user_id=testcase_scene.user_id)
         db.session.add(testcase_scene_copy)
         db.session.commit()

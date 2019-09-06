@@ -261,7 +261,11 @@ class TestCaseCopy(MethodView):
         testcase_self = TestCases.query.get(testcase_id)
 
         timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
-        name = testcase_self.name + timestr
+        if len(testcase_self.name) > 30:
+            name = testcase_self.name[:31] + timestr
+        else:
+            name = testcase_self.name + timestr
+
         db.session.add(TestCases(name, testcase_self.url, testcase_self.data, testcase_self.regist_variable,
                                  testcase_self.regular, testcase_self.method, testcase_self.group_id,
                                  testcase_self.request_headers_id, hope_result=testcase_self.hope_result,
@@ -302,6 +306,18 @@ class ModelTestCase(MethodView):
             FrontLogs('取消设置测试用例 name: %s 为模板成功' % testcase.name).add_to_front_log()
         db.session.commit()
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
+
+
+class TestCaseUrls(MethodView):
+
+    def get(self):
+        user_id = session.get('user_id')
+        urls_sql = 'select url from testcases where user_id=%s'
+        urls = list(set(cdb().query_db(urls_sql, params=(user_id,))))
+        testcases_urls = []
+        [testcases_urls.append(AnalysisParams().analysis_params(url[0])) for url in urls]
+        testcases_urls.sort()
+        return render_template('test_case/testcase_urls.html', testcases_urls=testcases_urls)
 
 
 class TestCaseValidata(MethodView):
@@ -353,6 +369,7 @@ testcase_blueprint.add_url_rule('/testcase_model/<id>/', view_func=ModelTestCase
 testcase_blueprint.add_url_rule('/look_test_case/<id>/', view_func=TestCaseLook.as_view('look_test_case'))
 testcase_blueprint.add_url_rule('/run_test_case/', view_func=TestCaseRun.as_view('run_test_case'))
 testcase_blueprint.add_url_rule('/copy_test_case/', view_func=TestCaseCopy.as_view('copy_test_case'))
+testcase_blueprint.add_url_rule('/test_case_urls/', view_func=TestCaseUrls.as_view('test_case_urls'))
 
 testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))
 testcase_blueprint.add_url_rule('/testcaseupdatevalidate/',

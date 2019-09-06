@@ -4,14 +4,15 @@
                 <div class="panel-body">
                     <table class="table table-hover">
                     <div class="col-md-12">
-                        <div class="col-md-5">
+                        <div class="col-md-6">
                         <form action="{{ url_for('testcase_blueprint.test_case_list') }}" role="search" class="navbar-form">
-                            <div class="form-group col-md-8">
+                            <div class="form-group col-md-6">
                                 <input type="text" name="testcase_search" class="form-control" placeholder="Search">
                             </div>
                             <button type="submit" class="btn btn-default">查询</button>
                         </form>
-                            {{ macro.show_col() }}
+                        {{ macro.show_col() }}
+                        <a href="{{ url_for('testcase_blueprint.test_case_urls') }}" class="btn btn-default">统计</a>
                     </div>
                         <div class="col-md-offset-8">
                             <div class="form-group col-md-12" style="margin-top: 7px">

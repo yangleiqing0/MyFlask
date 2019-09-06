@@ -50,10 +50,21 @@
 </style>
 {% endblock %}
 {% block js %}
-
     <script>
+    function confirm_delete() {
+            let msg = '确定删除此条记录？';
+            if (confirm(msg) == true){
+                alert('删除成功')
+            }else {
+                return false
+            }
+        }
     $(document).ready(function () {
-
+        $('a>i[class="fa fa-trash"]').each(function () {
+            $(this).click(function () {
+                {#confirm_delete()#}
+            })
+        })
     })
     </script>
 {% endblock %}

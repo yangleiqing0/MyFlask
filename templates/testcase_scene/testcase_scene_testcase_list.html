@@ -16,7 +16,7 @@
             <div class="col-md-5 col-md-offset-1" style="margin-top: 7px">
                 <div class="form-group col-md-12"  style="float: right">
                     <div class="float-right">
-                        <select  name="testcase_scene_copy" id="testcase_scene_copy"class="btn btn-default" style="width: 150px;height: 34px">
+                        <select  name="testcase_scene_copy" id="testcase_scene_copy" class="btn btn-default" style="width: 120px;height: 34px">
                             {% for model_testcase_scene in model_testcase_scenes %}
                                 <option  value="{{ model_testcase_scene.id }}" style="width: 20px">{{ model_testcase_scene.name }}</option>
                             {% endfor %}
@@ -37,8 +37,8 @@
                             <div class="col-md-10" style="float: left">
                                 {% if testcase_scene.testcase_scene_case_group %}
                                     <div class="badge-color-black col-md-3" >【{{ testcase_scene.testcase_scene_case_group.name }}】</div>
-                                    <div class="col-md-9">
-                                        <span class="badge-color-black" >
+                                    <div class="col-md-9" >
+                                        <span class="badge-color-black" style="text-overflow: ellipsis">
                                             {{testcase_scene.name }}
                                         </span>
                                     </div>
@@ -60,9 +60,9 @@
                                 <a href="{{ url_for('testcase_scene_blueprint.testcase_scene_model',testcase_scene_id=testcase_scene.id) }}?page={{ page }}" class="btn btn-default btn-xs" title="取消设置为场景模板"><i class="fa fa-file-text"></i></a>
                             {% endif %}
                             <a href='{{ url_for("testcase_blueprint.add_test_case")}}?testcase_scene_id={{ testcase_scene.id }}&scene_page={{ page }}' class="btn btn-default btn-xs" title="添加场景用例"><i class="fa fa-plus"></i></a>
-                            <select name="testcase_list" id="testcase_list_{{ testcase_scene.id }}">
+                            <select name="testcase_list" id="testcase_list_{{ testcase_scene.id }}"  style="width: 110px">
                                 {% for model_testcase in model_testcases %}
-                                    <option  value="{{ model_testcase.id }}" style="width: 20px">{{ model_testcase.name }}</option>
+                                    <option  value="{{ model_testcase.id }}">{{ model_testcase.name }}</option>
                                 {% endfor %}
                             </select>
                             <a id="testcase_add_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="复制测试用例"><i class="fa fa-copy"></i></a>
