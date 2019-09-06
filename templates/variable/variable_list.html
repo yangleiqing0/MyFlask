@@ -9,12 +9,15 @@
                                     <div class="form-group col-md-8">
                                         <input name="variable_search" type="text" class="form-control" placeholder="可搜索私有变量">
                                     </div>
-                                    <button type="submit" class="btn btn-default">Submit</button>
+                                    <button type="submit" class="btn btn-default">查询</button>
                                 </form>
+                                {{ macro.show_col() }}
                             </div>
                             <div class="col-md-offset-10">
-                                <div class="form-group col-md-8" style="margin-top: 7px">
-                                  <a  href="{{ url_for('variables_blueprint.variable_add') }}" title="添加全局变量"><button class="btn btn-default " style="color: black">添加全局变量</button></a>
+                                <div class="float-right">
+                                    <div class="form-group col-md-8" style="margin-top: 7px">
+                                        <a  href="{{ url_for('variables_blueprint.variable_add') }}" title="添加全局变量"><button class="btn btn-default " style="color: black">添加</button></a>
+                                    </div>
                                 </div>
                             </div>
                         </div>

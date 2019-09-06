@@ -86,3 +86,18 @@ div_style="margin-left:108px") %}
         </td>
     </tr>
 {% endmacro %}
+{% macro show_col() %}
+    <button class="btn btn-default" id="btn_alert">显示</button>
+        <div id="cm_layer">
+            <div class="custom-layer">
+                <div class="col-md-12 text-center" style="height: 80px"><h2>请选择需要显示的栏目</h2></div>
+                <div id="layer-content">
+                </div>
+                <div class="col-md-12">
+                    <div style="text-align:center">
+                        <button id="layer-sub" type="button" class="btn btn-primary" style="margin-bottom: 0">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+{% endmacro %}

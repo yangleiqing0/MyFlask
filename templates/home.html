@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.js"></script>
     <link href="{{url_for('static',filename='css/badge/badge.css')}}?v=1.0.6"  rel="stylesheet">
-{#    <script src="https://cdn.bootcss.com/jquery/2.0.0/jquery.min.js"></script>#}
+
 </head>
 <body style="background-color:ghostwhite;"  >
 <div class="tpl-page-container tpl-page-header-fixed" style="padding-top: 0">
@@ -287,12 +287,30 @@
         .chooseBtn:checked + label.choose-label {
             background-color: #51ccee;
         }
-
-
+.custom-layer{
+     width: 60%;
+     padding: 10px;
+     -webkit-border-radius: 10px;
+     -moz-border-radius: 10px;
+     border-radius: 10px;
+     font: 16px "Microsoft YaHei UI";
+     background: #fff;
+     float: left;
+}
+.float-right{
+    float: right;
+}
 </style>
 <script>
 $(document).ready(function() {
-
+    href = window.location.href.split('/')[3];
+    var ths = window.localStorage.getItem(href + '_not_show_ths');
+    if( ths != undefined) {
+        ths = JSON.parse(ths);
+        for (let i = 0; i < ths.length; i++) {
+            $('th:contains(' + ths[i] + ')').css('width', '0')
+        }
+    }
     let $fullText = $('.admin-fullText');
         $('#admin-fullscreen').on('click', function() {
             $.AMUI.fullscreen.toggle();
@@ -387,6 +405,66 @@ $(document).ready(function() {
                     };
                 }
                 });
+
+    $('th').each(function () {
+        try {
+            if(ths.indexOf($(this).text()) !== -1){
+                checked = ""}else { checked = "checked"}}catch (e) {
+                checked = "checked"
+        }
+            $('#layer-content').append(
+                "<div class=\"form-group col-md-4 no-padding\" >\n" +
+                "                              <div class=\"col-md-9\">\n" +
+                "                              <label for=" + $(this).text() + "class=\"dots control-label col-md-8\" style=\"font-weight: normal;text-align: left\">" + $(this).text() + "</label>\n" +
+                "                              </div>\n" +
+                "                              <div class=\"col-md-3\">        " +
+                "                              <input   type=\"checkbox\" id=" + $(this).text() + " value=" + $(this).text() + " name=\"layer-th\" style=\"zoom:1.5;width: 20px\" " + checked + ">\n" +
+                "                              </div>" +
+                "                         </div>");
+
+        });
+
+        function alertMCLayer(layerStr, activeStr) {
+         let oLayer = $(layerStr);
+
+         //触发弹出蒙层
+         $(activeStr).on('click', function () {
+             oLayer.css({
+                 'display': 'flex',
+                 'display': '-webkit-flex',
+             })
+         });
+         oLayer.css({
+             'position': 'fixed',
+             'left': '0',
+             'top': '0',
+             'width': '100%',
+             'height': '100%',
+             'background': 'rgba(0,0,0,0.7)',
+             'display': 'none',
+             'justify-content': 'center',
+             'align-items': 'center',
+             'z-index':999
+         });
+         $('#layer-sub').click(function () {
+                 $('#cm_layer').css('display','none');
+                 let show_ths = [];
+                 $('input[name="layer-th"]').each(function () {
+                     let text = $(this).get(0).value;
+                    if($(this).attr('checked') != 'checked'){
+                        show_ths.push(text);
+                       $('th:contains(' + text +')').css('width','0')
+                    }else {
+                        $('th:contains(' + text +')').css('width','100%')
+                    }
+                    window.localStorage.setItem(href+'_not_show_ths', JSON.stringify(show_ths));
+                 });
+
+             })
+     }
+     $(function(){
+        alertMCLayer('#cm_layer','#btn_alert');
+      })
 });
 
 </script>
