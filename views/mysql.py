@@ -4,11 +4,9 @@ from flask.views import MethodView
 from flask import render_template, Blueprint, redirect, url_for, session, request, current_app, jsonify
 from common.request_get_more_values import request_get_values
 from common.tail_font_log import FrontLogs
-from modles.database import Mysql
 from common.analysis_params import AnalysisParams
 from common.connect_sql.connect_mysql import ConnMysql
-from app import db
-from modles.variables import Variables
+from modles import db, Mysql, Variables
 
 mysql_blueprint = Blueprint('mysql_blueprint', __name__)
 

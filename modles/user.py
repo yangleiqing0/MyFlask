@@ -1,5 +1,5 @@
-from app import db
-from . import Base
+
+from . import Base, db
 
 
 class User(Base, db.Model):

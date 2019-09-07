@@ -2,19 +2,13 @@ import json
 from _datetime import datetime
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, session, current_app
-from modles.testcase import TestCases
-from modles.testcase_result import TestCaseResult
-from modles.case_group import CaseGroup
-from modles.testcase_start_times import TestCaseStartTimes
-from modles.testcase_scene import TestCaseScene
-from modles.user import User
 from common.tail_font_log import FrontLogs
-from app import db
 from common.analysis_params import AnalysisParams
 from common.execute_testcase import to_execute_testcase
 from common.assert_method import AssertMethod
 from common.most_common_method import NullObject
 from views.mysql import mysqlrun
+from modles import datetime, TestCases, TestCaseResult, CaseGroup, TestCaseStartTimes, TestCaseScene, User, db
 
 test_case_request_blueprint = Blueprint('test_case_request_blueprint', __name__)
 
@@ -98,13 +92,15 @@ def post_testcase(test_case_id, testcase_time_id):
     testcase = TestCases.query.get(test_case_id)
     url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
     method = testcase.method
-    response_body, regist_variable_value = to_execute_testcase(testcase)
-    testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_method()
+
     if testcase.old_sql and testcase.old_sql_id and testcase.old_sql_regist_variable:
         old_sql_value = mysqlrun(mysql_id=testcase.old_sql_id, sql=testcase.old_sql, regist_variable=testcase.old_sql_regist_variable, is_request=False)
         old_sql_value_result = AssertMethod(actual_result=old_sql_value, hope_result=AnalysisParams().analysis_params(testcase.old_sql_hope_result)).assert_method()
     else:
         old_sql_value = old_sql_value_result = ''
+
+    response_body, regist_variable_value = to_execute_testcase(testcase)
+    testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_method()
 
     if testcase.new_sql and testcase.new_sql_id and testcase.new_sql_regist_variable:
         new_sql_value = mysqlrun(mysql_id=testcase.new_sql_id, sql=testcase.new_sql,

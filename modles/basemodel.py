@@ -1,5 +1,4 @@
-from datetime import datetime
-from app import db
+from . import datetime, db
 
 
 class Base:

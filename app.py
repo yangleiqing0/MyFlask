@@ -1,9 +1,7 @@
 import requests
 import config
-import os
-from flask_sqlalchemy import SQLAlchemy
-from flask import Flask, request, session, redirect, url_for, render_template
-from logs.config import file_log_handler, logging, FLASK_LOGS_FILE, FRONT_LOGS_FILE
+from flask import Flask, session
+from logs.config import file_log_handler, logging
 from flask_migrate import Migrate, MigrateCommand
 from flask_script import Manager
 from flask_mail import Mail
@@ -12,52 +10,22 @@ from common.connect_sql.connect_mysql import ConnMysql
 from apscheduler.events import EVENT_JOB_EXECUTED, EVENT_JOB_ERROR
 # flask_mail需要安装0.9.1版本
 
-
 requests.packages.urllib3.disable_warnings()
 
 logging.getLogger().addHandler(file_log_handler)
-db = SQLAlchemy()
-
 app = Flask(__name__)
 
 
 def create_app():
+    from db_create import db
     app.debug = True
     app.threaded = True
     app.secret_key = 'asldfwadadw@fwq@#!Eewew'
     app.config.from_object(config)
     db.init_app(app)
-
-    from views.testcase import testcase_blueprint  # 不能放在其他位置
-    from views.home import home_blueprint
-    from views.case_group import case_group_blueprint
-    from views.variables import variables_blueprint
-    from views.request_headers import request_headers_blueprint
-    from views.testcase_request import test_case_request_blueprint
-    from views.testcase_report import testcase_report_blueprint
-    from views.system_config import system_config_blueprint
-    from views.testcase_scene import testcase_scene_blueprint
-    from views.login import login_blueprint
-    from views.user import user_blueprint
-    from views.job import job_blueprint
-    from views.emai import mail_blueprint
-    from views.mysql import mysql_blueprint
-
-    app.register_blueprint(testcase_blueprint)
-    app.register_blueprint(home_blueprint)
-    app.register_blueprint(case_group_blueprint)
-    app.register_blueprint(variables_blueprint)
-    app.register_blueprint(request_headers_blueprint)
-    app.register_blueprint(test_case_request_blueprint)
-    app.register_blueprint(testcase_report_blueprint)
-    app.register_blueprint(system_config_blueprint)
-    app.register_blueprint(testcase_scene_blueprint)
-    app.register_blueprint(login_blueprint)
-    app.register_blueprint(user_blueprint)
-    app.register_blueprint(job_blueprint)
-    app.register_blueprint(mail_blueprint)
-    app.register_blueprint(mysql_blueprint)
-    return app
+    from views import view_list
+    [app.register_blueprint(_view) for _view in view_list]
+    return db
 
 
 def create_db():
@@ -67,42 +35,13 @@ def create_db():
     ConnMysql(config.host, config.port, config.root, config.pwd, '', sql2).operate_mysql()
 
 
+def return_app():
+    return app
+
+
 create_db()
 
-create_app()
-
-
-@app.before_request    # 在请求达到视图前执行
-def login_required():
-
-    # print('username: ', session.get('username'), request.path, type(session.get('username')))
-    if request.path == '/user_regist/':
-        if session.get('username') != 'admin':
-            return redirect(url_for('testcase_blueprint.test_case_list'))
-
-    if request.path in ('/login/', '/frontlogs/', '/flasklogs/'):
-        return
-    elif 'static' in request.path or 'validate' in request.path:
-        return
-
-    elif session.get('username'):
-        return
-
-    else:
-        return redirect(url_for('login_blueprint.login'))
-
-
-@app.errorhandler(404)
-# 当发生404错误时，会被该路由匹配
-def handle_404_error(err_msg):
-    """自定义的异常处理函数"""
-    # 这个函数的返回值就是前端用户看到的最终结果 (404错误页面)
-    return render_template('exception/404.html', err_msg=err_msg, mes=404)
-
-
-@app.errorhandler(500)
-def handle_500_error(err_msg):
-    return render_template('exception/404.html', err_msg=err_msg, mes=500)
+db = create_app()
 
 
 manager = Manager(app)
@@ -111,30 +50,6 @@ manager = Manager(app)
 migrate = Migrate(app, db)
 # manager是Flask-Script的实例，这条语句在flask-Script中添加一个db命令
 manager.add_command('db', MigrateCommand)
-
-
-@app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
-def db_create_pre_all():
-    session['app_rootpath'] = app.root_path
-    from modles.test import TestGroup
-    from modles.testcase import TestCases
-    from modles.case_group import CaseGroup
-    from modles.variables import Variables
-    from modles.request_headers import RequestHeaders
-    from modles.testcase_start_times import TestCaseStartTimes
-    from modles.testcase_result import TestCaseResult
-    from modles.testcase_scene import TestCaseScene
-    from modles.user import User
-    from modles.job import Job
-    from modles.mail import Mail
-    from modles.database import Mysql
-    from modles.testcase_scene_result import TestCaseSceneResult
-    from modles.time_message import TimeMessage
-    db.create_all()
-
-    from views.job import init_scheduler
-    from common.pre_db_insert_data import to_insert_data
-    to_insert_data()
 
 
 def get_app_mail():
@@ -176,20 +91,6 @@ def my_listener(event):
         print('任务出错了！！！！！！')
     else:
         print('任务照常运行...')
-
-
-@app.before_first_request
-def init_flask_log():
-    with open(FLASK_LOGS_FILE, 'w+') as f:
-        f.write('#coding=utf-8\n')
-    with open(FRONT_LOGS_FILE, 'w+') as f:
-        f.writelines(['#coding=utf-8\n',
-                      '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n',
-                      '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n',
-                      '欢迎使用自动化测试平台\n', '联系QQ253775405\n', '微信15155492421\n', 'github地址\n',
-                      'https://github.com/yangleiqing0/MyFlask.git\n', '遇到任何bug请直接联系我\n',
-                      '接定制任务\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n',
-                      ])
 
 
 scheduler = APScheduler()

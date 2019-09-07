@@ -1,4 +1,4 @@
-from modles.variables import Variables
+from modles import Variables
 
 
 def get_page():

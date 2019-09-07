@@ -1,7 +1,6 @@
 #coding=utf-8
-from app import db
-from modles.user import User
-from . import BaseModel
+
+from . import BaseModel, User, db
 
 
 class Mysql(BaseModel, db.Model):

@@ -1,9 +1,7 @@
 from selenium import webdriver
-from modles.user import User
-from modles.variables import Variables
 import time
 import os
-from flask import session
+from modles import User, Variables
 
 
 class ReportImage:

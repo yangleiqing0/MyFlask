@@ -4,20 +4,15 @@ import datetime
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, g, redirect, url_for, current_app, jsonify, session
-from modles.testcase import TestCases
-from modles.case_group import CaseGroup
-from modles.user import User
-from modles.database import Mysql
-from modles.request_headers import RequestHeaders
 from common.rand_name import RangName
 from common.analysis_params import AnalysisParams
-from app import db
+from db_create import db
 from common.connect_sqlite import cdb
 from common.method_request import MethodRequest
 from common.execute_testcase import to_execute_testcase
 from common.request_get_more_values import request_get_values
 from common.most_common_method import NullObject
-from modles.variables import Variables
+from modles import TestCases, CaseGroup, User, Mysql, RequestHeaders, Variables
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -208,7 +203,7 @@ class UpdateTestCase(MethodView):
         case_group_id_before = testcase.group_id
         request_headers_id_before = testcase.request_headers_id
         request_headerses = user.user_request_headers
-        print('testcase:', testcase)
+        print('testcase:', testcase, testcase.new_sql, type(testcase.new_sql), type(testcase.old_sql_hope_result))
         print('case_groups :', case_groups)
         print('request_headerses:', request_headerses)
         FrontLogs('进入编辑测试用例 id: %s 页面' % id).add_to_front_log()

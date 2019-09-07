@@ -1,9 +1,8 @@
 # encoding=utf-8
 import re
-from modles.variables import Variables
 from common.method_request import MethodRequest
-from app import db
 from flask import session
+from modles import Variables, db
 
 
 def to_regist_variables(name, method, url, data, headers, regist_variable='', regular=''):

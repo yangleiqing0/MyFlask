@@ -1,13 +1,9 @@
 from flask.views import MethodView
-from app import db
 from common.connect_sqlite import cdb
-from modles.variables import Variables
-from modles.testcase import TestCases
-from modles.user import User
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
 from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session
-
+from modles import db, Variables, TestCases
 
 variables_blueprint = Blueprint('variables_blueprint', __name__)
 

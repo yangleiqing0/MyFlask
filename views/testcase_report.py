@@ -3,22 +3,15 @@ import re
 from flask.views import MethodView
 from sqlalchemy import or_
 from flask import render_template, Blueprint, request, redirect, url_for, send_from_directory, session, jsonify
-
-from modles.testcase_scene_result import TestCaseSceneResult
-from modles.variables import Variables
-from modles.testcase_start_times import TestCaseStartTimes
-from modles.testcase_result import TestCaseResult
-from modles.testcase_scene import TestCaseScene
-from modles.testcase import TestCases
-from modles.time_message import TimeMessage
 from common.tail_font_log import FrontLogs
-from app import db
+from db_create import db
 from common.connect_sqlite import cdb
 from common.do_report import test_report
-from datetime import datetime
 from common.analysis_params import AnalysisParams
 from common.send_mail import send_mail, send_excel
 from common.request_get_more_values import request_get_values
+from modles import TestCaseSceneResult, Variables, TestCaseStartTimes, TestCaseResult, TestCaseScene, TestCases, \
+    TimeMessage, datetime
 
 
 testcase_report_blueprint = Blueprint('testcase_report_blueprint', __name__)

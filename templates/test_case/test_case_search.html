@@ -39,9 +39,36 @@
                     {{ macro.form_group_textarea(lable_name="data",blank_name="请求报文",value=item.data,placeholder_name="可使用如：${随机4}自动在执行的时候生成随机位名称,必填") }}
                     {{ macro.form_group(lable_name="hope_result",blank_name="预期结果**", value=item.hope_result,placeholder_name="必填") }}
                      <div class="form-group">
+                         <div class="control-label col-md-4 col-md-offset-3">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="config_sql" value="option1"> 数据库验证
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="config_wait" value="option2"> 条件等待
+                            </label>
+                         </div>
+                     </div>
+                    <div class="form-group config_wait_content">
+                        <label for="old_wait_sql" class="control-label col-md-4">前置等待查询语句</label>
+                            <div class="col-md-4">
+                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="old_wait_sql" name="old_wait_sql" placeholder="前置等待查询语句" ></textarea>
+                        </div>
+                         <div class="col-md-4" style="height: 34px">
+                            <div class="form-group col-md-12" style="padding-left: 0">
+                             <select class="btn btn-default" name="old_wait_mysql" id="old_wait_mysql" style="width: 120px;height: 34px">
+                                {% for mysql in mysqls %}
+                                    <option  value="{{ mysql.id }}" style="width: 20px">{{ mysql.name }}</option>
+                                {% endfor %}
+                            </select>
+                                <button type="button" id="run_mysql_old_wait" class="btn btn-default btn-xs" title="执行数据库语句"><i class="fa fa-play"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    {{ macro.form_group(lable_name="old_wait",blank_name="前置等待条件", class_name="config_wait_content") }}
+                    <div class="form-group config_sql_content">
                         <label for="old_sql" class="control-label col-md-4">前置数据库查询语句</label>
                             <div class="col-md-4">
-                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="old_sql" name="old_sql" placeholder="前置数据库查询语句" >{{ item.old_sql }}</textarea>
+                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="old_sql" name="old_sql" placeholder="前置数据库查询语句" >{{ item.old_sql if item.old_sql else ""}}</textarea>
                         </div>
                          <div class="col-md-4" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
@@ -54,12 +81,12 @@
                             </div>
                         </div>
                     </div>
-                    {{ macro.form_group(lable_name="old_sql_regist_variable",blank_name="前置数据库注册变量", value=item.old_sql_regist_variable) }}
-                    {{ macro.form_group(lable_name="old_sql_hope_result",blank_name="前置数据库预期结果",value=item.old_sql_hope_result) }}
-                    <div class="form-group">
+                    {{ macro.form_group(lable_name="old_sql_regist_variable",blank_name="前置数据库注册变量", value=item.old_sql_regist_variable,class_name="config_sql_content") }}
+                    {{ macro.form_group(lable_name="old_sql_hope_result",blank_name="前置数据库预期结果",value=item.old_sql_hope_result,class_name="config_sql_content") }}
+                    <div class="form-group config_sql_content">
                         <label for="new_sql" class="control-label col-md-4">后置数据库查询语句</label>
                             <div class="col-md-4">
-                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="new_sql" name="new_sql" placeholder="后置数据库查询语句" >{{ item.new_sql }}</textarea>
+                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="new_sql" name="new_sql" placeholder="后置数据库查询语句" >{{ item.new_sql if item.new_sql else "" }}</textarea>
                         </div>
                         <div class="col-md-4" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
@@ -72,8 +99,26 @@
                             </div>
                         </div>
                     </div>
-                    {{ macro.form_group(lable_name="new_sql_regist_variable",blank_name="后置数据库注册变量", value=item.new_sql_regist_variable) }}
-                    {{ macro.form_group(lable_name="new_sql_hope_result",blank_name="后置数据库预期结果",value=item.new_sql_hope_result) }}
+                    {{ macro.form_group(lable_name="new_sql_regist_variable",blank_name="后置数据库注册变量", value=item.new_sql_regist_variable,class_name="config_sql_content") }}
+                    {{ macro.form_group(lable_name="new_sql_hope_result",blank_name="后置数据库预期结果",value=item.new_sql_hope_result,class_name="config_sql_content") }}
+                    <div class="form-group config_wait_content">
+                        <label for="new_wait_sql" class="control-label col-md-4">后置等待查询语句</label>
+                            <div class="col-md-4">
+                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="new_wait_sql" name="new_wait_sql" placeholder="后置等待查询语句" ></textarea>
+                        </div>
+                         <div class="col-md-4" style="height: 34px">
+                            <div class="form-group col-md-12" style="padding-left: 0">
+                             <select class="btn btn-default" name="new_wait_mysql" id="new_wait_mysql" style="width: 120px;height: 34px">
+                                {% for mysql in mysqls %}
+                                    <option  value="{{ mysql.id }}" style="width: 20px">{{ mysql.name }}</option>
+                                {% endfor %}
+                            </select>
+                                <button type="button" id="run_mysql_new_wait" class="btn btn-default btn-xs" title="执行数据库语句"><i class="fa fa-play"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    {{ macro.form_group(lable_name="new_wait",blank_name="后置等待条件", class_name="config_wait_content") }}
+
                     {{ macro.submit_test(submit_id="testcase_update",test_type="button") }}
                 </form>
             </div>
@@ -202,7 +247,7 @@
                 $('#request_body_show').css('overflow','scroll').html(result)
             }
         })
-    })
+    });
 });
 
     </script>

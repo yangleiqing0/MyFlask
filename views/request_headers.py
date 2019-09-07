@@ -3,10 +3,9 @@ from urllib import parse
 from flask.views import MethodView
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
-from app import db
 from common.connect_sqlite import cdb
-from modles.request_headers import RequestHeaders
 from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session
+from modles import db, RequestHeaders
 
 request_headers_blueprint = Blueprint('request_headers_blueprint', __name__)
 

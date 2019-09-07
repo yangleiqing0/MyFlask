@@ -1,9 +1,5 @@
 #coding=utf-8
-from datetime import datetime
-from app import db
-from modles.mail import Mail
-from modles.user import User
-from . import BaseModel
+from . import BaseModel, datetime, db, Mail, User
 
 
 class Job(BaseModel, db.Model):

@@ -1,9 +1,4 @@
-from modles.case_group import CaseGroup
-from modles.mail import Mail
-from modles.request_headers import RequestHeaders
-from modles.variables import Variables
-from modles.user import User
-from app import db
+from modles import CaseGroup, Mail, RequestHeaders, Variables, User, db
 from common.connect_sqlite import cdb
 from pre_data import variable as var
 from pre_data.variable import *

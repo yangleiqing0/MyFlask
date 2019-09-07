@@ -1,18 +1,9 @@
 #coding=utf-8
-from datetime import datetime
-import json
 from flask.views import MethodView
 from flask import render_template, Blueprint, redirect, url_for, session, request, current_app, jsonify
 from common.request_get_more_values import request_get_values
-from common.send_mail import send_excel
 from common.tail_font_log import FrontLogs
-from modles.job import Job
-from modles.mail import Mail
-from modles.testcase_scene import TestCaseScene
-from modles.testcase_start_times import TestCaseStartTimes
-from modles.user import User
-from app import db
-
+from modles import db, Mail
 
 mail_blueprint = Blueprint('mail_blueprint', __name__)
 

@@ -1,16 +1,11 @@
 import datetime
 import json
-from common.connect_sqlite import cdb
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session
-from modles.testcase import TestCases
-from modles.testcase_scene import TestCaseScene
-from modles.case_group import CaseGroup
-from modles.user import User
-from app import db
+from flask import render_template, Blueprint, request, redirect, url_for, jsonify, session
 from common.request_get_more_values import request_get_values
 from common.execute_testcase import to_execute_testcase
+from modles import db, TestCases, TestCaseScene, User
 
 
 testcase_scene_blueprint = Blueprint('testcase_scene_blueprint', __name__)

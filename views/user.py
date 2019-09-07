@@ -1,11 +1,10 @@
 #coding=utf-8
 from common.tail_font_log import FrontLogs
-from modles.user import User
 from flask.views import MethodView
-from flask import render_template, Blueprint, g, make_response, redirect, url_for, session, flash, jsonify
+from flask import render_template, Blueprint, redirect, url_for, jsonify
 from common.request_get_more_values import request_get_values
 from common.pre_db_insert_data import add_pre_data_go
-from app import db
+from modles import User, db
 
 user_blueprint = Blueprint('user_blueprint', __name__)
 

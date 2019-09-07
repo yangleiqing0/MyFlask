@@ -6,14 +6,10 @@ from flask import render_template, Blueprint, redirect, url_for, session, reques
 from common.request_get_more_values import request_get_values
 from common.send_mail import send_excel, send_mail
 from common.tail_font_log import FrontLogs
-from modles.job import Job
-from modles.mail import Mail
-from modles.testcase import TestCases
-from modles.testcase_scene import TestCaseScene
-from modles.testcase_start_times import TestCaseStartTimes
-from app import db
 from views.testcase_report import get_report
 from views.testcase_request import post_testcase
+from modles import Job, Mail, TestCases, TestCaseScene, TestCaseStartTimes, db
+
 
 job_blueprint = Blueprint('job_blueprint', __name__)
 

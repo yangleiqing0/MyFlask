@@ -3,7 +3,7 @@ from flask import render_template
 import time
 import os
 from common.selenium_get_page import ReportImage
-from modles.testcase_start_times import TestCaseStartTimes
+from modles import TestCaseStartTimes
 
 
 def async_send_mail(app, func, func_name='send_image', *args):

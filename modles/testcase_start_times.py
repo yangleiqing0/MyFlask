@@ -1,6 +1,5 @@
-from app import db
-from modles.user import User
-from . import BaseModel
+
+from . import BaseModel, db, User
 
 
 class TestCaseStartTimes(BaseModel, db.Model):

@@ -1,11 +1,7 @@
 import xlsxwriter
-
-from app import db
-from modles.testcase_start_times import TestCaseStartTimes
-from modles.testcase_scene import TestCaseScene
-from modles.testcase_scene_result import TestCaseSceneResult
 from common.connect_sqlite import cdb
 from common.analysis_params import AnalysisParams
+from modles import db, TestCaseStartTimes, TestCaseScene, TestCaseSceneResult
 
 
 def test_report(testcase_time_id, allocation, testcase_scene_list):

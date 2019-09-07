@@ -1,9 +1,5 @@
-from modles.case_group import CaseGroup
-from modles.testcase_scene import TestCaseScene
-from modles.request_headers import RequestHeaders
-from modles.user import User
-from app import db
-from . import BaseModel
+
+from . import BaseModel, db, User, CaseGroup, TestCaseScene, RequestHeaders
 
 
 class TestCases(BaseModel, db.Model):

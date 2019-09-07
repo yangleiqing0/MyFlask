@@ -311,6 +311,27 @@ $(document).ready(function() {
             $('th:contains(' + ths[i] + ')').css('width', '0')
         }
     }
+
+    let config_sql = window.localStorage.getItem('config_sql_content');
+    let wait_sql = window.localStorage.getItem('config_wait_content');
+    if(config_sql === "0"){
+         $('div[class*="config_sql_content"]').each(function () {
+                $(this).attr('hidden', 'hidden');
+            });
+    }else {
+        $('div[class*="config_sql_content"]').each(function () {
+            $('#config_sql').attr('checked', 'checked')
+        });
+    }
+    if(wait_sql === "0"){
+         $('div[class*="config_wait_content"]').each(function () {
+                $(this).attr('hidden', 'hidden');
+            });
+    }else {
+        $('div[class*="config_wait_content"]').each(function () {
+            $('#config_wait').attr('checked', 'checked')
+        });
+    }
     let $fullText = $('.admin-fullText');
         $('#admin-fullscreen').on('click', function() {
             $.AMUI.fullscreen.toggle();
@@ -464,7 +485,21 @@ $(document).ready(function() {
      }
      $(function(){
         alertMCLayer('#cm_layer','#btn_alert');
-      })
+      });
+    $('input[id*="config"]').click(function () {
+        let name = $(this).attr('id');
+        if($(this).attr('checked') === 'checked') {
+            $('div[class*='+name + '_content]').each(function () {
+                $(this).removeAttr('hidden');
+            });
+            window.localStorage.setItem(name + '_content', "1")
+        }else {
+            $('div[class*='+name + '_content]').each(function () {
+                $(this).attr('hidden', 'hidden');
+            });
+            window.localStorage.setItem(name + '_content', "0")
+        }
+    })
 });
 
 </script>

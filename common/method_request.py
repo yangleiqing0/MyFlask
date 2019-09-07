@@ -1,6 +1,7 @@
 # encoding=utf-8
 import requests
 import time
+from modles import Variables
 
 
 class MethodRequest:
@@ -13,28 +14,33 @@ class MethodRequest:
         print('请求方法: ', method, url, data, headers, type(url))
         requests.adapters.DEFAULT_RETRIES = 51
         requests.session().keep_alive = False
+        timeout = Variables.query.filter(Variables.name == '_Request_Time_Out').first().value
+        if timeout and timeout.isdigit():
+            timeout = int(timeout)
+        else:
+            timeout = 5
         try:
             if method.upper() == 'GET':
                 if 'https' in url:
                     print('True')
-                    result = requests.get(url, headers=headers, verify=False).text
+                    result = requests.get(url, headers=headers, verify=False, timeout=timeout).text
                 else:
-                    result = requests.get(url, headers=headers).text
+                    result = requests.get(url, headers=headers, timeout=timeout).text
             elif method.upper() == 'POST':
                 if 'https' in url:
-                    result = requests.post(url, data=data, headers=headers, verify=False).text
+                    result = requests.post(url, data=data, headers=headers, verify=False, timeout=timeout).text
                 else:
-                    result = requests.post(url, data=data, headers=headers).text
+                    result = requests.post(url, data=data, headers=headers, timeout=timeout).text
             elif method.upper() == 'PUT':
                 if 'https' in url:
-                    result = requests.put(url, data=data, headers=headers, verify=False).text
+                    result = requests.put(url, data=data, headers=headers, verify=False, timeout=timeout).text
                 else:
-                    result = requests.put(url, data=data, headers=headers).text
+                    result = requests.put(url, data=data, headers=headers, timeout=timeout).text
             elif method.upper() == 'DELETE':
                 if 'https' in url:
-                    result = requests.delete(url, data=data, headers=headers, verify=False).text
+                    result = requests.delete(url, data=data, headers=headers, verify=False, timeout=timeout).text
                 else:
-                    result = requests.delete(url, data=data, headers=headers).text
+                    result = requests.delete(url, data=data, headers=headers, timeout=timeout).text
             else:
                 result = "请求方法不正确"
         except Exception as e:

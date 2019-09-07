@@ -1,6 +1,4 @@
-from app import db
-from . import BaseModel
-from .user import User
+from . import BaseModel, User, db
 
 
 class CaseGroup(BaseModel, db.Model):

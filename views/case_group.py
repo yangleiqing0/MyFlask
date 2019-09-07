@@ -1,14 +1,10 @@
 import json
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session
-from modles.case_group import CaseGroup
-from modles.request_headers import RequestHeaders
-from modles.testcase import TestCases
+from flask import render_template, Blueprint, request, redirect, url_for, jsonify, session
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
-from app import db
 from common.connect_sqlite import cdb
-from modles.user import User
+from modles import CaseGroup, RequestHeaders, TestCases, db, User
 
 
 case_group_blueprint = Blueprint('case_group_blueprint', __name__)

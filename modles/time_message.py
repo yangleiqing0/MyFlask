@@ -1,7 +1,5 @@
-from app import db
-from modles.variables import Variables
-from modles.testcase_start_times import TestCaseStartTimes
-from . import Base
+
+from . import Base, db, TestCaseStartTimes
 
 
 class TimeMessage(Base, db.Model):

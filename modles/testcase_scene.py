@@ -1,7 +1,5 @@
-from app import db
-from modles.case_group import CaseGroup
-from modles.user import User
-from . import BaseModel
+
+from . import BaseModel, db, User, CaseGroup
 
 
 class TestCaseScene(BaseModel, db.Model):

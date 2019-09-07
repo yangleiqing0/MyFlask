@@ -1,7 +1,5 @@
-from app import db
-from modles.testcase_scene import TestCaseScene
-from modles.testcase_start_times import TestCaseStartTimes
-from . import BaseModel
+
+from . import BaseModel, db, TestCaseScene, TestCaseStartTimes
 
 
 class TestCaseSceneResult(BaseModel, db.Model):
