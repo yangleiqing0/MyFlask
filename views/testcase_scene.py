@@ -5,8 +5,7 @@ from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, jsonify, session
 from common.request_get_more_values import request_get_values
 from common.execute_testcase import to_execute_testcase
-from modles import db, TestCases, TestCaseScene, User
-
+from modles import db, TestCases, TestCaseScene, User, Wait
 
 testcase_scene_blueprint = Blueprint('testcase_scene_blueprint', __name__)
 
@@ -125,15 +124,22 @@ class TestCaseSceneTestCaseCopy(MethodView):
             name = testcase.name[:21] + timestr
         else:
             name = testcase.name + timestr
-
-        db.session.add(TestCases(name, testcase.url, testcase.data, testcase.regist_variable,
+        testcase_new = TestCases(name, testcase.url, testcase.data, testcase.regist_variable,
                        testcase.regular, testcase.method, testcase.group_id, testcase.request_headers_id,
                        testcase_scene_id, testcase.hope_result, user_id=testcase.user_id, old_sql=testcase.old_sql,
                                  new_sql=testcase.old_sql, old_sql_regist_variable=testcase.old_sql_regist_variable,
                                  new_sql_regist_variable=testcase.new_sql_regist_variable, old_sql_hope_result=testcase.old_sql_hope_result,
                                  new_sql_hope_result=testcase.new_sql_hope_result, old_sql_id=testcase.old_sql_id,
-                                 new_sql_id=testcase.new_sql_id))
+                                 new_sql_id=testcase.new_sql_id)
+        db.session.add(testcase_new)
         db.session.commit()
+        if Wait.query.filter(Wait.testcase_id == testcase.id).count() > 0:
+            old_wait = Wait.query.filter(Wait.testcase_id == testcase.id).first()
+            wait = Wait(old_wait.old_wait_sql, old_wait.old_wait, old_wait.old_wait_time, old_wait.old_wait_mysql,
+                        old_wait.new_wait_sql, old_wait.new_wait, old_wait.new_wait_time,
+                        old_wait.new_wait_mysql, testcase_new.id)
+            db.session.add(wait)
+            db.session.commit()
         FrontLogs('复制场景测试用例 name： %s 成功' % testcase.name).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
 

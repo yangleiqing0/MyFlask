@@ -23,12 +23,14 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
     testcase_results_query_sql = 'select testcases.name,testcases.url,testcases.method,testcases.data,test_case_result.response_body,' \
                                  ' testcases.hope_result,test_case_result.old_sql_value,test_case_result.new_sql_value,' \
                                  'test_case_result.testcase_test_result,test_case_result.old_sql_value_result,test_case_result.new_sql_value_result,' \
-                                 'testcases.testcase_scene_id,testcases.old_sql_hope_result,testcases.new_sql_hope_result from testcases,test_case_result where testcases.id=test_case_result.testcase_id ' \
+                                 'testcases.old_sql_hope_result,testcases.new_sql_hope_result,test_case_result.result,' \
+                                 'testcases.testcase_scene_id' \
+                                 ' from testcases,test_case_result where testcases.id=test_case_result.testcase_id ' \
                                  'and test_case_result.testcase_start_time_id=%s' % testcase_time_id
     testcase_results = cdb().query_db(testcase_results_query_sql)
     for testcase_result in testcase_results:
-        if testcase_result[11]:
-            testcase_scene_name = TestCaseScene.query.get(testcase_result[11]).name
+        if testcase_result[14]:
+            testcase_scene_name = TestCaseScene.query.get(testcase_result[14]).name
         else:
             testcase_scene_name = ''
         t_name = AnalysisParams().analysis_params(testcase_result[0])
@@ -39,10 +41,7 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
         t_hope = AnalysisParams().analysis_params(testcase_result[5])
         old_database_value = testcase_result[6]
         new_database_value = testcase_result[7]
-        if testcase_result[8] == "测试失败" or testcase_result[9] == "测试失败" or testcase_result[10] == "测试失败":
-            t_result = "测试失败"
-        else:
-            t_result = "测试成功"
+        t_result = testcase_result[13]
         # print('testcase_result: ', testcase_result)
         content = {"t_name": t_name,
                    "t_url": t_url,
@@ -57,18 +56,23 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
                    "t_new_sql_value_result": testcase_result[10],
                    "t_testcase_scene": testcase_scene_name,
                    "t_testcase_result": t_result,
-                   "t_old_sql_hope": AnalysisParams().analysis_params(testcase_result[12]),
-                   "t_new_sql_hope": AnalysisParams().analysis_params(testcase_result[13])
+                   "t_old_sql_hope": AnalysisParams().analysis_params(testcase_result[11]),
+                   "t_new_sql_hope": AnalysisParams().analysis_params(testcase_result[12])
                    }
         data.append(content)
     data = data[::-1]
+    print('data:', data)
     filename = testcase_time.filename
     data_title = {"test_name": allocation.test_name, "test_version": allocation.zdbm_version, "test_pl": allocation.test_pl, "test_net": allocation.test_net}
     data_re = {"test_sum": allocation.test_sum, "test_success": allocation.test_success, "test_failed": allocation.fail_sum,
                "test_date": allocation.time_strftime}
     r = Report()
     # print("data_re", data_title, data_re, allocation.time_strftime, filename)
-    r.init(data_title, data_re, int(allocation.test_success * 100 / allocation.test_sum), title_name=allocation.title_name, filename=filename)
+    if allocation.test_success == 0:
+        score = 0
+    else:
+        score = int(allocation.test_success * 100 / allocation.test_sum)
+    r.init(data_title, data_re, score, title_name=allocation.title_name, filename=filename)
     r.test_detail(data, len(data), len(data), testcase_scene_count_dict, testcase_time_id)
 
 
@@ -218,7 +222,7 @@ class Report:
             self.write_center(self.worksheet2, "K" + str(temp), item["new_database_value"], self.workbook)
             self.write_center(self.worksheet2, "L" + str(temp), item["t_new_sql_hope"], self.workbook)
             self.write_center(self.worksheet2, "M" + str(temp), item["t_new_sql_value_result"], self.workbook)
-            if item["t_testcase_result"] == '测试失败':
+            if item["t_testcase_result"] != '测试成功':
                 self.write_center(self.worksheet2, "N" + str(temp), item["t_testcase_result"], self.workbook, color='red')
             else:
                 self.write_center(self.worksheet2, "N" + str(temp), item["t_testcase_result"], self.workbook)
@@ -226,23 +230,35 @@ class Report:
                 if testcase_scene_count_dict.get(item['t_testcase_scene'], None):
                     testcase_scene_count = testcase_scene_count_dict[item['t_testcase_scene']][0]
                     testcase_scene = testcase_scene_count_dict['testcase_scene_' + item['t_testcase_scene']]
-                    self.worksheet2.merge_range('%s:%s' % ("O" + str(temp - testcase_scene_count + 1), "O" + str(temp)),
-                                                 item["t_testcase_scene"], self.get_format_center(self.workbook))
+                    print('testcase_scene_count:', testcase_scene_count, testcase_scene)
+                    if testcase_scene_count == 1:
+                        self.write_center(self.worksheet2, "O" + str(temp), item["t_testcase_scene"], self.workbook)
+                    else:
+                        self.worksheet2.merge_range('%s:%s' % ("O" + str(temp - testcase_scene_count + 1), "O" + str(temp)),
+                                                     item["t_testcase_scene"], self.get_format_center(self.workbook))
                     testcase_scene_result = TestCaseSceneResult(testcase_scene_count_dict[item['t_testcase_scene']][1],
                                                                 item['t_testcase_scene'],
                                                                 testcase_scene_count, testcase_scene.result, testcase_time_id)
                     db.session.add(testcase_scene_result)
-                    if testcase_scene.result == '测试失败':
-                        self.worksheet2.merge_range('%s:%s' % ("P" + str(temp - testcase_scene_count + 1), "P" + str(temp)),
-                             "测试失败", self.get_format_center(self.workbook,  color='red'))
+                    if testcase_scene.result != '测试成功':
+                        if testcase_scene_count == 1:
+                            self.write_center(self.worksheet2, "P" + str(temp), testcase_scene.result,
+                                              self.workbook, color='red')
+                        else:
+                            self.worksheet2.merge_range('%s:%s' % ("P" + str(temp - testcase_scene_count + 1), "P" + str(temp)),
+                                 testcase_scene.result, self.get_format_center(self.workbook,  color='red'))
                     else:
-                        self.worksheet2.merge_range('%s:%s' % ("P" + str(temp - testcase_scene_count + 1), "P" + str(temp)),
-                             "测试成功", self.get_format_center(self.workbook))
+                        if testcase_scene_count == 1:
+                            self.write_center(self.worksheet2, "P" + str(temp), testcase_scene.result,
+                                              self.workbook)
+                        else:
+                            self.worksheet2.merge_range('%s:%s' % ("P" + str(temp - testcase_scene_count + 1), "P" + str(temp)),
+                                testcase_scene.result, self.get_format_center(self.workbook))
                     testcase_scene_count_dict.pop(item['t_testcase_scene'])
             else:
                 self.write_center(self.worksheet2, "O" + str(temp), item["t_testcase_scene"], self.workbook)
-                if item["t_testcase_result"] == "测试失败":
-                    self.write_center(self.worksheet2, "P" + str(temp), item["t_testcase_result"],
+                if item["t_testcase_result"] != "测试成功":
+                    self.write_center(self.worksheet2, "P" + str(temp), "测试失败",
                                       self.workbook, color='red')
                 else:
                     self.write_center(self.worksheet2, "P" + str(temp), item["t_testcase_result"],

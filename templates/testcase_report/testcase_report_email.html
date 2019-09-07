@@ -67,15 +67,15 @@
                 <td title="{{ item.request_body }}">{{ item.request_body }}</td>
                 <td title="{{ item.hope }}">{{ item.hope }}</td>
                 <td title="{{ item.response_body }}" style=" text-align: left;max-width: 100px;width:100%;word-break:break-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ item.response_body }}</td>
-                <td title="{{ item.result }}">{{ item.result }}</td>
+                <td title="{{ item.test_result }}">{{ item.test_result }}</td>
                 <td title="{{ item.old_database_value }}">{{ item.old_database_value }}</td>
                 <td title="{{ item.old_sql_value_result }}">{{ item.old_sql_value_result }}</td>
                 <td title="{{ item.new_database_value }}">{{ item.new_database_value }}</td>
                 <td title="{{ item.new_sql_value_result }}">{{ item.new_sql_value_result }}</td>
-                {% if  item.result == "失败" or item.old_sql_value_result == "测试失败" or item.new_sql_value_result == "测试失败"%}
-                    <td title="{{ item.result }}"><span class="badge  badge-pill badge-danger ">测试失败</span></td>
+                {% if  item.result != "测试成功" %}
+                    <td title="{{ item.result }}" ><span class="badge  badge-pill badge-danger " style="width: 48px">{{item.result}}</span></td>
                 {% else %}
-                    <td title="{{ item.result }}"><span class="badge  badge-pill badge-success">测试成功</span></td>
+                    <td title="{{ item.result }}"><span class="badge  badge-pill badge-success"style="width: 48px">测试成功</span></td>
                 {% endif %}
             </tr>
         {% endfor %}
@@ -111,10 +111,10 @@
                     <td>{{ testcase.old_sql_value_result }}</td>
                     <td>{{ testcase.new_sql_value }}</td>
                     <td>{{ testcase.new_sql_value_result }}</td>
-                    {% if  testcase.result == "测试失败"%}
-                        <td><span class="badge  badge-pill badge-warning" style="background-color: rgba(255,0,0,0.18)">测试失败</span></td>
+                    {% if  testcase.result != "测试成功"%}
+                        <td ><span class="badge  badge-pill badge-warning" style="background-color: rgba(255,0,0,0.18);width: 48px">{{testcase.result}}</span></td>
                         {% else %}
-                        <td><span class="badge  badge-pill badge-success" style="background-color: rgba(52,151,43,0.35)">测试成功</span></td>
+                        <td ><span class="badge  badge-pill badge-success" style="background-color: rgba(52,151,43,0.35);width: 48px">测试成功</span></td>
                     {% endif %}
                 </tr>
             {% endfor %}

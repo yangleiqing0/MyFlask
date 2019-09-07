@@ -4,7 +4,6 @@ from . import Base, db
 
 class User(Base, db.Model):
     __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(10), nullable=False)
     password = db.Column(db.String(10), nullable=False)
 

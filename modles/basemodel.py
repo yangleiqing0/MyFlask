@@ -2,6 +2,7 @@ from . import datetime, db
 
 
 class Base:
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     timestamp = db.Column(db.DateTime, index=True)
     updated_time = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
@@ -10,7 +11,6 @@ class Base:
 
 
 class BaseModel(Base):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(50), nullable=False)
 
     def __init__(self, name):

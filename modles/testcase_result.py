@@ -4,7 +4,6 @@ from . import Base, db, TestCases, TestCaseStartTimes
 
 class TestCaseResult(Base, db.Model):
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     testcase_name = db.Column(db.String(50), nullable=False)
     testcase_url = db.Column(db.String(300), nullable=False)
     testcase_data = db.Column(db.TEXT)
@@ -20,7 +19,7 @@ class TestCaseResult(Base, db.Model):
     new_sql_value = db.Column(db.TEXT)
     old_sql_value_result = db.Column(db.String(10))
     new_sql_value_result = db.Column(db.String(10))
-    result = db.Column(db.String(10))
+    result = db.Column(db.String(100))
 
     testcases = db.relationship('TestCases', backref='testcase_result')
 

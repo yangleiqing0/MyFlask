@@ -15,7 +15,7 @@ from .time_message import TimeMessage
 from .testcase_result import TestCaseResult
 from .job import Job
 from .test import TestGroup
-
+from .wait import Wait
 
 models_list = []
 [models_list.append(eval(_model)) for _model in dir() if "__" not in _model

@@ -35,7 +35,10 @@ class EnvMessage:
         self.test_sum = len(testcase_results) + len(testcase_scene_list)
         self.test_success = self.test_sum - self.fail_sum
         self.time_strftime = testcase_time.time_strftime
-        self.score = int(self.test_success * 100 / self.test_sum)
+        if self.test_success == 0:
+            self.score = 0
+        else:
+            self.score = int(self.test_success * 100 / self.test_sum)
         print('EnvMessage:', self.fail_sum, self.test_sum )
 
     def count_success_testcase_scene(self, testcase_time_id):
@@ -45,7 +48,7 @@ class EnvMessage:
                 testcase_result = TestCaseResult.query.filter(
                     TestCaseResult.testcase_id==testcase.id, TestCaseResult.testcase_start_time_id==testcase_time_id).first()
                 print('testcase.testcase_result: ', testcase_result)
-                if testcase_result.testcase_test_result == "测试失败" or testcase_result.old_sql_value_result == "测试失败" or testcase_result.new_sql_value_result == "测试失败":
+                if testcase_result.result != "测试成功":
                     fail_count += 1
                     break
         return fail_count
@@ -54,8 +57,7 @@ class EnvMessage:
     def count_testcase_fail(testcase_time_id):
         count = TestCaseResult.query.join(TestCases, TestCaseResult.testcase_id == TestCases.id).filter(
             TestCaseResult.testcase_start_time_id == testcase_time_id, TestCases.testcase_scene_id.is_(None),
-            or_(TestCaseResult.testcase_test_result == "测试失败", TestCaseResult.old_sql_value_result == "测试失败",
-                TestCaseResult.new_sql_value_result == "测试失败")).count()
+            TestCaseResult.result != "测试成功").count()
         return count
 
 
@@ -69,12 +71,12 @@ class Test:
         print('self.t_name: ', self.t_name)
 
         self.method, self.response_body, self.old_database_value, self.new_database_value, self.result, \
-        self.old_sql_value_result, self.new_sql_value_result \
-            = testcase_result[2], testcase_result[4], testcase_result[6], testcase_result[7], testcase_result[8], \
-        testcase_result[9], testcase_result[10]
+        self.old_sql_value_result, self.new_sql_value_result, self.test_result  \
+            = testcase_result[2], testcase_result[4], testcase_result[6], testcase_result[7], testcase_result[11], \
+        testcase_result[9], testcase_result[10], testcase_result[8]
 
         try:
-            self.scene_id = testcase_result[11]
+            self.scene_id = testcase_result[12]
         except Exception:
             pass
 
@@ -92,7 +94,7 @@ class Testcaseresult:
                                          'testcase_hope_result,test_case_result.' \
                                          'old_sql_value,test_case_result.new_sql_value,test_case_result.' \
                                          'testcase_test_result,test_case_result.old_sql_value_result,test_case_result.new_sql_value_result' \
-                                         ' from testcases,test_case_result where testcases.id=' \
+                                         ', test_case_result.result from testcases,test_case_result where testcases.id=' \
                                          'test_case_result.testcase_id and testcases.testcase_scene_id is Null and ' \
                                          'test_case_result.testcase_start_time_id=%s' \
                                          % testcase_time_id
@@ -105,7 +107,8 @@ class Testcaseresult:
                                          'test_case_result.response_body,test_case_result.testcase_hope_result,' \
                                          'test_case_result.old_sql_value,test_case_result.new_sql_value,' \
                                          'test_case_result.testcase_test_result,test_case_result.old_sql_value_result,' \
-                                         'test_case_result.new_sql_value_result,testcases.testcase_scene_id' \
+                                         'test_case_result.new_sql_value_result, test_case_result.result, ' \
+                                         'testcases.testcase_scene_id' \
                                          ' from testcases, test_case_result ' \
                                          'where testcases.id=test_case_result.testcase_id and ' \
                                          'testcases.testcase_scene_id is not NULL and ' \
@@ -123,6 +126,7 @@ class TestCaseReport(MethodView):
         testcase_results = Testcaseresult(testcase_time_id).testcase_results
         items = []
         for testcase_result in testcase_results:
+            print('testcase_result:', testcase_result)
             items.append(Test(testcase_result))
         allocation = TimeMessage.query.filter(TimeMessage.time_id == testcase_time_id).first()
         testcase_scene_list = TestCaseSceneResult.query.filter(TestCaseSceneResult.time_id == testcase_time_id).all()
@@ -173,7 +177,7 @@ def get_testcase_scene_message(testcase_time_id):
     testcase_scene_ids = []
     testcase_scene_testcases_after_list = []
     for testcase_scene_result in testcase_scene_results:
-        testcase_scene_ids.append(testcase_scene_result[11])
+        testcase_scene_ids.append(testcase_scene_result[12])
         testcase_scene_testcases_after_list.append(Test(testcase_scene_result))
     testcase_scene_ids = set(testcase_scene_ids)
     testcase_scene_list = []
@@ -188,7 +192,7 @@ def get_env_message(testcase_time_id):
         for testcase in testcase_scene.testcases:
             testcase_result = TestCaseResult.query.filter(TestCaseResult.testcase_id==testcase.id,
                                                           TestCaseResult.testcase_start_time_id==testcase_time_id).first()
-            if testcase_result.result == "测试失败":
+            if testcase_result.result != "测试成功":
                 fail_count += 1
         if fail_count == 0:
             testcase_scene.result = "测试成功"

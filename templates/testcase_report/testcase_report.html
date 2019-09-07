@@ -56,16 +56,16 @@
                     <td>{{ item.request_body }}</td>
                     <td>{{ item.hope }}</td>
                     <td>{{ item.response_body }}</td>
-                    <td>{{ item.result }}</td>
+                    <td>{{ item.test_result }}</td>
                     <td>{{ item.old_database_value }}</td>
                     <td>{{ item.old_sql_value_result }}</td>
                     <td>{{ item.new_database_value }}</td>
                     <td>{{ item.new_sql_value_result }}</td>
-                    {% if  item.result == "测试失败" or item.old_sql_value_result == "测试失败" or item.new_sql_value_result == "测试失败"%}
-                        <td><span class="badge  badge-pill badge-danger ">测试失败</span></td>
+                        {% if  item.result != "测试成功" %}
+                        <td><span class="badge  badge-pill badge-danger "  style="width: 62px">{{item.result}}</span></td>
                         {% else %}
-                        <td><span class="badge  badge-pill badge-success">测试成功</span></td>
-                    {% endif %}
+                        <td><span class="badge  badge-pill badge-success">{{ item.result }}</span></td>
+                        {% endif %}
                 </tr>
             {% endfor %}
             {% for testcase_scene in testcase_scene_list %}
@@ -103,8 +103,8 @@
                         <td>{{ testcase.old_sql_value_result }}</td>
                         <td>{{ testcase.new_sql_value }}</td>
                         <td>{{ testcase.new_sql_value_result }}</td>
-                        {% if  testcase.result == "测试失败" %}
-                            <td><span class="badge badge-danger" style="background-color: rgba(255,0,0,0.18)">测试失败</span></td>
+                        {% if  testcase.result != "测试成功" %}
+                            <td><span class="badge badge-danger" style="background-color: rgba(255,0,0,0.18);width: 62px">{{testcase.result}}</span></td>
                             {% else %}
                             <td><span class="badge badge-success" style="background-color: rgba(52,151,43,0.35)">测试成功</span></td>
                         {% endif %}

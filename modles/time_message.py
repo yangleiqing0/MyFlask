@@ -4,7 +4,6 @@ from . import Base, db, TestCaseStartTimes
 
 class TimeMessage(Base, db.Model):
 
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     test_name = db.Column(db.String(100))
     zdbm_version = db.Column(db.String(100))
     test_pl = db.Column(db.String(100))

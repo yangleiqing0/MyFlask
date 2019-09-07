@@ -143,6 +143,12 @@ def handle_500_error(err_msg):
     return render_template('exception/404.html', err_msg=err_msg, mes=500)
 
 
+# @app.errorhandler(AttributeError)
+# def zero_division_error(e):
+#     print('error:', e)
+#     return render_template('exception/404.html', err_msg=e, mes=500)
+
+
 @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
 def db_create_pre_all():
     session['app_rootpath'] = app.root_path

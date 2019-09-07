@@ -73,14 +73,14 @@ class MysqlList(MethodView):
         return render_template('database/mysql_list.html', pagination=pagination, mysqls=mysqls)
 
 
-def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True):
+def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=True):
     print('MysqlRun:', sql, regist_variable)
     mysql = Mysql.query.get(mysql_id)
     host, port, db_name, user, password = AnalysisParams().analysis_more_params(
         mysql.ip, mysql.port, mysql.db_name, mysql.user, mysql.password)
     try:
         result = ConnMysql(host, int(port), user, password, db_name, sql).select_mysql()
-        if regist_variable:
+        if regist_variable and regist:
             if Variables.query.filter(Variables.name == regist_variable).count() > 0:
                 Variables.query.filter(Variables.name == regist_variable).first().value = str(result)
             else:
@@ -91,6 +91,8 @@ def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True):
                 result = '【查询结果】<br>' + str(result) + '<br>【注册变量名】 【' + regist_variable + '】<br>' + str(result)
             else:
                 return result
+        elif not regist:
+            return result
         else:
             result = '【查询结果】<br>' + str(result) + '<br>【未注册变量】'
         return json.dumps(result)

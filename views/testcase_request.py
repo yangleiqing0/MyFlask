@@ -1,4 +1,6 @@
+# encoding=utf-8
 import json
+import time
 from _datetime import datetime
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, session, current_app
@@ -92,6 +94,34 @@ def post_testcase(test_case_id, testcase_time_id):
     testcase = TestCases.query.get(test_case_id)
     url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
     method = testcase.method
+    if testcase.wait:
+        wait = testcase.wait[0]
+        time_count = 0
+        if wait.old_wait_mysql and wait.old_wait and wait.old_wait_sql:
+            while 1:
+                old_wait_value = mysqlrun(mysql_id=wait.old_wait_mysql, sql=wait.old_wait_sql, is_request=False, regist=False)
+                old_wait_assert_result = AssertMethod(actual_result=old_wait_value,
+                             hope_result=AnalysisParams().analysis_params(wait.old_wait)).assert_method()
+                if old_wait_assert_result == "测试成功":
+                    break
+                else:
+                    print('5s后执行下一次前置验证, 此次查询结果: %s 已执行 %ss  等待超时%s' % (old_wait_value, time_count,  int(wait.old_wait_time) * 60))
+                    time_count += 5
+                    time.sleep(5)
+                if wait.old_wait_time:
+                    if time_count == int(wait.old_wait_time) * 5:
+                        time_out_mes = "前置等待超时, 查询结果 %s" % old_wait_value
+                        testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
+                                                         testcase_time_id, '', '',
+                                                         old_sql_value='',
+                                                         new_sql_value='',
+                                                         old_sql_value_result='',
+                                                         new_sql_value_result='', result=time_out_mes,
+                                                         scene_id=testcase.testcase_scene_id)
+                        # 测试结果实例化
+                        db.session.add(testcase_result)
+                        db.session.commit()
+                        return time_out_mes
 
     if testcase.old_sql and testcase.old_sql_id and testcase.old_sql_regist_variable:
         old_sql_value = mysqlrun(mysql_id=testcase.old_sql_id, sql=testcase.old_sql, regist_variable=testcase.old_sql_regist_variable, is_request=False)
@@ -116,6 +146,7 @@ def post_testcase(test_case_id, testcase_time_id):
         test_result = "测试失败"
     else:
         test_result = "测试成功"
+
     testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
                                      testcase_time_id, response_body, testcase_test_result, old_sql_value=old_sql_value,
                                      new_sql_value=new_sql_value, old_sql_value_result=old_sql_value_result,

@@ -12,7 +12,7 @@ from common.method_request import MethodRequest
 from common.execute_testcase import to_execute_testcase
 from common.request_get_more_values import request_get_values
 from common.most_common_method import NullObject
-from modles import TestCases, CaseGroup, User, Mysql, RequestHeaders, Variables
+from modles import TestCases, CaseGroup, User, Mysql, RequestHeaders, Variables, Wait
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -24,11 +24,23 @@ class TestCaseLook(MethodView):
         user_id = session.get('user_id')
         print('testcase_id:', testcase_id)
         testcase = TestCases.query.get(testcase_id)
+        wait = testcase.wait[0]
+        if wait.old_wait_mysql:
+            old_wait_mysql = Mysql.query.get(wait.old_wait_mysql)
+        else:
+            old_wait_mysql = ''
+
+        if wait.new_wait_mysql:
+            new_wait_mysql = Mysql.query.get(wait.new_wait_mysql)
+        else:
+            new_wait_mysql = ''
+
         if testcase.old_sql_id:
             old_mysql = Mysql.query.get(testcase.old_sql_id)
             old_mysql.name = AnalysisParams().analysis_params(old_mysql.name)
         else:
             old_mysql = ''
+
         if testcase.new_sql_id:
             new_mysql = Mysql.query.get(testcase.new_sql_id)
             new_mysql.name = AnalysisParams().analysis_params(new_mysql.name)
@@ -43,7 +55,8 @@ class TestCaseLook(MethodView):
         return render_template('test_case/test_case_look.html', item=testcase, case_groups=case_groups,
                                request_headers_id_before=request_headers_id_before,
                                case_group_id_before=case_group_id_before,
-                               request_headerses=request_headerses, old_mysql=old_mysql, new_mysql=new_mysql)
+                               request_headerses=request_headerses, old_mysql=old_mysql, new_mysql=new_mysql, wait=wait,
+                               old_wait_mysql=old_wait_mysql, new_wait_mysql=new_wait_mysql)
 
 
 class TestCaseRun(MethodView):
@@ -141,6 +154,7 @@ class TestCaseAdd(MethodView):
                                'regist_variable', 'regular', 'request_headers', 'old_sql', 'new_sql',
                                'old_sql_regist_variable', 'new_sql_regist_variable', 'old_sql_hope_result',
                                'new_sql_hope_result', 'old_mysql', 'new_mysql')
+
         group_id = request.form.get('case_group', None)
         data = request.form.get('data', '').replace('/n', '').replace(' ', '')
 
@@ -177,6 +191,12 @@ class TestCaseAdd(MethodView):
         add_regist_variable(old_sql_regist_variable, new_sql_regist_variable, user_id)
         db.session.add(testcase)
         db.session.commit()
+
+        old_wait_sql, old_wait, old_wait_time, old_wait_mysql, new_wait_sql, new_wait, new_wait_time, new_wait_mysql = request_get_values(
+            'old_wait_sql', 'old_wait', 'old_wait_time', 'old_wait_mysql', 'new_wait_sql', 'new_wait', 'new_wait_time', 'new_wait_mysql')
+        wait = Wait(old_wait_sql, old_wait, old_wait_time, old_wait_mysql, new_wait_sql, new_wait, new_wait_time, new_wait_mysql, testcase.id)
+        db.session.add(wait)
+        db.session.commit()
         FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:insert into testcases success, name: %s' % name)
         if testcase_scene_id not in (None, "None"):
@@ -197,7 +217,10 @@ class UpdateTestCase(MethodView):
         scene_page = request.args.get('scene_page')
         print('UpdateTestCase get:testcase_scene_id ', testcase_scene_id)
         testcase = TestCases.query.filter(TestCases.id == id).first()
-        print('testcase.group_id:', testcase.group_id)
+        if testcase.wait:
+            wait = testcase.wait[0]
+        else:
+            wait = ''
         # 获取测试用例分组的列表
         case_groups = user.user_case_groups
         case_group_id_before = testcase.group_id
@@ -211,7 +234,7 @@ class UpdateTestCase(MethodView):
                                request_headers_id_before=request_headers_id_before,
                                case_group_id_before=case_group_id_before,
                                request_headerses=request_headerses, testcase_scene_id=testcase_scene_id,
-                               scene_page=scene_page, page=page, mysqls=mysqls)
+                               scene_page=scene_page, page=page, mysqls=mysqls, wait=wait)
 
     def post(self, id=-1):
         page, scene_page, name, url, method, data, group_id, request_headers_id, regist_variable, regular \
@@ -220,9 +243,29 @@ class UpdateTestCase(MethodView):
             'page', 'scene_page', 'name', 'url', 'method', 'data', 'case_group', 'request_headers', 'regist_variable',
             'regular', 'hope_result', 'testcase_scene_id', 'old_sql', 'new_sql', 'old_sql_regist_variable',
             'new_sql_regist_variable', 'old_sql_hope_result', 'new_sql_hope_result', 'old_mysql', 'new_mysql')
+
+        old_wait_sql, old_wait, old_wait_time, old_wait_mysql, new_wait_sql, new_wait, new_wait_time, new_wait_mysql = request_get_values(
+            'old_wait_sql', 'old_wait', 'old_wait_time', 'old_wait_mysql', 'new_wait_sql', 'new_wait', 'new_wait_time',
+            'new_wait_mysql')
         print('UpdateTestCase post:testcase_scene_id ', testcase_scene_id, scene_page)
         id = request.args.get('id', id)
         user_id = session.get('user_id')
+        testcase = TestCases.query.get(id)
+        if testcase.wait:
+            wait = Wait.query.filter(Wait.testcase_id == id).first()
+            wait.old_wait_sql = old_wait_sql
+            wait.old_wait = old_wait
+            wait.old_wait_time = old_wait_time
+            wait.old_wait_mysql = old_wait_mysql
+            wait.new_wait_sql = new_wait_sql
+            wait.new_wait = new_wait
+            wait.new_wait_time = new_wait_time
+            wait.new_wait_mysql = new_wait_mysql
+        else:
+            wait = Wait(old_wait_sql, old_wait, old_wait_time, old_wait_mysql, new_wait_sql, new_wait, new_wait_time,
+                        new_wait_mysql, testcase.id)
+            db.session.add(wait)
+        db.session.commit()
 
         if not old_sql_id:
             old_sql_id = None
@@ -260,16 +303,23 @@ class TestCaseCopy(MethodView):
             name = testcase_self.name[:31] + timestr
         else:
             name = testcase_self.name + timestr
-
-        db.session.add(TestCases(name, testcase_self.url, testcase_self.data, testcase_self.regist_variable,
+        testcase = TestCases(name, testcase_self.url, testcase_self.data, testcase_self.regist_variable,
                                  testcase_self.regular, testcase_self.method, testcase_self.group_id,
                                  testcase_self.request_headers_id, hope_result=testcase_self.hope_result,
                                  user_id=testcase_self.user_id, old_sql=testcase_self.old_sql,
                                  new_sql=testcase_self.old_sql, old_sql_regist_variable=testcase_self.old_sql_regist_variable,
                                  new_sql_regist_variable=testcase_self.new_sql_regist_variable, old_sql_hope_result=testcase_self.old_sql_hope_result,
                                  new_sql_hope_result=testcase_self.new_sql_hope_result, old_sql_id=testcase_self.old_sql_id,
-                                 new_sql_id=testcase_self.new_sql_id))
+                                 new_sql_id=testcase_self.new_sql_id)
+        db.session.add(testcase)
         db.session.commit()
+        if Wait.query.filter(Wait.testcase_id == testcase_id).count() > 0:
+            old_wait = Wait.query.filter(Wait.testcase_id == testcase_id).first()
+            wait = Wait(old_wait.old_wait_sql, old_wait.old_wait, old_wait.old_wait_time, old_wait.old_wait_mysql,
+                        old_wait.new_wait_sql, old_wait.new_wait, old_wait.new_wait_time,
+                        old_wait.new_wait_mysql, testcase.id)
+            db.session.add(wait)
+            db.session.commit()
         FrontLogs('复制测试用例 name: %s 为模板成功' % testcase_self.name).add_to_front_log()
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
@@ -279,8 +329,12 @@ class DeleteTestCase(MethodView):
     def get(self, id=-1):
         page, scene_page = request_get_values('page', 'scene_page')
         testcase_scene_id = request.args.get('testcase_scene_id', None)
-        delete_test_case_sql = 'delete from testcases where id=%s'
-        cdb().opeat_db(delete_test_case_sql, (id,))
+        testcase = TestCases.query.get(id)
+        if Wait.query.filter(Wait.testcase_id == id).count() > 0:
+            wait = Wait.query.filter(Wait.testcase_id == id).first()
+            db.session.delete(wait)
+        db.session.delete(testcase)
+        db.session.commit()
         FrontLogs('删除测试用例 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete testcases success, id: %s' % id)
         if testcase_scene_id not in (None, "None"):
