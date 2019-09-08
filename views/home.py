@@ -29,17 +29,8 @@ class DbCreatAll(MethodView):
 class Test(MethodView):
     
     def get(self):
-        from modles.test import TestGroup
-        add = request.values.get('add')
-        if add:
-            test = TestGroup.query.get(1)
-            test.name = 'go'
-            db.session.commit()
-            return 'add OK'
-        test = TestGroup('ha')
-        db.session.add(test)
-        db.session.commit()
-        return 'OK'
+
+        return render_template('test.html')
     
     def post(self):
         print(request.args)

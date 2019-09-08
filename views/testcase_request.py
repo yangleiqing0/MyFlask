@@ -59,23 +59,29 @@ class TestCaseRequest(MethodView):
         print('TestCaseRequest post request.form: ', request.form)
         testcase_ids = request.form.getlist('testcase')
         print("request_from_list: ", testcase_ids)
+        scene_case_list = []
         testcase_list = []
         for index, testcase_id in enumerate(testcase_ids):
             testcase = TestCases.query.get(testcase_id)
             testcase.name = AnalysisParams().analysis_params(testcase.name)
             testcase_list.append(testcase)
-        print('testcase_list: ', testcase_list)
+            scene_case_list.append([testcase.id, ])
+        print('testcase_list post: ', testcase_list,  scene_case_list)
 
         testcase_scene_ids = request.form.getlist('testcase_scene')
+
         for testcase_scene_id in testcase_scene_ids:
             testcase_scene = TestCaseScene.query.get(testcase_scene_id)
             testcases = testcase_scene.testcases
+            case_list = []
             for testcase in testcases:
                 testcase.scene_name = testcase.testcase_scene.name
                 testcase_list.append(testcase)
-        print("request_testcase_ids_list: ", testcase_ids)
+                case_list.append(testcase.id)
+            scene_case_list.append(case_list)
+        print("request_testcase_ids_list: ", testcase_ids, scene_case_list)
 
-        return render_template('test_case_request/test_case_request_list.html', items=testcase_list)
+        return render_template('test_case_request/test_case_request_list.html', items=testcase_list, scene_case_list=scene_case_list)
 
 
 class TestCaseRequestStart(MethodView):

@@ -15,7 +15,9 @@
                         <tr>
                             <td><a href="#"><span class="badge">{{ loop.index }}</span></a></td>          <!--使用循环的数字作为id -->
                             <td>{{ item.name }}</td>
-                            <td><samp id="response_{{ item.id }}"></samp></td>
+                            <td>
+                                <samp id="response_{{ item.id }}"></samp>
+                            </td>
                             <td>{{ item.scene_name }}</td>
                         </tr>
                         {% endfor %}
@@ -28,9 +30,58 @@
                     </div>
                 </div>
 {% endblock %}
+{% block css %}
+    <style>
+    .div-middle{
+        display: table-cell;
+        text-align: center;
+        vertical-align: middle;
+        width: 200px;
+        height: 20px;
+        margin: auto;
+        background-color: #e7e7e7;
+        border-radius: 20px;
+        background-image:-webkit-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);background-image:-o-linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+        background-image:linear-gradient(45deg,rgba(255,255,255,.15) 25%,transparent 25%,transparent 50%,rgba(255,255,255,.15) 50%,rgba(255,255,255,.15) 75%,transparent 75%,transparent);
+        -webkit-background-size:20px 20px;background-size:20px 20px;
+        -webkit-animation:progress-bar-stripes 5s linear infinite;
+        -o-animation:progress-bar-stripes 5s linear infinite;
+        animation:progress-bar-stripes 5s linear infinite;
+
+    }
+    @-webkit-keyframes progress-bar-stripes{from{background-position:40px 0}to{background-position:0 0}}
+    @-o-keyframes progress-bar-stripes{from{background-position:40px 0}to{background-position:0 0}}
+    @keyframes progress-bar-stripes{from{background-position:40px 0}to{background-position:0 0}}
+    </style>
+{% endblock %}
 {% block js %}
 <script>
+function ajax_post(start,len, ids) {
+    $.ajax({
+        beforeSend: function () {
+            $('#response_'+ids[start]).html('<div class="col-md-10 col-md-offset-1" id="wait">' +
+                '                                    <div class="div-middle" style=""><span style="font-size: 12px">请求中...</span></div>' +
+                '                                </div>');
+            $("#start_testcase").attr({disabled: "disabled"})
+        },
+        url:{{ url_for('test_case_request_blueprint.test_case_request_start') }},
+        type: "POST",
+        data: {'testcase_id': ids[start], 'test_case_time_id': testcase_time_id},
+        success: function (response) {
+            $('#response_'+ids[start]).html(response);
+            start ++;
+            if(start< len){
+                ajax_post(start,len,ids)
+            }
+        },
+        complete: function () {
+            $("#start_testcase").removeAttr("disabled");
+        },
+        {#async: false,#}
+    });
+}
 $(document).ready(function() {
+
     $("#start_testcase").click(function () {
         $.ajax({
                 url:{{ url_for('test_case_request_blueprint.test_case_time_get') }},
@@ -41,18 +92,11 @@ $(document).ready(function() {
                         testcase_time_id = eval(testcase_time_id);
                 }
             });
-        {% for item in items %}
-            var testcase_id = {{ item.id }};
-            $.ajax({
-                url:{{ url_for('test_case_request_blueprint.test_case_request_start') }},
-                type:"POST",
-                data:{'testcase_id':testcase_id, 'test_case_time_id':testcase_time_id},
-                success:function (response) {
-                    $('#response_{{ item.id }}').html(response)
-                },
-                async: false,
-            });
-        {% endfor %}
+        scene_case_list = {{ scene_case_list }};
+        for(let i=0;i<scene_case_list.length;i++){
+            let len = scene_case_list[i].length;
+            ajax_post(0, len, scene_case_list[i]);
+        }
         $('#to_report').removeAttr("disabled");
     });
     $("#to_report").click(function(){
@@ -69,7 +113,5 @@ $(document).ready(function() {
 
     });
     });
-
-
 </script>
 {% endblock %}
