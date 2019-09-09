@@ -369,6 +369,16 @@ class TestCaseUrls(MethodView):
         return render_template('test_case/testcase_urls.html', testcases_urls=testcases_urls)
 
 
+class TestCaseDownload(MethodView):
+
+    def get(self):
+        page = request.args.get('page')
+        user_id = session.get('user_id')
+        testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).all()
+        print('testcase_id:', len(testcases))
+        return redirect(url_for('testcase_blueprint.test_case_list', page=page))
+
+
 class TestCaseValidata(MethodView):
 
     def get(self):
@@ -419,6 +429,8 @@ testcase_blueprint.add_url_rule('/look_test_case/<id>/', view_func=TestCaseLook.
 testcase_blueprint.add_url_rule('/run_test_case/', view_func=TestCaseRun.as_view('run_test_case'))
 testcase_blueprint.add_url_rule('/copy_test_case/', view_func=TestCaseCopy.as_view('copy_test_case'))
 testcase_blueprint.add_url_rule('/test_case_urls/', view_func=TestCaseUrls.as_view('test_case_urls'))
+testcase_blueprint.add_url_rule('/test_case_download/', view_func=TestCaseDownload.as_view('test_case_download'))
+
 
 testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))
 testcase_blueprint.add_url_rule('/testcaseupdatevalidate/',
