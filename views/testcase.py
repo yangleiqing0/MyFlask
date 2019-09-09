@@ -24,28 +24,23 @@ class TestCaseLook(MethodView):
         user_id = session.get('user_id')
         print('testcase_id:', testcase_id)
         testcase = TestCases.query.get(testcase_id)
-        wait = testcase.wait[0]
-        if wait.old_wait_mysql:
-            old_wait_mysql = Mysql.query.get(wait.old_wait_mysql)
-        else:
-            old_wait_mysql = ''
+        old_wait_mysql = new_wait_mysql = old_mysql = new_mysql = wait = ''
+        if testcase.wait:
+            wait = testcase.wait[0]
+            if wait.old_wait_mysql:
+                old_wait_mysql = Mysql.query.get(wait.old_wait_mysql)
 
-        if wait.new_wait_mysql:
-            new_wait_mysql = Mysql.query.get(wait.new_wait_mysql)
-        else:
-            new_wait_mysql = ''
+            if wait.new_wait_mysql:
+                new_wait_mysql = Mysql.query.get(wait.new_wait_mysql)
 
         if testcase.old_sql_id:
             old_mysql = Mysql.query.get(testcase.old_sql_id)
             old_mysql.name = AnalysisParams().analysis_params(old_mysql.name)
-        else:
-            old_mysql = ''
 
         if testcase.new_sql_id:
             new_mysql = Mysql.query.get(testcase.new_sql_id)
             new_mysql.name = AnalysisParams().analysis_params(new_mysql.name)
-        else:
-            new_mysql = ''
+
         case_groups = CaseGroup.query.all()
         case_group_id_before = testcase.group_id
         request_headers_id_before = testcase.request_headers_id

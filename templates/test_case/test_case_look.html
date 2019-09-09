@@ -53,7 +53,7 @@
                     <div class="form-group config_wait_content">
                         <label for="old_wait_sql" class="control-label col-md-4">前置等待查询语句</label>
                             <div class="col-md-4">
-                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="old_wait_sql" name="old_wait_sql" placeholder="前置等待查询语句" >{{ wait.old_wait_sql }}</textarea>
+                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="old_wait_sql" name="old_wait_sql" placeholder="前置等待查询语句" >{{ wait.old_wait_sql if wait else ""}}</textarea>
                         </div>
                          <div class="col-md-4" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
@@ -64,13 +64,13 @@
                             </div>
                         </div>
                     </div>
-                    {{ macro.form_group(lable_name="old_wait",blank_name="前置等待预期结果",value=wait.old_wait, class_name="config_wait_content") }}
-                    {{ macro.form_group(lable_name="old_wait_time",blank_name="前置等待超时设置",value=wait.old_wait_time, class_name="config_wait_content") }}
+                    {{ macro.form_group(lable_name="old_wait",blank_name="前置等待预期结果",value=wait.old_wait if wait else "", class_name="config_wait_content") }}
+                    {{ macro.form_group(lable_name="old_wait_time",blank_name="前置等待超时设置",value=wait.old_wait_time if wait else "", class_name="config_wait_content") }}
 
                     <div class="form-group config_wait_content">
                         <label for="new_wait_sql" class="control-label col-md-4">后置等待查询语句</label>
                             <div class="col-md-4">
-                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="new_wait_sql" name="new_wait_sql" placeholder="后置等待查询语句" >{{ wait.new_wait_sql }}</textarea>
+                                <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="new_wait_sql" name="new_wait_sql" placeholder="后置等待查询语句" >{{ wait.new_wait_sql if wait else ""}}</textarea>
                         </div>
                          <div class="col-md-4" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
@@ -81,8 +81,8 @@
                             </div>
                         </div>
                     </div>
-                    {{ macro.form_group(lable_name="new_wait",blank_name="后置等待预期结果",value=wait.new_wait, class_name="config_wait_content") }}
-                    {{ macro.form_group(lable_name="new_wait_time",blank_name="后置等待超时设置",value=wait.new_wait_time, class_name="config_wait_content") }}
+                    {{ macro.form_group(lable_name="new_wait",blank_name="后置等待预期结果",value=wait.new_wait if wait else "", class_name="config_wait_content") }}
+                    {{ macro.form_group(lable_name="new_wait_time",blank_name="后置等待超时设置",value=wait.new_wait_time if wait else "", class_name="config_wait_content") }}
                     <div class="form-group config_sql_content">
                         <label for="old_sql" class="control-label col-md-4">前置数据库查询语句</label>
                             <div class="col-md-4">
