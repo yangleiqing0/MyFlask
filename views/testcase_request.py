@@ -101,6 +101,7 @@ def post_testcase(test_case_id, testcase_time_id):
     url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
     method = testcase.method
     if testcase.wait:
+        # 前置等待验证
         wait = testcase.wait[0]
         time_count = 0
         if wait.old_wait_mysql and wait.old_wait and wait.old_wait_sql:
@@ -115,7 +116,7 @@ def post_testcase(test_case_id, testcase_time_id):
                     time_count += 5
                     time.sleep(5)
                 if wait.old_wait_time:
-                    if time_count == int(wait.old_wait_time) * 5:
+                    if time_count == int(wait.old_wait_time) * 60:
                         time_out_mes = "前置等待超时, 查询结果 %s" % old_wait_value
                         testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
                                                          testcase_time_id, '', '',
@@ -135,7 +136,8 @@ def post_testcase(test_case_id, testcase_time_id):
     else:
         old_sql_value = old_sql_value_result = ''
 
-    response_body, regist_variable_value = to_execute_testcase(testcase)
+    response_body, regist_variable_value = to_execute_testcase(testcase)  # 发送请求
+
     testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_method()
 
     if testcase.new_sql and testcase.new_sql_id and testcase.new_sql_regist_variable:
@@ -153,6 +155,30 @@ def post_testcase(test_case_id, testcase_time_id):
     else:
         test_result = "测试成功"
 
+    if testcase.wait:
+        # 后置等待验证
+        wait = testcase.wait[0]
+        time_new_count = 0
+        if wait.new_wait_mysql and wait.new_wait and wait.new_wait_sql:
+            while 1:
+                new_wait_value = mysqlrun(mysql_id=wait.new_wait_mysql, sql=wait.new_wait_sql, is_request=False,
+                                          regist=False)
+                new_wait_assert_result = AssertMethod(actual_result=new_wait_value,
+                                                      hope_result=AnalysisParams().analysis_params(
+                                                          wait.new_wait)).assert_method()
+                if new_wait_assert_result == "测试成功":
+                    break
+                else:
+                    print('5s后执行下一次后置验证, 此次查询结果: %s 已执行 %ss  等待超时%s' % (
+                    new_wait_value, time_new_count, int(wait.new_wait_time) * 60))
+                    time_new_count += 5
+                    time.sleep(5)
+                if wait.new_wait_time:
+                    if time_new_count == int(wait.new_wait_time) * 60:
+                        time_out_new_mes = "后置等待超时, 查询结果 %s" % new_wait_value
+                        test_result = time_out_new_mes
+                        break
+
     testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
                                      testcase_time_id, response_body, testcase_test_result, old_sql_value=old_sql_value,
                                      new_sql_value=new_sql_value, old_sql_value_result=old_sql_value_result,
@@ -160,6 +186,7 @@ def post_testcase(test_case_id, testcase_time_id):
     # 测试结果实例化
     db.session.add(testcase_result)
     db.session.commit()
+
     return response_body
 
 

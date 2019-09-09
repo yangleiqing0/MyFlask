@@ -7,6 +7,8 @@ from flask import render_template, Blueprint, request, redirect, url_for, sessio
 from db_create import db
 from common.pre_db_insert_data import to_insert_data
 from app import return_app
+from views.testcase_report import report_delete
+from modles import TestCaseStartTimes
 
 home_blueprint = Blueprint('home_blueprint', __name__)
 
@@ -32,6 +34,16 @@ class Test(MethodView):
 
         return render_template('test.html')
     
+    def post(self):
+        print(request.args)
+        return request.form
+
+
+class WaitTime(MethodView):
+
+    def get(self):
+        return render_template('exception/wait.html')
+
     def post(self):
         print(request.args)
         return request.form
@@ -114,11 +126,24 @@ def login_required():
         return redirect(url_for('login_blueprint.login'))
 
 
+class ClearData(MethodView):
+
+    def get(self):
+        white_reports = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == '').all()
+        print('white_reports:', white_reports)
+        for report in white_reports:
+            report_delete(report.id)
+            print('report_delete:', report.id)
+        return 'OK'
+
+
 home_blueprint.add_url_rule('/', view_func=Home.as_view('home'))
 home_blueprint.add_url_rule('/test/', view_func=Test.as_view('test'))
+home_blueprint.add_url_rule('/wait_time/', view_func=WaitTime.as_view('wait_time'))
 home_blueprint.add_url_rule('/db_create_all/', view_func=DbCreatAll.as_view('db_create_all'))
 home_blueprint.add_url_rule('/frontlogs/', view_func=FrontLog.as_view('front_logs'))
 home_blueprint.add_url_rule('/flasklogs/', view_func=FlaskLog.as_view('flask_logs'))
+home_blueprint.add_url_rule('/clear_data/', view_func=ClearData.as_view('clear_data'))
 
 
 @app.errorhandler(404)

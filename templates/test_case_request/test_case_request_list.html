@@ -103,10 +103,11 @@ $(document).ready(function() {
         $.ajax({
             url:"{{ url_for("testcase_report_blueprint.testcase_report")}}?testcase_time_id=" + testcase_time_id,
             type:"POST",
-            success:function (response) {
+            beforeSend:function(){
+                $('#ajax_content').load("{{ url_for('home_blueprint.wait_time') }}");
+            },
+            success:function () {
                 window.location.href = "{{ url_for("testcase_report_blueprint.testcase_report")}}?testcase_time_id=" + testcase_time_id
-                /* 需要协程原始js形式 完成自动添加title功能*/
-
             }
 
         });

@@ -238,39 +238,43 @@ class TestCaseReportList(MethodView):
 class TestCaseReportDelete(MethodView):
 
     def get(self, id=-1):
-        try:
-            testcase_time_id = request.args.get('id', id)
-            testcase_report = TestCaseStartTimes.query.get(testcase_time_id)
-            testcase_results = testcase_report.this_time_testcase_result
-            testcase_scene_results = TestCaseSceneResult.query.filter(TestCaseSceneResult.time_id == testcase_time_id).all()
-            env = TimeMessage.query.filter(TimeMessage.time_id == testcase_time_id).first()
-            print('testcase_report: ', testcase_report, id)
-            db.session.delete(testcase_report)
-            try:
-                db.session.delete(env)
-            except Exception as e:
-                pass
-            db.session.commit()
-            try:
-                for testcase_scene_result in testcase_scene_results:
-                    db.session.delete(testcase_scene_result)
-                    db.session.commit()
-            except Exception as e:
-                print(e)
-                pass
-            try:
-                for testcase_result in testcase_results:
-                    db.session.delete(testcase_result)
-                    db.session.commit()
-                os.remove(testcase_report.filename)
-            except FileNotFoundError:
-                pass
-            FrontLogs('删除测试报告 id: %s 成功' % testcase_time_id).add_to_front_log()
-        except AttributeError as e:
-            print(e)
+        testcase_time_id = request.args.get('id', id)
+        report_delete(testcase_time_id)
         # app.logger.info('message:delete testcase_report success, id: %s' % id)
         return redirect(url_for('testcase_report_blueprint.testcase_report_list'))
 
+
+def report_delete(testcase_time_id):
+    try:
+
+        testcase_report = TestCaseStartTimes.query.get(testcase_time_id)
+        testcase_results = testcase_report.this_time_testcase_result
+        testcase_scene_results = TestCaseSceneResult.query.filter(TestCaseSceneResult.time_id == testcase_time_id).all()
+        env = TimeMessage.query.filter(TimeMessage.time_id == testcase_time_id).first()
+        print('testcase_report: ', testcase_report, id)
+        db.session.delete(testcase_report)
+        try:
+            db.session.delete(env)
+        except Exception as e:
+            pass
+        db.session.commit()
+        try:
+            for testcase_scene_result in testcase_scene_results:
+                db.session.delete(testcase_scene_result)
+                db.session.commit()
+        except Exception as e:
+            print(e)
+            pass
+        try:
+            for testcase_result in testcase_results:
+                db.session.delete(testcase_result)
+                db.session.commit()
+            os.remove(testcase_report.filename)
+        except FileNotFoundError:
+            pass
+        FrontLogs('删除测试报告 id: %s 成功' % testcase_time_id).add_to_front_log()
+    except AttributeError as e:
+        print(e)
 
 class TestCaseReportDownLoad(MethodView):
 

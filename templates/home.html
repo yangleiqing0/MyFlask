@@ -170,15 +170,17 @@
                         {% endblock %}
                     </h1>
                 </div>
-            {%block content%}
-            {%endblock%}
-            {% if session.get('username') %}
-                <div class="panel panel-default col-lg-12" style="float: left">
-                    <div  id="front_logs" class="col-lg-3 logs" style="height: 200px"></div>
-                    <div  id="flask_logs" class="col-lg-9 logs" style="height: 200px"></div>
+                <div id="ajax_content">
+                    {%block content%}
+                    {%endblock%}
                 </div>
-                 <div class="panel-footer" style="clear:both"></div>
-            {% endif %}
+                {% if session.get('username') %}
+                    <div class="panel panel-default col-lg-12" style="float: left">
+                        <div  id="front_logs" class="col-lg-3 logs" style="height: 200px"></div>
+                        <div  id="flask_logs" class="col-lg-9 logs" style="height: 200px"></div>
+                    </div>
+                     <div class="panel-footer" style="clear:both"></div>
+                {% endif %}
              </div>
         </div>
     </div>
@@ -451,7 +453,7 @@ $(document).ready(function() {
 
         });
 
-        function alertMCLayer(layerStr, activeStr) {
+    function alertMCLayer(layerStr, activeStr) {
          let oLayer = $(layerStr);
 
          //触发弹出蒙层
@@ -489,7 +491,7 @@ $(document).ready(function() {
 
              })
      }
-     $(function(){
+    $(function(){
         alertMCLayer('#cm_layer','#btn_alert');
       });
     $('input[id*="config"]').click(function () {
