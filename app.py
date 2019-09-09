@@ -108,10 +108,6 @@ def init_scheduler_job():
         scheduler_job(job, scheduler)
 
 
-def return_app():
-    return app
-
-
 if __name__ == '__main__':
 
     manager.run()

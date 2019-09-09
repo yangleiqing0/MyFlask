@@ -5,7 +5,7 @@ from modles import db, TestCaseStartTimes, TestCaseScene, TestCaseSceneResult
 
 
 def test_report(testcase_time_id, allocation, testcase_scene_list):
-    data = []
+    data = {'testcase_scene': []}
     testcase_scene_count_dict = {}
     for testcase_scene in testcase_scene_list:
         testcase_scene_count_dict.update({'testcase_scene_' + str(testcase_scene.name): testcase_scene})
@@ -30,9 +30,12 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
     testcase_results = cdb().query_db(testcase_results_query_sql)
     for testcase_result in testcase_results:
         if testcase_result[14]:
-            testcase_scene_name = TestCaseScene.query.get(testcase_result[14]).name
+            scene = TestCaseScene.query.get(testcase_result[14])
+            testcase_scene_name = scene.name
+            testcase_scene_id = scene.id
         else:
             testcase_scene_name = ''
+            testcase_scene_id = ''
         t_name = AnalysisParams().analysis_params(testcase_result[0])
         t_url = AnalysisParams().analysis_params(testcase_result[1])
         t_method = testcase_result[2]
@@ -59,9 +62,20 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
                    "t_old_sql_hope": AnalysisParams().analysis_params(testcase_result[11]),
                    "t_new_sql_hope": AnalysisParams().analysis_params(testcase_result[12])
                    }
-        data.append(content)
-    data = data[::-1]
-    print('data:', data)
+        if testcase_scene_id:
+            if data.get('testcase_scene_%s' % testcase_scene_id):
+                data['testcase_scene_%s' % testcase_scene_id].append(content)
+            else:
+                data.update({'testcase_scene_%s' % testcase_scene_id: [content, ]})
+        else:
+            data['testcase_scene'].append(content)
+        
+    content_list = []
+    for data_ in data:
+        if 'testcase_scene_' in data_:
+            content_list += data[data_][::-1]
+    content_list = content_list + data['testcase_scene'][::-1]
+
     filename = testcase_time.filename
     data_title = {"test_name": allocation.test_name, "test_version": allocation.zdbm_version, "test_pl": allocation.test_pl, "test_net": allocation.test_net}
     data_re = {"test_sum": allocation.test_sum, "test_success": allocation.test_success, "test_failed": allocation.fail_sum,
@@ -73,7 +87,7 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
     else:
         score = int(allocation.test_success * 100 / allocation.test_sum)
     r.init(data_title, data_re, score, title_name=allocation.title_name, filename=filename)
-    r.test_detail(data, len(data), len(data), testcase_scene_count_dict, testcase_time_id)
+    r.test_detail(content_list, len(content_list), len(content_list), testcase_scene_count_dict, testcase_time_id)
 
 
 class Report:
@@ -168,7 +182,7 @@ class Report:
         wos.insert_chart('A9', chart1, {'x_offset': 25, 'y_offset': 10})
 
     def test_detail(self, data, tmp, row, testcase_scene_count_dict, testcase_time_id):
-
+        print('data:', data)
         # 设置列行的宽高
         self.worksheet2.set_column("A:A", 16)
         self.worksheet2.set_column("B:B", 16)
@@ -270,7 +284,7 @@ class Report:
         self.worksheet.hide_gridlines(2)    # 隐藏网格线
         self.worksheet2.hide_gridlines(2)   # 隐藏网格线
 
-        self.worksheet2.freeze_panes(2, 16)  # 冻结首2行
+        # self.worksheet2.freeze_panes(2, 16)  # 冻结首2行
         self.worksheet2.autofilter('A2:P2')  # 设置自动筛选
 
     def __del__(self):
