@@ -172,8 +172,8 @@ class TestCaseAdd(MethodView):
             request_headers_id, hope_result=hope_result,
             testcase_scene_id=testcase_scene_id, user_id=user_id, old_sql=old_sql, new_sql=new_sql,
             old_sql_regist_variable=old_sql_regist_variable, new_sql_regist_variable=new_sql_regist_variable,
-            old_sql_hope_result=old_sql_hope_result, new_sql_hope_result=new_sql_hope_result, old_mysql_id=old_mysql_id,
-            new_mysql_id=new_mysql_id)
+            old_sql_hope_result=old_sql_hope_result, new_sql_hope_result=new_sql_hope_result, old_sql_id=old_mysql_id,
+            new_sql_id=new_mysql_id)
         add_regist_variable(old_sql_regist_variable, new_sql_regist_variable, user_id)
         db.session.add(testcase)
         db.session.commit()
