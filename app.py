@@ -99,15 +99,6 @@ scheduler.add_listener(my_listener, EVENT_JOB_EXECUTED | EVENT_JOB_ERROR)
 scheduler.start()
 
 
-@app.before_first_request
-def init_scheduler_job():
-    from modles.job import Job
-    from views.job import scheduler_job
-    jobs = Job.query.filter(Job.is_start == 1).all()
-    for job in jobs:
-        scheduler_job(job, scheduler)
-
-
 if __name__ == '__main__':
 
     manager.run()

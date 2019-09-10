@@ -1,7 +1,6 @@
 # encoding=utf-8
 import json
 import datetime
-import xlsxwriter
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, g, redirect, url_for, jsonify, session, send_from_directory

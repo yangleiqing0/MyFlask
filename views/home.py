@@ -9,6 +9,7 @@ from common.pre_db_insert_data import to_insert_data
 from app import return_app
 from views.testcase_report import report_delete
 from modles import TestCaseStartTimes
+from common import clear_download_xlsx
 
 home_blueprint = Blueprint('home_blueprint', __name__)
 
@@ -174,6 +175,21 @@ def db_create_pre_all():
     from views.job import init_scheduler
     from common.pre_db_insert_data import to_insert_data
     to_insert_data()
+    
+
+@app.before_first_request
+def init_scheduler_job():
+    # 5分钟检查一次需要删除的测试用例xlsx
+    from modles.job import Job
+    from views.job import scheduler_job
+    from app import scheduler
+    jobs = Job.query.filter(Job.is_start == 1).all()
+    print('jobs:', jobs)
+    for job in jobs:
+        scheduler_job(job, scheduler)
+    job_id = "__clear_download_xlsx"
+    scheduler.add_job(id=job_id, func=clear_download_xlsx, trigger='cron', minute='*/5', second='0')
+    print('scheduler_job:', scheduler.get_job(job_id))
 
 
 @app.before_first_request

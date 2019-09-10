@@ -2,6 +2,7 @@ import xlsxwriter
 from common.connect_sqlite import cdb
 from common.analysis_params import AnalysisParams
 from modles import db, TestCaseStartTimes, TestCaseScene, TestCaseSceneResult, CaseGroup
+from config import TESTCASE_XLSX_PATH
 
 
 def test_report(testcase_time_id, allocation, testcase_scene_list):
@@ -313,7 +314,7 @@ class WriterXlsx:
         return worksheet.write(colum, data, WriterXlsx.add_format(workbook, color=color))
 
     def open_xlsx(self):
-        dir_path = 'data/' + self.method
+        dir_path = TESTCASE_XLSX_PATH + self.method
         xlsx_name = self.name + '.xlsx'
         path = dir_path + '/' + xlsx_name
         print('path:', path)
