@@ -4,19 +4,30 @@
                 <div class="panel-body">
                     <table class="table table-hover">
                     <div class="col-md-12">
-                        <div class="col-md-7">
+                        <div class="col-md-3">
                             <form action="{{ url_for('testcase_blueprint.test_case_list') }}" role="search" class="navbar-form">
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-9" style="padding-right: 8px">
                                     <input type="text" name="testcase_search" class="form-control" placeholder="Search">
                                 </div>
-                                <button type="submit" class="btn btn-default">查询</button>
+                                    <button type="submit" class="btn btn-default">查询</button>
                             </form>
-                            {{ macro.show_col() }}
-                            <a href="{{ url_for('testcase_blueprint.test_case_urls') }}" class="btn btn-default">统计</a>
-                            <a href="{{ url_for('testcase_blueprint.test_case_download') }}" class="btn btn-default">下载</a>
-                            <a href="#" class="btn btn-default">上传</a>
                         </div>
-                        <div class="col-md-offset-8">
+                        <div class="col-md-6" style="float: left;margin-left: -30px">
+                            <div class="padding-top">{{ macro.show_col() }}</div>
+                            <div class="padding-top"><a href="{{ url_for('testcase_blueprint.test_case_urls') }}" class="btn btn-default">统计</a></div>
+                            <div class="padding-top"><a href="{{ url_for('testcase_blueprint.test_case_download') }}" class="btn btn-default">下载</a></div>
+                            <div style="height: 34px;float: left;width: 300px">
+                                <form action="{{ url_for('testcase_blueprint.test_case_upload') }}" method="post" enctype="multipart/form-data" style="margin: 0;float: left">
+                                    <div class="padding-top">
+                                      <input type="file" id="upload_xlsx" name="upload_xlsx" class="btn btn-default" style="width: 200px;padding: 3px 12px 4px 12px">
+                                    </div>
+                                    <div class="padding-top" style="margin-left: 145px">
+                                        <input type="submit" value="上传" class="btn btn-default">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-md-offset-9">
                             <div class="form-group col-md-12" style="margin-top: 7px">
                                 <div class="float-right">
                                     <select class="btn btn-default" name="testcase_copy" id="testcase_copy" style="width: 120px;height: 34px">
@@ -122,8 +133,16 @@
 
     </script>
 {% endblock %}
+{% block css %}
 <style>
     th,td{
         text-align: center;
     }
+    .padding-top{
+       padding: 0;
+        margin:8px 0 0 0;
+        width: 60px;
+        float: left;
+    }
 </style>
+{% endblock %}

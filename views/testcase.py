@@ -1,6 +1,5 @@
 # encoding=utf-8
-import json
-import datetime
+from views import os, json, datetime
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, g, redirect, url_for, jsonify, session, send_from_directory
@@ -14,6 +13,7 @@ from common.request_get_more_values import request_get_values
 from common.most_common_method import NullObject
 from modles import TestCases, CaseGroup, User, Mysql, RequestHeaders, Variables, Wait
 from common import WriterXlsx, get_now_time
+from config import ALLOWED_EXTENSIONS, TESTCASE_XLSX_PATH
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -379,6 +379,19 @@ class TestCaseDownload(MethodView):
         return send_from_directory(dir_path, xlsx_name, as_attachment=True)
 
 
+class TestCaseUpload(MethodView):
+
+    def post(self):
+        if request.files.get('upload_xlsx'):
+            xlsx = request.files['upload_xlsx']
+            if allowed_file(xlsx.filename):
+                now = get_now_time()
+                dir_path = TESTCASE_XLSX_PATH + 'upload'
+                Image = now+os.path.splitext(xlsx.filename)[-1]
+                xlsx.save(os.path.join(dir_path, Image))
+        return redirect(url_for('testcase_blueprint.test_case_list'))
+
+
 class TestCaseValidata(MethodView):
 
     def get(self):
@@ -430,7 +443,7 @@ testcase_blueprint.add_url_rule('/run_test_case/', view_func=TestCaseRun.as_view
 testcase_blueprint.add_url_rule('/copy_test_case/', view_func=TestCaseCopy.as_view('copy_test_case'))
 testcase_blueprint.add_url_rule('/test_case_urls/', view_func=TestCaseUrls.as_view('test_case_urls'))
 testcase_blueprint.add_url_rule('/test_case_download/', view_func=TestCaseDownload.as_view('test_case_download'))
-
+testcase_blueprint.add_url_rule('/test_case_upload/', view_func=TestCaseUpload.as_view('test_case_upload'))
 
 testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))
 testcase_blueprint.add_url_rule('/testcaseupdatevalidate/',
@@ -457,3 +470,9 @@ def update_regist_variable(testcase_id, old_sql_regist_variable, new_sql_regist_
         Variables.query.filter(Variables.name == testcase.new_sql_regist_variable,
                                Variables.user_id == user_id).first().name = new_sql_regist_variable
     db.session.commit()
+
+
+def allowed_file(filename):
+    _, ext = os.path.splitext(filename)
+    print('ext.lower() in ALLOWED_EXTENSIONS:', ext.lower() in ALLOWED_EXTENSIONS)
+    return ext.lower() in ALLOWED_EXTENSIONS   # 判断文件后缀在不在可允许的文件类型下
