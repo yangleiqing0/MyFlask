@@ -1,7 +1,7 @@
 import xlsxwriter
 from common.connect_sqlite import cdb
 from common.analysis_params import AnalysisParams
-from modles import db, TestCaseStartTimes, TestCaseScene, TestCaseSceneResult
+from modles import db, TestCaseStartTimes, TestCaseScene, TestCaseSceneResult, CaseGroup
 
 
 def test_report(testcase_time_id, allocation, testcase_scene_list):
@@ -102,7 +102,7 @@ class Report:
     def set_border_(self, wb, num=1):
         return wb.add_format({}).set_border(num)
     # 写数据
-
+    
     def write_center(self, worksheet, cl, data, wb, color='black'):
         return worksheet.write(cl, data, self.get_format_center(wb, color=color))
 
@@ -290,3 +290,84 @@ class Report:
     def __del__(self):
         self.workbook.close()
 
+
+class WriterXlsx:
+
+    def __init__(self, name, data, method="download"):
+        self.name = name
+        self.method = method
+        self.data = data
+        self.workbook = self.worksheet = None
+
+    @staticmethod
+    def get_format(workbook, option):
+        return workbook.add_format(option)
+
+    @staticmethod
+    def add_format(workbook, num=1, color='black'):
+        return workbook.add_format({'align': 'center', 'valign': 'vcenter', 'border': num,
+                                    'text_wrap': 1, 'color': color})
+
+    @staticmethod
+    def write_center(worksheet, colum, data, workbook, color='black'):
+        return worksheet.write(colum, data, WriterXlsx.add_format(workbook, color=color))
+
+    def open_xlsx(self):
+        dir_path = 'data/' + self.method
+        xlsx_name = self.name + '.xlsx'
+        path = dir_path + '/' + xlsx_name
+        print('path:', path)
+        self.workbook = xlsxwriter.Workbook(path)
+        self.write_xlsx()
+        return dir_path, xlsx_name
+
+    def write_xlsx(self):
+        self.worksheet = self.workbook.add_worksheet('测试用例列表')
+        self.worksheet.set_column("A:A", 8)
+        self.worksheet.set_column("B:B", 25)
+        self.worksheet.set_column("C:C", 30)
+        self.worksheet.set_column("D:D", 8)
+        self.worksheet.set_column("E:E", 20)
+        self.worksheet.set_column("F:F", 60)
+        self.worksheet.set_column("G:G", 15)
+        self.worksheet.set_column("H:H", 15)
+        self.worksheet.set_column("I:I", 15)
+
+        row = len(self.data)
+        for i in range(1, (row + 2)):
+            self.worksheet.set_row(i, 40)
+        self.worksheet.merge_range('A1:I1', '测试用例列表', self.get_format(self.workbook,
+                                                                     {'bold': True, 'font_size': 18, 'align': 'center',
+                                                                      'valign': 'vcenter', 'bg_color': '#70DB93',
+                                                                      'font_color': '#ffffff'}))
+        self.write_center(self.worksheet, "A2", '用例ID', self.workbook)
+        self.write_center(self.worksheet, "B2", '用例名称', self.workbook)
+        self.write_center(self.worksheet, "C2", '请求接口', self.workbook)
+        self.write_center(self.worksheet, "D2", '请求方法', self.workbook)
+        self.write_center(self.worksheet, "E2", '用例分组', self.workbook)
+        self.write_center(self.worksheet, "F2", '请求报文', self.workbook)
+        self.write_center(self.worksheet, "G2", '响应预期', self.workbook)
+        self.write_center(self.worksheet, "H2", '注册变量', self.workbook)
+        self.write_center(self.worksheet, "I2", '正则匹配', self.workbook)
+
+        temp = 3
+
+        for item in self.data:
+            if item.group_id:
+                group_name = CaseGroup.query.get(item.group_id).name
+            else:
+                group_name = ''
+            self.write_center(self.worksheet, "A" + str(temp), item.id, self.workbook)
+            self.write_center(self.worksheet, "B" + str(temp), item.name, self.workbook)
+            self.write_center(self.worksheet, "C" + str(temp), item.url, self.workbook)
+            self.write_center(self.worksheet, "D" + str(temp), item.method, self.workbook)
+            self.write_center(self.worksheet, "E" + str(temp), group_name, self.workbook)
+            self.write_center(self.worksheet, "F" + str(temp), item.data, self.workbook)
+            self.write_center(self.worksheet, "G" + str(temp), item.hope_result, self.workbook)
+            self.write_center(self.worksheet, "H" + str(temp), item.regist_variable, self.workbook)
+            self.write_center(self.worksheet, "I" + str(temp), item.regular, self.workbook)
+
+            temp = temp + 1
+
+    def __del__(self):
+        self.workbook.close()

@@ -276,10 +276,12 @@ def report_delete(testcase_time_id):
     except AttributeError as e:
         print(e)
 
+
 class TestCaseReportDownLoad(MethodView):
 
     def get(self, name):
-        download_path = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == name).first().filename.replace(name, '')
+        download_path = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == name).first().\
+            filename.replace(name, '')
         print('download_path:', download_path)
         dirpath = os.path.join(session.get('app_rootpath'), download_path)
         # 这里是下在目录，从工程的根目录写起，比如你要下载static/js里面的js文件，这里就要写“static/js”

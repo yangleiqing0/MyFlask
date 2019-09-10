@@ -1,9 +1,10 @@
 # encoding=utf-8
 import json
 import datetime
+import xlsxwriter
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, g, redirect, url_for, current_app, jsonify, session
+from flask import render_template, Blueprint, request, g, redirect, url_for, jsonify, session, send_from_directory
 from common.rand_name import RangName
 from common.analysis_params import AnalysisParams
 from db_create import db
@@ -13,6 +14,7 @@ from common.execute_testcase import to_execute_testcase
 from common.request_get_more_values import request_get_values
 from common.most_common_method import NullObject
 from modles import TestCases, CaseGroup, User, Mysql, RequestHeaders, Variables, Wait
+from common import WriterXlsx, get_now_time
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -367,11 +369,15 @@ class TestCaseUrls(MethodView):
 class TestCaseDownload(MethodView):
 
     def get(self):
-        page = request.args.get('page')
         user_id = session.get('user_id')
-        testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).all()
-        print('testcase_id:', len(testcases))
-        return redirect(url_for('testcase_blueprint.test_case_list', page=page))
+        testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).\
+            with_entities(TestCases.id, TestCases.name, TestCases.method, TestCases.url, TestCases.data,
+                          TestCases.regist_variable, TestCases.regular, TestCases.group_id.name,
+                          TestCases.request_headers_id, TestCases.testcase_scene_id, TestCases.hope_result).all()
+ 
+        now = get_now_time()
+        dir_path, xlsx_name = WriterXlsx('testcases_' + now, testcases).open_xlsx()
+        return send_from_directory(dir_path, xlsx_name, as_attachment=True)
 
 
 class TestCaseValidata(MethodView):
