@@ -1,6 +1,6 @@
 import os
 
-host = '192.168.12.50'
+host = '192.168.1.11'
 port = 3333
 db = 'flasktest'
 root = 'root'
@@ -23,4 +23,4 @@ EXCEL_TO_HTML_PATH = 'templates/reports/'
 
 TESTCASE_XLSX_PATH = 'data/'
 
-ALLOWED_EXTENSIONS=['.jpg', '.png', '.gif']   # 允许上传的文件类型
+ALLOWED_EXTENSIONS=['.xlsx', '.xls', '.xlsm']   # 允许上传的文件类型

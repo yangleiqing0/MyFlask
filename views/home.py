@@ -189,6 +189,7 @@ def init_scheduler_job():
         scheduler_job(job, scheduler)
     job_id = "__clear_download_xlsx"
     scheduler.add_job(id=job_id, func=clear_download_xlsx, trigger='cron', minute='*/5', second='0')
+    scheduler.add_job(id="__clear_upload_xlsx", func=clear_download_xlsx, args=('upload', ), trigger='cron', minute='*/5', second='0')
     print('scheduler_job:', scheduler.get_job(job_id))
 
 

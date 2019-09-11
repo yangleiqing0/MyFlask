@@ -16,5 +16,6 @@ from .job import job_blueprint
 from .emai import mail_blueprint
 from .mysql import mysql_blueprint
 
+
 view_list = []
 [view_list.append(eval(dr)) if '_blueprint' in dr else "" for dr in dir()]

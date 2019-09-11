@@ -3,16 +3,14 @@ from views import os, json, datetime
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, g, redirect, url_for, jsonify, session, send_from_directory
-from common.rand_name import RangName
 from common.analysis_params import AnalysisParams
 from db_create import db
 from common.connect_sqlite import cdb
 from common.method_request import MethodRequest
 from common.execute_testcase import to_execute_testcase
 from common.request_get_more_values import request_get_values
-from common.most_common_method import NullObject
 from modles import TestCases, CaseGroup, User, Mysql, RequestHeaders, Variables, Wait
-from common import WriterXlsx, get_now_time
+from common import WriterXlsx, get_now_time, read_xlsx, NullObject, RangName
 from config import ALLOWED_EXTENSIONS, TESTCASE_XLSX_PATH
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
@@ -390,6 +388,13 @@ class TestCaseUpload(MethodView):
                 dir_path = TESTCASE_XLSX_PATH + 'upload'
                 Image = now+os.path.splitext(xlsx.filename)[-1]
                 xlsx.save(os.path.join(dir_path, Image))
+                xlsx_path = dir_path + '/' + Image
+                row_list = read_xlsx(xlsx_path)
+                print('row_list:', row_list)
+                add_upload_testcases(row_list)
+                os.remove(xlsx_path)
+            else:
+                print('错误的格式')
         return redirect(url_for('testcase_blueprint.test_case_list'))
 
 
@@ -477,3 +482,34 @@ def allowed_file(filename):
     _, ext = os.path.splitext(filename)
     print('ext.lower() in ALLOWED_EXTENSIONS:', ext.lower() in ALLOWED_EXTENSIONS)
     return ext.lower() in ALLOWED_EXTENSIONS   # 判断文件后缀在不在可允许的文件类型下
+
+
+def add_upload_testcases(testcases):
+    user_id = session.get('user_id')
+    if len(testcases) >0 :
+        for testcase in testcases:
+            print(testcase[0], TestCases.query.filter(TestCases.name == testcase[0]).count())
+            if testcase[0] and not TestCases.query.filter(TestCases.name == testcase[0]).count():
+                if testcase[-1]:
+                    if not CaseGroup.query.filter(CaseGroup.name == testcase[-1]).count():
+                        case_group = CaseGroup(testcase[-1], user_id=user_id)
+                        db.session.add(case_group)
+                        db.session.commit()
+                        testcase[-1] = case_group.id
+                    else:
+                        testcase[-1] = CaseGroup.query.filter(CaseGroup.name == testcase[-1]).first().id
+                if testcase[3] :
+                    if not RequestHeaders.query.filter(RequestHeaders.value == testcase[3]).count():
+                        request_headers_name = testcase[0] + RangName.rand_name('6')  # 6位随机数+用例名作为头部名称
+                        request_headers = RequestHeaders(request_headers_name, testcase[3], user_id=user_id)
+                        db.session.add(request_headers)
+                        db.session.commit()
+                        testcase[3] = request_headers.id
+                    else:
+                        testcase[3] = RequestHeaders.query.filter(RequestHeaders.value == testcase[3]).first().id
+                _testcase = TestCases(testcase[0], testcase[1], testcase[4], testcase[6], testcase[7],
+                                      testcase[2], testcase[-1], testcase[3], hope_result=testcase[5])
+                db.session.add(_testcase)
+                db.session.commit()
+    else:
+        print("空文件或已存在此用例")

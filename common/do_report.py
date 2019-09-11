@@ -1,7 +1,7 @@
 import xlsxwriter
 from common.connect_sqlite import cdb
 from common.analysis_params import AnalysisParams
-from modles import db, TestCaseStartTimes, TestCaseScene, TestCaseSceneResult, CaseGroup
+from modles import db, TestCaseStartTimes, TestCaseScene, TestCaseSceneResult, CaseGroup, RequestHeaders
 from config import TESTCASE_XLSX_PATH
 
 
@@ -328,16 +328,17 @@ class WriterXlsx:
         self.worksheet.set_column("B:B", 25)
         self.worksheet.set_column("C:C", 30)
         self.worksheet.set_column("D:D", 8)
-        self.worksheet.set_column("E:E", 20)
-        self.worksheet.set_column("F:F", 60)
+        self.worksheet.set_column("E:E", 35)
+        self.worksheet.set_column("F:F", 50)
         self.worksheet.set_column("G:G", 15)
         self.worksheet.set_column("H:H", 15)
         self.worksheet.set_column("I:I", 15)
+        self.worksheet.set_column("J:J", 20)
 
         row = len(self.data)
         for i in range(1, (row + 2)):
             self.worksheet.set_row(i, 40)
-        self.worksheet.merge_range('A1:I1', '测试用例列表', self.get_format(self.workbook,
+        self.worksheet.merge_range('A1:J1', '测试用例列表', self.get_format(self.workbook,
                                                                      {'bold': True, 'font_size': 18, 'align': 'center',
                                                                       'valign': 'vcenter', 'bg_color': '#70DB93',
                                                                       'font_color': '#ffffff'}))
@@ -345,11 +346,12 @@ class WriterXlsx:
         self.write_center(self.worksheet, "B2", '用例名称', self.workbook)
         self.write_center(self.worksheet, "C2", '请求接口', self.workbook)
         self.write_center(self.worksheet, "D2", '请求方法', self.workbook)
-        self.write_center(self.worksheet, "E2", '用例分组', self.workbook)
+        self.write_center(self.worksheet, "E2", '请求头部', self.workbook)
         self.write_center(self.worksheet, "F2", '请求报文', self.workbook)
         self.write_center(self.worksheet, "G2", '响应预期', self.workbook)
         self.write_center(self.worksheet, "H2", '注册变量', self.workbook)
         self.write_center(self.worksheet, "I2", '正则匹配', self.workbook)
+        self.write_center(self.worksheet, "J2", '用例分组', self.workbook)
 
         temp = 3
 
@@ -358,16 +360,17 @@ class WriterXlsx:
                 group_name = CaseGroup.query.get(item.group_id).name
             else:
                 group_name = ''
+            request_headers = RequestHeaders.query.get(item.request_headers_id).value
             self.write_center(self.worksheet, "A" + str(temp), item.id, self.workbook)
             self.write_center(self.worksheet, "B" + str(temp), item.name, self.workbook)
             self.write_center(self.worksheet, "C" + str(temp), item.url, self.workbook)
             self.write_center(self.worksheet, "D" + str(temp), item.method, self.workbook)
-            self.write_center(self.worksheet, "E" + str(temp), group_name, self.workbook)
+            self.write_center(self.worksheet, "E" + str(temp), request_headers, self.workbook)
             self.write_center(self.worksheet, "F" + str(temp), item.data, self.workbook)
             self.write_center(self.worksheet, "G" + str(temp), item.hope_result, self.workbook)
             self.write_center(self.worksheet, "H" + str(temp), item.regist_variable, self.workbook)
             self.write_center(self.worksheet, "I" + str(temp), item.regular, self.workbook)
-
+            self.write_center(self.worksheet, "J" + str(temp), group_name, self.workbook)
             temp = temp + 1
 
     def __del__(self):
