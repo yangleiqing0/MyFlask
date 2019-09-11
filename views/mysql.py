@@ -56,12 +56,12 @@ class MysqlList(MethodView):
     def get(self):
         from common.data.dynamic_variable import get_page
         user_id = session.get('user_id')
-        mysql_search = request_get_values('mysql_search')
+        search = request_get_values('search')
         page = request.args.get('page', 1, type=int)
         FrontLogs('进入mysql配置列表页面 第%s页' % page).add_to_front_log()
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
         pagination = Mysql.query.filter(Mysql.name.like(
-                "%"+mysql_search+"%") if mysql_search is not None else "", Mysql.user_id == user_id). \
+                "%"+search+"%") if search is not None else "", Mysql.user_id == user_id). \
             order_by(Mysql.timestamp.desc()).paginate(
             page, per_page=next(get_page), error_out=False)
         # 返回一个内容对象
@@ -70,7 +70,7 @@ class MysqlList(MethodView):
             mysql.ip, mysql.port, mysql.name, mysql.user, mysql.password = AnalysisParams().analysis_more_params(
                 mysql.ip, mysql.port, mysql.name, mysql.user, mysql.password
             )
-        return render_template('database/mysql_list.html', pagination=pagination, mysqls=mysqls)
+        return render_template('database/mysql_list.html', pagination=pagination, mysqls=mysqls, search=search)
 
 
 def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=True):

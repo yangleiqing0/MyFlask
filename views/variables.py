@@ -32,14 +32,15 @@ class VariableList(MethodView):
         from common.data.dynamic_variable import get_page
         user_id = session.get('user_id')
         # 指定渲染的页数
-        variable_search = request_get_values('variable_search')
+        search = request_get_values('search')
+        print('variable_search:', search)
         page = request.args.get('page', 1, type=int)
         FrontLogs('进入全局变量列表 第%s页' % page).add_to_front_log()
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
-        if variable_search:
+        if search:
             pagination = Variables.query.filter(Variables.user_id == user_id, Variables.name.like(
-                "%" + variable_search + "%")). \
-                order_by(Variables.timestamp.desc()).paginate(1, per_page=next(get_page), error_out=False)
+                "%" + search + "%")). \
+                order_by(Variables.timestamp.desc()).paginate(page, per_page=next(get_page), error_out=False)
         else:
             pagination = Variables.query.filter(Variables.user_id == user_id,
                                                 Variables.is_private ==0).\
@@ -49,7 +50,8 @@ class VariableList(MethodView):
         # 返回一个内容对象
         variables = pagination.items
         print("pagination: ", pagination, variables)
-        return render_template('variable/variable_list.html', pagination=pagination, items=variables)
+        return render_template('variable/variable_list.html', pagination=pagination, items=variables, 
+                                search=search)
 
 
 class VariableUpdate(MethodView):

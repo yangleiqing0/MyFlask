@@ -31,7 +31,7 @@ class CaseGroupAdd(MethodView):
 class CaseGroupList(MethodView):
     def get(self):
         user_id =session.get('user_id')
-        case_group_search = request_get_values('case_group_search')
+        search = request_get_values('search')
         user = User.query.get(user_id)
         case_groups = user.user_case_groups
         print('case_groups: ', case_groups)
@@ -51,13 +51,14 @@ class CaseGroupList(MethodView):
             #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
             from common.data.dynamic_variable import get_page
             pagination = CaseGroup.query.filter(CaseGroup.name.like(
-                "%"+case_group_search+"%") if case_group_search is not None else "", CaseGroup.user_id == user_id).\
+                "%"+search+"%") if search is not None else "", CaseGroup.user_id == user_id).\
                 order_by(CaseGroup.timestamp.desc()).paginate(
                 page, per_page=next(get_page), error_out=False)
             # 返回一个内容对象
             case_groups = pagination.items
             print("pagination: ", pagination)
-            return render_template('case_group/case_group_list.html', pagination=pagination, items=case_groups)
+            return render_template('case_group/case_group_list.html', pagination=pagination, items=case_groups, 
+                                   search=search)
 
 
 class CaseGroupUpdate(MethodView):

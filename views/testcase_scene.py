@@ -60,21 +60,21 @@ class TestCaseSceneTestCaseList(MethodView):
     def get(self):
         from common.data.dynamic_variable import get_page
         user_id = session.get('user_id')
-        testcase_scene_search = request_get_values('testcase_scene_search')
+        search = request_get_values('search')
         model_testcase_scenes = TestCaseScene.query.filter(TestCaseScene.is_model == 1, TestCaseScene.user_id == user_id).all()
         model_testcases = TestCases.query.filter(TestCases.is_model == 1, TestCases.user_id == user_id).all()
         page = request.args.get('page', 1, type=int)
         FrontLogs('进入测试场景列表 第%s页' % page).add_to_front_log()
 
         pagination = TestCaseScene.query.filter(TestCaseScene.name.like(
-                "%"+testcase_scene_search+"%") if testcase_scene_search is not None else "", TestCaseScene.user_id == user_id).order_by(TestCaseScene.timestamp.desc()).paginate(page, per_page=
+                "%"+search+"%") if search is not None else "", TestCaseScene.user_id == user_id).order_by(TestCaseScene.timestamp.desc()).paginate(page, per_page=
         next(get_page), error_out=False)
         # 返回一个内容对象
         testcase_scenes = pagination.items
         print("request_headers_pagination: ", pagination)
         return render_template('testcase_scene/testcase_scene_testcase_list.html', testcase_scenes=testcase_scenes,
                                model_testcases=model_testcases, pagination=pagination,
-                               model_testcase_scenes=model_testcase_scenes, page=page)
+                               model_testcase_scenes=model_testcase_scenes, page=page, search=search)
 
 
 class TestCaseSceneRun(MethodView):

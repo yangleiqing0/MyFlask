@@ -33,7 +33,7 @@ class RequestHeadersList(MethodView):
     def get(self):
         from common.data.dynamic_variable import get_page
         user_id = session.get('user_id')
-        request_headers_search = request_get_values('request_headers_search')
+        search = request_get_values('search')
         request_headers = RequestHeaders.query.all()
         print('request_headers:', request_headers)
         if request.is_xhr:
@@ -50,12 +50,13 @@ class RequestHeadersList(MethodView):
         FrontLogs('进入请求头部列表 第%s页' % page).add_to_front_log()
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
         pagination = RequestHeaders.query.filter(RequestHeaders.name.like(
-                "%"+request_headers_search+"%") if request_headers_search is not None else "", RequestHeaders.user_id == user_id).order_by(RequestHeaders.timestamp.desc()).paginate(page, per_page=
+                "%"+search+"%") if search is not None else "", RequestHeaders.user_id == user_id).order_by(RequestHeaders.timestamp.desc()).paginate(page, per_page=
         next(get_page), error_out=False)
         # 返回一个内容对象
         request_headerses = pagination.items
         print("request_headers_pagination: ", pagination)
-        return render_template('request_headers/request_headers_list.html', pagination=pagination, items=request_headerses)
+        return render_template('request_headers/request_headers_list.html', pagination=pagination, 
+                               items=request_headerses, search=search)
 
 
 class RequestHeadersUpdate(MethodView):

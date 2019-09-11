@@ -86,7 +86,8 @@ class TestCastList(MethodView):
 
     def get(self):
         user_id = session.get('user_id')
-        testcase_search = request_get_values('testcase_search')
+        search = request_get_values('search')
+        print('testcase_search:', search)
         show_var = Variables.query.filter(Variables.name == '_VAR_IS_SHOW').first().value
         user = User.query.get(user_id)
         model_testcases = TestCases.query.filter(TestCases.is_model == 1, TestCases.user_id == user_id).all()
@@ -98,7 +99,7 @@ class TestCastList(MethodView):
         from common.data.dynamic_variable import get_page
         #  pagination是salalchemy的方法，第一个参数：当前页数，per_pages：显示多少条内容 error_out:True 请求页数超出范围返回404错误 False：反之返回一个空列表
         pagination = TestCases.query.filter(TestCases.name.like(
-            "%" + testcase_search + "%") if testcase_search is not None else "",
+            "%" + search + "%") if search is not None else "",
                                             TestCases.testcase_scene_id.is_(None),
                                             TestCases.user_id == user_id).order_by \
             (TestCases.timestamp.desc()).paginate(
@@ -115,8 +116,8 @@ class TestCastList(MethodView):
         print("pagination: ", pagination)
         FrontLogs('进入测试用例列表页面 第%s页' % page).add_to_front_log()
         return render_template('test_case/test_case_list.html', pagination=pagination, items=testcaseses,
-                               case_groups=case_groups,
-                               request_headers=request_headers, page=page, model_testcases=model_testcases)
+                               case_groups=case_groups,request_headers=request_headers, page=page, 
+                               model_testcases=model_testcases, search=search)
 
 
 class TestCaseAdd(MethodView):
