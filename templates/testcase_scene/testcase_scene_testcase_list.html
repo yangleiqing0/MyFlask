@@ -92,6 +92,7 @@
 
 {% endblock %}
 {% block js %}
+
     <script>
     $(document).ready(function () {
         $('a[id*="testcase_add"]').click(function () {
@@ -107,33 +108,12 @@
             })
         });
 
-         /**
-          * @return {string}
-          */
-         function GetQueryString(name)
-        {
-             let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-             let r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
-             if(r != null){
-                 return  unescape(r[2]);
-             }else {
-                 return '';
-             }
-        }
-
          $('a[id="testcase_scene_add"]').click(function () {
              let scene_page = GetQueryString('page');
              let testcase_scene_id = $('#testcase_scene_copy').val();
              window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_copy_scene")}}?testcase_scene_id='+testcase_scene_id+'&scene_page='+scene_page
         });
 
-
-        $('a[id*="testcase_scene_delete"]').click(function () {
-            let scene_page = GetQueryString('page');
-            let testcase_scene_id = $(this).attr('id').replace('testcase_scene_delete_','');
-            window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_delete")}}?testcase_scene_id='+testcase_scene_id+'&scene_page='+scene_page
-
-        });
 
         $('a[id*="testcase_scene_run"]').click(function () {
             let testcase_scene_id = $(this).attr('id').replace('testcase_scene_run_','');

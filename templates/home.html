@@ -22,7 +22,7 @@
     <script type="text/javascript" src="/static/js/collapse/bootstrap-collapse.js"></script>
     <script src="https://cdn.bootcss.com/jquery-validate/1.15.1/jquery.validate.js"></script>
     <link href="{{url_for('static',filename='css/badge/badge.css')}}?v=1.0.6"  rel="stylesheet">
-{#    <script src="{{url_for('static',filename='js/bootstrap.min.js')}}"></script>#}
+    <script src="{{url_for('static',filename='js/alert-style.js' , charset= "UTF-8")}}"></script>
 
 
 </head>
@@ -313,6 +313,31 @@
 }
 </style>
 <script>
+    /**
+          * @return {string}
+          */
+     function GetQueryString(name)
+        {
+             let reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+             let r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+             if(r != null){
+                 return  unescape(r[2]);
+             }else {
+                 return '';
+             }
+        }
+
+    function delete_scene(id) {
+            let scene_page = GetQueryString('page');
+            window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_delete")}}?testcase_scene_id=' + id + '&scene_page=' + scene_page
+    }
+    {#function delete_scene_() {#}
+    {#    $('a[id*="testcase_scene_delete"]').click(function () {#}
+    {#        let scene_page = GetQueryString('page');#}
+    {#        let testcase_scene_id = $(this).attr('id').replace('testcase_scene_delete_', '');#}
+    {#        window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_delete")}}?testcase_scene_id=' + testcase_scene_id + '&scene_page=' + scene_page#}
+    {##}
+    {#    });#}
 $(document).ready(function() {
     href = window.location.href.split('/')[3];
     var ths = window.localStorage.getItem(href + '_not_show_ths');
@@ -510,7 +535,8 @@ $(document).ready(function() {
             });
             window.localStorage.setItem(name + '_content', "0")
         }
-    })
+    });
+
 });
 
 </script>

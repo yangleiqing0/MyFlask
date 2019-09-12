@@ -51,7 +51,7 @@ class VariableList(MethodView):
         variables = pagination.items
         print("pagination: ", pagination, variables)
         return render_template('variable/variable_list.html', pagination=pagination, items=variables, 
-                                search=search)
+                                search=search, page=page)
 
 
 class VariableUpdate(MethodView):
@@ -73,11 +73,12 @@ class VariableUpdate(MethodView):
 class VariableDelete(MethodView):
 
     def get(self, id=-1):
+        page = request.values.get('page')
         delete_variables_sql = 'delete from variables where id=%s'
         cdb().opeat_db(delete_variables_sql, (id,))
         FrontLogs('删除全局变量 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete variables success, id: %s' % id)
-        return redirect(url_for('variables_blueprint.variable_list'))
+        return redirect(url_for('variables_blueprint.variable_list', page=page))
 
 
 class VariableValidata(MethodView):
