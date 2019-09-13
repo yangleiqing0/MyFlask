@@ -33,7 +33,7 @@ class Test(MethodView):
     
     def get(self):
 
-        return render_template('test.html')
+        return render_template('test.html', error='哈哈')
     
     def post(self):
         print(request.args)
@@ -205,3 +205,4 @@ def init_flask_log():
                       'https://github.com/yangleiqing0/MyFlask.git\n', '遇到任何bug请直接联系我\n',
                       '接定制任务\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n',
                       ])
+

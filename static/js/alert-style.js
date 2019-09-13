@@ -19,14 +19,14 @@ $(document).ready(function() {
     $("a[href*='delete']").each(function () {
         $(this).click(function () {
         let href = $(this).attr('href');
-        $.MsgBox.Confirm("温馨提示", "确定要进行修改吗？", test, href);
+        $.MsgBox.Confirm("温馨提示", "确定要进行删除吗", test, href);
         return false
     });
     });
     $("a[id*='testcase_scene_delete']").each(function () {
         $(this).click(function () {
             let id = $(this).attr('id').replace('testcase_scene_delete_', '');
-             $.MsgBox.Confirm("温馨提示", "确定要进行修改吗？", delete_scene, id);
+             $.MsgBox.Confirm("温馨提示", "确定要进行删除吗？", delete_scene, id);
         return false
         })
     });
@@ -153,3 +153,20 @@ $(document).ready(function() {
         });
     }
 });
+
+
+
+
+// 提示信息框
+
+// 删除url中某个参数,并跳转  保证页面只提示一次信息，然后删除url参数
+function funcUrlDel(name){
+    let href = window.location.href;
+    let reg = new RegExp(name + '=[^&]*');
+
+    let href_after = href.replace(reg, '');
+    window.history.pushState(null, '', href_after)
+}
+
+
+

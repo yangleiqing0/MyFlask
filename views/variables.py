@@ -23,7 +23,7 @@ class VariableAdd(MethodView):
         db.session.commit()
         FrontLogs('添加全局变量 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:insert into variables success, name: %s' % name)
-        return redirect(url_for('variables_blueprint.variable_list'))
+        return redirect(url_for('variables_blueprint.variable_list', msg='添加全局变量成功'))
 
 
 class VariableList(MethodView):
@@ -32,7 +32,7 @@ class VariableList(MethodView):
         from common.data.dynamic_variable import get_page
         user_id = session.get('user_id')
         # 指定渲染的页数
-        search = request_get_values('search')
+        search, msg = request_get_values('search', 'msg')
         print('variable_search:', search)
         page = request.args.get('page', 1, type=int)
         FrontLogs('进入全局变量列表 第%s页' % page).add_to_front_log()
@@ -51,7 +51,7 @@ class VariableList(MethodView):
         variables = pagination.items
         print("pagination: ", pagination, variables)
         return render_template('variable/variable_list.html', pagination=pagination, items=variables, 
-                                search=search, page=page)
+                                search=search, page=page, msg=msg)
 
 
 class VariableUpdate(MethodView):
@@ -73,12 +73,12 @@ class VariableUpdate(MethodView):
 class VariableDelete(MethodView):
 
     def get(self, id=-1):
-        page = request.values.get('page')
+        page, search = request.values.get('page', 'search')
         delete_variables_sql = 'delete from variables where id=%s'
         cdb().opeat_db(delete_variables_sql, (id,))
         FrontLogs('删除全局变量 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete variables success, id: %s' % id)
-        return redirect(url_for('variables_blueprint.variable_list', page=page))
+        return redirect(url_for('variables_blueprint.variable_list', page=page, search=search, msg='删除成功'))
 
 
 class VariableValidata(MethodView):

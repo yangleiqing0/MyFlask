@@ -7,6 +7,7 @@
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
+    <link href="{{url_for('static',filename='css/prompt-box.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/amazeui.min.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/admin.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/app.css')}}"  rel="stylesheet">
@@ -27,6 +28,7 @@
 
 </head>
 <body style="background-color:ghostwhite;"  >
+{#    <div id="prompt-center" class="prompt-center"></div>#}
 <div class="tpl-page-container tpl-page-header-fixed" style="padding-top: 0">
     <div style="height: 20px;width: 100%;background-color:ghostwhite;"></div>
     <div class="row" >
@@ -189,7 +191,7 @@
     </div>
 </div>
 </div>
-
+{{ macro.prompt_msg(msg, error)}}
 {% block js %}
 {%endblock%}
 </body>
@@ -311,6 +313,14 @@
 .float-right{
     float: right;
 }
+    .prompt-center{
+        position: absolute;
+        z-index: 9999;
+        width: 438px;
+        height: 90px;
+        left:0; right:0; top:50px; bottom:0;
+        margin: 0 auto;
+    }
 </style>
 <script>
     /**
@@ -536,6 +546,13 @@ $(document).ready(function() {
             window.localStorage.setItem(name + '_content', "0")
         }
     });
+    // 设置提示框淡出时间
+    $('.toast__close').click(function(e) {
+     $('.toast').stop().fadeOut(1000);
+    });
+    $('.toast').fadeOut(5000);
+    funcUrlDel('msg')
+
 
 });
 
