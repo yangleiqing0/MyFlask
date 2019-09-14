@@ -28,7 +28,6 @@
 
 </head>
 <body style="background-color:ghostwhite;"  >
-{#    <div id="prompt-center" class="prompt-center"></div>#}
 <div class="tpl-page-container tpl-page-header-fixed" style="padding-top: 0">
     <div style="height: 20px;width: 100%;background-color:ghostwhite;"></div>
     <div class="row" >
@@ -139,9 +138,9 @@
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('system_config_blueprint.email_config') }}" class="nav-link tpl-left-nav-link-list">
+                    <a href="{{ url_for('project_group_blueprint.project_group_urls') }}" class="nav-link tpl-left-nav-link-list">
                         <i class="am-icon-cog am-icon-fw"></i>
-                        <span>系统设置</span>
+                        <span>项目组配置</span>
                     </a>
                 </li>
                 <li class="tpl-left-nav-item">
@@ -157,35 +156,35 @@
         {% endif %}
     </div>
     <div  class="col-md-8 body-content">
-    <div class="container" >
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default" id="get_container_height">
-                <div class="panel-heading text-center" >
-                    <input id="to_back" type="button" class="btn btn-default relative-position" onclick="history.go(-1);scrollTop = 0" value="返回上一步">
-                    <h1>
-                        {% block title %}
-                        {% endblock %}
-                    </h1>
-                </div>
-                <div id="ajax_content">
-                    {%block content%}
-                    {%endblock%}
-                </div>
-                {% if session.get('username') %}
-                    <div class="panel panel-default col-lg-12" style="float: left">
-                        <div  id="front_logs" class="col-lg-3 logs" style="height: 200px"></div>
-                        <div  id="flask_logs" class="col-lg-9 logs" style="height: 200px"></div>
+        <div class="container" >
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-default" id="get_container_height">
+                        <div class="panel-heading text-center" >
+                            <input id="to_back" type="button" class="btn btn-default relative-position" onclick="history.go(-1);scrollTop = 0" value="返回上一步">
+                            <h1>
+                                {% block title %}
+                                {% endblock %}
+                            </h1>
+                        </div>
+                            <div id="ajax_content">
+                                {%block content%}
+                                {%endblock%}
+                            </div>
+                            {% if session.get('username') %}
+                                <div class="panel panel-default col-lg-12" style="float: left">
+                                    <div  id="front_logs" class="col-lg-3 logs" style="height: 200px"></div>
+                                    <div  id="flask_logs" class="col-lg-9 logs" style="height: 200px"></div>
+                                </div>
+                                <div class="panel-footer" style="clear:both"></div>
+                            {% endif %}
                     </div>
-                     <div class="panel-footer" style="clear:both"></div>
-                {% endif %}
-             </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-</div>
-    <div class="col-md-2 col-md-offset-10" id="request_body_show" style="background-color:ghostwhite;
-    width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 700px;position:fixed">
+    <div class="col-md-2 col-md-offset-10" id="request_body_show" style="
+    width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 700px;position: fixed">
     </div>
     {%block hello%}
     {%endblock%}
@@ -210,11 +209,11 @@
         left: 280px;
         height:100%;
         position: fixed;
-        overflow-x: hidden;
-        overflow-y: scroll;
+        {#overflow-x: hidden;#}
+        overflow-y: auto;
     }
     .body-content::-webkit-scrollbar {
-        display: none;
+        {#display: none;#}
     }
     .tpl-page-header-fixed{
         position: fixed;
@@ -363,13 +362,7 @@
             let scene_page = GetQueryString('page');
             window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_delete")}}?testcase_scene_id=' + id + '&scene_page=' + scene_page
     }
-    {#function delete_scene_() {#}
-    {#    $('a[id*="testcase_scene_delete"]').click(function () {#}
-    {#        let scene_page = GetQueryString('page');#}
-    {#        let testcase_scene_id = $(this).attr('id').replace('testcase_scene_delete_', '');#}
-    {#        window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_delete")}}?testcase_scene_id=' + testcase_scene_id + '&scene_page=' + scene_page#}
-    {##}
-    {#    });#}
+
   function back_img() {
   //封装方法，压缩之后减少文件大小
   function get_attribute(node, attr, default_value) {
@@ -524,7 +517,7 @@ $(document).ready(function() {
         $(this).removeAttr('title')
     });
      $("td,th").on("click",function() {
-            $('#request_body_show').css('overflow','scroll').text($(this).text())
+            $('#request_body_show').css('overflow','auto').text($(this).text())
     });
     $(".dots",$(this)).hover(function(){
         $(this).attr('title',$(this).text());
@@ -691,14 +684,17 @@ $(document).ready(function() {
             window.localStorage.setItem(name + '_content', "0")
         }
     });
+
     // 设置提示框淡出时间
     $('.toast__close').click(function(e) {
      $('.toast').stop().fadeOut(1000);
     });
     $('.toast').fadeOut(5000);
 
-    $('.alert').fadeOut(3000)
+    $('.alert').fadeOut(3000);
+
     back_img()
+    //  启动动态背景
 
 });
 

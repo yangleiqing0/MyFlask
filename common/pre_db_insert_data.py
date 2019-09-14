@@ -1,4 +1,4 @@
-from modles import CaseGroup, Mail, RequestHeaders, Variables, User, db
+from modles import CaseGroup, Mail, RequestHeaders, Variables, User, db, ProjectGroup
 from common.connect_sqlite import cdb
 from pre_data import variable as var
 from pre_data.variable import *
@@ -10,6 +10,8 @@ from pre_data import mail
 from pre_data.mail import *
 from pre_data import request_headers
 from pre_data.request_headers import *
+from pre_data import project_group
+from pre_data.project_group import *
 
 
 def add_pre_data(key, user_id, table=None):
@@ -54,6 +56,13 @@ def add_pre_data(key, user_id, table=None):
             db.session.add(_request_headers)
             db.session.commit()
 
+    elif 'ProjectGroup' in table:
+        value = eval(key)
+        if ProjectGroup.query.filter(ProjectGroup.name == "%s" % value).count() == 0:
+            _project_group = ProjectGroup(value)
+            db.session.add(_project_group)
+            db.session.commit()
+
 
 def add_pre_data_go(user_id):
     print('add_pre_data_go user_id:', user_id)
@@ -74,6 +83,9 @@ def add_pre_data_go(user_id):
 
     pre_variable = dir(request_headers)
     [add_pre_data(key, user_id, table='RequestHeaders') for key in pre_variable if "__" not in key and key[0].isupper()]
+
+    pre_variable = dir(project_group)
+    [add_pre_data(key, user_id, table='ProjectGroup') for key in pre_variable if "__" not in key and key[0].isupper()]
 
 
 def to_insert_data(user_id=1):

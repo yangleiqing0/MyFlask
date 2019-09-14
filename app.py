@@ -24,6 +24,7 @@ def create_app():
     app.config.from_object(config)
     db.init_app(app)
     from views import view_list
+    print('view_list:', view_list)
     [app.register_blueprint(_view) for _view in view_list]
     return db
 

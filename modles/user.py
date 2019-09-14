@@ -1,11 +1,12 @@
 
-from . import Base, db
+from . import Base, db, ProjectGroup
 
 
 class User(Base, db.Model):
     __tablename__ = 'users'
     username = db.Column(db.String(10), nullable=False)
     password = db.Column(db.String(10), nullable=False)
+    project_group_id = db.Column(db.Integer, db.ForeignKey(ProjectGroup.id))
 
     user_testcase_scenes = db.relationship('TestCaseScene', backref='testcase_scene_user')
     user_testcases = db.relationship('TestCases', backref='testcase_user')
@@ -16,13 +17,8 @@ class User(Base, db.Model):
     user_mails = db.relationship('Mail', backref='mail_user')
     user_mysqls = db.relationship('Mysql', backref='mysql_user')
 
-    def __init__(self, username, password):
+    def __init__(self, username, password, project_group_id=1):
         super().__init__()
         self.username = username
         self.password = password
-
-    def __repr__(self):
-        return "<CaseGroup:%s,%s,%s>" % (self.id, self.username, self.password)
-
-    def to_json(self):
-        return dict(id=self.id, username=self.username, password=self.password)
+        self.project_group_id = project_group_id

@@ -1,6 +1,7 @@
 from db_create import db
 from datetime import datetime
 from .basemodel import BaseModel, Base
+from .project_group import ProjectGroup
 from .user import User
 from .variables import Variables
 from .case_group import CaseGroup
@@ -16,6 +17,7 @@ from .testcase_result import TestCaseResult
 from .job import Job
 from .test import TestGroup
 from .wait import Wait
+
 
 models_list = []
 [models_list.append(eval(_model)) for _model in dir() if "__" not in _model

@@ -14,7 +14,6 @@
                             <label for="username" class="form-label col-md-2 col-md-offset-2">账号</label>
                             <div class="input-group col-md-5">
                                 <div class="input-group "  >
-{#                                    <span class="input-group-addon" ><i class="fa fa-user" ></i></span>#}
                                     <input type="text" id="username" name="username" class="form-control" placeholder="账号">
                                 </div>
                             </div>
@@ -23,14 +22,20 @@
                             <label for="password" class="form-label col-md-2 col-md-offset-2">密码</label>
                             <div class="input-group col-md-5">
                                 <div class="input-group">
-{#                                     <span class="input-group-addon"><i class="fa fa-key"></i></span>#}
                                     <input type="password" id="password" name="password" class="form-control" placeholder="密码">
                                 </div>
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-md-4 col-md-offset-4">
-
+                            <label for="project_group" class="form-label col-md-2 col-md-offset-2">项目组</label>
+                            <div class="input-group col-md-5">
+                                <div class="input-group">
+                                    <select name="project_group" id="project_group" class="form-control">
+                                        {% for project_group in project_groups %}
+                                            <option  value="{{ project_group.id }}">{{ project_group.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
