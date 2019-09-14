@@ -71,19 +71,19 @@ div_style="margin-left:108px") %}
 {% endmacro %}
 
 
-    {% macro render_field(field) %}
-    <tr>
-        <td>{{ field.label }}</td>
-        <td>{{ field(**kwargs) }}</td>
-        <td>
-            {% if field.errors %}
-                <ul>
-                {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-                </ul>
-            {% endif %}
-        </td>
+{% macro render_field(field) %}
+<tr>
+    <td>{{ field.label }}</td>
+    <td>{{ field(**kwargs) }}</td>
+    <td>
+        {% if field.errors %}
+            <ul>
+            {% for error in field.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    </td>
     </tr>
 {% endmacro %}
 {% macro show_col() %}
@@ -103,9 +103,9 @@ div_style="margin-left:108px") %}
 {% endmacro %}
 
 
-{% macro prompt_msg(msg, error) %}
-    {% if msg %}
-        <div class="toast toast--green prompt-center">
+{% macro prompt_msg() %}
+    {% if session.get('msg') %}
+        <div class="toast toast--green prompt-center" {{ 'hidden' if session.get('flash_show') == '0' else '' }}>
           <div class="toast__icon">
             <svg version="1.1" class="toast__svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
               <g>
@@ -117,15 +117,16 @@ div_style="margin-left:108px") %}
           </div>
           <div class="toast__content">
             <p class="toast__type">成功</p>
-            <p class="toast__message">{{msg}}</p></div>
+            <p class="toast__message">{{session.get('msg')}}</p></div>
           <div class="toast__close">
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.642 15.642" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 15.642 15.642">
               <path fill-rule="evenodd" d="M8.882,7.821l6.541-6.541c0.293-0.293,0.293-0.768,0-1.061  c-0.293-0.293-0.768-0.293-1.061,0L7.821,6.76L1.28,0.22c-0.293-0.293-0.768-0.293-1.061,0c-0.293,0.293-0.293,0.768,0,1.061  l6.541,6.541L0.22,14.362c-0.293,0.293-0.293,0.768,0,1.061c0.147,0.146,0.338,0.22,0.53,0.22s0.384-0.073,0.53-0.22l6.541-6.541  l6.541,6.541c0.147,0.146,0.338,0.22,0.53,0.22c0.192,0,0.384-0.073,0.53-0.22c0.293-0.293,0.293-0.768,0-1.061L8.882,7.821z"></path>
             </svg>
           </div>
         </div>
-    {% elif error %}
-         <div class="toast toast--red prompt-center">
+        {{ session.pop('msg') }}
+    {% elif session.get('error') %}
+         <div class="toast toast--red prompt-center" {{ 'hidden' if session.get('flash_show') == '0' else '' }}>
                   <div class="toast__icon">
                     <svg version="1.1" class="toast__svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 32 32" style="enable-background:new 0 0 32 32;" xml:space="preserve">
                       <g>
@@ -140,12 +141,28 @@ div_style="margin-left:108px") %}
                   </div>
                   <div class="toast__content">
                     <p class="toast__type">提示</p>
-                    <p class="toast__message">{{error}}</p></div>
+                    <p class="toast__message">{{session.get('error')}}</p></div>
                   <div class="toast__close">
                     <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.642 15.642" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 15.642 15.642">
                       <path fill-rule="evenodd" d="M8.882,7.821l6.541-6.541c0.293-0.293,0.293-0.768,0-1.061  c-0.293-0.293-0.768-0.293-1.061,0L7.821,6.76L1.28,0.22c-0.293-0.293-0.768-0.293-1.061,0c-0.293,0.293-0.293,0.768,0,1.061  l6.541,6.541L0.22,14.362c-0.293,0.293-0.293,0.768,0,1.061c0.147,0.146,0.338,0.22,0.53,0.22s0.384-0.073,0.53-0.22l6.541-6.541  l6.541,6.541c0.147,0.146,0.338,0.22,0.53,0.22c0.192,0,0.384-0.073,0.53-0.22c0.293-0.293,0.293-0.768,0-1.061L8.882,7.821z"></path>
                     </svg>
                   </div>
                 </div>
+        {{ session.pop('error') }}
     {% endif %}
+{% endmacro %}
+
+{% macro flash_msg() %}
+{#    {% if session.get('flash_show') == 1 %}#}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for msg in messages %}
+                    <div class="alert alert-warning prompt-login" {{ 'hidden' if session.get('flash_show') == '0' else '' }}>
+        {#                <a href="#" class="close" data-dismiss="alert">&times;</a>#}
+                        {{ msg}}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+{#    {% endif %}#}
 {% endmacro %}

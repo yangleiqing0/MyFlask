@@ -26,6 +26,7 @@ class TestCaseSceneAdd(MethodView):
         testcase_scene = TestCaseScene(name, group_id, description, user_id=user_id)
         db.session.add(testcase_scene)
         db.session.commit()
+        session['msg'] = '添加成功'
         FrontLogs('添加测试场景 name： %s 成功' % testcase_scene.name).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=page))
 
@@ -109,6 +110,7 @@ class TestCaseSceneDelete(MethodView):
                 FrontLogs('删除测试场景 id： %s  关联的测试用例名称 %s' % (testcase_scene_id, testcase.name)).add_to_front_log()
         db.session.delete(testcase_scene)
         db.session.commit()
+        session['msg'] = '删除成功'
         FrontLogs('删除测试场景 id： %s' % testcase_scene_id).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
 

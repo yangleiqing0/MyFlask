@@ -192,6 +192,7 @@ class TestCaseAdd(MethodView):
         wait = Wait(old_wait_sql, old_wait, old_wait_time, old_wait_mysql, new_wait_sql, new_wait, new_wait_time, new_wait_mysql, testcase.id)
         db.session.add(wait)
         db.session.commit()
+        session['msg'] = '添加成功'
         FrontLogs('添加测试用例 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:insert into testcases success, name: %s' % name)
         if testcase_scene_id not in (None, "None"):
@@ -330,6 +331,7 @@ class DeleteTestCase(MethodView):
             db.session.delete(wait)
         db.session.delete(testcase)
         db.session.commit()
+        session['msg'] = '删除成功'
         FrontLogs('删除测试用例 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete testcases success, id: %s' % id)
         if testcase_scene_id not in (None, "None"):

@@ -98,6 +98,7 @@ class JobDelete(MethodView):
         db.session.commit()
         FrontLogs('删除测试任务 name: %s 成功' % job.name).add_to_front_log()
         # app.logger.info('message:delete testcases success, id: %s' % id)
+        session['msg'] = '删除成功'
         return redirect(url_for('job_blueprint.job_list', page=page))
 
 

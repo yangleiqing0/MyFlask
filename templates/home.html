@@ -191,7 +191,8 @@
     </div>
 </div>
 </div>
-{{ macro.prompt_msg(msg, error)}}
+{{ macro.prompt_msg()}}
+{{ macro.flash_msg() }}
 {% block js %}
 {%endblock%}
 </body>
@@ -320,6 +321,15 @@
         height: 90px;
         left:0; right:0; top:50px; bottom:0;
         margin: 0 auto;
+    }
+    .prompt-login{
+        text-align: center;
+        position: absolute;
+        z-index: 9999;
+        left:0; right:0; top:50px; bottom:0;
+        margin: 0 auto;
+        width: 150px;
+        height: 53px;
     }
 </style>
 <script>
@@ -551,9 +561,8 @@ $(document).ready(function() {
      $('.toast').stop().fadeOut(1000);
     });
     $('.toast').fadeOut(5000);
-    funcUrlDel('msg')
 
-
+    $('.alert').fadeOut(3000)
 });
 
 </script>

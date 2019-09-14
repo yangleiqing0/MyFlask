@@ -159,14 +159,16 @@ $(document).ready(function() {
 
 // 提示信息框
 
-// 删除url中某个参数,并跳转  保证页面只提示一次信息，然后删除url参数
+// 删除url中某个参数,并跳转  保证页面只提示一次信息，然后删除url参数, 已由session来进行处理
 function funcUrlDel(name){
     let href = window.location.href;
-    let reg = new RegExp(name + '=[^&]*');
+    let reg = new RegExp('[&?]?' + name + '=[^&]*');
 
     let href_after = href.replace(reg, '');
     window.history.pushState(null, '', href_after)
 }
+
+
 
 
 

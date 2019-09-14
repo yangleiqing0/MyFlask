@@ -26,6 +26,7 @@ class Login(MethodView):
                             expires=datetime.now() + timedelta(days=7))
             session['username'] = username
             session['user_id'] = user.id
+            flash('登录成功')
             return resp
         flash('账号或密码错误')
         return render_template('login/login.html')
@@ -36,6 +37,7 @@ class LoginOut(MethodView):
     def get(self):
         session['username'] = None
         session['user_id'] = None
+        flash('登出成功')
         return redirect(url_for('login_blueprint.login'))
 
 

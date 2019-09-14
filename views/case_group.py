@@ -25,6 +25,7 @@ class CaseGroupAdd(MethodView):
         db.session.commit()
         FrontLogs('开始添加测试用例分组 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:insert into case_group success, name: %s' % name)
+        session['msg'] = '添加成功'
         return redirect(url_for('case_group_blueprint.case_group_list'))
 
 
@@ -89,6 +90,7 @@ class CaseGroupDelete(MethodView):
         db.session.commit()
         FrontLogs('删除测试用例分组 id:%s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete case_group success, id: %s' % id)
+        session['msg'] = '删除成功'
         return redirect(url_for('case_group_blueprint.case_group_list'))
 
 

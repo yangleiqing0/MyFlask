@@ -24,6 +24,7 @@ class MysqlAdd(MethodView):
         db.session.add(mysql)
         db.session.commit()
         FrontLogs('添加mysql配置 name: %s 成功' % name).add_to_front_log()
+        session['msg'] = '添加成功'
         return redirect(url_for('mysql_blueprint.mysql_list'))
 
 
@@ -117,6 +118,7 @@ class MysqlDelete(MethodView):
         db.session.delete(mysql)
         db.session.commit()
         FrontLogs('删除mysql配置 name: %s 成功' % mysql.name).add_to_front_log()
+        session['msg'] = '删除成功'
         return redirect(url_for('mysql_blueprint.mysql_list'))
 
 

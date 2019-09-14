@@ -241,6 +241,7 @@ class TestCaseReportDelete(MethodView):
         testcase_time_id = request.args.get('id', id)
         report_delete(testcase_time_id)
         # app.logger.info('message:delete testcase_report success, id: %s' % id)
+        session['msg'] = '删除成功'
         return redirect(url_for('testcase_report_blueprint.testcase_report_list'))
 
 

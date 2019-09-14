@@ -21,6 +21,7 @@ class MailAdd(MethodView):
         db.session.add(mail)
         db.session.commit()
         FrontLogs('添加邮件配置 name: %s 成功' % name).add_to_front_log()
+        session['msg'] = '添加成功'
         return redirect(url_for('mail_blueprint.mail_list'))
 
 
@@ -71,6 +72,7 @@ class MailDelete(MethodView):
         db.session.delete(mail)
         db.session.commit()
         FrontLogs('删除邮件配置 name: %s 成功' % mail.name).add_to_front_log()
+        session['msg'] = '删除成功'
         return redirect(url_for('mail_blueprint.mail_list'))
 
 

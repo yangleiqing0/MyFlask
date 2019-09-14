@@ -25,6 +25,7 @@ class RequestHeadersAdd(MethodView):
         db.session.commit()
         FrontLogs('添加请求头部 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:insert into request_headers success, name: %s' % name)
+        session['msg'] = '添加成功'
         return redirect(url_for('request_headers_blueprint.request_headers_list'))
 
 
@@ -85,6 +86,7 @@ class RequestHeadersDelete(MethodView):
         cdb().opeat_db(delete_request_headers_sql, (id,))
         FrontLogs('删除请求头部 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete request_headers success, id: %s' % id)
+        session['msg'] = '删除成功'
         return redirect(url_for('request_headers_blueprint.request_headers_list'))
 
 

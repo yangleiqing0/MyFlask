@@ -2,7 +2,7 @@ from flask.views import MethodView
 from common.connect_sqlite import cdb
 from common.tail_font_log import FrontLogs
 from common.request_get_more_values import request_get_values
-from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session
+from flask import render_template, Blueprint, request, redirect, url_for, current_app, jsonify, session, flash
 from modles import db, Variables, TestCases
 
 variables_blueprint = Blueprint('variables_blueprint', __name__)
@@ -19,11 +19,16 @@ class VariableAdd(MethodView):
         name, value, description= request_get_values('name', 'value', 'description')
         FrontLogs('开始添加全局变量 name: %s' % name).add_to_front_log()
         variable = Variables(name, value, description=description, user_id=user_id)
-        db.session.add(variable)
-        db.session.commit()
+        try:
+            db.session.add(variable)
+            db.session.commit()
+            session['msg'] = '添加成功'
+        except Exception as e:
+            session['error'] = '删除失败:' + str(e)
+
         FrontLogs('添加全局变量 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:insert into variables success, name: %s' % name)
-        return redirect(url_for('variables_blueprint.variable_list', msg='添加全局变量成功'))
+        return redirect(url_for('variables_blueprint.variable_list'))
 
 
 class VariableList(MethodView):
@@ -51,7 +56,7 @@ class VariableList(MethodView):
         variables = pagination.items
         print("pagination: ", pagination, variables)
         return render_template('variable/variable_list.html', pagination=pagination, items=variables, 
-                                search=search, page=page, msg=msg)
+                                search=search, page=page)
 
 
 class VariableUpdate(MethodView):
@@ -65,6 +70,11 @@ class VariableUpdate(MethodView):
         name, value, description= request_get_values('name', 'value', 'description')
         variable_update_sql = 'update variables set name=%s,value=%s,description=%s where id=%s'
         cdb().opeat_db(variable_update_sql, (name, value, description, id))
+        if name == '_Flash_Show':
+            if value == '1':
+                session['flash_show'] = '1'
+            else:
+                session['flash_show'] = '0'
         # app.logger.info('message:update variables success, name: %s' % name)
         FrontLogs('编辑全局变量 name: %s 成功' % name).add_to_front_log()
         return redirect(url_for('variables_blueprint.variable_list'))
@@ -73,12 +83,17 @@ class VariableUpdate(MethodView):
 class VariableDelete(MethodView):
 
     def get(self, id=-1):
-        page, search = request.values.get('page', 'search')
+        msg = error = ''
+        page, search = request_get_values('page', 'search')
         delete_variables_sql = 'delete from variables where id=%s'
-        cdb().opeat_db(delete_variables_sql, (id,))
+        try:
+            cdb().opeat_db(delete_variables_sql, (id,))
+            session['msg'] = '删除成功'
+        except Exception as e:
+            session['error'] = '删除失败:' + str(e)
         FrontLogs('删除全局变量 id: %s 成功' % id).add_to_front_log()
         # app.logger.info('message:delete variables success, id: %s' % id)
-        return redirect(url_for('variables_blueprint.variable_list', page=page, search=search, msg='删除成功'))
+        return redirect(url_for('variables_blueprint.variable_list', page=page, search=search))
 
 
 class VariableValidata(MethodView):
