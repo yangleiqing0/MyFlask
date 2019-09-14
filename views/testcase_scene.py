@@ -135,6 +135,7 @@ class TestCaseSceneTestCaseCopy(MethodView):
                                  new_sql_id=testcase.new_sql_id)
         db.session.add(testcase_new)
         db.session.commit()
+        session['msg'] = '复制用例成功'
         if Wait.query.filter(Wait.testcase_id == testcase.id).count() > 0:
             old_wait = Wait.query.filter(Wait.testcase_id == testcase.id).first()
             wait = Wait(old_wait.old_wait_sql, old_wait.old_wait, old_wait.old_wait_time, old_wait.old_wait_mysql,
@@ -160,6 +161,7 @@ class TestCaseSceneCopy(MethodView):
         testcase_scene_copy = TestCaseScene(name, description=testcase_scene.description, user_id=testcase_scene.user_id)
         db.session.add(testcase_scene_copy)
         db.session.commit()
+        session['msg'] = '复制场景成功'
         FrontLogs('复制测试场景 name： %s 成功' % testcase_scene.name).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
 

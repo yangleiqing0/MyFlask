@@ -309,6 +309,7 @@ class TestCaseCopy(MethodView):
                                  new_sql_id=testcase_self.new_sql_id)
         db.session.add(testcase)
         db.session.commit()
+        session['msg'] = '复制用例成功'
         if Wait.query.filter(Wait.testcase_id == testcase_id).count() > 0:
             old_wait = Wait.query.filter(Wait.testcase_id == testcase_id).first()
             wait = Wait(old_wait.old_wait_sql, old_wait.old_wait, old_wait.old_wait_time, old_wait.old_wait_mysql,

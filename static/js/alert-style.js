@@ -1,6 +1,5 @@
 #! coding=utf-8
 $(document).ready(function() {
-
     $.MsgBox = {
         Alert: function (title, msg) {
             GenerateHtml("alert", title, msg);
@@ -167,8 +166,4 @@ function funcUrlDel(name){
     let href_after = href.replace(reg, '');
     window.history.pushState(null, '', href_after)
 }
-
-
-
-
 
