@@ -101,18 +101,24 @@ class VariableValidata(MethodView):
     def get(self):
         user_id = session.get('user_id')
         regist_variable, name =request_get_values('regist_variable', 'name')
-        if regist_variable:
+        if name:
+            regist_variable = name
+        if ',' in regist_variable and len(regist_variable)>0:
+            variable_list = regist_variable.split(',')
+            print('variable_list:', variable_list)
+            for _variable in variable_list:
+                variable = Variables.query.filter(Variables.name == _variable,
+                                                  Variables.user_id == user_id).count()
+                if variable != 0:
+                    return jsonify(False)
+            return jsonify(True)
+        else:
             variable = Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).count()
             if variable != 0:
                 return jsonify(False)
             else:
                 return jsonify(True)
-        else:
-            variable = Variables.query.filter(Variables.name == name, Variables.user_id == user_id).count()
-            if variable != 0:
-                return jsonify(False)
-            else:
-                return jsonify(True)
+
 
 
 class OldSqlVariableValidata(MethodView):
