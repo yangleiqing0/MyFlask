@@ -2,6 +2,7 @@
 import requests
 import time
 from modles import Variables
+from flask import session
 
 
 class MethodRequest:
@@ -10,11 +11,12 @@ class MethodRequest:
         pass
     
     def request_value(self, method, url, data, headers):
+        user_id = session.get('user_id')
         headers.update({'Connection': 'close'})
         print('请求方法: ', method, url, data, headers, type(url))
         requests.adapters.DEFAULT_RETRIES = 51
         requests.session().keep_alive = False
-        timeout = Variables.query.filter(Variables.name == '_Request_Time_Out').first().value
+        timeout = Variables.query.filter(Variables.name == '_Request_Time_Out', Variables.user_id == user_id).first().value
         if timeout and timeout.isdigit():
             timeout = int(timeout)
         else:

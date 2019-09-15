@@ -25,7 +25,10 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                 for index in range(len(regular_list)):
                     # 循环取正则的规则
                     if '$.' not in regular_list[index]:
-                        regist_variable_value = re.compile(regular_list[index]).findall(response_body)
+                        try:
+                            regist_variable_value = re.compile(regular_list[index]).findall(response_body)
+                        except Exception as e:
+                            regist_variable_value = str(e)
                     else:
                         if not is_json(response_body):
                             regist_variable_value = "不是合法的字典响应信息"
@@ -52,10 +55,10 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                     else:
                         regist_variable_value = '未知的值'
                     regist_variable_value_list.append(regist_variable_value)
-                    if Variables.query.filter(Variables.name == regist_variable_list[index]).count() > 0:
+                    if Variables.query.filter(Variables.name == regist_variable_list[index], Variables.user_id == user_id).count() > 0:
                         print('%s 请求结束,存在此变量时：' % url,
-                              Variables.query.filter(Variables.name == regist_variable_list[index]).first())
-                        Variables.query.filter(Variables.name == regist_variable_list[index]).first().value = \
+                              Variables.query.filter(Variables.name == regist_variable_list[index], Variables.user_id == user_id).first())
+                        Variables.query.filter(Variables.name == regist_variable_list[index], Variables.user_id == user_id).first().value = \
                         regist_variable_value
                         db.session.commit()
                     else:

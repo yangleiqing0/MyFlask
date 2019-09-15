@@ -10,7 +10,8 @@ from common.execute_testcase import to_execute_testcase
 from common.assert_method import AssertMethod
 from common.most_common_method import NullObject
 from views.mysql import mysqlrun
-from modles import datetime, TestCases, TestCaseResult, CaseGroup, TestCaseStartTimes, TestCaseScene, User, db
+from modles import datetime, TestCases, TestCaseResult, CaseGroup, TestCaseStartTimes, TestCaseScene, User, db, \
+    Variables
 
 test_case_request_blueprint = Blueprint('test_case_request_blueprint', __name__)
 
@@ -58,6 +59,8 @@ class TestCaseRequest(MethodView):
     def post(self):
         print('TestCaseRequest post request.form: ', request.form)
         testcase_ids = request.form.getlist('testcase')
+        for _i in range(len(testcase_ids)):
+            testcase_ids[_i] = int(testcase_ids[_i])
         print("request_from_list: ", testcase_ids)
         scene_case_list = []
         testcase_list = []
@@ -78,10 +81,12 @@ class TestCaseRequest(MethodView):
                 testcase.scene_name = testcase.testcase_scene.name
                 testcase_list.append(testcase)
                 case_list.append(testcase.id)
+                testcase_ids.append(testcase.id)
             scene_case_list.append(case_list)
-        print("request_testcase_ids_list: ", testcase_ids, scene_case_list)
+        print("request_testcase_ids_list: ", testcase_list, scene_case_list, testcase_ids)
 
-        return render_template('test_case_request/test_case_request_list.html', items=testcase_list, scene_case_list=scene_case_list)
+        return render_template('test_case_request/test_case_request_list.html', items=testcase_list,
+                               scene_case_list=scene_case_list, testcase_ids=testcase_ids)
 
 
 class TestCaseRequestStart(MethodView):
@@ -193,6 +198,7 @@ def post_testcase(test_case_id, testcase_time_id):
 class TestCaseTimeGet(MethodView):
 
     def get(self):
+        #  获得本次测试批号和是否开启异步场景功能
         print('current_app.name: ', current_app.name)
         user_id = session.get('user_id')
         time_strftime = datetime.now().strftime('%Y%m%d%H%M%S')
@@ -200,7 +206,9 @@ class TestCaseTimeGet(MethodView):
         db.session.add(testcase_time)
         db.session.commit()
         print('testcase_time: ', testcase_time)
-        return json.dumps({"testcase_time_id": str(testcase_time.id)})
+
+        scene_async = Variables.query.filter(Variables.name == '_Scene_Async', Variables.user_id == user_id).first().value
+        return json.dumps({"testcase_time_id": str(testcase_time.id), 'scene_async': scene_async})
 
 
 test_case_request_blueprint.add_url_rule('/testcaserequest/', view_func=TestCaseRequest.as_view('test_case_request'))

@@ -77,15 +77,16 @@ class MysqlList(MethodView):
 def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=True):
     print('MysqlRun:', sql, regist_variable)
     mysql = Mysql.query.get(mysql_id)
+    user_id = session.get('user_id')
     host, port, db_name, user, password = AnalysisParams().analysis_more_params(
         mysql.ip, mysql.port, mysql.db_name, mysql.user, mysql.password)
     try:
         result = ConnMysql(host, int(port), user, password, db_name, sql).select_mysql()
         if regist_variable and regist:
-            if Variables.query.filter(Variables.name == regist_variable).count() > 0:
-                Variables.query.filter(Variables.name == regist_variable).first().value = str(result)
+            if Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).count() > 0:
+                Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).first().value = str(result)
             else:
-                variable = Variables(regist_variable, str(result), is_private=1, user_id=session.get('user_id'))
+                variable = Variables(regist_variable, str(result), is_private=1, user_id=user_id)
                 db.session.add(variable)
             db.session.commit()
             if is_request:

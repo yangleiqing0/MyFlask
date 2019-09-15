@@ -12,6 +12,7 @@ from pre_data import request_headers
 from pre_data.request_headers import *
 from pre_data import project_group
 from pre_data.project_group import *
+from flask import session
 
 
 def add_pre_data(key, user_id, table=None):
@@ -21,12 +22,19 @@ def add_pre_data(key, user_id, table=None):
     print('add_pre_data user_id:', user_id)
     print('key:', key, eval(key))
     var_name = "_%s" % key
+    var_values = list(eval(key))
     if "Variavles" in table:
-        if Variables.query.filter(Variables.name == "%s" % var_name, Variables.user_id == user_id).count() == 0:
-            print('Variables.query.filter user_id:', user_id)
-            instance = Variables(var_name, *eval(key), user_id=user_id)
-            db.session.add(instance)
-            db.session.commit()
+        if var_values[-1].isdigit():
+            if Variables.query.filter(Variables.name == "%s" % var_name, Variables.user_id == user_id).count() == 0:
+                var_values[-1] = int(var_values[-1])
+                instance = Variables(var_name, *var_values)
+                db.session.add(instance)
+        else:
+            if Variables.query.filter(Variables.name == "%s" % var_name, Variables.user_id == user_id).count() == 0:
+                print('Variables.query.filter user_id:', user_id)
+                instance = Variables(var_name, *var_values, user_id=user_id)
+                db.session.add(instance)
+        db.session.commit()
 
     elif 'User' in table:
         username, password = eval(key)
@@ -37,22 +45,22 @@ def add_pre_data(key, user_id, table=None):
 
     elif 'CaseGroup' in table:
         name = eval(key)
-        if CaseGroup.query.filter(CaseGroup.name == "%s" % name).count() == 0:
-            _case_group = CaseGroup(name)
+        if CaseGroup.query.filter(CaseGroup.name == "%s" % name, CaseGroup.user_id == user_id).count() == 0:
+            _case_group = CaseGroup(name, user_id=user_id)
             db.session.add(_case_group)
             db.session.commit()
 
     elif 'Mail' in table:
         name = eval(key)
-        if Mail.query.filter(Mail.name == "%s" % name).count() == 0:
-            _mail = Mail(name)
+        if Mail.query.filter(Mail.name == "%s" % name, Mail.user_id == user_id).count() == 0:
+            _mail = Mail(name, user_id=user_id)
             db.session.add(_mail)
             db.session.commit()
 
     elif 'RequestHeaders' in table:
         name, value = eval(key)
-        if RequestHeaders.query.filter(RequestHeaders.name == "%s" % name).count() == 0:
-            _request_headers = RequestHeaders(name, value)
+        if RequestHeaders.query.filter(RequestHeaders.name == "%s" % name, RequestHeaders.user_id == user_id).count() == 0:
+            _request_headers = RequestHeaders(name, value, user_id=user_id)
             db.session.add(_request_headers)
             db.session.commit()
 

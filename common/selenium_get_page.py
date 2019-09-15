@@ -13,7 +13,7 @@ class ReportImage:
         self.driver.implicitly_wait(10)
         self.start_time = time.time()
         self.user_id = user_id
-        self.port = Variables.query.filter(Variables.name == '_LOCAL_FLASK_PORT').first().value
+        self.port = Variables.query.filter(Variables.name == '_LOCAL_FLASK_PORT', Variables.user_id == 1).first().value
 
     def get_web(self):
         self.driver.get('http://127.0.0.1:%s/login/' % self.port)

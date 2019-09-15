@@ -160,7 +160,7 @@ class OldSqlVariableUpdateValidata(MethodView):
         testcase = TestCases.query.get(testcase_id)
         if not old_sql_regist_variable:
             return jsonify(True)
-        var = Variables.query.filter(Variables.name == testcase.old_sql_regist_variable).first()
+        var = Variables.query.filter(Variables.name == testcase.old_sql_regist_variable, Variables.user_id == user_id).first()
         # print('OldSqlVariableUpdateValidata var:', var, var.id)
         if var:
             variable = Variables.query.filter(
@@ -183,7 +183,7 @@ class NewSqlVariableUpdateValidata(MethodView):
         print('new_sql_regist_variable:', new_sql_regist_variable)
         if not new_sql_regist_variable:
             return jsonify(True)
-        var = Variables.query.filter(Variables.name == testcase.new_sql_regist_variable).first()
+        var = Variables.query.filter(Variables.name == testcase.new_sql_regist_variable, Variables.user_id == user_id).first()
         if var:
             variable = Variables.query.filter(
                 Variables.id != var.id, Variables.name == new_sql_regist_variable, Variables.user_id == user_id).count()
@@ -221,7 +221,7 @@ class VariableUpdateValidata(MethodView):
             if testcase_regist_variable == regist_variables:
                 return jsonify(True)
             for _regist_variable in regist_variables:
-                var = Variables.query.filter(Variables.name == _regist_variable).first()
+                var = Variables.query.filter(Variables.name == _regist_variable, Variables.user_id == user_id).first()
                 print('VariableUpdateValidata var: ', var, regist_variables)
                 if var:
                     variable = Variables.query.filter(

@@ -8,7 +8,7 @@ from db_create import db
 from common.pre_db_insert_data import to_insert_data
 from app import return_app
 from views.testcase_report import report_delete
-from modles import TestCaseStartTimes, Variables
+from modles import TestCaseStartTimes, Variables, User
 from common import clear_download_xlsx
 
 home_blueprint = Blueprint('home_blueprint', __name__)
@@ -167,8 +167,11 @@ def handle_500_error(err_msg):
 
 @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
 def db_create_pre_all():
-    if Variables.query.filter(Variables.name == '_Flash_Show').first():
-        session['flash_show'] = Variables.query.filter(Variables.name == '_Flash_Show').first().value
+    user_id = session.get('user_id')
+    if not user_id:
+        user_id = 1
+    if Variables.query.filter(Variables.name == '_Flash_Show', Variables.user_id == user_id).first():
+        session['flash_show'] = Variables.query.filter(Variables.name == '_Flash_Show', Variables.user_id == user_id).first().value
     else:
         session['flash_show'] = 1
     session['app_rootpath'] = app.root_path
@@ -177,7 +180,8 @@ def db_create_pre_all():
 
     from views.job import init_scheduler
     from common.pre_db_insert_data import to_insert_data
-    to_insert_data()
+    for user in User.query.all():
+        to_insert_data(user.id)
     
 
 @app.before_first_request

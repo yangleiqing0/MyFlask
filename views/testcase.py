@@ -86,7 +86,7 @@ class TestCastList(MethodView):
         user_id = session.get('user_id')
         search = request_get_values('search')
         print('testcase_search:', search)
-        show_var = Variables.query.filter(Variables.name == '_VAR_IS_SHOW').first().value
+        show_var = Variables.query.filter(Variables.name == '_VAR_IS_SHOW', Variables.user_id == user_id).first().value
         user = User.query.get(user_id)
         model_testcases = TestCases.query.filter(TestCases.is_model == 1, TestCases.user_id == user_id).all()
 
@@ -493,12 +493,17 @@ def add_regist_variable(old_sql_regist_variable, new_sql_regist_variable, user_i
 
 def update_regist_variable(testcase_id, old_sql_regist_variable, new_sql_regist_variable, user_id):
     testcase = TestCases.query.get(testcase_id)
-    if testcase.old_sql_regist_variable:
-        Variables.query.filter(Variables.name == testcase.old_sql_regist_variable,
-                               Variables.user_id == user_id).first().name = old_sql_regist_variable
-    if testcase.new_sql_regist_variable:
-        Variables.query.filter(Variables.name == testcase.new_sql_regist_variable,
-                               Variables.user_id == user_id).first().name = new_sql_regist_variable
+    if testcase.old_sql_regist_variable and old_sql_regist_variable:
+        if Variables.query.filter(Variables.name == testcase.old_sql_regist_variable,
+                               Variables.user_id == user_id).count >0 :
+            Variables.query.filter(Variables.name == testcase.old_sql_regist_variable,
+                                   Variables.user_id == user_id).first().name = old_sql_regist_variable
+
+    if testcase.new_sql_regist_variable and new_sql_regist_variable:
+        if Variables.query.filter(Variables.name == testcase.new_sql_regist_variable,
+                                  Variables.user_id == user_id).count > 0:
+            Variables.query.filter(Variables.name == testcase.new_sql_regist_variable,
+                                   Variables.user_id == user_id).first().name = new_sql_regist_variable
     db.session.commit()
 
 

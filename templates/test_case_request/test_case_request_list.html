@@ -69,6 +69,7 @@ function ajax_post(start,len, ids) {
         data: {'testcase_id': ids[start], 'test_case_time_id': testcase_time_id},
         success: function (response) {
             $('#response_'+ids[start]).html(response);
+
             start ++;
             if(start< len){
                 ajax_post(start,len,ids)
@@ -89,14 +90,23 @@ $(document).ready(function() {
                 async: false,
                 success:function (response) {
                         testcase_time_id = JSON.parse(response)["testcase_time_id"];
+                        scene_async = JSON.parse(response)["scene_async"];
                         testcase_time_id = eval(testcase_time_id);
                 }
             });
-        scene_case_list = {{ scene_case_list }};
-        for(let i=0;i<scene_case_list.length;i++){
-            let len = scene_case_list[i].length;
-            ajax_post(0, len, scene_case_list[i]);
+        if(scene_async === '1'){
+            let scene_case_list = {{ scene_case_list }};
+            for(let i=0;i<scene_case_list.length;i++){
+                let len = scene_case_list[i].length;
+                ajax_post(0, len, scene_case_list[i]);
+            }
+        }else {
+            let testcase_ids = {{ testcase_ids }};
+            console.log(testcase_ids);
+            let len = testcase_ids.length;
+            ajax_post(0, len, testcase_ids)
         }
+
         $('#to_report').removeAttr("disabled");
     });
     $("#to_report").click(function(){

@@ -209,8 +209,9 @@ def get_env_message(testcase_time_id):
 
 
 def get_report(testcase_time_id):
+    user_id = session.get('user_id')
     time_strftime = datetime.now().strftime('%Y%m%d%H%M%S')
-    testcase_report_name = Variables.query.filter(Variables.name == "_TEST_REPORT_EXCEL_NAME").first().value + "_" + \
+    testcase_report_name = Variables.query.filter(Variables.name == "_TEST_REPORT_EXCEL_NAME", Variables.user_id == user_id).first().value + "_" + \
                            time_strftime + ".xlsx"
     REPORT_FILE_PATH = Variables.query.filter(Variables.name == "_REPORT_FILE_PATH").first().value
     Filename = REPORT_FILE_PATH + testcase_report_name
