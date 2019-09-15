@@ -52,24 +52,42 @@ $.data.id的值为5
 报文中取注册规则的值存入全局变量，供后续使用，支持多个注册变量，以逗号分隔
 
 
-1   _Scene_Async	0	开启/关闭场景异步请求  开启：1根据不同场景同时执行测试 关闭：0依次执行所有测试用例	 
-2	_Flash_Show	1	flash显示提示框0/1	 开启：1用户的登陆/登出/增删操作时页面有弹窗提醒 关闭：0 用户的操作均无弹窗
-3	_TEST_NAME	备份一体机	项目的名字	 测试报告中项目的名称（web/excel）
-4	_Request_Time_Out	3	请求超时时间	 请求接口超时未响应的中断时间
-5	_VAR_IS_SHOW	0	显示变量为对应的值0/1	 开启：1测试用例列表的所有参数均显示为对应的值 关闭：0显示参数名称
-6	_TITLE_NAME	ZDBM接口测试	测试的类型  测试报告中项目的类型（web/excel）	 
-7	_TEST_VERSION	2.0.0	项目的版本  测试报告中项目的版本（web/excel） 
-8	_TEST_REPORT_TXT_NAME	ZDBM_test_result	测试报告内的标题	 测试报告中项目的标题（web/excel）
-9	_TEST_REPORT_EXCEL_NAME	ZDBM_test_report	项目报告的名字	 测试报告的名字（web/excel）
-10	_TEST_PL	win10	测试的系统	 测试报告中项目的系统（web/excel）
-11	_TEST_NET	公司内网	测试的网络	 测试报告中项目的网络（web/excel）
-12	_REPORT_FILE_PATH	reports/	报告保存在本地的路径	 
-13	_MAIL_USERNAME	253775405@qq.com	邮件发送的账号	 
-14	_MAIL_SERVER	smtp.qq.com	邮件发送的网站	 
-15	_MAIL_DEFAULT_SENDER_NAME	Lei Yang	邮件发送人名字	 
-16	_MAIL_DEFAULT_SENDER_EMAIL	253775405@qq.com	邮件发送人默认QQ	 
-17	_LOCAL_FLASK_PORT	5000	默认flask启动端口，如有变动，请更改	 如果不是以5000端口启动的更改为5000端口
-18	_FLASK_POST_PRE_ARGV	20	每页显示数量
+1   _Scene_Async	0	开启/关闭场景异步请求  开启：1根据不同场景同时执行测试 关闭：0依次执行所有测试用例  
+	 
+2	_Flash_Show	1	flash显示提示框0/1	 开启：1用户的登陆/登出/增删操作时页面有弹窗提醒 关闭：0 用户的操作均无弹窗  
+
+3	_TEST_NAME	备份一体机	项目的名字	 测试报告中项目的名称（web/excel）  
+
+4	_Request_Time_Out	3	请求超时时间	 请求接口超时未响应的中断时间  
+
+5	_VAR_IS_SHOW	0	显示变量为对应的值0/1	 开启：1测试用例列表的所有参数均显示为对应的值 关闭：0显示参数名称  
+
+6	_TITLE_NAME	ZDBM接口测试	测试的类型  测试报告中项目的类型（web/excel）  
+	 
+7	_TEST_VERSION	2.0.0	项目的版本  测试报告中项目的版本（web/excel）  
+ 
+8	_TEST_REPORT_TXT_NAME	ZDBM_test_result	测试报告内的标题	 测试报告中项目的标题（web/excel）  
+
+9	_TEST_REPORT_EXCEL_NAME	ZDBM_test_report	项目报告的名字  	 测试报告的名字（web/excel）  
+
+10	_TEST_PL	win10	测试的系统	 测试报告中项目的系统（web/excel）  
+
+11	_TEST_NET	公司内网	测试的网络	 测试报告中项目的网络（web/excel）  
+
+12	_REPORT_FILE_PATH	reports/	报告保存在本地的路径  
+	 
+13	_MAIL_USERNAME	253775405@qq.com	邮件发送的账号  
+	 
+14	_MAIL_SERVER	smtp.qq.com	邮件发送的网站	  
+ 
+15	_MAIL_DEFAULT_SENDER_NAME	Lei Yang	邮件发送人名字  
+	 
+16	_MAIL_DEFAULT_SENDER_EMAIL	253775405@qq.com	邮件发送人默认QQ	   
+
+17	_LOCAL_FLASK_PORT	5000	默认flask启动端口，如有变动，请更改	 如果不是以5000端口启动的更改为5000端口  
+
+18	_FLASK_POST_PRE_ARGV	20	每页显示数量  
+
 
 ![](https://github.com/yangleiqing0/test/blob/master/20190819154824.png)
 ![](https://github.com/yangleiqing0/test/blob/master/20190819131549.png)
