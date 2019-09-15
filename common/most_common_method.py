@@ -1,5 +1,5 @@
 from config import TESTCASE_XLSX_PATH
-from . import datetime, xlrd, time, os
+from . import datetime, xlrd, time, os, json
 
 
 class NullObject:
@@ -35,3 +35,11 @@ def read_xlsx(table):
         for row in range(sheet.nrows):
             row_list.append(sheet.row_values(row))
     return row_list
+
+
+def is_json(_str):
+    try:
+        json.loads(_str)
+    except ValueError:
+        return False
+    return True

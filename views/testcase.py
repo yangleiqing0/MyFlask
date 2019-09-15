@@ -62,8 +62,10 @@ class TestCaseRun(MethodView):
         testcase = TestCases.query.get(testcase_id)
         print('TestCaseRunForm: ', request.form)
         if testcase_update_run:
-            testcase.name, testcase.url, testcase.data, testcase.method \
-                = request_get_values('name', 'url', 'data', 'method')
+            testcase.name, testcase.url, testcase.data, testcase.method, request_headers_id, \
+            testcase.regist_variable, testcase.regular \
+                = request_get_values('name', 'url', 'data', 'method', 'request_headers', 'regist_variable', 'regular')
+            testcase.testcase_request_header = RequestHeaders.query.get(request_headers_id)
         if testcase_add_run:
             testcase = NullObject()
             testcase.name, testcase.url, testcase.data, testcase.method, request_headers_id, \
@@ -72,10 +74,8 @@ class TestCaseRun(MethodView):
             testcase.testcase_request_header = RequestHeaders.query.get(request_headers_id)
         testcase_results = []
         testcase_result, regist_variable_value = to_execute_testcase(testcase)
-        # print('regist_variable_value', regist_variable_value)
         testcase_results.extend(['【%s】' % testcase.name, testcase_result, '【正则匹配的值】', regist_variable_value])
         testcase_results_html = '<br>'.join(testcase_results)
-        # print('TestCaseRun testcase_results_html', testcase_results_html.encode('utf-8').decode('gbk'))
         FrontLogs('执行测试用例 name: %s ' % testcase.name).add_to_front_log()
         return json.dumps({'testcase_result': testcase_results_html})
 

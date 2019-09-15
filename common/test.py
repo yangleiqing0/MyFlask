@@ -12,7 +12,5 @@
 #     print(os.path.getctime(_path + '/' + path))
 # print(path_list)
 a = [1,2]
-a.sort()
-b = [2,1]
-b.sort()
-print(a == b)
+for u in range(len(a)):
+    print(u)
