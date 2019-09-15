@@ -110,6 +110,29 @@ class MysqlRun(MethodView):
         return result
 
 
+class MysqlTest(MethodView):
+
+    def post(self):
+        ip, port, user, password, db_name = request_get_values(
+            'ip', 'port', 'user', 'password', 'db_name')
+        host, port, db_name, user, password = AnalysisParams().analysis_more_params(
+            ip, port, db_name, user, password)
+        print('form:',  ip, port, user, password, db_name)
+        try:
+            if db_name:
+                sql = 'show tables'
+            else:
+                sql = 'show databases'
+            result = ConnMysql(host, int(port), user, password, db_name, sql).select_mysql()
+            if result:
+                return '连接成功'
+            else:
+                return '连接失败'
+        except Exception as e:
+            print(e)
+            return '连接失败:' + str(e)
+
+
 class MysqlDelete(MethodView):
 
     def get(self):
@@ -153,6 +176,7 @@ mysql_blueprint.add_url_rule('/mysql_list/', view_func=MysqlList.as_view('mysql_
 mysql_blueprint.add_url_rule('/mysql_delete/', view_func=MysqlDelete.as_view('mysql_delete'))
 
 mysql_blueprint.add_url_rule('/mysql_run/', view_func=MysqlRun.as_view('mysql_run'))
+mysql_blueprint.add_url_rule('/mysql_test/', view_func=MysqlTest.as_view('mysql_test'))
 
 mysql_blueprint.add_url_rule('/mysql_name_validate/', view_func=MysqlNameValidate.as_view('mysql_name_validate'))
 mysql_blueprint.add_url_rule('/mysql_name_update_validate/', view_func=MysqlNameUpdateValidate.as_view('mysql_name_update_validate'))

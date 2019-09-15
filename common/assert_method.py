@@ -27,14 +27,19 @@ class AssertMethod:
                 if result == '测试失败':
                     return '测试失败'
             return '测试成功'
-
-        if '包含' in self.assertmethod:
-            result = self.assert_in(self.hoperesult)
-        elif '等于' in self.assertmethod:
-            result = self.assert_eq(self.hoperesult)
         else:
-            result = ''
-        return result
+
+            if '不包含' in self.assertmethod:
+                result = self.not_assert_in(self.hoperesult)
+            elif '不等于' in self.assertmethod:
+                result = self.not_assert_eq(self.hoperesult)
+            elif '等于' in self.assertmethod:
+                result = self.assert_eq(self.hoperesult)
+            elif '包含' in self.assertmethod:
+                result = self.assert_in(self.hoperesult)
+            else:
+                result = ''
+            return result
 
     def assert_eq(self, hoperesult):
         if self.actual_result == hoperesult:    # 返回结果与期望结果相等
@@ -49,4 +54,19 @@ class AssertMethod:
         else:
             self.result = '测试失败'
         print('self.result: ', self.result)
+        return self.result
+
+    def not_assert_in(self, hoperesult):
+        if hoperesult not in self.actual_result:  # 期望结果不在返回结果中
+            self.result = '测试成功'
+        else:
+            self.result = '测试失败'
+        print('self.result: ', self.result)
+        return self.result
+
+    def not_assert_eq(self, hoperesult):
+        if self.actual_result != hoperesult:    # 返回结果与期望结果相等
+            self.result = '测试成功'
+        else:
+            self.result = '测试失败'
         return self.result

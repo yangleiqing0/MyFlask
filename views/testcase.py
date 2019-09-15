@@ -432,11 +432,12 @@ class TestCaseHopeResultValidata(MethodView):
         hope_result = request.args.get('hope_result')
         print('hope_result: ', hope_result)
         try:
-            com_method, _ = hope_result.split(':', 1)
-            if com_method == "包含":
-                return jsonify(True)
-            else:
-                return jsonify(False)
+            hope_results = hope_result.split(',')
+            for hope_result in hope_results:
+                com_method, _ = hope_result.split(':', 1)
+                if com_method not in ["包含", "不包含", "等于", "不等于"]:
+                    return jsonify(False)
+            return jsonify(True)
         except Exception as e:
             print(e)
             return jsonify(False)
@@ -489,8 +490,11 @@ def allowed_file(filename):
 
 def add_upload_testcases(testcases):
     user_id = session.get('user_id')
-    if len(testcases) >0 :
+    if len(testcases) >0:
         for testcase in testcases:
+            if not testcase[2]:
+                # 如果没写请求方法 给予默认的get方法
+                testcase[2] = 'get'
             print(testcase[0], TestCases.query.filter(TestCases.name == testcase[0]).count())
             if testcase[0] and not TestCases.query.filter(TestCases.name == testcase[0]).count():
                 if testcase[-1]:

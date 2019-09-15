@@ -3,8 +3,8 @@
 {% block content %}
             <div class="panel-body" >
                 <form  action="{{ url_for('request_headers_blueprint.request_headers_update',id=item.id) }}" id="request_headers_update_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
-                    {{ macro.form_group(lable_name="name",blank_name="请求头部名称",value=item.name) }}
-                    {{ macro.form_group_textarea(lable_name="value",blank_name="请求头部的值",value=item.value) }}
+                    {{ macro.form_group(lable_name="name",blank_name="请求头部名称(必填)",value=item.name) }}
+                    {{ macro.form_group_textarea(lable_name="value",blank_name="请求头部的值(必填)",value=item.value) }}
                     {{ macro.form_group(lable_name="description",blank_name="请求头部备注",value=item.description) }}
                     {{ macro.submit(submit_id="request_headers_update") }}
                 </form>

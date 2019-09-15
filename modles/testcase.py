@@ -6,7 +6,7 @@ class TestCases(BaseModel, db.Model):
     __tablename__ = 'testcases'
     url = db.Column(db.String(300), nullable=False)
     data = db.Column(db.TEXT)
-    regist_variable = db.Column(db.String(30))
+    regist_variable = db.Column(db.String(500))
     regular = db.Column(db.TEXT)
     method = db.Column(db.String(10), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey(CaseGroup.id))

@@ -3,14 +3,14 @@
 {% block content %}
             <div class="panel-body content-agileits" >
                 <form action="{{ url_for('mysql_blueprint.mysql_update',mysql_id=mysql.id) }}" id="mysql_update_form" method="post" data-toggle="validator" class="form-horizontal">
-                    {{ macro.form_group(lable_name="name",blank_name="配置名称",value=mysql.name) }}
-                    {{ macro.form_group(lable_name="ip",blank_name="服务器地址",value=mysql.ip) }}
-                    {{ macro.form_group(lable_name="port",blank_name="服务器端口",value=mysql.port) }}
-                    {{ macro.form_group(lable_name="user",blank_name="服务器用户",value=mysql.user) }}
-                    {{ macro.form_group(lable_name="password",blank_name="服务器密码",value=mysql.password) }}
+                    {{ macro.form_group(lable_name="name",blank_name="配置名称(必填)",value=mysql.name) }}
+                    {{ macro.form_group(lable_name="ip",blank_name="服务器地址(必填)",value=mysql.ip) }}
+                    {{ macro.form_group(lable_name="port",blank_name="服务器端口(必填)",value=mysql.port) }}
+                    {{ macro.form_group(lable_name="user",blank_name="服务器用户(必填)",value=mysql.user) }}
+                    {{ macro.form_group(lable_name="password",blank_name="服务器密码(必填)",value=mysql.password) }}
                     {{ macro.form_group(lable_name="db_name",blank_name="数据库名",value=mysql.db_name) }}
                     {{ macro.form_group(lable_name="description",blank_name="配置备注",value=mysql.description) }}
-                    {{ macro.submit(submit_id="mysql_update") }}
+                    {{ macro.submit(submit_id="mysql_update",test_style="",test_type="button",test_id="mysql_test") }}
                 </form>
             </div>
 {% endblock %}
@@ -69,6 +69,17 @@
                         form.submit()
                     }
                     });
+            });
+            $('#mysql_test').click(function () {
+                $.ajax({
+                    url:'{{ url_for("mysql_blueprint.mysql_test") }}',
+                    type:'POST',
+                    data:$('#mysql_update_form').serialize(),
+                    success:function (response) {
+                        {#let result = JSON.parse(response);#}
+                        $('#request_body_show').html(response)
+                    }
+                })
             })
 });
 

@@ -180,8 +180,8 @@ def post_testcase(test_case_id, testcase_time_id):
                         break
 
     testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
-                                     testcase_time_id, response_body, testcase_test_result, old_sql_value=old_sql_value,
-                                     new_sql_value=new_sql_value, old_sql_value_result=old_sql_value_result,
+                                     testcase_time_id, response_body, testcase_test_result, old_sql_value=str(old_sql_value),
+                                     new_sql_value=str(new_sql_value), old_sql_value_result=old_sql_value_result,
                                      new_sql_value_result=new_sql_value_result, result=test_result, scene_id=testcase.testcase_scene_id)
     # 测试结果实例化
     db.session.add(testcase_result)

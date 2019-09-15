@@ -4,7 +4,7 @@
             <div class="panel-body content-agileits" >
                 <form action="#" id="email_config_form" data-toggle="validator" class="form-horizontal">
                     {{ macro.form_group(lable_name="subject",blank_name="邮件标题") }}
-                    {{ macro.form_group(lable_name="to_user_list",blank_name="接收人",placeholder_name="多个接收人如：1@qq.com,2@qq.com") }}
+                    {{ macro.form_group(lable_name="to_user_list",blank_name="接收人(必填)",placeholder_name="多个接收人如：1@qq.com,2@qq.com") }}
                     <label for="email_method" class="control-label col-md-4">发送邮件方式</label>
                             <div class="col-md-4">
                                     <select name="email_method" id="email_method" class="form-control">

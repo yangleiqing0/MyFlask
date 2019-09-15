@@ -105,6 +105,8 @@ class VariableValidata(MethodView):
             regist_variable = name
         if ',' in regist_variable and len(regist_variable)>0:
             variable_list = regist_variable.split(',')
+            if len(variable_list) != len(set(variable_list)):
+                return jsonify(False)
             print('variable_list:', variable_list)
             for _variable in variable_list:
                 variable = Variables.query.filter(Variables.name == _variable,
@@ -118,7 +120,6 @@ class VariableValidata(MethodView):
                 return jsonify(False)
             else:
                 return jsonify(True)
-
 
 
 class OldSqlVariableValidata(MethodView):
@@ -210,18 +211,27 @@ class VariableUpdateValidata(MethodView):
                 return jsonify(True)
         else:
             testcase = TestCases.query.get(testcase_id)
-            var = Variables.query.filter(Variables.name == testcase.regist_variable).first()
-            print('VariableUpdateValidata var: ', var)
-            if var:
-                variable = Variables.query.filter(
-                    Variables.id != var.id, Variables.name == regist_variable, Variables.user_id == user_id).count()
-            else:
-                variable = Variables.query.filter(
-                    Variables.name == regist_variable, Variables.user_id == user_id).count()
-            if variable != 0:
+            regist_variables = regist_variable.split(',')
+            regist_variables.sort()
+            testcase_regist_variable = testcase.regist_variable.split(',')
+            testcase_regist_variable.sort()
+
+            if len(regist_variables) != len(set(regist_variables)):
                 return jsonify(False)
-            else:
+            if testcase_regist_variable == regist_variables:
                 return jsonify(True)
+            for _regist_variable in regist_variables:
+                var = Variables.query.filter(Variables.name == _regist_variable).first()
+                print('VariableUpdateValidata var: ', var, regist_variables)
+                if var:
+                    variable = Variables.query.filter(
+                        Variables.id != var.id, Variables.name == _regist_variable, Variables.user_id == user_id).count()
+                else:
+                    variable = Variables.query.filter(
+                        Variables.name == _regist_variable, Variables.user_id == user_id).count()
+                if variable != 0:
+                    return jsonify(False)
+            return jsonify(True)
 
 
 variables_blueprint.add_url_rule('/variableadd/', view_func=VariableAdd.as_view('variable_add'))

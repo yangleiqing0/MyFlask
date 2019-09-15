@@ -21,8 +21,8 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                     regist_variable_value_list = []
                     for index in range(len(regular_list)):
                         regist_variable_value = re.compile(regular_list[index]).findall(response_body)
-                        regist_variable_value_list.append(regist_variable_value[0])
                         if len(regist_variable_value) > 0:
+                            regist_variable_value_list.append(regist_variable_value[0])
                             if Variables.query.filter(Variables.name == regist_variable_list[index]).count() > 0:
                                 print('%s 请求结束,存在此变量时：' % url,
                                       Variables.query.filter(Variables.name == regist_variable_list[index]).first())
@@ -34,9 +34,10 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                                                          user_id=user_id)
                             db.session.add(private_variable)
                             db.session.commit()
-                            # regist_variable_value_list.append(regist_variable_value)
+                        else:
+                            regist_variable_value_list.append(regist_variable_value)
                     return response_body, str(regist_variable_value_list)
-                return response_body, '正则匹配数量过多'
+                return response_body, '正则匹配规则数量过多'
             regist_variable_value = re.compile(regular).findall(response_body)
             if len(regist_variable_value) > 0:
                 if Variables.query.filter(Variables.name == regist_variable).count() > 0:

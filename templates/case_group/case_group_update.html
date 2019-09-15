@@ -3,7 +3,7 @@
 {% block content %}
             <div class="panel-body" >
                 <form  action="{{ url_for('case_group_blueprint.case_group_update',id=item.id) }}"  id="case_group_update_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
-                    {{ macro.form_group(lable_name="name",blank_name="测试用例分组名称", value=item.name) }}
+                    {{ macro.form_group(lable_name="name",blank_name="测试用例分组名称(必填)", value=item.name) }}
                     {{ macro.form_group(lable_name="description",blank_name="测试用例分组备注",value=item.description) }}
                     {{ macro.submit(submit_id="case_group_update") }}
                 </form>

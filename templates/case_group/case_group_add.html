@@ -3,7 +3,7 @@
 {% block content %}
             <div class="panel-body content-agileits" >
                 <form action="{{ url_for('case_group_blueprint.case_group_add') }}" method="POST" id="case_group_add_form" data-toggle="validator" class="form-horizontal">
-                    {{ macro.form_group(lable_name="name",blank_name="测试用例分组名称") }}
+                    {{ macro.form_group(lable_name="name",blank_name="测试用例分组名称(必填)") }}
                     {{ macro.form_group(lable_name="description",blank_name="测试用例分组备注") }}
                     {{ macro.submit(submit_id="case_group_add") }}
                 </form>

@@ -30,7 +30,7 @@ div_class="control-label col-md-6",div_style="margin-left:75px",submit_id="",tes
 submit_type="submit",reset_type="reset",test_value="测试",test_style="visibility: hidden;") %}
 <div class="{{ div_class }}" style="{{ div_style }}">
         <input type="{{ submit_type }}" class="btn btn-primary" style="" value="{{ submit_value }}" id="{{ submit_id }}">
-        <input type="{{ test_type }}" class="btn btn-default" style="{{test_style}}" value={{test_value}} id={{ test_id }}>
+        <input type="{{ test_type }}" class="btn btn-primary" style="{{test_style}}" value={{test_value}} id={{ test_id }}>
         <input type="{{ reset_type }}" class="btn btn-default" value="{{ reset_value }}" id="{{ reset_id }}">
 </div>
 {% endmacro %}
@@ -154,12 +154,10 @@ div_style="margin-left:108px") %}
 {% endmacro %}
 
 {% macro flash_msg() %}
-{#    {% if session.get('flash_show') == 1 %}#}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 {% for msg in messages %}
                     <div class="alert alert-warning prompt-login" {{ 'hidden' if session.get('flash_show') == '0' else '' }}>
-        {#                <a href="#" class="close" data-dismiss="alert">&times;</a>#}
                         {{ msg}}
                     </div>
                 {% endfor %}
