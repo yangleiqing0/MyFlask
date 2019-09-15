@@ -443,6 +443,25 @@ class TestCaseHopeResultValidata(MethodView):
             return jsonify(False)
 
 
+class RegularValidata(MethodView):
+
+    def get(self):
+        regular = request_get_values('regular')
+        regular_list = regular.split(',')
+        for _regular in regular_list:
+            print('_regular:', _regular)
+            if '$' in _regular:
+                if _regular[1] != '.':
+                    return jsonify(False)
+                if len(_regular.split('.')) != len(set(_regular.split('.'))):
+                    return jsonify(False)
+                else:
+                    for key in _regular.split('.'):
+                        if ' ' in key:
+                            return jsonify(False)
+        return jsonify(True)
+
+
 testcase_blueprint.add_url_rule('/testcaselist/', view_func=TestCastList.as_view('test_case_list'))
 testcase_blueprint.add_url_rule('/addtestcase/', view_func=TestCaseAdd.as_view('add_test_case'))
 testcase_blueprint.add_url_rule('/deletetestcase/<id>/', view_func=DeleteTestCase.as_view('delete_test_case'))
@@ -456,6 +475,7 @@ testcase_blueprint.add_url_rule('/test_case_download/', view_func=TestCaseDownlo
 testcase_blueprint.add_url_rule('/test_case_upload/', view_func=TestCaseUpload.as_view('test_case_upload'))
 
 testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))
+testcase_blueprint.add_url_rule('/regular_validate/', view_func=RegularValidata.as_view('regular_validate'))
 testcase_blueprint.add_url_rule('/testcaseupdatevalidate/',
                                 view_func=TestCaseUpdateValidata.as_view('testcase_update_validate'))
 testcase_blueprint.add_url_rule('/test_case_hope_result_validate/',

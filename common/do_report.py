@@ -350,7 +350,7 @@ class WriterXlsx:
         self.write_center(self.worksheet, "F2", '请求报文', self.workbook)
         self.write_center(self.worksheet, "G2", '响应预期', self.workbook)
         self.write_center(self.worksheet, "H2", '注册变量', self.workbook)
-        self.write_center(self.worksheet, "I2", '正则匹配', self.workbook)
+        self.write_center(self.worksheet, "I2", '注册规则', self.workbook)
         self.write_center(self.worksheet, "J2", '用例分组', self.workbook)
 
         temp = 3

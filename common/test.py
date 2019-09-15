@@ -11,6 +11,5 @@
 # for path in path_list:
 #     print(os.path.getctime(_path + '/' + path))
 # print(path_list)
-a = [1,2]
-for u in range(len(a)):
-    print(u)
+a = '1 2'
+print(' ' in a)

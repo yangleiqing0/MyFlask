@@ -15,13 +15,15 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
     if regist_variable:
         # 判断是否有注册变量和正则方法，有的话进行获取
         if regular:
-            # if ',' in regular:
+            #  判断是否有正则匹配规则
             regular_list = regular.split(',')
             regist_variable_list = regist_variable.split(',')
             print('regular_list:', regular_list, len(regular_list), len(regist_variable_list))
             if len(regular_list) <= len(regist_variable_list):
+                # 判断正则和注册变量数目是否相符 小于或等于
                 regist_variable_value_list = []
                 for index in range(len(regular_list)):
+                    # 循环取正则的规则
                     if '$.' not in regular_list[index]:
                         regist_variable_value = re.compile(regular_list[index]).findall(response_body)
                     else:
@@ -62,8 +64,6 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                                                      user_id=user_id)
                         db.session.add(private_variable)
                         db.session.commit()
-                # else:
-                #     regist_variable_value_list.append(regist_variable_value)
                 return response_body, str(regist_variable_value_list)
             return response_body, '正则匹配规则数量过多'
         return response_body, '未存在正则匹配'
