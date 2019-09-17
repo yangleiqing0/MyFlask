@@ -5,14 +5,15 @@ from common.analysis_params import AnalysisParams
 
 class ConnMysql:
 
-    def __init__(self, host, port, user, password, db_name, sql):
+    def __init__(self, host, port, user, password, db_name, sql, is_param=True):
         print('ConnMysql:', host, port, user, password, db_name, sql)
 
         self.db = pymysql.connect(host=host, port=port, user=user,
                                   passwd=password, db=db_name, charset='utf8', connect_timeout=3)
         if db_name:
             if sql:
-                sql = AnalysisParams().analysis_params(sql)
+                if is_param:
+                    sql = AnalysisParams().analysis_params(sql)
             self.sql = sql
         else:
             self.sql = sql

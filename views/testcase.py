@@ -2,7 +2,7 @@
 from views import os, json, datetime
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, g, redirect, url_for, jsonify, session, send_from_directory
+from flask import render_template, Blueprint, request, g, redirect, url_for, jsonify, session, send_from_directory, flash
 from common.analysis_params import AnalysisParams
 from db_create import db
 from common.connect_sqlite import cdb
@@ -123,7 +123,7 @@ class TestCaseAdd(MethodView):
     def get(self):
         user_id = session.get('user_id')
         user = User.query.get(user_id)
-        mysqls = Mysql.query.all()
+        mysqls = Mysql.query.filter(Mysql.user_id == user_id).all()
         for mysql in mysqls:
             mysql.ip, mysql.port, mysql.name, mysql.user, mysql.password = AnalysisParams().analysis_more_params(
                 mysql.ip, mysql.port, mysql.name, mysql.user, mysql.password
@@ -189,7 +189,12 @@ class TestCaseAdd(MethodView):
 
         old_wait_sql, old_wait, old_wait_time, old_wait_mysql, new_wait_sql, new_wait, new_wait_time, new_wait_mysql = request_get_values(
             'old_wait_sql', 'old_wait', 'old_wait_time', 'old_wait_mysql', 'new_wait_sql', 'new_wait', 'new_wait_time', 'new_wait_mysql')
+        if not old_wait_mysql or not old_wait_mysql.isdigit():
+            old_wait_mysql = None
+        if not new_wait_mysql or not new_wait_mysql.isdigit():
+            new_wait_mysql = None
         wait = Wait(old_wait_sql, old_wait, old_wait_time, old_wait_mysql, new_wait_sql, new_wait, new_wait_time, new_wait_mysql, testcase.id)
+
         db.session.add(wait)
         db.session.commit()
         session['msg'] = '添加成功'
@@ -247,6 +252,10 @@ class UpdateTestCase(MethodView):
         id = request.args.get('id', id)
         user_id = session.get('user_id')
         testcase = TestCases.query.get(id)
+        if not old_wait_mysql:
+            old_wait_mysql = None
+        if not new_wait_mysql:
+            new_wait_mysql = None
         if testcase.wait:
             wait = Wait.query.filter(Wait.testcase_id == id).first()
             wait.old_wait_sql = old_wait_sql
@@ -293,6 +302,9 @@ class TestCaseCopy(MethodView):
     def get(self):
         page, testcase_id = request_get_values('page', 'testcase_id')
         testcase_self = TestCases.query.get(testcase_id)
+        if not testcase_id or testcase_id == "null":
+            flash('请配置用例模板')
+            return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
         timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
         if len(testcase_self.name) > 30:
@@ -347,9 +359,11 @@ class ModelTestCase(MethodView):
         page = request.args.get('page')
         if testcase.is_model == 0:
             testcase.is_model = 1
+            flash('设置用例模板成功')
             FrontLogs('设置测试用例 name: %s 为模板成功' % testcase.name).add_to_front_log()
         else:
             testcase.is_model = 0
+            flash('取消用例模板成功')
             FrontLogs('取消设置测试用例 name: %s 为模板成功' % testcase.name).add_to_front_log()
         db.session.commit()
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
@@ -371,11 +385,14 @@ class TestCaseDownload(MethodView):
 
     def get(self):
         user_id = session.get('user_id')
+        page = request_get_values('page')
         testcases = TestCases.query.filter(TestCases.testcase_scene_id.is_(None), TestCases.user_id == user_id).\
             with_entities(TestCases.id, TestCases.name, TestCases.method, TestCases.url, TestCases.data,
                           TestCases.regist_variable, TestCases.regular, TestCases.group_id.name,
                           TestCases.request_headers_id, TestCases.testcase_scene_id, TestCases.hope_result).all()
- 
+        if len(testcases) == 0:
+            flash("请先添加用例")
+            return redirect(url_for('testcase_blueprint.test_case_list', page=page))
         now = get_now_time()
         dir_path, xlsx_name = WriterXlsx('testcases_' + now, testcases).open_xlsx()
         return send_from_directory(dir_path, xlsx_name, as_attachment=True)
@@ -384,6 +401,7 @@ class TestCaseDownload(MethodView):
 class TestCaseUpload(MethodView):
 
     def post(self):
+        page = request_get_values('page')
         if request.files.get('upload_xlsx'):
             xlsx = request.files['upload_xlsx']
             if allowed_file(xlsx.filename):
@@ -397,8 +415,11 @@ class TestCaseUpload(MethodView):
                 add_upload_testcases(row_list)
                 os.remove(xlsx_path)
             else:
-                print('错误的格式')
-        return redirect(url_for('testcase_blueprint.test_case_list'))
+                flash('错误的文件格式')
+                return redirect(url_for('testcase_blueprint.test_case_list', page=page))
+        else:
+            flash('请选择上传文件')
+        return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
 
 class TestCaseValidata(MethodView):
@@ -521,27 +542,27 @@ def add_upload_testcases(testcases):
                 # 如果没写请求方法 给予默认的get方法
                 testcase[2] = 'get'
             testcase[0] = AnalysisParams().analysis_params(testcase[0])
-            print(testcase[0], TestCases.query.filter(TestCases.name == testcase[0]).count())
-            if testcase[0] and not TestCases.query.filter(TestCases.name == testcase[0]).count():
+            print(testcase[0], TestCases.query.filter(TestCases.name == testcase[0], TestCases.user_id == user_id).count())
+            if testcase[0] and not TestCases.query.filter(TestCases.name == testcase[0], TestCases.user_id == user_id).count():
                 if testcase[-1]:
-                    if not CaseGroup.query.filter(CaseGroup.name == testcase[-1]).count():
+                    if not CaseGroup.query.filter(CaseGroup.name == testcase[-1], CaseGroup.user_id == user_id).count():
                         case_group = CaseGroup(testcase[-1], user_id=user_id)
                         db.session.add(case_group)
                         db.session.commit()
                         testcase[-1] = case_group.id
                     else:
-                        testcase[-1] = CaseGroup.query.filter(CaseGroup.name == testcase[-1]).first().id
+                        testcase[-1] = CaseGroup.query.filter(CaseGroup.name == testcase[-1], CaseGroup.user_id == user_id).first().id
                 if testcase[3] :
-                    if not RequestHeaders.query.filter(RequestHeaders.value == testcase[3]).count():
+                    if not RequestHeaders.query.filter(RequestHeaders.value == testcase[3], RequestHeaders.user_id == user_id).count():
                         request_headers_name = testcase[0] + RangName.rand_name('6')  # 6位随机数+用例名作为头部名称
                         request_headers = RequestHeaders(request_headers_name, testcase[3], user_id=user_id)
                         db.session.add(request_headers)
                         db.session.commit()
                         testcase[3] = request_headers.id
                     else:
-                        testcase[3] = RequestHeaders.query.filter(RequestHeaders.value == testcase[3]).first().id
+                        testcase[3] = RequestHeaders.query.filter(RequestHeaders.value == testcase[3], RequestHeaders.user_id == user_id).first().id
                 _testcase = TestCases(testcase[0], testcase[1], testcase[4], testcase[6], testcase[7],
-                                      testcase[2], testcase[-1], testcase[3], hope_result=testcase[5])
+                                      testcase[2], testcase[-1], testcase[3], hope_result=testcase[5], user_id=user_id)
                 db.session.add(_testcase)
                 db.session.commit()
     else:

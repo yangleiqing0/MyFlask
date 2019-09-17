@@ -1,5 +1,5 @@
 from flask_mail import Message
-from flask import render_template, session
+from flask import render_template, session, flash
 import time
 import os
 from common.selenium_get_page import ReportImage
@@ -39,7 +39,11 @@ def send_mail(subject, to_user_list, user_id=None,
     msg.attach(filename=shot_name, data=img_data, content_type='application/octet-stream', disposition='inline',
                     headers=[('Content-ID', 'report_image')])
     msg.html = render_template('testcase_report/testcase_report_email_image.html')
-    mail.send(message=msg)
+    try:
+        mail.send(message=msg)
+    except Exception as e:
+        print('邮件发送失败', e)
+        flash('邮件发送失败')
     os.remove(shot_name)
 
 

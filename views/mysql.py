@@ -1,7 +1,7 @@
 # coding=utf-8
 import json
 from flask.views import MethodView
-from flask import render_template, Blueprint, redirect, url_for, session, request, current_app, jsonify
+from flask import render_template, Blueprint, redirect, url_for, session, request, current_app, jsonify, flash
 from common.request_get_more_values import request_get_values
 from common.tail_font_log import FrontLogs
 from common.analysis_params import AnalysisParams
@@ -77,6 +77,10 @@ class MysqlList(MethodView):
 def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=True):
     print('MysqlRun:', sql, regist_variable)
     mysql = Mysql.query.get(mysql_id)
+    if not mysql:
+        return json.dumps('请检查配置数据库')
+    if not sql:
+        return json.dumps('请输入查询语句')
     user_id = session.get('user_id')
     host, port, db_name, user, password = AnalysisParams().analysis_more_params(
         mysql.ip, mysql.port, mysql.db_name, mysql.user, mysql.password)

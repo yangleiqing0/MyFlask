@@ -23,8 +23,9 @@ class Home(MethodView):
 class DbCreatAll(MethodView):
 
     def get(self):
+        user_id = session.get('user_id')
         db.create_all()
-        to_insert_data()
+        to_insert_data(user_id)
 
         return '数据库表创建OK'
 

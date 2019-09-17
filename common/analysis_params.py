@@ -1,13 +1,15 @@
 import re
 from common.rand_name import RangName
 from common.connect_sqlite import cdb
+from flask import session
 
 
 class AnalysisParams:
 
     def __init__(self):
-        variables_query_sql = 'select name from variables'
-        self.variables = cdb().query_db(variables_query_sql)
+        user_id = session.get('user_id')
+        variables_query_sql = 'select name from variables where user_id=%s'
+        self.variables = cdb().query_db(variables_query_sql, (user_id,))
         print('init:self.variables:', self.variables)
 
     def analysis_params(self,  params, is_change=None):

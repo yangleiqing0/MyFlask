@@ -99,20 +99,15 @@
             let scene_page = GetQueryString('page');
             let testcase_scene_id = $(this).attr('id').replace('testcase_add_','');
             let testcase_id = $("#testcase_list_"+testcase_scene_id).val();
-            $.ajax({
-                url:'{{ url_for("testcase_scene_blueprint.testcase_scene_copy")}}?testcase_scene_id='+testcase_scene_id+"&testcase_id="+testcase_id,
-                type:'GET',
-                success:function () {
-                    window.location.href = "{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}?page=" + scene_page
-                }
-            })
+            window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_copy")}}?testcase_scene_id='+testcase_scene_id+"&testcase_id="+testcase_id + "&page=" + scene_page
         });
 
          $('a[id="testcase_scene_add"]').click(function () {
              let scene_page = GetQueryString('page');
              let testcase_scene_id = $('#testcase_scene_copy').val();
-             window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_copy_scene")}}?testcase_scene_id='+testcase_scene_id+'&scene_page='+scene_page
-        });
+             window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_copy_scene")}}?testcase_scene_id=' + testcase_scene_id + '&scene_page=' + scene_page
+
+             });
 
 
         $('a[id*="testcase_scene_run"]').click(function () {

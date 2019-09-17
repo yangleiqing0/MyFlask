@@ -2,7 +2,7 @@ import datetime
 import json
 from common.tail_font_log import FrontLogs
 from flask.views import MethodView
-from flask import render_template, Blueprint, request, redirect, url_for, jsonify, session
+from flask import render_template, Blueprint, request, redirect, url_for, jsonify, session, flash
 from common.request_get_more_values import request_get_values
 from common.execute_testcase import to_execute_testcase
 from modles import db, TestCases, TestCaseScene, User, Wait
@@ -119,6 +119,11 @@ class TestCaseSceneTestCaseCopy(MethodView):
 
     def get(self):
         scene_page, testcase_scene_id, testcase_id = request_get_values('scene_page', 'testcase_scene_id', 'testcase_id')
+        if not testcase_id or testcase_id == "null":
+            print('TestCaseSceneTestCaseCopy:', testcase_id, type(testcase_id))
+            flash('请先设置用例模板')
+            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
+
         testcase = TestCases.query.get(testcase_id)
 
         timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
@@ -151,6 +156,9 @@ class TestCaseSceneCopy(MethodView):
 
     def get(self):
         scene_page, testcase_scene_id = request_get_values('scene_page', 'testcase_scene_id')
+        if not testcase_scene_id or testcase_scene_id == "null":
+            flash('请先设置场景模板')
+            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
         testcase_scene = TestCaseScene.query.get(testcase_scene_id)
         timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
 
@@ -173,9 +181,11 @@ class TestCaseSceneModel(MethodView):
         page = request.args.get('page')
         if testcase_scene.is_model == 0 or testcase_scene.is_model is None:
             testcase_scene.is_model = 1
+            flash('设置场景模板成功')
             FrontLogs('设置测试场景 name： %s 作为模板成功' % testcase_scene.name).add_to_front_log()
         else:
             testcase_scene.is_model = 0
+            flash('取消场景模板成功')
             FrontLogs('取消设置测试场景 name： %s 作为模板成功' % testcase_scene.name).add_to_front_log()
         db.session.commit()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=page))

@@ -4,8 +4,8 @@ from . import Base, db, ProjectGroup
 
 class User(Base, db.Model):
     __tablename__ = 'users'
-    username = db.Column(db.String(10), nullable=False)
-    password = db.Column(db.String(10), nullable=False)
+    username = db.Column(db.String(50), nullable=False)
+    password = db.Column(db.String(50), nullable=False)
     project_group_id = db.Column(db.Integer, db.ForeignKey(ProjectGroup.id))
 
     user_testcase_scenes = db.relationship('TestCaseScene', backref='testcase_scene_user')

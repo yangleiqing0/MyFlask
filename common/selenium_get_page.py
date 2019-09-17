@@ -25,7 +25,8 @@ class ReportImage:
         return shot_name
 
     def to_report_page(self):
-        user = User.query.filter(User.id == self.user_id).first()
+        user = User.query.get(self.user_id)
+        print('ReportImage user_id:', user, user.username, user.password)
         self.driver.find_element_by_id('username').send_keys(user.username)
         self.driver.find_element_by_id('password').send_keys(user.password)
         self.driver.find_element_by_id('login').click()

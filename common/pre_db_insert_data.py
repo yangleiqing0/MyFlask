@@ -53,8 +53,8 @@ def add_pre_data(key, user_id, table=None):
 
     elif 'Mail' in table:
         name = eval(key)
-        if Mail.query.filter(Mail.name == "%s" % name, Mail.user_id == user_id).count() == 0:
-            _mail = Mail(name, user_id=user_id)
+        if Mail.query.filter(Mail.name == "%s" % name[0], Mail.user_id == user_id).count() == 0:
+            _mail = Mail(name[0], subject=name[1], to_user_list=name[2], user_id=user_id)
             db.session.add(_mail)
             db.session.commit()
 
