@@ -6,7 +6,7 @@ from flask import render_template, Blueprint, redirect, url_for, session, reques
 from common.request_get_more_values import request_get_values
 from common.send_mail import send_excel, send_mail
 from common.tail_font_log import FrontLogs
-from views.testcase_report import get_report
+from views.testcase_report import get_report, add_message
 from views.testcase_request import post_testcase
 from modles import Job, Mail, TestCases, TestCaseScene, TestCaseStartTimes, db
 
@@ -216,6 +216,7 @@ def auto_send_mail(job, mail):
     testcase_time_id = get_testcase_time_id(user_id)
     post_request(testcases_ids, testcase_scenes_ids, testcase_time_id)
     get_report(testcase_time_id)
+    add_message(testcase_time_id)
     if mail:
         if mail.email_method == 1:
             send_mail(mail.subject, mail.to_user_list.split(','), user_id=user_id, testcase_time_id=testcase_time_id)

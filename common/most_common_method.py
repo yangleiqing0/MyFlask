@@ -13,12 +13,13 @@ def get_now_time():
 
 
 def clear_download_xlsx(method='download'):
-    dir_path = TESTCASE_XLSX_PATH + method
+    from logs.config import path as root_path
+    dir_path = os.path.join(root_path, TESTCASE_XLSX_PATH + method)
     path_list = os.listdir(dir_path)
     target_time = int(time.time())-300
-    for path in path_list:
-        if '.py' not in path:
-            __path = dir_path + '/' + path
+    for _path in path_list:
+        if '.py' not in _path:
+            __path = dir_path + '/' + _path
             path_time = int(os.path.getctime(__path))
             print('path_time:', path_time, target_time, __path)
             if path_time <= target_time:

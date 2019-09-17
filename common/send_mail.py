@@ -1,5 +1,5 @@
 from flask_mail import Message
-from flask import render_template
+from flask import render_template, session
 import time
 import os
 from common.selenium_get_page import ReportImage
@@ -47,7 +47,8 @@ def send_excel(subject, to_user_list, testcase_time_id):
     from app import get_app_mail
     app, mail = get_app_mail()
     testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
-    filename = testcase_time.filename
+    from logs.config import path
+    filename = os.path.join(path, testcase_time.filename)
     print('send_excel filename', filename)
     message = Message(subject, recipients=to_user_list, body='自动化测试报告 : %s' % testcase_time.name)
     try:

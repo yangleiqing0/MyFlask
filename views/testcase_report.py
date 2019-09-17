@@ -143,28 +143,33 @@ class TestCaseReport(MethodView):
         testcase_time_id = request.args.get('testcase_time_id')
         # 生成测试报告
         get_report(testcase_time_id)
-        testcase_scene_ids, testcase_scene_list, testcase_scene_testcases_after_list, testcase_results, testcase_time, items = get_testcase_scene_message(
-            testcase_time_id)
-        for testcase_scene_id in testcase_scene_ids:
-            testcase_scene = TestCaseScene.query.get(testcase_scene_id)
-            testcase_scene_list.append(testcase_scene)
-            testcase_scene_testcases = []
-            for testcase_scene_testcase in testcase_scene_testcases_after_list:
-                if testcase_scene_testcase.scene_id == testcase_scene.id:
-                    testcase_scene_testcases.append(testcase_scene_testcase)
-                testcase_scene.test_cases = testcase_scene_testcases
-        allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
-        print('allocation:', allocation.fail_sum)
-        time_message = TimeMessage(allocation.test_name, allocation.zdbm_version, allocation.test_pl, allocation.test_net,
-                                   allocation.title_name, allocation.fail_sum, allocation.test_sum, allocation.test_success,
-                                   allocation.time_strftime, allocation.score, testcase_time_id)
-        db.session.add(time_message)
-        db.session.commit()
+        items, allocation, testcase_scene_list = add_message(testcase_time_id)
 
         FrontLogs('进入测试报告页面 报告id: %s' % testcase_time_id).add_to_front_log()
         # return items, Allocation
         return render_template("testcase_report/testcase_report.html", items=items, allocation=allocation,
                                testcase_scene_list=testcase_scene_list)
+
+
+def add_message(testcase_time_id):
+    testcase_scene_ids, testcase_scene_list, testcase_scene_testcases_after_list, testcase_results, testcase_time, items = get_testcase_scene_message(
+        testcase_time_id)
+    for testcase_scene_id in testcase_scene_ids:
+        testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+        testcase_scene_list.append(testcase_scene)
+        testcase_scene_testcases = []
+        for testcase_scene_testcase in testcase_scene_testcases_after_list:
+            if testcase_scene_testcase.scene_id == testcase_scene.id:
+                testcase_scene_testcases.append(testcase_scene_testcase)
+            testcase_scene.test_cases = testcase_scene_testcases
+    allocation = EnvMessage(testcase_results, testcase_time_id, testcase_time, testcase_scene_list)
+    print('allocation:', allocation.fail_sum)
+    time_message = TimeMessage(allocation.test_name, allocation.zdbm_version, allocation.test_pl, allocation.test_net,
+                               allocation.title_name, allocation.fail_sum, allocation.test_sum, allocation.test_success,
+                               allocation.time_strftime, allocation.score, testcase_time_id)
+    db.session.add(time_message)
+    db.session.commit()
+    return items, allocation, testcase_scene_list
 
 
 def get_testcase_scene_message(testcase_time_id):
@@ -271,7 +276,9 @@ def report_delete(testcase_time_id):
             for testcase_result in testcase_results:
                 db.session.delete(testcase_result)
                 db.session.commit()
-            os.remove(testcase_report.filename)
+            from logs.config import path
+            filename = os.path.join(path, testcase_report.filename)
+            os.remove(filename)
         except FileNotFoundError:
             pass
         FrontLogs('删除测试报告 id: %s 成功' % testcase_time_id).add_to_front_log()

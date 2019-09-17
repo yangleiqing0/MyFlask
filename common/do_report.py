@@ -1,4 +1,6 @@
 import xlsxwriter
+import os
+from flask import session
 from common.connect_sqlite import cdb
 from common.analysis_params import AnalysisParams
 from modles import db, TestCaseStartTimes, TestCaseScene, TestCaseSceneResult, CaseGroup, RequestHeaders
@@ -77,7 +79,8 @@ def test_report(testcase_time_id, allocation, testcase_scene_list):
             content_list += data[data_][::-1]
     content_list = content_list + data['testcase_scene'][::-1]
 
-    filename = testcase_time.filename
+    from logs.config import path
+    filename = os.path.join(path, testcase_time.filename)
     data_title = {"test_name": allocation.test_name, "test_version": allocation.zdbm_version, "test_pl": allocation.test_pl, "test_net": allocation.test_net}
     data_re = {"test_sum": allocation.test_sum, "test_success": allocation.test_success, "test_failed": allocation.fail_sum,
                "test_date": allocation.time_strftime}
@@ -314,7 +317,8 @@ class WriterXlsx:
         return worksheet.write(colum, data, WriterXlsx.add_format(workbook, color=color))
 
     def open_xlsx(self):
-        dir_path = TESTCASE_XLSX_PATH + self.method
+
+        dir_path = os.path.join(session.get('app_rootpath'), TESTCASE_XLSX_PATH + self.method)
         xlsx_name = self.name + '.xlsx'
         path = dir_path + '/' + xlsx_name
         print('path:', path)

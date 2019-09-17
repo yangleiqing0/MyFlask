@@ -520,6 +520,7 @@ def add_upload_testcases(testcases):
             if not testcase[2]:
                 # 如果没写请求方法 给予默认的get方法
                 testcase[2] = 'get'
+            testcase[0] = AnalysisParams().analysis_params(testcase[0])
             print(testcase[0], TestCases.query.filter(TestCases.name == testcase[0]).count())
             if testcase[0] and not TestCases.query.filter(TestCases.name == testcase[0]).count():
                 if testcase[-1]:

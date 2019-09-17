@@ -24,8 +24,9 @@ def add_pre_data(key, user_id, table=None):
     var_name = "_%s" % key
     var_values = list(eval(key))
     if "Variavles" in table:
+        print('var_values[-1]:', var_values[-1])
         if var_values[-1].isdigit():
-            if Variables.query.filter(Variables.name == "%s" % var_name, Variables.user_id == user_id).count() == 0:
+            if Variables.query.filter(Variables.name == "%s" % var_name, Variables.user_id == int(var_values[-1])).count() == 0:
                 var_values[-1] = int(var_values[-1])
                 instance = Variables(var_name, *var_values)
                 db.session.add(instance)
@@ -98,7 +99,6 @@ def add_pre_data_go(user_id):
 
 def to_insert_data(user_id=1):
     add_pre_data_go(user_id=user_id)
-
 
 
 

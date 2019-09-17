@@ -1,3 +1,4 @@
+from flask import session
 from selenium import webdriver
 import time
 import os
@@ -14,6 +15,7 @@ class ReportImage:
         self.start_time = time.time()
         self.user_id = user_id
         self.port = Variables.query.filter(Variables.name == '_LOCAL_FLASK_PORT', Variables.user_id == 1).first().value
+        print('ReportImage:', self.testcase_time_id, self.port)
 
     def get_web(self):
         self.driver.get('http://127.0.0.1:%s/login/' % self.port)
@@ -26,9 +28,10 @@ class ReportImage:
         user = User.query.filter(User.id == self.user_id).first()
         self.driver.find_element_by_id('username').send_keys(user.username)
         self.driver.find_element_by_id('password').send_keys(user.password)
-        self.driver.find_element_by_xpath('//*[@id="get_container_height"]/div[2]/div/div/div[2]/form/div[6]/input[1]').click()
+        self.driver.find_element_by_id('login').click()
         self.driver.get('http://127.0.0.1:%s/testcase_report_sendmail/?testcase_time_id=%s&report_type=phantomjs' % (self.port, self.testcase_time_id))
-        shot_name = 'reports/' +str(self.start_time) + 'screen.png'
+        from logs.config import path
+        shot_name = os.path.join(path, 'reports/' +str(self.start_time) + 'screen.png')
         self.driver.save_screenshot(shot_name)
         print('over save shot:', time.time(), shot_name)
         return shot_name

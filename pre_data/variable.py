@@ -1,5 +1,6 @@
 TEST_REPORT_EXCEL_NAME = "ZDBM_test_report", "项目报告的名字"
 REPORT_FILE_PATH = "reports/", "报告保存在本地的路径", "1"
+Project_Path = "D:/PythonProject/MytestFlask", "项目所在服务器的目录", "1"
 TEST_NAME = "备份一体机", "项目的名字"
 TEST_VERSION = "1.0.13", "项目的版本"
 TEST_PL = "win10", "测试的系统"

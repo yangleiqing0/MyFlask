@@ -11,5 +11,8 @@
 # for path in path_list:
 #     print(os.path.getctime(_path + '/' + path))
 # print(path_list)
-a = '1 2'
-print(' ' in a)
+# import config
+
+import os
+path = os.path.join('path', 'data/')
+print('path', path)
