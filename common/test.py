@@ -16,3 +16,11 @@
 import os
 path = os.path.join('path', 'data/')
 print('path', path)
+
+a = [1,3,2]
+for i in a:
+    if i == 3:
+        continue
+    print(i)
+# a.pop(0)
+# print(a[0])

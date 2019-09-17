@@ -536,15 +536,18 @@ def allowed_file(filename):
 
 def add_upload_testcases(testcases):
     user_id = session.get('user_id')
+    print('testcases:', testcases, len(testcases))
     if len(testcases) >0:
         for testcase in testcases:
-            if not testcase[2]:
-                # 如果没写请求方法 给予默认的get方法
-                testcase[2] = 'get'
-            testcase[0] = AnalysisParams().analysis_params(testcase[0])
+            testcase.pop(0)  # 自动删除ID列
+            if not testcase[2]:  # 请求方式
+                continue
+            if testcase[2].lower() not in ['put', 'post', 'get', 'delete', 'head', 'options']:
+                continue
+            testcase[0] = AnalysisParams().analysis_params(testcase[0])  # 解析用例名称
             print(testcase[0], TestCases.query.filter(TestCases.name == testcase[0], TestCases.user_id == user_id).count())
             if testcase[0] and not TestCases.query.filter(TestCases.name == testcase[0], TestCases.user_id == user_id).count():
-                if testcase[-1]:
+                if testcase[-1]:  # 用例分组
                     if not CaseGroup.query.filter(CaseGroup.name == testcase[-1], CaseGroup.user_id == user_id).count():
                         case_group = CaseGroup(testcase[-1], user_id=user_id)
                         db.session.add(case_group)
@@ -552,7 +555,9 @@ def add_upload_testcases(testcases):
                         testcase[-1] = case_group.id
                     else:
                         testcase[-1] = CaseGroup.query.filter(CaseGroup.name == testcase[-1], CaseGroup.user_id == user_id).first().id
-                if testcase[3] :
+                else:
+                    testcase[-1] = None
+                if testcase[3] :  # 请求头部
                     if not RequestHeaders.query.filter(RequestHeaders.value == testcase[3], RequestHeaders.user_id == user_id).count():
                         request_headers_name = testcase[0] + RangName.rand_name('6')  # 6位随机数+用例名作为头部名称
                         request_headers = RequestHeaders(request_headers_name, testcase[3], user_id=user_id)

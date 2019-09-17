@@ -14,7 +14,7 @@ from flask import session
 #             yield FLASK_POST_PRE_ARGV
 
 
-def get_page():
+def _get_page():
     while 1:
         user_id = session.get('user_id')
         FLASK_POST_PRE_ARGV = eval(
@@ -24,7 +24,7 @@ def get_page():
         yield FLASK_POST_PRE_ARGV
 
 
-get_page = get_page()
+get_page = _get_page()
 
 
 
