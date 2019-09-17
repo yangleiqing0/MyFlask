@@ -110,6 +110,7 @@ app = return_app()
 
 @app.before_request    # 在请求达到视图前执行
 def login_required():
+
     # print('username: ', session.get('username'), request.path, type(session.get('username')))
     if request.path == '/user_regist/':
         if session.get('username') != 'admin':
@@ -168,19 +169,15 @@ def handle_500_error(err_msg):
 
 @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
 def db_create_pre_all():
-    user_id = session.get('user_id')
-    if not user_id:
-        user_id = 1
-    if Variables.query.filter(Variables.name == '_Flash_Show', Variables.user_id == user_id).first():
-        session['flash_show'] = Variables.query.filter(Variables.name == '_Flash_Show', Variables.user_id == user_id).first().value
-    else:
-        session['flash_show'] = 1
+    session['user_id'] = ''
+    session['username'] = ''
     session['app_rootpath'] = app.root_path
     import modles
     db.create_all()
 
     from views.job import init_scheduler
     from common.pre_db_insert_data import to_insert_data
+    to_insert_data()
     for user in User.query.all():
         to_insert_data(user.id)
     

@@ -74,6 +74,9 @@ def add_pre_data(key, user_id, table=None):
 
 
 def add_pre_data_go(user_id):
+    pre_variable = dir(project_group)
+    [add_pre_data(key, user_id, table='ProjectGroup') for key in pre_variable if "__" not in key and key[0].isupper()]
+
     print('add_pre_data_go user_id:', user_id)
     pre_variable = dir(user)
     # 获取var模块的所有属性
@@ -93,13 +96,9 @@ def add_pre_data_go(user_id):
     pre_variable = dir(request_headers)
     [add_pre_data(key, user_id, table='RequestHeaders') for key in pre_variable if "__" not in key and key[0].isupper()]
 
-    pre_variable = dir(project_group)
-    [add_pre_data(key, user_id, table='ProjectGroup') for key in pre_variable if "__" not in key and key[0].isupper()]
-
 
 def to_insert_data(user_id=1):
     add_pre_data_go(user_id=user_id)
-
 
 
 # if __name__ == '__main__':

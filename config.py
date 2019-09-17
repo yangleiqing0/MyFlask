@@ -2,10 +2,11 @@ import os
 
 host = '192.168.1.11'
 port = 3333
-db = 'flasktest'
+db = 'flaskt'
 root = 'root'
 pwd = 'zdbm123'
 
+project_path = 'D:/PythonProject/MytestFlask'   # 工作目录，考虑到其他方式启动flask 需要先把flask目录提供
 basedir = os.path.abspath(os.path.dirname(__file__))
 # DATABASE_URL = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'db\\test.sqlite')
 

@@ -11,8 +11,8 @@ import os
 import config
 from common.connect_sql.connect_mysql import ConnMysql
 
-sql = 'select value from variables where name="_Project_Path" and user_id=1'
-path = ConnMysql(config.host, config.port, config.root, config.pwd, 'flasktest', sql, is_param=False).select_mysql()
+# sql = 'select value from variables where name="_Project_Path" and user_id=1'
+path = config.project_path
 FLASK_LOGS_FILE = os.path.join(path, 'logs/flask.log')
 FRONT_LOGS_FILE = os.path.join(path, 'logs/frontlogs.log')   # 输入到前端的日志路径
 # 设置日志的记录等级

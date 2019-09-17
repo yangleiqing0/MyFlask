@@ -3,7 +3,7 @@ from flask.views import MethodView
 from flask import render_template, Blueprint, make_response, redirect, url_for, session, flash
 from common.request_get_more_values import request_get_values
 from common.connect_sqlite import cdb
-from modles.user import User
+from modles import User, Variables
 
 
 login_blueprint = Blueprint('login_blueprint', __name__)
@@ -19,6 +19,7 @@ class Login(MethodView):
         username, password = request_get_values('username', 'password')
         user_query_sql = 'select password from users where username=%s'
         pwd = cdb().query_db(user_query_sql, (username,), True)
+        print('pwd:', pwd, username, password)
         if pwd and password == pwd[0]:
             user = User.query.filter(User.username == username).first()
             resp = make_response(redirect(url_for('testcase_blueprint.test_case_list')))
@@ -26,6 +27,11 @@ class Login(MethodView):
                             expires=datetime.now() + timedelta(days=7))
             session['username'] = username
             session['user_id'] = user.id
+            if Variables.query.filter(Variables.name == '_Flash_Show', Variables.user_id == user.id).first():
+                session['flash_show'] = Variables.query.filter(Variables.name == '_Flash_Show',
+                                                               Variables.user_id == user.id).first().value
+            else:
+                session['flash_show'] = 1
             flash('登录成功')
             return resp
         flash('账号或密码错误')
