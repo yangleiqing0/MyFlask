@@ -7,6 +7,11 @@
     <meta http-equiv="pragma" content="no-cache">
     <meta http-equiv="cache-control" content="no-cache">
     <meta http-equiv="expires" content="0">
+    <link rel="stylesheet" type="text/css" href="/static/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/static/easyui/themes/icon.css">
+    <script type="text/javascript" src="/static/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/easyui/jquery.easyui.min.js"></script>
+
     <link href="{{url_for('static',filename='css/prompt-box.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/amazeui.min.css')}}"  rel="stylesheet">
     <link href="{{url_for('static',filename='css/admin.css')}}"  rel="stylesheet">
@@ -17,7 +22,6 @@
     <link rel="stylesheet" href="http://cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="http://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://cdn.staticfile.org/jquery/3.1.1/jquery.min.js"></script>
-{#    <script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>#}
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/collapse/jquery.js"></script>
     <script type="text/javascript" src="/static/js/collapse/bootstrap-collapse.js"></script>
@@ -25,35 +29,33 @@
     <link href="{{url_for('static',filename='css/badge/badge.css')}}?v=1.0.6"  rel="stylesheet">
     <script src="{{url_for('static',filename='js/alert-style.js' , charset= "UTF-8")}}"></script>
 
-
 </head>
-<body style="background-color:ghostwhite;"  >
-<div class="tpl-page-container tpl-page-header-fixed" style="padding-top: 0">
-    <div style="height: 20px;width: 100%;background-color:ghostwhite;"></div>
-    <div class="row" >
-            <nav class="navbar navbar-default" role="navigation"
-                 style="padding: 10px 0 10px 0;margin:0 15px 0 15px">
-                <div class="navbar-header"  >
-                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-ex1-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a href="#" class="navbar-brand">自动化接口测试</a>
 
-                </div>
-                <div class="collapse navbar-collapse navbar-ex1-collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">反馈管理 <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#">问题列表</a></li>
-                                <li><a href="#">详情页面</a></li>
-                            </ul>
-                        </li>
-                    </ul>
+<body class="easyui-layout">
+    <div data-options="region:'north',title:'登录面板',split:true" style="height:100px;">
+{#        <div class="row" >#}
+{#            <nav class="navbar navbar-default" role="navigation"#}
+{#                 style="padding: 10px 0 10px 0;margin:0 15px 0 15px">#}
+{#                <div class="navbar-header"  >#}
+{#                    <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-ex1-collapse">#}
+{#                        <span class="sr-only">Toggle navigation</span>#}
+{#                        <span class="icon-bar"></span>#}
+{#                        <span class="icon-bar"></span>#}
+{#                        <span class="icon-bar"></span>#}
+{#                    </button>#}
+{#                    <a href="#" class="navbar-brand">自动化接口测试</a>#}
+{##}
+{#                </div>#}
+{#                <div class="collapse navbar-collapse navbar-ex1-collapse">#}
+{#                    <ul class="nav navbar-nav">#}
+{#                        <li><a href="#" class="dropdown-toggle" data-toggle="dropdown">反馈管理 <b class="caret"></b></a>#}
+{#                            <ul class="dropdown-menu">#}
+{#                                <li><a href="#">问题列表</a></li>#}
+{#                                <li><a href="#">详情页面</a></li>#}
+{#                            </ul>#}
+{#                        </li>#}
+{#                    </ul>#}
                     <ul class="nav navbar-nav navbar-right">
-{#                        <li><a href="#"></a></li>#}
                         {% if session.get('username') %}
                             <li><a href=""><i class="fa fa-user"></i>{{session.get('username')}}</a></li>
                             <li><a href="{{ url_for('login_blueprint.logout') }}">退出登陆</a></li>
@@ -61,138 +63,145 @@
                             <li><a href="{{ url_for('login_blueprint.login') }}" >请登陆</a></li>
                         {% endif %}
                     </ul>
-                </div>
-            </nav>
-        </div>
-    <div style="height: 20px;width: 100%;"></div>
-    <div class="panel tpl-left-nav tpl-left-nav-hover panel-default panel-heading " style="width: 10%;background-color: rgba(248,248,248,0.42)">
+{#                </div>#}
+{#            </nav>#}
+{#        </div>#}
+    </div>
+    <div data-options="region:'south',title:'日志面板',split:true" style="height:100px;">
         {% if session.get('username') %}
-        <div class="tpl-left-nav-list">
-            <ul class="tpl-left-nav-menu ">
-                {% if  session.get('username') == 'admin' %}
+            <div class="panel panel-default col-lg-12" style="float: left;">
+                <div  id="front_logs" class="col-lg-3 logs" style="height: 200px"></div>
+                <div  id="flask_logs" class="col-lg-9 logs" style="height: 200px"></div>
+            </div>
+            <div class="panel-footer" style="clear:both;"></div>
+        {% endif %}
+        <div class="col-md-offset-1">
+            {{ macro.prompt_msg()}}
+            {{ macro.flash_msg() }}
+        </div>
+    </div>
+    <div data-options="region:'east',title:'信息面板',split:true" style="width:250px;">
+        <div class="" id="request_body_show" style="height: 100%;display:block;word-break: break-all;word-wrap: break-word">
+        </div>
+    </div>
+    <div data-options="region:'west',title:'菜单面板',split:true" style="width:10%;">
+         <div class="" style="background-color: rgba(248,248,248,0.42);margin-top: 20px">
+            {% if session.get('username') %}
+            <div class="tpl-left-nav-list">
+                <ul class="tpl-left-nav-menu ">
+                    {% if  session.get('username') == 'admin' %}
+                        <li class="tpl-left-nav-item">
+                            <a href="{{ url_for('user_blueprint.user_regist') }}" class="nav-link ">
+                                <i class="am-icon-user am-icon-fw"></i>
+                                <span>用户注册</span>
+                            </a>
+                        </li>
+                    {% endif %}
                     <li class="tpl-left-nav-item">
-                        <a href="{{ url_for('user_blueprint.user_regist') }}" class="nav-link ">
-                            <i class="am-icon-user am-icon-fw"></i>
-                            <span>用户注册</span>
+                         <a href="{{ url_for('testcase_blueprint.test_case_list') }}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-book am-icon-fw"></i>
+                            <span>测试用例</span>
+                            </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                            <a href="{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-briefcase am-icon-fw"></i>
+                            <span>测试场景</span>
+                            </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                            <a href="{{ url_for('case_group_blueprint.case_group_list')}}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-group am-icon-fw"></i>
+                            <span>用例分组</span>
+                            </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                            <a href="{{ url_for('variables_blueprint.variable_list')}}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-cubes am-icon-fw"></i>
+                            <span>全局变量</span>
+                            </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                            <a href="{{ url_for('request_headers_blueprint.request_headers_list')}}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-mortar-board am-icon-fw"></i>
+                            <span>请求头部</span>
+                            </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                            <a href="{{ url_for('mysql_blueprint.mysql_list')}}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-database am-icon-fw"></i>
+                            <span>数据库配置</span>
+                            </a>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <a href="{{ url_for('test_case_request_blueprint.test_case_request') }}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-play am-icon-fw"></i>
+                            <span>测试执行</span>
                         </a>
                     </li>
-                {% endif %}
-                <li class="tpl-left-nav-item">
-                     <a href="{{ url_for('testcase_blueprint.test_case_list') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-book am-icon-fw"></i>
-                        <span>测试用例</span>
+                    <li class="tpl-left-nav-item">
+                        <a href="{{ url_for('testcase_report_blueprint.testcase_report_list') }}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-table am-icon-fw"></i>
+                            <span>测试报告</span>
                         </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                        <a href="{{ url_for('testcase_scene_blueprint.testcase_scene_testcase_list') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-briefcase am-icon-fw"></i>
-                        <span>测试场景</span>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <a href="{{ url_for('job_blueprint.job_list') }}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-tasks am-icon-fw"></i>
+                            <span>测试任务</span>
                         </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                        <a href="{{ url_for('case_group_blueprint.case_group_list')}}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-group am-icon-fw"></i>
-                        <span>用例分组</span>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <a href="{{ url_for('mail_blueprint.mail_list') }}" class="nav-link tpl-left-nav-link-list">
+                            <i class="am-icon-envelope am-icon-fw"></i>
+                            <span>邮件设置</span>
                         </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                        <a href="{{ url_for('variables_blueprint.variable_list')}}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-cubes am-icon-fw"></i>
-                        <span>全局变量</span>
+                    </li>
+                    <li class="tpl-left-nav-item">
+                        <a href="{{ url_for('project_group_blueprint.project_group_urls') }}" class="nav-link tpl-left-nav-link-list">
+                            <i class="fa-sitemap am-icon-fw"></i>
+                            <span>项目组配置</span>
                         </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                        <a href="{{ url_for('request_headers_blueprint.request_headers_list')}}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-mortar-board am-icon-fw"></i>
-                        <span>请求头部</span>
-                        </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                        <a href="{{ url_for('mysql_blueprint.mysql_list')}}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-database am-icon-fw"></i>
-                        <span>数据库配置</span>
-                        </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('test_case_request_blueprint.test_case_request') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-play am-icon-fw"></i>
-                        <span>测试执行</span>
-                    </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('testcase_report_blueprint.testcase_report_list') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-table am-icon-fw"></i>
-                        <span>测试报告</span>
-                    </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('job_blueprint.job_list') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-tasks am-icon-fw"></i>
-                        <span>测试任务</span>
-                    </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('mail_blueprint.mail_list') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="am-icon-envelope am-icon-fw"></i>
-                        <span>邮件设置</span>
-                    </a>
-                </li>
-                <li class="tpl-left-nav-item">
-                    <a href="{{ url_for('project_group_blueprint.project_group_urls') }}" class="nav-link tpl-left-nav-link-list">
-                        <i class="fa-sitemap am-icon-fw"></i>
-                        <span>项目组配置</span>
-                    </a>
-                </li>
-{#                <li class="tpl-left-nav-item">#}
-{#                    <a href="{{ url_for('home_blueprint.test') }}" class="nav-link tpl-left-nav-link-list">#}
-{#                        <i class="am-icon-cog am-icon-fw"></i>#}
-{#                        <span>test</span>#}
-{#                    </a>#}
-{#                </li>#}
-            </ul>
+                    </li>
+    {#                <li class="tpl-left-nav-item">#}
+    {#                    <a href="{{ url_for('home_blueprint.test') }}" class="nav-link tpl-left-nav-link-list">#}
+    {#                        <i class="am-icon-cog am-icon-fw"></i>#}
+    {#                        <span>test</span>#}
+    {#                    </a>#}
+    {#                </li>#}
+                </ul>
+            </div>
+            {% else %}
+                请登录管理员账号注册用户
+            {% endif %}
         </div>
-        {% else %}
-            请登录管理员账号注册用户
-        {% endif %}
     </div>
-    <div  class="col-md-8 body-content">
-        <div class="container" >
-            <div class="row" >
+    <div data-options="region:'center',title:'{% block title %}
+                                {% endblock %}'" style="padding:5px;">
+        <div  class=" body-content">
+        <div class="" >
+            <div class="" >
                 <div class="col-md-12" >
-                    <div class="panel panel-default" id="get_container_height" >
-                        <div class="panel-heading text-center" >
+                    <div class="" id="get_container_height" >
+                        <div class="panel-heading text-center" style="background-color: rgb(238, 238, 238); border: solid 1px rgb(238, 238, 238);height: 60px" >
+                            {% if session.get('username') %}
                             <input id="to_back" type="button" class="btn btn-default relative-position" onclick="history.go(-1);scrollTop = 0" value="返回上一步">
-                            <h1>
-                                {% block title %}
-                                {% endblock %}
-                            </h1>
+                            {% endif %}
                         </div>
                             <div id="ajax_content">
+                            <div style="height: 20px;width: 100%;border-left: 1px  solid rgb(238, 238, 238);border-right: 1px  solid rgb(238, 238, 238);"></div>
                                 {%block content%}
                                 {%endblock%}
                             </div>
-                            {% if session.get('username') %}
-                                <div class="panel panel-default col-lg-12" style="float: left;">
-                                    <div  id="front_logs" class="col-lg-3 logs" style="height: 200px"></div>
-                                    <div  id="flask_logs" class="col-lg-9 logs" style="height: 200px"></div>
-                                </div>
-                                <div class="panel-footer" style="clear:both;"></div>
-                            {% endif %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col-md-2 col-md-offset-10" id="request_body_show" style="
-    width: 250px;display:block;word-break: break-all;word-wrap: break-word;height: 700px;position: fixed">
     </div>
-    {%block hello%}
-    {%endblock%}
-</div>
-<div class="col-md-offset-1">
-    {{ macro.prompt_msg()}}
-    {{ macro.flash_msg() }}
-</div>
+</body>
+
+
 
 {% block js %}
 {%endblock%}
@@ -206,9 +215,9 @@
         float: left;
     }
     .body-content{
-        left: 280px;
-        height:90%;
-        position: fixed;
+        {#left: 280px;#}
+        {#height:90%;#}
+        {#position: fixed;#}
         {#overflow-x: hidden;#}
         overflow-y: auto;
     }
@@ -326,7 +335,7 @@
     float: right;
 }
     .prompt-center{
-        position: absolute;
+        position: fixed;
         z-index: 9999;
         width: 438px;
         height: 90px;
@@ -335,12 +344,15 @@
     }
     .prompt-login{
         text-align: center;
-        position: absolute;
+        position: fixed;
         z-index: 9999;
         left:0; right:0; top:50px; bottom:0;
         margin: 0 auto;
         width: 150px;
         height: 53px;
+    }
+    #ajax_content>.panel-body{
+        border-color: rgb(238, 238, 238);
     }
 </style>
 <script>
@@ -693,7 +705,7 @@ $(document).ready(function() {
 
     $('.alert').fadeOut(3000);
 
-    back_img()
+    {#back_img()#}
     //  启动动态背景
 
 });

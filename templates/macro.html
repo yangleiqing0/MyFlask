@@ -46,7 +46,10 @@ div_style="margin-left:108px") %}
 
 
 {% macro pagination_widget(pagination, endpoint) %}
-    <div class="col-md-offset-5"><ul class="pagination">
+    <div class="col-md-12">
+        <div style="text-align: center">
+            <div style="margin: 0 auto">
+                <ul class="pagination">
      <li{% if not pagination.has_prev %} class="disabled"{% endif %}>
          <a href="{% if pagination.has_prev %}{{ url_for(endpoint, page=pagination.page - 1, **kwargs) }}{% else %}#{% endif %}">
           &laquo;
@@ -66,7 +69,10 @@ div_style="margin-left:108px") %}
         &raquo;
        </a>
     </li>
- </ul></div>
+ </ul>
+            </div>
+        </div>
+    </div>
 
 {% endmacro %}
 

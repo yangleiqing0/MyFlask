@@ -124,7 +124,7 @@
                     type : "POST",
                     success:function (response) {
                         let result = JSON.parse(response)['testcase_result'];
-                        $('#request_body_show').css('overflow','scroll').empty().html(result);
+                        $('#request_body_show').css('overflow','auto').empty().html(result);
                     }
                 });
                  run_test_case_obj.removeAttr('disabled');

@@ -117,7 +117,7 @@
                 type:'GET',
                 success:function (response) {
                     let results = JSON.parse(response)['testcase_results'];
-                    $('#request_body_show').css('overflow','scroll').html(results)
+                    $('#request_body_show').css('overflow','auto').html(results)
                 }
             })
         });

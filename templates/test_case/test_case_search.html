@@ -136,7 +136,7 @@
                     data:$('#testcase_update_form').serialize(),
                     success : function (response) {
                         let result = JSON.parse(response)['testcase_result'];
-                        $('#request_body_show').css('overflow','scroll').html(result)
+                        $('#request_body_show').css('overflow','auto').html(result)
                     }
                 })
             })
@@ -257,7 +257,7 @@
             },
             success: function (response) {
                 let result = JSON.parse(response);
-                $('#request_body_show').css('overflow','scroll').html(result)
+                $('#request_body_show').css('overflow','auto').html(result)
             }
         })
     });

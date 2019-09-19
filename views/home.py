@@ -167,7 +167,7 @@ def handle_500_error(err_msg):
 #     return render_template('exception/404.html', err_msg=e, mes=500)
 
 
-@app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
+# @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
 def db_create_pre_all():
     session['user_id'] = ''
     session['username'] = ''
@@ -182,7 +182,7 @@ def db_create_pre_all():
         to_insert_data(user.id)
     
 
-@app.before_first_request
+# @app.before_first_request
 def init_scheduler_job():
     # 5分钟检查一次需要删除的测试用例xlsx
     from modles.job import Job
@@ -198,7 +198,7 @@ def init_scheduler_job():
     print('scheduler_job:', scheduler.get_job(job_id))
 
 
-@app.before_first_request
+# @app.before_first_request
 def init_flask_log():
     with open(FLASK_LOGS_FILE, 'w+') as f:
         f.write('#coding=utf-8\n')

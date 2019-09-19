@@ -1,7 +1,9 @@
 
 <div class="out">
-    <div class="middle">
-            请稍等....
+    <div class="middle-out">
+        <div class="middle">
+                请稍等....
+        </div>
     </div>
 </div>
 
@@ -11,16 +13,16 @@
 <style>
 
     .out{
-        width:1138px;
-        height: 300px;
+        width: 800px;
+        height: 400px;
+        margin: 0 auto;
+        position: relative
     }
     .middle{
-        {#display: table-cell;#}
         text-align: center;
         vertical-align: middle;
         width: 600px;
         height:100px;
-        margin:150px auto 50px;
         font-size: 20px;
         line-height: 100px;
         background-color: #e7e7e7;
@@ -37,5 +39,12 @@
     @-o-keyframes progress-bar-stripes{from{background-position:40px 0}to{background-position:0 0}}
     @keyframes progress-bar-stripes{from{background-position:40px 0}to{background-position:0 0}}
 
+    .middle-out{
+        position: absolute;
+        top: 50%;
+        left: 100px;
+        right: 0;
+        transform: translateY(-50%);
+    }
 
 </style>
