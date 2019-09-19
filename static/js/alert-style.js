@@ -150,7 +150,18 @@ $(document).ready(function() {
         $("#mb_btn_no,#mb_ico").click(function () {
             $("#mb_box,#mb_con").remove();
         });
-    }
+    };
+
+   $('input[type="text"],input[type="password"],textarea').each(function () {
+        $(this).focus(function(){
+        $(this).css("background-color","#FFFFCC");
+
+        });
+         $(this).blur(function() {
+             $(this).css("background-color", "white");
+         })
+    });
+
 });
 
 

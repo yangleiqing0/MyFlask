@@ -2,7 +2,7 @@ import os
 
 host = '192.168.1.11'
 port = 3333
-db = 'flaskt'
+db = 'flasktest'
 root = 'root'
 pwd = 'zdbm123'
 
