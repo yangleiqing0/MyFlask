@@ -26,21 +26,25 @@ textarea_class_name="form-control",textarea_style="resize: vertical;min-height: 
 
 
 {% macro submit(submit_value="提交",reset_value="重置",test_type="hidden",
-div_class="control-label col-md-6",div_style="margin-left:75px",submit_id="",test_id="",reset_id="",
+div_class="control-label col-md-12",div_style="",submit_id="",test_id="",reset_id="",
 submit_type="submit",reset_type="reset",test_value="测试",test_style="visibility: hidden;") %}
-<div class="{{ div_class }}" style="{{ div_style }}">
-        <input type="{{ submit_type }}" class="btn btn-primary" style="" value="{{ submit_value }}" id="{{ submit_id }}">
-        <input type="{{ test_type }}" class="btn btn-primary" style="{{test_style}}" value={{test_value}} id={{ test_id }}>
-        <input type="{{ reset_type }}" class="btn btn-default" value="{{ reset_value }}" id="{{ reset_id }}">
+<div class="{{ div_class }}" style="text-align: center;{{ div_style }}">
+        <div style="margin:0 auto">
+            <input type="{{ submit_type }}" class="btn btn-primary" style="" value="{{ submit_value }}" id="{{ submit_id }}">
+            <input type="{{ test_type }}" class="btn btn-primary" style="{{test_style}}" value={{test_value}} id={{ test_id }}>
+            <input type="{{ reset_type }}" class="btn btn-default" value="{{ reset_value }}" id="{{ reset_id }}">
+        </div>
 </div>
 {% endmacro %}
 
 {% macro submit_test(submit_name="提交", submit_id="",test_type="submit",
-div_style="margin-left:108px") %}
-<div class="control-label col-md-6" style="{{ div_style }}" >
-    <input type="submit" class="btn btn-primary" value="{{ submit_name }}" id="{{ submit_id }}">
-    <input type="{{test_type}}" class="btn btn-primary" name="test" value="测试" id="update_testcase_test">
-    <input type="reset" class="btn btn-default" value="重置">
+div_style="") %}
+<div class="control-label col-md-12" style="text-align: center;{{ div_style }}" >
+<div style="margin:0 auto">
+<input type="submit" class="btn btn-primary" value="{{ submit_name }}" id="{{ submit_id }}">
+<input type="{{test_type}}" class="btn btn-primary" name="test" value="测试" id="update_testcase_test">
+<input type="reset" class="btn btn-default" value="重置">
+</div>
 </div>
 {% endmacro %}
 
