@@ -29,21 +29,21 @@ def create_app():
     return db
 
 
-def create_db():
+def return_app():
+    return app
+
+
+db = create_app()
+
+
+def _create_db():
     # sql = 'drop database if EXISTS flasktest'
     # ConnMysql(config.host, config.port, config.root, config.pwd, '', sql).operate_mysql()
     sql2 = 'create database IF NOT EXISTS %s' % config.db
     ConnMysql(config.host, config.port, config.root, config.pwd, '', sql2).operate_mysql()
 
 
-def return_app():
-    return app
-
-
-create_db()
-
-db = create_app()
-
+_create_db()
 
 manager = Manager(app)
 # 第一个参数是Flask的实例，第二个参数是Sqlalchemy数据库实例

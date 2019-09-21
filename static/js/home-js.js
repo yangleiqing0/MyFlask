@@ -18,7 +18,9 @@
             window.location.href = '{{ url_for("testcase_scene_blueprint.testcase_scene_delete")}}?testcase_scene_id=' + id + '&scene_page=' + scene_page
     }
 
+
 $(document).ready(function() {
+
     href = window.location.href.split('/')[3];
     var ths = window.localStorage.getItem(href + '_not_show_ths');
     if( ths != undefined) {
@@ -214,7 +216,18 @@ $(document).ready(function() {
 
     $('.alert').fadeOut(3000);
 
+
 });
 
 
+window.onbeforeunload=function(){
+    let layout = $('#layout');
+    let west = layout.layout('panel','west').css('display');
+    let east = layout.layout('panel','east').css('display');
+    let south = layout.layout('panel','south').css('display');
+    localStorage.setItem('west', west);
+    localStorage.setItem('east', east);
+    localStorage.setItem('south', south)
+
+};
 
