@@ -69,7 +69,7 @@
 {#            </nav>#}
 {#        </div>#}
     </div>
-    <div data-options="region:'south',title:'日志面板',split:true" style="height:100px;">
+    <div data-options="region:'south',title:'日志面板',split:true,collapsed:true" style="height:250px;">
         {% if session.get('username') %}
             <div class="panel panel-default col-lg-12" style="float: left;">
                 <div  id="front_logs" class="col-lg-3 logs" style="height: 200px"></div>
@@ -82,7 +82,7 @@
             {{ macro.flash_msg() }}
         </div>
     </div>
-    <div id="east" data-options="region:'east',title:'信息面板',split:true" style="width:250px;">
+    <div id="east" data-options="region:'east',title:'信息面板',split:true,collapsed:true" style="width:250px;">
         <div class="" id="request_body_show" style="height: 100%;display:block;word-break: break-all;word-wrap: break-word">
         </div>
     </div>
@@ -212,21 +212,32 @@
          //  获取左右下 east west south 是否是展开的
         let east = localStorage.getItem('east');
         let west = localStorage.getItem('west');
-        let south = localStorage.getItem('east');
+        let south = localStorage.getItem('south');
         let layout = $('#layout');
-        if(east){
-            if(east === 'none' && layout.layout('panel','east').css('display')==='block'){
-            layout.layout('collapse','east')
-            }
-        }
         if(west){
             if(west === 'none' && layout.layout('panel','west').css('display')==='block'){
             layout.layout('collapse','west')
             }
+            /*if(west === 'block' && layout.layout('panel','west').css('display')==='none'){
+            layout.layout('expand','west')
+            }*/
         }
+
+        if(east){
+            /*if(east === 'none' && layout.layout('panel','east').css('display')==='block'){
+            layout.layout('collapse','east')
+            }*/
+            if(east === 'block' && layout.layout('panel','east').css('display')==='none'){
+            layout.layout('expand','east')
+            }
+        }
+
         if(south){
-            if(south === 'none' && layout.layout('panel','south').css('display')==='block'){
+            /*if(south === 'none' && layout.layout('panel','south').css('display')==='block'){
             layout.layout('collapse','south')
+            }*/
+            if(south === 'block' && layout.layout('panel','south').css('display')==='none'){
+            layout.layout('expand','south')
             }
         }
         function auto_front_logs(){
