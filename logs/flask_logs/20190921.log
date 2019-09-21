@@ -1,0 +1,22 @@
+#coding=utf-8
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:19] "GET /login/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:19] "GET /static/img/log.png HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:19] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:19] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:20] "POST /login/ HTTP/1.1" 302 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:20] "GET /testcaselist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:21] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:21] "GET /static/img/log.png HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:21] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:26] "GET /variablelist/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:26] "GET /flasklogs/ HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:26] "GET /static/img/log.png HTTP/1.1" 200 -
+INFO _internal.py:122 127.0.0.1 - - [21/Sep/2019 17:51:26] "GET /frontlogs/ HTTP/1.1" 200 -
+INFO base.py:123 Running job "__clear_download_xlsx (trigger: cron[minute='*/5', second='0'], next run at: 2019-09-21 18:00:00 CST)" (scheduled at 2019-09-21 17:55:00+08:00)
+INFO base.py:144 Job "__clear_download_xlsx (trigger: cron[minute='*/5', second='0'], next run at: 2019-09-21 18:00:00 CST)" executed successfully
+INFO base.py:123 Running job "__clear_upload_xlsx (trigger: cron[minute='*/5', second='0'], next run at: 2019-09-21 18:00:00 CST)" (scheduled at 2019-09-21 17:55:00+08:00)
+INFO base.py:144 Job "__clear_upload_xlsx (trigger: cron[minute='*/5', second='0'], next run at: 2019-09-21 18:00:00 CST)" executed successfully
+INFO base.py:123 Running job "__clear_download_xlsx (trigger: cron[minute='*/5', second='0'], next run at: 2019-09-21 18:00:00 CST)" (scheduled at 2019-09-21 18:00:00+08:00)
+INFO base.py:123 Running job "__clear_upload_xlsx (trigger: cron[minute='*/5', second='0'], next run at: 2019-09-21 18:00:00 CST)" (scheduled at 2019-09-21 18:00:00+08:00)
+INFO base.py:144 Job "__clear_download_xlsx (trigger: cron[minute='*/5', second='0'], next run at: 2019-09-21 18:05:00 CST)" executed successfully
+INFO base.py:144 Job "__clear_upload_xlsx (trigger: cron[minute='*/5', second='0'], next run at: 2019-09-21 18:05:00 CST)" executed successfully

@@ -131,11 +131,7 @@ def login_required():
 class ClearData(MethodView):
 
     def get(self):
-        white_reports = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == '').all()
-        print('white_reports:', white_reports)
-        for report in white_reports:
-            report_delete(report.id)
-            print('report_delete:', report.id)
+        clear_report(is_job=False)
         return 'OK'
 
 
@@ -146,6 +142,22 @@ home_blueprint.add_url_rule('/db_create_all/', view_func=DbCreatAll.as_view('db_
 home_blueprint.add_url_rule('/frontlogs/', view_func=FrontLog.as_view('front_logs'))
 home_blueprint.add_url_rule('/flasklogs/', view_func=FlaskLog.as_view('flask_logs'))
 home_blueprint.add_url_rule('/clear_data/', view_func=ClearData.as_view('clear_data'))
+
+
+def clear_report(is_job=True):
+    if is_job:
+        with app.app_context():
+            white_reports = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == '').all()
+            print('white_reports:', white_reports)
+            for report in white_reports:
+                report_delete(report.id)
+                print('report_delete:', report.id)
+    else:
+        white_reports = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == '').all()
+        print('white_reports:', white_reports)
+        for report in white_reports:
+            report_delete(report.id)
+            print('report_delete:', report.id)
 
 
 @app.errorhandler(404)
@@ -193,9 +205,10 @@ def init_scheduler_job():
     for job in jobs:
         scheduler_job(job, scheduler)
     job_id = "__clear_download_xlsx"
+    scheduler.add_job(id='__clear_report', func=clear_report, trigger='cron', hour='*/12', minute='0', second='0')
     scheduler.add_job(id=job_id, func=clear_download_xlsx, trigger='cron', minute='*/5', second='0')
     scheduler.add_job(id="__clear_upload_xlsx", func=clear_download_xlsx, args=('upload', ), trigger='cron', minute='*/5', second='0')
-    print('scheduler_job:', scheduler.get_job(job_id))
+    print('scheduler_job:', scheduler.get_job(job_id),scheduler.get_job('__clear_report'))
 
 
 @app.before_first_request

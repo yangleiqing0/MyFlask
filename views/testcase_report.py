@@ -278,7 +278,8 @@ def report_delete(testcase_time_id):
                 db.session.commit()
             from logs.config import path
             filename = os.path.join(path, testcase_report.filename)
-            os.remove(filename)
+            if testcase_report.filename:
+                os.remove(filename)
         except FileNotFoundError:
             pass
         FrontLogs('删除测试报告 id: %s 成功' % testcase_time_id).add_to_front_log()
