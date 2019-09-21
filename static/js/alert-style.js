@@ -1,4 +1,4 @@
-#! coding=utf-8
+// #! coding=utf-8
 $(document).ready(function() {
     $.MsgBox = {
         Alert: function (title, msg) {
