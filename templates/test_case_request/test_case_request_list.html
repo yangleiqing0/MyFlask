@@ -74,6 +74,9 @@ function ajax_post(start,len, ids) {
             if(start< len){
                 ajax_post(start,len,ids)
             }
+            else {
+                $('#to_report').removeAttr("disabled")
+            }
         },
         complete: function () {
             $("#start_testcase").removeAttr("disabled");
@@ -84,6 +87,7 @@ function ajax_post(start,len, ids) {
 $(document).ready(function() {
 
     $("#start_testcase").click(function () {
+        $('#to_report').attr("disabled",'disabled');
         $.ajax({
                 url:{{ url_for('test_case_request_blueprint.test_case_time_get') }},
                 type:"GET",
@@ -106,8 +110,6 @@ $(document).ready(function() {
             let len = testcase_ids.length;
             ajax_post(0, len, testcase_ids)
         }
-
-        $('#to_report').removeAttr("disabled");
     });
     $("#to_report").click(function(){
         $.ajax({

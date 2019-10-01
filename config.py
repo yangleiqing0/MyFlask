@@ -17,6 +17,7 @@ SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_COMMIT_TEARDOWN = False
 
 # processes = 5
+threaded = True
 
 # 这个配置将来会被禁用,设置为True或者False可以解除警告信息,建议设置False
 

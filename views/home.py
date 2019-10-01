@@ -31,11 +31,10 @@ class DbCreatAll(MethodView):
 
 
 class Test(MethodView):
-    
-    def get(self):
 
+    def get(self):
         return render_template('test.html', error='哈哈')
-    
+
     def post(self):
         print(request.args)
         return request.form
@@ -81,7 +80,7 @@ class FlaskLog(MethodView):
     def get(self):
         with open(FLASK_LOGS_FILE) as logs:
             flask_logs = logs.readlines()
-            flask_logs = "<br/>".join(flask_logs[len(flask_logs)-9:])
+            flask_logs = "<br/>".join(flask_logs[len(flask_logs) - 9:])
         return json.dumps({"flask_logs": str(flask_logs)})
 
 
@@ -95,7 +94,7 @@ def to_read_last_row(file, row):
             """
             logs.seek(offset, 2)  # seek(offset, 2)表示文件指针：从文件末尾(2)开始向前50个字符(-50)
             front_logs = logs.readlines()  # 读取文件指针范围内所有行
-            if len(front_logs) >= row+1:  # 判断是否最后至少有两行，这样保证了最后一行是完整的
+            if len(front_logs) >= row + 1:  # 判断是否最后至少有两行，这样保证了最后一行是完整的
                 front_logs = front_logs[-row:]
                 for i in range(len(front_logs)):
                     front_logs[i] = front_logs[i].decode('gbk')
@@ -108,9 +107,8 @@ def to_read_last_row(file, row):
 app = return_app()
 
 
-@app.before_request    # 在请求达到视图前执行
+@app.before_request  # 在请求达到视图前执行
 def login_required():
-
     # print('username: ', session.get('username'), request.path, type(session.get('username')))
     if request.path == '/user_regist/':
         if session.get('username') != 'admin':
@@ -131,11 +129,7 @@ def login_required():
 class ClearData(MethodView):
 
     def get(self):
-        white_reports = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == '').all()
-        print('white_reports:', white_reports)
-        for report in white_reports:
-            report_delete(report.id)
-            print('report_delete:', report.id)
+        clear_report(is_job=False)
         return 'OK'
 
 
@@ -146,6 +140,22 @@ home_blueprint.add_url_rule('/db_create_all/', view_func=DbCreatAll.as_view('db_
 home_blueprint.add_url_rule('/frontlogs/', view_func=FrontLog.as_view('front_logs'))
 home_blueprint.add_url_rule('/flasklogs/', view_func=FlaskLog.as_view('flask_logs'))
 home_blueprint.add_url_rule('/clear_data/', view_func=ClearData.as_view('clear_data'))
+
+
+def clear_report(is_job=True):
+    if is_job:
+        with app.app_context():
+            white_reports = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == '').all()
+            print('white_reports:', white_reports)
+            for report in white_reports:
+                report_delete(report.id)
+                print('report_delete:', report.id)
+    else:
+        white_reports = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == '').all()
+        print('white_reports:', white_reports)
+        for report in white_reports:
+            report_delete(report.id)
+            print('report_delete:', report.id)
 
 
 @app.errorhandler(404)
@@ -180,7 +190,7 @@ def db_create_pre_all():
     to_insert_data()
     for user in User.query.all():
         to_insert_data(user.id)
-    
+
 
 @app.before_first_request
 def init_scheduler_job():
@@ -193,9 +203,11 @@ def init_scheduler_job():
     for job in jobs:
         scheduler_job(job, scheduler)
     job_id = "__clear_download_xlsx"
+    scheduler.add_job(id='__clear_report', func=clear_report, trigger='cron', hour='*/12', minute='0', second='0')
     scheduler.add_job(id=job_id, func=clear_download_xlsx, trigger='cron', minute='*/5', second='0')
-    scheduler.add_job(id="__clear_upload_xlsx", func=clear_download_xlsx, args=('upload', ), trigger='cron', minute='*/5', second='0')
-    print('scheduler_job:', scheduler.get_job(job_id))
+    scheduler.add_job(id="__clear_upload_xlsx", func=clear_download_xlsx, args=('upload',), trigger='cron',
+                      minute='*/5', second='0')
+    print('scheduler_job:', scheduler.get_job(job_id), scheduler.get_job('__clear_report'))
 
 
 @app.before_first_request
@@ -210,4 +222,3 @@ def init_flask_log():
                       'https://github.com/yangleiqing0/MyFlask.git\n', '遇到任何bug请直接联系我\n',
                       '接定制任务\n', '欢迎使用自动化测试平台\n', '欢迎使用自动化测试平台\n',
                       ])
-

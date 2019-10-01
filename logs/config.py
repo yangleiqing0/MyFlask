@@ -9,14 +9,23 @@
 import logging
 import os
 import config
-from common.connect_sql.connect_mysql import ConnMysql
+import datetime
+from logging.handlers import RotatingFileHandler
+timestr = str(datetime.datetime.now().strftime('%Y%m%d'))
+fn = "logs/flask_logs/{}.log".format(timestr)
+fh = RotatingFileHandler(fn, maxBytes=1, backupCount=50, encoding="utf-8")
+fh.namer = lambda x: "backup."+x.split(".")[-1]
 
-# sql = 'select value from variables where name="_Project_Path" and user_id=1'
 path = config.project_path
-FLASK_LOGS_FILE = os.path.join(path, 'logs/flask.log')
-FRONT_LOGS_FILE = os.path.join(path, 'logs/frontlogs.log')   # 输入到前端的日志路径
+FLASK_LOGS_FILE = os.path.join(path, fn)
+FRONT_LOGS_FILE = os.path.join(path, 'logs/front_logs/{}.log'.format(timestr))   # 输入到前端的日志路径
 # 设置日志的记录等级
-logging.basicConfig(level=logging.ERROR)  # 调试debug级
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s',
+                    datefmt='%a, %d %b %Y %H:%M:%S',
+                    filemode='w')   # 调试debug级
+# logging.INFO('fh.name')
+
 # 创建日志记录器，指明日志保存的路径、每个日志文件的最大大小、保存的日志文件个数上限
 file_log_handler = logging.FileHandler(FLASK_LOGS_FILE)
 # 创建日志记录的格式 日志等级 输入日志信息的文件名 行数 日志信息
