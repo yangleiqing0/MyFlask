@@ -11,14 +11,14 @@ class TestCaseResult(Base, db.Model):
     testcase_hope_result = db.Column(db.String(200))
 
     response_body = db.Column(db.TEXT)
-    testcase_test_result = db.Column(db.String(10))
+    testcase_test_result = db.Column(db.TEXT)
     testcase_id = db.Column(db.Integer, db.ForeignKey(TestCases.id))
     scene_id = db.Column(db.Integer)
     testcase_start_time_id = db.Column(db.Integer, db.ForeignKey(TestCaseStartTimes.id))
     old_sql_value = db.Column(db.TEXT)
     new_sql_value = db.Column(db.TEXT)
-    old_sql_value_result = db.Column(db.String(10))
-    new_sql_value_result = db.Column(db.String(10))
+    old_sql_value_result = db.Column(db.String(100))
+    new_sql_value_result = db.Column(db.String(100))
     result = db.Column(db.String(100))
 
     testcases = db.relationship('TestCases', backref='testcase_result')
