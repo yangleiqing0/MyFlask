@@ -41,7 +41,11 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                             for key in keys:
                                 if key:
                                     try:
-                                        regist_variable_value = regist_variable_value.get(key)
+                                        if ']' in key and '[' in key:
+                                            key, _index = key.split('[')
+                                            regist_variable_value = regist_variable_value.get(key)[int(_index[:-1])]
+                                        else:
+                                            regist_variable_value = regist_variable_value.get(key)
                                     except AttributeError as e:
                                         print(e)
                                         regist_variable_value = ''
