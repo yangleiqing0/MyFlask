@@ -80,7 +80,11 @@
                                         <a href="{{ url_for('testcase_blueprint.update_test_case',id=testcase.id) }}?testcase_scene_id={{ testcase_scene.id }}&scene_page={{ page }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
                                         <a href="{{ url_for('testcase_blueprint.delete_test_case',id=testcase.id) }}?testcase_scene_id={{ testcase_scene.id }}&scene_page={{ page }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>
                                         <button type="button" id="run_test_case_id_{{ testcase.id }}" class="btn btn-default btn-xs" title="执行测试用例"><i class="fa fa-play"></i></button>
-
+                                        {% if testcase.is_model ==0 %}
+                                            <a href="{{ url_for('testcase_blueprint.test_case_model',id=testcase.id, scene_page=page) }}" class="btn btn-default btn-xs" title="设置为用例模板"><i class="fa fa-file-text-o"></i></a>
+                                        {% else %}
+                                             <a href="{{ url_for('testcase_blueprint.test_case_model',id=testcase.id, scene_page=page) }}" class="btn btn-default btn-xs" title="取消设置为用例模板"><i class="fa fa-file-text"></i></a>
+                                        {% endif %}
                                     </div>
                                  </div>
                             </div>

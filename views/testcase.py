@@ -356,7 +356,7 @@ class ModelTestCase(MethodView):
 
     def get(self, id=-1):
         testcase = TestCases.query.get(id)
-        page = request.args.get('page')
+        page, scene_page = request_get_values('page', 'scene_page')
         if testcase.is_model == 0:
             testcase.is_model = 1
             flash('设置用例模板成功')
@@ -366,6 +366,8 @@ class ModelTestCase(MethodView):
             flash('取消用例模板成功')
             FrontLogs('取消设置测试用例 name: %s 为模板成功' % testcase.name).add_to_front_log()
         db.session.commit()
+        if scene_page:
+            return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
 

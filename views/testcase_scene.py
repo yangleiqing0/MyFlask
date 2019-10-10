@@ -68,7 +68,7 @@ class TestCaseSceneTestCaseList(MethodView):
         FrontLogs('进入测试场景列表 第%s页' % page).add_to_front_log()
 
         pagination = TestCaseScene.query.filter(TestCaseScene.name.like(
-                "%"+search+"%") if search is not None else "", TestCaseScene.user_id == user_id).order_by(TestCaseScene.timestamp.desc()).paginate(page, per_page=
+                "%"+search+"%") if search is not None else "", TestCaseScene.user_id == user_id).order_by(TestCaseScene.updated_time.desc()).paginate(page, per_page=
         next(get_page), error_out=False)
         # 返回一个内容对象
         testcase_scenes = pagination.items
