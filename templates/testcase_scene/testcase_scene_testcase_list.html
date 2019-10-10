@@ -79,6 +79,8 @@
                                         <a href="{{ url_for('testcase_blueprint.look_test_case',id=testcase.id) }}" class="btn btn-default btn-xs" title="查询测试用例"><i class="fa fa-search"></i></a>
                                         <a href="{{ url_for('testcase_blueprint.update_test_case',id=testcase.id) }}?testcase_scene_id={{ testcase_scene.id }}&scene_page={{ page }}" class="btn btn-default btn-xs" title="编辑测试用例"><i class="fa fa-pencil"></i></a>
                                         <a href="{{ url_for('testcase_blueprint.delete_test_case',id=testcase.id) }}?testcase_scene_id={{ testcase_scene.id }}&scene_page={{ page }}" class="btn btn-default btn-xs" title="删除测试用例"><i class="fa fa-trash"></i></a>
+                                        <button type="button" id="run_test_case_id_{{ testcase.id }}" class="btn btn-default btn-xs" title="执行测试用例"><i class="fa fa-play"></i></button>
+
                                     </div>
                                  </div>
                             </div>
@@ -120,6 +122,19 @@
                     $('#request_body_show').css('overflow','scroll').html(results)
                 }
             })
+        });
+        $('[id*="run_test_case_id_"]').click(function () {
+            let run_test_case_obj = $(this);
+            let run_testcase_id = run_test_case_obj.attr('id').replace('run_test_case_id_', '');
+            $.ajax({
+                url: '{{ url_for("testcase_blueprint.run_test_case")}}?testcase_id=' + run_testcase_id,
+                type: "POST",
+                success: function (response) {
+                    let result = JSON.parse(response)['testcase_result'];
+                    $('#request_body_show').css('overflow', 'scroll').empty().html(result);
+                }
+            });
+            run_test_case_obj.removeAttr('disabled');
         });
     });
     </script>
