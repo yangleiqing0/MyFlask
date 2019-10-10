@@ -40,9 +40,19 @@
     position: absolute;
     top:50px;
     left: 45px;
-
-
     text-align: center;
     vertical-align: middle;
-;
+}
+.relative-position-big{
+    position: absolute;
+    top:50px;
+    left: 150px;
+    text-align: center;
+    vertical-align: middle;
+}
+.form-control{
+    font-size: 18px;
+}
+span,.tpl-left-nav-item .nav-link span, .tpl-left-nav-sub-menu a span,table,.table,a,button{
+    font-size: 16px;
 }

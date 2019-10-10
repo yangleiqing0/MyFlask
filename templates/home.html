@@ -693,8 +693,28 @@ $(document).ready(function() {
 
     $('.alert').fadeOut(3000);
 
-    back_img()
+    back_img();
     //  启动动态背景
+
+    $('#request_body_show').dblclick(function () {
+        if(this.innerHTML.length>5){
+            let con = this.innerHTML;
+            con = con.split('<br>');
+            if(con.length%2 !==0) return false;
+            let ajax_content = $('#ajax_content');
+            if($('#show_json').length===0) {
+                ajax_content.append('<textarea class="form-control" id="show_json" rows="20" style="white-space:nowrap; overflow:scroll;"></textarea>');
+            }
+            let show_json = $('#show_json');
+            show_json.html('');
+           for(let i=0;i<con.length; i++) {
+               if(i%2===1) {
+                   con[i] = JSON.stringify(eval('(' + con[i] + ')'), null, 4);
+               }
+               show_json.append(con[i]+'\n')
+           }
+        }
+    })
 
 });
 

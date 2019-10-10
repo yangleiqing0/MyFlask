@@ -518,13 +518,14 @@ def update_regist_variable(testcase_id, old_sql_regist_variable, new_sql_regist_
     testcase = TestCases.query.get(testcase_id)
     if testcase.old_sql_regist_variable and old_sql_regist_variable:
         if Variables.query.filter(Variables.name == testcase.old_sql_regist_variable,
-                               Variables.user_id == user_id).count >0 :
+                               Variables.user_id == user_id).count() >0 :
             Variables.query.filter(Variables.name == testcase.old_sql_regist_variable,
                                    Variables.user_id == user_id).first().name = old_sql_regist_variable
 
     if testcase.new_sql_regist_variable and new_sql_regist_variable:
+
         if Variables.query.filter(Variables.name == testcase.new_sql_regist_variable,
-                                  Variables.user_id == user_id).count > 0:
+                                  Variables.user_id == user_id).count() > 0:
             Variables.query.filter(Variables.name == testcase.new_sql_regist_variable,
                                    Variables.user_id == user_id).first().name = new_sql_regist_variable
     db.session.commit()
