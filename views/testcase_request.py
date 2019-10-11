@@ -101,8 +101,11 @@ class TestCaseRequestStart(MethodView):
             return response_body
 
 
-def post_testcase(test_case_id, testcase_time_id):
-    testcase = TestCases.query.get(test_case_id)
+def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_run=False):
+    if not testcase:
+        testcase = TestCases.query.get(test_case_id)
+    else:
+        is_run = True
     url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
     method = testcase.method
     if testcase.wait:
@@ -191,6 +194,8 @@ def post_testcase(test_case_id, testcase_time_id):
     # 测试结果实例化
     db.session.add(testcase_result)
     db.session.commit()
+    if is_run:
+        return response_body, regist_variable_value
 
     return response_body
 

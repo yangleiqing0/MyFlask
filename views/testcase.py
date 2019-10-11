@@ -13,6 +13,7 @@ from modles import TestCases, CaseGroup, User, Mysql, RequestHeaders, Variables,
 from common import WriterXlsx, get_now_time, read_xlsx, NullObject, RangName
 from config import ALLOWED_EXTENSIONS, TESTCASE_XLSX_PATH
 from views.testcase_scene import copy_case
+from views.testcase_request import post_testcase
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -57,7 +58,8 @@ class TestCaseLook(MethodView):
 class TestCaseRun(MethodView):
 
     def post(self):
-
+        sql_wait = Variables.query.filter(Variables.name == '_Sql_wait').first().value
+        print('sql_wait:', sql_wait)
         testcase_id, case_group_id, testcase_add_run, testcase_update_run \
             = request_get_values('testcase_id', 'case_group_id', 'testcase_add_run', 'testcase_update_run')
         testcase = TestCases.query.get(testcase_id)
@@ -74,7 +76,10 @@ class TestCaseRun(MethodView):
                 = request_get_values('name', 'url', 'data', 'method', 'request_headers', 'regist_variable', 'regular')
             testcase.testcase_request_header = RequestHeaders.query.get(request_headers_id)
         testcase_results = []
-        testcase_result, regist_variable_value = to_execute_testcase(testcase)
+        if sql_wait != "0":
+            testcase_result, regist_variable_value = post_testcase(testcase=testcase)
+        else:
+            testcase_result, regist_variable_value = to_execute_testcase(testcase)
         testcase_results.extend(['【%s】' % testcase.name, testcase_result, '【正则匹配的值】', regist_variable_value])
         testcase_results_html = '<br>'.join(testcase_results)
         FrontLogs('执行测试用例 name: %s ' % testcase.name).add_to_front_log()

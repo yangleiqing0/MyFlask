@@ -5,7 +5,8 @@ from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, jsonify, session, flash
 from common.request_get_more_values import request_get_values
 from common.execute_testcase import to_execute_testcase
-from modles import db, TestCases, TestCaseScene, User, Wait
+from views.testcase_request import post_testcase
+from modles import db, TestCases, TestCaseScene, User, Wait, Variables
 
 testcase_scene_blueprint = Blueprint('testcase_scene_blueprint', __name__)
 
@@ -81,6 +82,7 @@ class TestCaseSceneTestCaseList(MethodView):
 class TestCaseSceneRun(MethodView):
 
     def get(self):
+        sql_wait = Variables.query.filter(Variables.name == '_Sql_wait').first().value
         testcase_scene_id = request.args.get('testcase_scene_id')
         testcase_scene = TestCaseScene.query.get(testcase_scene_id)
         testcases = testcase_scene.testcases
@@ -88,7 +90,10 @@ class TestCaseSceneRun(MethodView):
             return json.dumps({'testcase_results': "场景未存在用例"})
         testcase_results = []
         for testcase in testcases:
-            testcase_result, regist_variable_value = to_execute_testcase(testcase)
+            if sql_wait != "0" :
+                testcase_result, regist_variable_value = post_testcase(testcase=testcase)
+            else:
+                testcase_result, regist_variable_value = to_execute_testcase(testcase)
             testcase_results.extend(['【%s】' % testcase.name, testcase_result])
         testcase_results_html = '<br>'.join(testcase_results)
         print('TestCaseSceneRun: ', json.dumps({'testcase_results': testcase_results_html}))
@@ -158,6 +163,7 @@ def copy_case(testcase, testcase_scene_id=None):
                     old_wait.new_wait_mysql, testcase_new.id)
         db.session.add(wait)
         db.session.commit()
+
 
 class TestCaseSceneCopy(MethodView):
 
