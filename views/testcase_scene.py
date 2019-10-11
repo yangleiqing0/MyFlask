@@ -106,6 +106,8 @@ class TestCaseSceneDelete(MethodView):
 
         if len(testcases) > 0:
             for testcase in testcases:
+                if testcase.wait:
+                    db.session.delete(testcase.wait[0])
                 db.session.delete(testcase)
                 FrontLogs('删除测试场景 id： %s  关联的测试用例名称 %s' % (testcase_scene_id, testcase.name)).add_to_front_log()
         db.session.delete(testcase_scene)
@@ -125,32 +127,37 @@ class TestCaseSceneTestCaseCopy(MethodView):
             return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
 
         testcase = TestCases.query.get(testcase_id)
-
-        timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
-        if len(testcase.name) > 30:
-            name = testcase.name[:21] + timestr
-        else:
-            name = testcase.name + timestr
-        testcase_new = TestCases(name, testcase.url, testcase.data, testcase.regist_variable,
-                       testcase.regular, testcase.method, testcase.group_id, testcase.request_headers_id,
-                       testcase_scene_id, testcase.hope_result, user_id=testcase.user_id, old_sql=testcase.old_sql,
-                                 new_sql=testcase.old_sql, old_sql_regist_variable=testcase.old_sql_regist_variable,
-                                 new_sql_regist_variable=testcase.new_sql_regist_variable, old_sql_hope_result=testcase.old_sql_hope_result,
-                                 new_sql_hope_result=testcase.new_sql_hope_result, old_sql_id=testcase.old_sql_id,
-                                 new_sql_id=testcase.new_sql_id)
-        db.session.add(testcase_new)
-        db.session.commit()
+        copy_case(testcase, testcase_scene_id)
         session['msg'] = '复制用例成功'
-        if Wait.query.filter(Wait.testcase_id == testcase.id).count() > 0:
-            old_wait = Wait.query.filter(Wait.testcase_id == testcase.id).first()
-            wait = Wait(old_wait.old_wait_sql, old_wait.old_wait, old_wait.old_wait_time, old_wait.old_wait_mysql,
-                        old_wait.new_wait_sql, old_wait.new_wait, old_wait.new_wait_time,
-                        old_wait.new_wait_mysql, testcase_new.id)
-            db.session.add(wait)
-            db.session.commit()
+
         FrontLogs('复制场景测试用例 name： %s 成功' % testcase.name).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
 
+
+def copy_case(testcase, testcase_scene_id=None):
+    timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
+    if len(testcase.name) > 30:
+        name = testcase.name[:21] + timestr
+    else:
+        name = testcase.name + timestr
+    testcase_new = TestCases(name, testcase.url, testcase.data, testcase.regist_variable,
+                             testcase.regular, testcase.method, testcase.group_id, testcase.request_headers_id,
+                             testcase_scene_id, testcase.hope_result, user_id=testcase.user_id,
+                             old_sql=testcase.old_sql,
+                             new_sql=testcase.old_sql, old_sql_regist_variable=testcase.old_sql_regist_variable,
+                             new_sql_regist_variable=testcase.new_sql_regist_variable,
+                             old_sql_hope_result=testcase.old_sql_hope_result,
+                             new_sql_hope_result=testcase.new_sql_hope_result, old_sql_id=testcase.old_sql_id,
+                             new_sql_id=testcase.new_sql_id)
+    db.session.add(testcase_new)
+    db.session.commit()
+    if Wait.query.filter(Wait.testcase_id == testcase.id).count() > 0:
+        old_wait = Wait.query.filter(Wait.testcase_id == testcase.id).first()
+        wait = Wait(old_wait.old_wait_sql, old_wait.old_wait, old_wait.old_wait_time, old_wait.old_wait_mysql,
+                    old_wait.new_wait_sql, old_wait.new_wait, old_wait.new_wait_time,
+                    old_wait.new_wait_mysql, testcase_new.id)
+        db.session.add(wait)
+        db.session.commit()
 
 class TestCaseSceneCopy(MethodView):
 
@@ -170,6 +177,9 @@ class TestCaseSceneCopy(MethodView):
         db.session.add(testcase_scene_copy)
         db.session.commit()
         session['msg'] = '复制场景成功'
+        if testcase_scene.testcases:
+            for testcase in testcase_scene.testcases:
+                copy_case(testcase, testcase_scene_copy.id)
         FrontLogs('复制测试场景 name： %s 成功' % testcase_scene.name).add_to_front_log()
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=scene_page))
 

@@ -12,6 +12,7 @@ from common.request_get_more_values import request_get_values
 from modles import TestCases, CaseGroup, User, Mysql, RequestHeaders, Variables, Wait
 from common import WriterXlsx, get_now_time, read_xlsx, NullObject, RangName
 from config import ALLOWED_EXTENSIONS, TESTCASE_XLSX_PATH
+from views.testcase_scene import copy_case
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -306,29 +307,9 @@ class TestCaseCopy(MethodView):
             flash('请配置用例模板')
             return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
-        timestr = str(datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
-        if len(testcase_self.name) > 30:
-            name = testcase_self.name[:31] + timestr
-        else:
-            name = testcase_self.name + timestr
-        testcase = TestCases(name, testcase_self.url, testcase_self.data, testcase_self.regist_variable,
-                                 testcase_self.regular, testcase_self.method, testcase_self.group_id,
-                                 testcase_self.request_headers_id, hope_result=testcase_self.hope_result,
-                                 user_id=testcase_self.user_id, old_sql=testcase_self.old_sql,
-                                 new_sql=testcase_self.old_sql, old_sql_regist_variable=testcase_self.old_sql_regist_variable,
-                                 new_sql_regist_variable=testcase_self.new_sql_regist_variable, old_sql_hope_result=testcase_self.old_sql_hope_result,
-                                 new_sql_hope_result=testcase_self.new_sql_hope_result, old_sql_id=testcase_self.old_sql_id,
-                                 new_sql_id=testcase_self.new_sql_id)
-        db.session.add(testcase)
-        db.session.commit()
+        copy_case(testcase_self)
+
         session['msg'] = '复制用例成功'
-        if Wait.query.filter(Wait.testcase_id == testcase_id).count() > 0:
-            old_wait = Wait.query.filter(Wait.testcase_id == testcase_id).first()
-            wait = Wait(old_wait.old_wait_sql, old_wait.old_wait, old_wait.old_wait_time, old_wait.old_wait_mysql,
-                        old_wait.new_wait_sql, old_wait.new_wait, old_wait.new_wait_time,
-                        old_wait.new_wait_mysql, testcase.id)
-            db.session.add(wait)
-            db.session.commit()
         FrontLogs('复制测试用例 name: %s 为模板成功' % testcase_self.name).add_to_front_log()
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
