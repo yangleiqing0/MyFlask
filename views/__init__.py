@@ -1,6 +1,7 @@
 import json
 import os
 import datetime
+from .com import update, add, resolve, add_operate, update_operate, edit
 from .testcase import testcase_blueprint
 from .home import home_blueprint
 from .case_group import case_group_blueprint
@@ -16,6 +17,7 @@ from .job import job_blueprint
 from .emai import mail_blueprint
 from .mysql import mysql_blueprint
 from .project_group import project_group_blueprint
+
 
 view_list = []
 [view_list.append(eval(dr)) if '_blueprint' in dr else "" for dr in dir()]

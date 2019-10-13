@@ -14,6 +14,7 @@ from common import WriterXlsx, get_now_time, read_xlsx, NullObject, RangName
 from config import ALLOWED_EXTENSIONS, TESTCASE_XLSX_PATH
 from views.testcase_scene import copy_case
 from views.testcase_request import post_testcase
+from . import update
 
 testcase_blueprint = Blueprint('testcase_blueprint', __name__)
 
@@ -106,7 +107,7 @@ class TestCastList(MethodView):
             "%" + search + "%") if search is not None else "",
                                             TestCases.testcase_scene_id.is_(None),
                                             TestCases.user_id == user_id).order_by \
-            (TestCases.timestamp.desc()).paginate(
+            (TestCases.updated_time.desc(), TestCases.id.desc()).paginate(
             page, per_page=next(get_page), error_out=False)
         # 返回一个内容对象
         testcaseses = pagination.items
@@ -284,16 +285,10 @@ class UpdateTestCase(MethodView):
         if not new_sql_id:
             new_sql_id = None
         update_regist_variable(id, old_sql_regist_variable, new_sql_regist_variable, user_id)
-        update_test_case_sql = 'update testcases set name=%s,url=%s,data=%s,method=%s,group_id=%s,' \
-                               'request_headers_id=%s,regist_variable=%s,regular=%s,hope_result=%s,' \
-                               'old_sql=%s,new_sql=%s,old_sql_regist_variable=%s,new_sql_regist_variable=%s,' \
-                               'old_sql_hope_result=%s, new_sql_hope_result=%s, old_sql_id=%s, ' \
-                               'new_sql_id=%s where id=%s'
-        cdb().opeat_db(update_test_case_sql, (name, url, data, method, group_id,
-                                              request_headers_id, regist_variable, regular, hope_result, old_sql,
-                                              new_sql, old_sql_regist_variable, new_sql_regist_variable,
-                                               old_sql_hope_result, new_sql_hope_result, old_sql_id, new_sql_id, id))
-
+        update(testcase, 'name', 'url', 'data', 'method', 'group_id',
+                                              'request_headers_id', 'regist_variable', 'regular', 'hope_result', 'old_sql',
+                                              'new_sql', 'old_sql_regist_variable', 'new_sql_regist_variable',
+                                               'old_sql_hope_result', 'new_sql_hope_result', 'old_sql_id', 'new_sql_id')
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
         # app.logger.info('message:update testcases success, name: %s' % name)
         print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id, len(testcase_scene_id))

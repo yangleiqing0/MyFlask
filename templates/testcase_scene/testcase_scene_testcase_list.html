@@ -22,7 +22,7 @@
                             {% endfor %}
                         </select>
                         <a id="testcase_scene_add" class="btn btn-default" title="复制场景 " style="height: 34px"><i class="fa fa-copy" style="zoom:1.7"></i></a>
-                        <a  href="{{ url_for('testcase_scene_blueprint.testcase_scene_add') }}?page={{ page }}" title="添加测试场景"><button class="btn btn-default" style="color: black">添加</button></a>
+                        <a  href="{{ url_for('testcase_scene_blueprint.testcase_scene_update') }}?page={{ page }}" title="添加测试场景"><button class="btn btn-default" style="color: black">添加</button></a>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                         </div>
                         <div class="col-md-4 has_no_padding" style="float: left">
                             <div class="badge badge-primary" style="background-color: #337ab7;">{{ testcase_scene.testcases.__len__() }}</div>
-                            <a href='{{ url_for("testcase_scene_blueprint.testcase_scene_update")}}?testcase_scene_id={{ testcase_scene.id }}&page={{ page }}' class="btn btn-default btn-xs" title="编辑场景"><i class="fa fa-pencil"></i></a>
+                            <a href='{{ url_for("testcase_scene_blueprint.testcase_scene_update")}}?id={{ testcase_scene.id }}&page={{ page }}' class="btn btn-default btn-xs" title="编辑场景"><i class="fa fa-pencil"></i></a>
                             <a id="testcase_scene_run_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="执行场景"><i class="fa fa-play"></i></a>
                             <a id="testcase_scene_delete_{{ testcase_scene.id }}" class="btn btn-default btn-xs" title="删除场景"><i class="fa fa-trash"></i></a>
                             {% if testcase_scene.is_model ==0 or testcase_scene.is_model == None %}

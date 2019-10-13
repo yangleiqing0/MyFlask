@@ -7,29 +7,9 @@ from common.request_get_more_values import request_get_values
 from common.execute_testcase import to_execute_testcase
 from views.testcase_request import post_testcase
 from modles import db, TestCases, TestCaseScene, User, Wait, Variables
+from . import edit
 
 testcase_scene_blueprint = Blueprint('testcase_scene_blueprint', __name__)
-
-
-class TestCaseSceneAdd(MethodView):
-
-    def get(self):
-        user_id = session.get('user_id')
-        user = User.query.get(user_id)
-        page= request_get_values('page')
-        case_groups = user.user_case_groups
-        FrontLogs('进入测试场景添加页面').add_to_front_log()
-        return render_template('testcase_scene/testcase_scene_add.html', case_groups=case_groups, page=page)
-
-    def post(self):
-        user_id = session.get('user_id')
-        page, name, group_id, description = request_get_values('page', 'name', 'case_group', 'description')
-        testcase_scene = TestCaseScene(name, group_id, description, user_id=user_id)
-        db.session.add(testcase_scene)
-        db.session.commit()
-        session['msg'] = '添加成功'
-        FrontLogs('添加测试场景 name： %s 成功' % testcase_scene.name).add_to_front_log()
-        return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=page))
 
 
 class TestCaseSceneUpdate(MethodView):
@@ -40,21 +20,17 @@ class TestCaseSceneUpdate(MethodView):
         page= request_get_values('page')
         print('TestCaseSceneUpdate page: ', page)
         case_groups = user.user_case_groups
-        testcase_scene_id = request.args.get('testcase_scene_id')
-        testcase_scene = TestCaseScene.query.get(testcase_scene_id)
-        FrontLogs('进入编辑测试场景 name： %s 页面' % testcase_scene.name).add_to_front_log()
-        return render_template('testcase_scene/testcase_scene_update.html', testcase_scene=testcase_scene,
-                               case_groups=case_groups, page=page)
+        testcase_scene_id = request.args.get('id')
+        if testcase_scene_id:
+            testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+            FrontLogs('进入编辑测试场景 name： %s 页面' % testcase_scene.name).add_to_front_log()
+            return render_template('testcase_scene/scene_edit.html', testcase_scene=testcase_scene,
+                                   case_groups=case_groups, page=page)
+        FrontLogs('进入测试场景添加页面').add_to_front_log()
+        return render_template('testcase_scene/scene_edit.html', case_groups=case_groups, page=page)
 
     def post(self):
-        page= request_get_values('page')
-        testcase_scene_id = request.args.get('testcase_scene_id')
-        testcase_scene = TestCaseScene.query.get(testcase_scene_id)
-        testcase_scene.name, testcase_scene.group_id, testcase_scene.description = request_get_values('name', 'case_group', 'description')
-
-        db.session.commit()
-        FrontLogs('编辑测试场景 name： %s 成功' % testcase_scene.name).add_to_front_log()
-        return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=page))
+        return edit(TestCaseScene, '测试场景', 'testcase_scene_blueprint', 'testcase_scene_testcase_list')
 
 
 class TestCaseSceneTestCaseList(MethodView):
@@ -69,11 +45,12 @@ class TestCaseSceneTestCaseList(MethodView):
         FrontLogs('进入测试场景列表 第%s页' % page).add_to_front_log()
 
         pagination = TestCaseScene.query.filter(TestCaseScene.name.like(
-                "%"+search+"%") if search is not None else "", TestCaseScene.user_id == user_id).order_by(TestCaseScene.updated_time.desc()).paginate(page, per_page=
+                "%"+search+"%") if search is not None else "", TestCaseScene.user_id == user_id).order_by(
+            TestCaseScene.updated_time.desc(), TestCaseScene.id.desc()).paginate(page, per_page=
         next(get_page), error_out=False)
         # 返回一个内容对象
         testcase_scenes = pagination.items
-        print("request_headers_pagination: ", pagination)
+        print("request_headers_pagination: ", testcase_scenes)
         return render_template('testcase_scene/testcase_scene_testcase_list.html', testcase_scenes=testcase_scenes,
                                model_testcases=model_testcases, pagination=pagination,
                                model_testcase_scenes=model_testcase_scenes, page=page, search=search)
@@ -225,16 +202,21 @@ class TestCaseSceneUpdateValidate(MethodView):
         user_id = session.get('user_id')
         name = request.args.get('name')
         testcase_scene_id = request.args.get('testcase_scene_id')
-        print('TestCaseSceneUpdateValidate:', name, testcase_scene_id)
-        testcase_scene = TestCaseScene.query.filter(
-            TestCaseScene.id != testcase_scene_id, TestCaseScene.name == name, TestCaseScene.user_id == user_id).count()
+        if testcase_scene_id:
+            print('TestCaseSceneUpdateValidate:', name, testcase_scene_id)
+            testcase_scene = TestCaseScene.query.filter(
+                TestCaseScene.id != testcase_scene_id, TestCaseScene.name == name, TestCaseScene.user_id == user_id).count()
+            if testcase_scene != 0:
+                return jsonify(False)
+            else:
+                return jsonify(True)
+        testcase_scene = TestCaseScene.query.filter(TestCaseScene.name == name, TestCaseScene.user_id == user_id).count()
         if testcase_scene != 0:
             return jsonify(False)
         else:
             return jsonify(True)
 
 
-testcase_scene_blueprint.add_url_rule('/testcase_scene_add/', view_func=TestCaseSceneAdd.as_view('testcase_scene_add'))
 testcase_scene_blueprint.add_url_rule('/testcase_scene_update/', view_func=TestCaseSceneUpdate.as_view('testcase_scene_update'))
 testcase_scene_blueprint.add_url_rule('/testcase_scene_copy_scene/', view_func=TestCaseSceneCopy.as_view('testcase_scene_copy_scene'))
 testcase_scene_blueprint.add_url_rule('/testcase_scene_model/<testcase_scene_id>/', view_func=TestCaseSceneModel.as_view('testcase_scene_model'))

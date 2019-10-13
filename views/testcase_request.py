@@ -1,6 +1,7 @@
 # encoding=utf-8
 import json
 import time
+import operator
 from _datetime import datetime
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, session, current_app
@@ -30,7 +31,8 @@ class TestCaseRequest(MethodView):
             case_group_NullObject.name = case_group.name
             testcase_list = []
             testcases = TestCases.query.join(CaseGroup, CaseGroup.id == TestCases.group_id).filter(
-                TestCases.testcase_scene_id.is_(None), TestCases.group_id == case_group.id, TestCases.user_id == user_id).all()
+                TestCases.testcase_scene_id.is_(None), TestCases.group_id == case_group.id, TestCases.user_id == user_id
+            ).order_by(TestCases.updated_time.desc(), TestCases.id.desc()).all()
             print(' %s testcases_:' % case_group, testcases)
             for testcase in testcases:
                 testcase_NullObject = NullObject()
@@ -40,7 +42,8 @@ class TestCaseRequest(MethodView):
                 testcase_list.append(testcase_NullObject)
             try:
                 case_group_scene = TestCaseScene.query.join(CaseGroup, CaseGroup.id == TestCaseScene.group_id).filter(
-                    TestCaseScene.user_id == user_id, CaseGroup.name == case_group.name).all()
+                    TestCaseScene.user_id == user_id, CaseGroup.name == case_group.name).order_by(
+                    TestCaseScene.updated_time.desc(), TestCaseScene.id.desc()).all()
                 for testcase_scene in case_group_scene:
                     testcase_scene_NullObject = NullObject()
                     testcase_scene_NullObject.id = testcase_scene.id
@@ -72,9 +75,15 @@ class TestCaseRequest(MethodView):
         print('testcase_list post: ', testcase_list,  scene_case_list)
 
         testcase_scene_ids = request.form.getlist('testcase_scene')
-
+        scene_list = []
         for testcase_scene_id in testcase_scene_ids:
             testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+        #     scene_list.append(_testcase_scene)
+        #
+        # cmpfun = operator.attrgetter('updated_time')
+        # scene_list.sort(key=cmpfun, reverse=True)
+        # print('scene_list', scene_list)
+        # for testcase_scene in scene_list:
             testcases = testcase_scene.testcases
             case_list = []
             for testcase in testcases:
@@ -83,7 +92,7 @@ class TestCaseRequest(MethodView):
                 case_list.append(testcase.id)
                 testcase_ids.append(testcase.id)
             scene_case_list.append(case_list)
-        print("request_testcase_ids_list: ", testcase_list, scene_case_list, testcase_ids)
+        print("request_testcase_ids_list: ", scene_list)
 
         return render_template('test_case_request/test_case_request_list.html', items=testcase_list,
                                scene_case_list=scene_case_list, testcase_ids=testcase_ids)
