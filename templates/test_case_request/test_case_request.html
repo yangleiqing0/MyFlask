@@ -28,17 +28,23 @@
                                  {% for testcase in case_group.testcase_list %}
                                          {% if testcase.is_testcase_scene == 0 %}
                                              <div class="form-group col-md-4">
-                                              <div>
-                                                  <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal;text-align: left"><div class="badge badge-pill badge-success">【用例】</div>{{ testcase.name }}</label>
-                                              </div>
-                                              <input  type="checkbox" id="{{ testcase.id }}" value="{{ testcase.id }}" name="testcase" style="zoom:1.5;width: 20px" >
+                                                  <div class="col-md-10">
+                                                      <label for="{{ testcase.id }}"  class="dots control-label" style="max-width: 250px;font-weight: normal;text-align: left"><div class="badge badge-pill badge-success">【用例】</div>{{ testcase.name }}</label>
+                                                  </div>
+                                                 <div class="col-md-2 has_no_padding">
+                                                     <input  type="checkbox" id="{{ testcase.id }}" value="{{ testcase.id }}" name="testcase" style="zoom:1.5;width: 20px" >
+                                                     <a title="提升用例排序名次" class="up" href="{{ url_for('testcase_blueprint.case_up') }}?id={{ testcase.id }}" style="" ><i class="fa-arrow-up am-icon-fw"></i></a>
+                                                 </div>
                                              </div>
                                          {% else %}
                                              <div class="form-group col-md-4">
-                                             <div>
-                                              <label for="testcase_scene{{ testcase.id }}"  class="dots control-label col-md-8" style="max-width: 280px;font-weight: normal;text-align: left"><div class="badge badge-pill badge-primary" style="background-color: #337ab7">【场景】</div>{{ testcase.name }}</label>
-                                              </div>
-                                              <input  type="checkbox" id="testcase_scene{{ testcase.id }}" value="{{ testcase.id }}" name="testcase_scene" style="zoom:1.5;width: 20px" >
+                                                 <div class="col-md-10">
+                                                    <label for="testcase_scene{{ testcase.id }}"  class="dots control-label" style="max-width: 250px;font-weight: normal;text-align: left"><div class="badge badge-pill badge-primary" style="background-color: #337ab7">【场景】</div>{{ testcase.name }}</label>
+                                                 </div>
+                                                 <div class="col-md-2 has_no_padding">
+                                                     <input  type="checkbox" id="testcase_scene{{ testcase.id }}" value="{{ testcase.id }}" name="testcase_scene" style="zoom:1.5;width: 20px" >
+                                                     <a  title="提升场景排序名次" class="up" href="{{ url_for('testcase_scene_blueprint.scene_up') }}?id={{ testcase.id }}" style="" ><i class="fa-arrow-up am-icon-fw"></i></a>
+                                                 </div>
                                              </div>
                                          {% endif %}
                                  {% endfor %}
@@ -51,6 +57,7 @@
         div_class="control-label col-md-7",test_style="",test_value="全选",test_id="all_checkboxes",
                 div_style="") }}
         <div class="control-label col-md-5">
+            <input  type="button" class="btn btn-primary" value="全部展开" id="all_open">
             <input  type="button" class="btn btn-primary" value="添加为任务" id="job_add">
         </div>
         </form>
@@ -58,9 +65,69 @@
 {% endblock %}
 {% block js %}
     <script>
-
     isnotCheckboxes=true;
+    isnotAllopen = true;
     $(document).ready(function () {
+        let groups = localStorage.getItem('open');
+        console.log(groups)
+        if(groups !== null && groups){
+            groups = JSON.parse(groups);
+            for(let i=0;i<groups.length;i++){
+                $(groups[i]).addClass('in')
+            }
+        }
+        $('#all_open').click(function () {
+            let groups = $('div[id*="case_group_"]');
+            let store_groups = [];
+            if(isnotAllopen){
+                $('#all_open').attr('value','取消展开').attr('class','btn btn-success');
+                for(let i=0;i<groups.length;i++){
+                    let classVal = groups[i].getAttribute('class');
+                    store_groups.push('#' + groups[i].getAttribute('id'));
+                    if(classVal.indexOf(' in') === -1){
+                        groups[i].setAttribute("class",classVal.concat(" in"))
+                    }
+                }
+                localStorage.setItem('open', JSON.stringify(store_groups));
+                isnotAllopen=false
+            }else{
+                $('#all_open').attr('value','全部展开').attr('class','btn btn-primary');
+                for(let i=0;i<groups.length;i++){
+                    if(groups[i].getAttribute('class').indexOf('_in') === -1){
+                        groups[i].classList.remove('in')
+                    }
+                }
+                localStorage.setItem('open', JSON.stringify([]));
+                isnotAllopen=true
+            }
+        });
+
+        $('form').on('click', 'div[href*="case_group"]', function (event) {
+            let group = event.currentTarget.getAttribute('href');
+            let classname = $(group).attr('class');
+            let groups = localStorage.getItem('open');
+            console.log('dw', groups, group)
+            if (classname.indexOf(' in') === -1){
+                if (groups !== null && groups) {
+                    groups = JSON.parse(groups);
+                    if(groups.indexOf(group) === -1){
+                        groups.push(group);
+                        localStorage.setItem('open', JSON.stringify(groups))
+                    }
+                }else{
+                    groups = [];
+                    groups.push(group);
+                    localStorage.setItem('open', JSON.stringify(groups))
+                }
+            }else{
+                groups = JSON.parse(groups);
+                if(groups.indexOf(group) !== -1){
+                    groups.splice(groups.indexOf(group), 1);
+                    localStorage.setItem('open', JSON.stringify(groups))
+                }
+            }
+
+        });
         $('.all_checkbox').click(function () {
             let case_group_checkboxes_value = $(this).val().replace('_all','');
             if ($(this).is(':checked')){
@@ -81,15 +148,18 @@
             }
         });
         $('#all_checkboxes').click(function () {
-            $('input:checkbox').each(function () {
-                $(this).click();
-            });
             if (isnotCheckboxes){
                 isnotCheckboxes=false;
-                $('#all_checkboxes').attr('value','已全选').attr('class','btn btn-success')
+                $('#all_checkboxes').attr('value','取消全选').attr('class','btn btn-success');
+                $('input[name*="testcase"]:not(:checked)').each(function () {
+                $(this).click();
+            });
             }else {
                 $('#all_checkboxes').attr('value','全选').attr('class','btn btn-default');
                 isnotCheckboxes=true;
+                $('input[name*="testcase"]:checked').each(function () {
+                    $(this).click();
+                })
             }
 
         });

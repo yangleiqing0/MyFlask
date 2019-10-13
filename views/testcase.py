@@ -405,6 +405,15 @@ class TestCaseUpload(MethodView):
         return redirect(url_for('testcase_blueprint.test_case_list', page=page))
 
 
+class CaseUp(MethodView):
+    def get(self):
+        _id= request_get_values('id')
+        case = TestCases.query.get(_id)
+        case.updated_time = datetime.datetime.now()
+        db.session.commit()
+        return redirect(url_for('test_case_request_blueprint.test_case_request'))
+
+
 class TestCaseValidata(MethodView):
 
     def get(self):
@@ -477,6 +486,7 @@ testcase_blueprint.add_url_rule('/copy_test_case/', view_func=TestCaseCopy.as_vi
 testcase_blueprint.add_url_rule('/test_case_urls/', view_func=TestCaseUrls.as_view('test_case_urls'))
 testcase_blueprint.add_url_rule('/test_case_download/', view_func=TestCaseDownload.as_view('test_case_download'))
 testcase_blueprint.add_url_rule('/test_case_upload/', view_func=TestCaseUpload.as_view('test_case_upload'))
+testcase_blueprint.add_url_rule('/case_up/', view_func=CaseUp.as_view('case_up'))
 
 testcase_blueprint.add_url_rule('/testcasevalidate/', view_func=TestCaseValidata.as_view('testcase_validate'))
 testcase_blueprint.add_url_rule('/regular_validate/', view_func=RegularValidata.as_view('regular_validate'))

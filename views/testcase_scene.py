@@ -184,6 +184,15 @@ class TestCaseSceneModel(MethodView):
         return redirect(url_for('testcase_scene_blueprint.testcase_scene_testcase_list', page=page))
 
 
+class SceneUp(MethodView):
+    def get(self):
+        _id = request_get_values('id')
+        scene = TestCaseScene.query.get(_id)
+        scene.updated_time = datetime.datetime.now()
+        db.session.commit()
+        return redirect(url_for('test_case_request_blueprint.test_case_request'))
+
+
 class TestCaseSceneAddValidate(MethodView):
 
     def get(self):
@@ -226,6 +235,8 @@ testcase_scene_blueprint.add_url_rule('/testcase_scene_copy/', view_func=TestCas
 testcase_scene_blueprint.add_url_rule('/testcase_scene_testcase_list/', view_func=TestCaseSceneTestCaseList.as_view('testcase_scene_testcase_list'))
 testcase_scene_blueprint.add_url_rule('/testcase_scene_delete/', view_func=TestCaseSceneDelete.as_view('testcase_scene_delete'))
 testcase_scene_blueprint.add_url_rule('/testcase_scene_run/', view_func=TestCaseSceneRun.as_view('testcase_scene_run'))
+testcase_scene_blueprint.add_url_rule('/scene_up/', view_func=SceneUp.as_view('scene_up'))
+
 
 testcase_scene_blueprint.add_url_rule('/testcase_scene_add_validate/', view_func=TestCaseSceneAddValidate.as_view('testcase_scene_add_validate'))
 testcase_scene_blueprint.add_url_rule('/testcase_scene_update_validate/', view_func=TestCaseSceneUpdateValidate.as_view('testcase_scene_update_validate'))

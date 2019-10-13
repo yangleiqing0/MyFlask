@@ -56,3 +56,7 @@
 span,.tpl-left-nav-item .nav-link span, .tpl-left-nav-sub-menu a span,table,.table,a,button{
     font-size: 16px;
 }
+.up{
+    position: relative;
+    top:-4px
+}
