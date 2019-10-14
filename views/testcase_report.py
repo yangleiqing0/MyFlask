@@ -1,3 +1,4 @@
+#! encoding=utf-8
 import os
 import re
 from flask.views import MethodView
@@ -64,11 +65,11 @@ class EnvMessage:
 class Test:
 
     def __init__(self, testcase_result):
-        print('Test :', testcase_result)
+        # print('Test :', testcase_result)
 
         self.t_name, self.url, self.request_body, self.hope = AnalysisParams().\
             analysis_more_params(testcase_result[0], testcase_result[1], testcase_result[3], testcase_result[5])
-        print('self.t_name: ', self.t_name)
+        # print('self.t_name: ', self.t_name)
 
         self.method, self.response_body, self.old_database_value, self.new_database_value, self.result, \
         self.old_sql_value_result, self.new_sql_value_result, self.test_result  \
@@ -85,7 +86,7 @@ class Testcaseresult:
 
     def __init__(self, testcase_time_id, result="testcases"):
         self.testcase_time = TestCaseStartTimes.query.get(testcase_time_id)
-        print('testcase_time_id: ', testcase_time_id, self.testcase_time)
+        # print('testcase_time_id: ', testcase_time_id, self.testcase_time)
 
         if result == 'testcases':
             testcase_results_query_sql = 'select test_case_result.testcase_name,test_case_result.testcase_url,' \
@@ -99,7 +100,7 @@ class Testcaseresult:
                                          'test_case_result.testcase_start_time_id=%s' \
                                          % testcase_time_id
             self.testcase_results = cdb().query_db(testcase_results_query_sql)
-            print('self.testcase_results:', self.testcase_results)
+            # print('self.testcase_results:', self.testcase_results)
 
         elif result == 'scene_testcases':
             testcase_results_query_sql = 'select test_case_result.testcase_name,test_case_result.testcase_url,' \
@@ -116,7 +117,7 @@ class Testcaseresult:
                                          % testcase_time_id
             self.testcase_results = cdb().query_db(testcase_results_query_sql)
 
-            print('self.testcase_results:', self.testcase_results)
+            # print('self.testcase_results:', self.testcase_results)
 
 
 class TestCaseReport(MethodView):
@@ -126,7 +127,7 @@ class TestCaseReport(MethodView):
         testcase_results = Testcaseresult(testcase_time_id).testcase_results
         items = []
         for testcase_result in testcase_results:
-            print('testcase_result:', testcase_result)
+            # print('testcase_result:', testcase_result)
             items.append(Test(testcase_result))
         allocation = TimeMessage.query.filter(TimeMessage.time_id == testcase_time_id).first()
         testcase_scene_list = TestCaseSceneResult.query.filter(TestCaseSceneResult.time_id == testcase_time_id).all()

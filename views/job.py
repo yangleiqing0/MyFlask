@@ -23,11 +23,11 @@ class JobAdd(MethodView):
     def post(self):
         user_id =session.get('user_id')
         testcases, testcase_scenes, description = request_get_values('testcases', 'testcase_scenes', 'description')
-        print('JobAdd: ', testcases, type(testcases), eval(testcases), type(eval(testcases)), testcase_scenes)
+        print('JobAdd: ', testcases, testcase_scenes)
         job = Job(testcases, testcase_scenes, description, user_id)
         db.session.add(job)
         db.session.commit()
-        FrontLogs('添加任务 name 成功: %s ' % job.name).add_to_front_log()
+        FrontLogs('添加任务 name: %s 成功 ' % job.name).add_to_front_log()
         # app.logger.info('message:insert into SchedulerJobs success, name: %s' % name)
         return json.dumps({"job_id": str(job.id)})
 
@@ -211,8 +211,11 @@ def print_job_name(job):
 
 def auto_send_mail(job, mail):
     user_id = job.user_id
-    testcases_ids = eval(job.testcases)
-    testcase_scenes_ids = eval(job.testcase_scenes)
+    testcases_ids = testcase_scenes_ids = []
+    if job.testcases:
+        testcases_ids = eval(job.testcases)
+    if job.testcase_scenes:
+        testcase_scenes_ids = eval(job.testcase_scenes)
     testcase_time_id = get_testcase_time_id(user_id)
     post_request(testcases_ids, testcase_scenes_ids, testcase_time_id)
     get_report(testcase_time_id)
@@ -242,12 +245,14 @@ def get_testcase_time_id(user_id):
 
 
 def post_request(testcases_ids, testcase_scenes_ids, testcase_time_id):
-    for testcase_id in testcases_ids:
-        post_testcase(testcase_id, testcase_time_id)
-    for testcase_scene_id in testcase_scenes_ids:
-        testcase_scene = TestCaseScene.query.get(testcase_scene_id)
-        for testcase_scene_testcase in testcase_scene.testcases:
-            post_testcase(testcase_scene_testcase.id, testcase_time_id)
+    if testcases_ids:
+        for testcase_id in testcases_ids:
+            post_testcase(testcase_id, testcase_time_id)
+    if testcase_scenes_ids:
+        for testcase_scene_id in testcase_scenes_ids:
+            testcase_scene = TestCaseScene.query.get(testcase_scene_id)
+            for testcase_scene_testcase in testcase_scene.testcases:
+                post_testcase(testcase_scene_testcase.id, testcase_time_id)
 
 
 def init_scheduler():

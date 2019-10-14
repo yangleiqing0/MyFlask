@@ -186,7 +186,7 @@ class Report:
         wos.insert_chart('A9', chart1, {'x_offset': 25, 'y_offset': 10})
 
     def test_detail(self, data, tmp, row, testcase_scene_count_dict, testcase_time_id):
-        print('data:', data)
+        # print('data:', data)
         # 设置列行的宽高
         self.worksheet2.set_column("A:A", 16)
         self.worksheet2.set_column("B:B", 16)
@@ -222,7 +222,7 @@ class Report:
         self.write_center(self.worksheet2, "M2", '现值验证', self.workbook)
         self.write_center(self.worksheet2, "N2", '测试结果', self.workbook)
         self.write_center(self.worksheet2, "O2", '场景归属', self.workbook)
-        self.write_center(self.worksheet2, "P2", '场景结果', self.workbook)
+        self.write_center(self.worksheet2, "P2", '最终结果', self.workbook)
 
         temp = tmp+2
 
@@ -248,7 +248,7 @@ class Report:
                 if testcase_scene_count_dict.get(item['t_testcase_scene'], None):
                     testcase_scene_count = testcase_scene_count_dict[item['t_testcase_scene']][0]
                     testcase_scene = testcase_scene_count_dict['testcase_scene_' + item['t_testcase_scene']]
-                    print('testcase_scene_count:', testcase_scene_count, testcase_scene)
+                    # print('testcase_scene_count:', testcase_scene_count, testcase_scene)
                     if testcase_scene_count == 1:
                         self.write_center(self.worksheet2, "O" + str(temp), item["t_testcase_scene"], self.workbook)
                     else:

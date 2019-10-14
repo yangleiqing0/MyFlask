@@ -93,7 +93,7 @@
                         </div>
                          <div class="col-md-4" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
-                             <select class="btn btn-default" name="old_mysql" id="old_mysql" style="width: 120px;height: 34px">
+                             <select class="btn btn-default" name="old_sql_id" id="old_sql_id" style="width: 120px;height: 34px">
                                 {% for mysql in mysqls %}
                                     <option  value="{{ mysql.id }}" style="width: 20px">{{ mysql.name }}</option>
                                 {% endfor %}
@@ -111,7 +111,7 @@
                         </div>
                         <div class="col-md-4" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
-                             <select class="btn btn-default" name="new_mysql" id="new_mysql" style="width: 120px;height: 34px">
+                             <select class="btn btn-default" name="new_sql_id" id="new_sql_id" style="width: 120px;height: 34px">
                                 {% for mysql in mysqls %}
                                     <option  value="{{ mysql.id }}" style="width: 20px">{{ mysql.name }}</option>
                                 {% endfor %}
@@ -245,7 +245,7 @@
             $('button[id*="run_mysql"]').click(function () {
         let name = $(this).attr('id').replace('run_mysql_','');
         let regist_variable = $('#' + name + '_sql_regist_variable').val();
-        let mysql_id = $('#' + name + '_mysql').val();
+        let mysql_id = $('#' + name + '_sql_id').val();
         let sql = $('#' + name + '_sql').val();
         $.ajax({
             url:"{{ url_for('mysql_blueprint.mysql_run') }}",

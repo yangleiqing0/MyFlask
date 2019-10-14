@@ -34,12 +34,12 @@ def resolve():
 
 
 def add_operate(sqlalchemy_object, name, blueprint, endpoint):
-    result, page, _ = resolve()
+    result, values, _ = resolve()
     user_id = session.get('user_id')
     add(sqlalchemy_object, **result, user_id=user_id)
     session['msg'] = '添加成功'
     FrontLogs('添加%s name： %s 成功' % (name, result.get('name'))).add_to_front_log()
-    return redirect(url_for('{}.{}'.format(blueprint, endpoint), **page))
+    return redirect(url_for('{}.{}'.format(blueprint, endpoint), **values))
 
 
 def update_operate(sqlalchemy_object, name, blueprint, endpoint):

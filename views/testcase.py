@@ -248,9 +248,9 @@ class UpdateTestCase(MethodView):
         page, scene_page, name, url, method, data, group_id, request_headers_id, regist_variable, regular \
             , hope_result, testcase_scene_id, old_sql, new_sql, old_sql_regist_variable, new_sql_regist_variable, \
             old_sql_hope_result, new_sql_hope_result, old_sql_id, new_sql_id = request_get_values(
-            'page', 'scene_page', 'name', 'url', 'method', 'data', 'case_group', 'request_headers', 'regist_variable',
+            'page', 'scene_page', 'name', 'url', 'method', 'data', 'group_id', 'request_headers_id', 'regist_variable',
             'regular', 'hope_result', 'testcase_scene_id', 'old_sql', 'new_sql', 'old_sql_regist_variable',
-            'new_sql_regist_variable', 'old_sql_hope_result', 'new_sql_hope_result', 'old_mysql', 'new_mysql')
+            'new_sql_regist_variable', 'old_sql_hope_result', 'new_sql_hope_result', 'old_sql_id', 'new_sql_id')
 
         old_wait_sql, old_wait, old_wait_time, old_wait_mysql, new_wait_sql, new_wait, new_wait_time, new_wait_mysql = request_get_values(
             'old_wait_sql', 'old_wait', 'old_wait_time', 'old_wait_mysql', 'new_wait_sql', 'new_wait', 'new_wait_time',
@@ -285,11 +285,14 @@ class UpdateTestCase(MethodView):
         if not new_sql_id:
             new_sql_id = None
         update_regist_variable(id, old_sql_regist_variable, new_sql_regist_variable, user_id)
-        update(testcase, 'name', 'url', 'data', 'method', 'group_id',
-                                              'request_headers_id', 'regist_variable', 'regular', 'hope_result', 'old_sql',
-                                              'new_sql', 'old_sql_regist_variable', 'new_sql_regist_variable',
-                                               'old_sql_hope_result', 'new_sql_hope_result', 'old_sql_id', 'new_sql_id')
+        update(testcase, name=name, url=url, data=data, method=method, group_id=group_id, request_headers_id=request_headers_id,
+               regist_variable=regist_variable, regular=regular, hope_result=hope_result, old_sql=old_sql, new_sql=new_sql,
+               old_sql_regist_variable=old_sql_regist_variable, new_sql_regist_variable=new_sql_regist_variable,
+               old_sql_hope_result=old_sql_hope_result, new_sql_hope_result=new_sql_hope_result, old_sql_id=old_sql_id,
+               new_sql_id=new_sql_id)
+
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
+        session['msg'] = '编辑用例成功'
         # app.logger.info('message:update testcases success, name: %s' % name)
         print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id, len(testcase_scene_id))
         if testcase_scene_id not in (None, "None"):
