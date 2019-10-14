@@ -21,9 +21,9 @@
                             </div>
                     </div>
                     <div class="form-group">
-                        <label for="request_headers" class="control-label col-md-4">请求头部(必填)</label>
+                        <label for="request_headers_id" class="control-label col-md-4">请求头部(必填)</label>
                             <div class="col-md-4">
-                                    <select name="request_headers" id="request_headers" class="form-control">
+                                    <select name="request_headers_id" id="request_headers_id" class="form-control">
                                         {% for request_header in request_headers %}
                                             <option  value="{{ request_header[0] }}">{{ request_header[1] }}</option>
                                         {% endfor %}
@@ -97,7 +97,7 @@
                         </div>
                          <div class="col-md-4" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
-                             <select class="btn btn-default" name="old_mysql" id="old_mysql" style="width: 120px;height: 34px">
+                             <select class="btn btn-default" name="old_sql_id" id="old_sql_id" style="width: 120px;height: 34px">
                                 {% for mysql in mysqls %}
                                     <option  value="{{ mysql.id }}" style="width: 20px">{{ mysql.name }}</option>
                                 {% endfor %}
@@ -115,7 +115,7 @@
                         </div>
                         <div class="col-md-4" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
-                             <select class="btn btn-default" name="new_mysql" id="new_mysql" style="width: 120px;height: 34px">
+                             <select class="btn btn-default" name="new_sql_id" id="new_sql_id" style="width: 120px;height: 34px">
                                 {% for mysql in mysqls %}
                                     <option  value="{{ mysql.id }}" style="width: 20px">{{ mysql.name }}</option>
                                 {% endfor %}
@@ -144,14 +144,14 @@ $(document).ready(function() {
         $('#case_group').val(case_group_add)
     }
         if (request_headers_add != null){
-            $('#request_headers').val(request_headers_add)
+            $('#request_headers_id').val(request_headers_add)
         }
     }catch (e) {
     }
     $('#update_testcase_test').click(function () {
-        let request_headers = $("#request_headers").val();
+        let request_headers = $("#request_headers_id").val();
         $.ajax({
-            url:"{{ url_for("testcase_blueprint.run_test_case")}}?request_headers=" + request_headers + "&testcase_add_run=1",
+            url:"{{ url_for("testcase_blueprint.run_test_case")}}?request_headers_id=" + request_headers + "&testcase_add_run=1",
             type : "POST",
             data:$('#testcase_add_form').serialize(),
             success : function (response) {
@@ -165,6 +165,7 @@ $(document).ready(function() {
             rules: {
                     name: {required: true, minlength: 2, maxlength: 50, remote: '/testcasevalidate/'},
                     value:{required: true},
+                    url:{required:true, maxlength:500},
                     description: {maxlength: 50},
                     regular:{remote:{
                                     url :'/regular_validate/'
@@ -178,6 +179,7 @@ $(document).ready(function() {
                 messages: {
                     name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过50位', remote: '已存在名称'},
                     value: {required: '不可为空'},
+                    url:{required:'不可为空', maxlength:'不可超过500位'},
                     description: {maxlength: '不可超过50位'},
                     regular:{remote:'注册规则格式错误'},
                     regist_variable:{maxlength:'不可超过500位',remote:'变量名已存在'},
@@ -193,13 +195,14 @@ $(document).ready(function() {
         });
     $('#testcase_add').click(function () {
         let case_group_id = $("#case_group").val();
-        let request_headers_id = $("#request_headers").val();
+        let request_headers_id = $("#request_headers_id").val();
         window.localStorage.setItem('case_group_add',case_group_id);
         window.localStorage.setItem('request_headers_add',request_headers_id);
         $('#testcase_add_form').validate({
                 rules: {
                     name: {required: true, minlength: 2, maxlength: 50, remote: '/testcasevalidate/'},
                     value:{required: true},
+                    url:{required:true, maxlength:500},
                     description: {maxlength: 50},
                     regular:{remote:{
                                 url :'/regular_validate/'
@@ -213,6 +216,7 @@ $(document).ready(function() {
                 messages: {
                     name: {required: '不可为空', minlength: '长度最少2位', maxlength: '不可超过50位', remote: '已存在名称'},
                     value: {required: '不可为空'},
+                    url:{required:'不可为空', maxlength:'不可超过500位'},
                     description: {maxlength: '不可超过50位'},
                     regular:{remote:'注册规则格式错误'},
                     regist_variable:{maxlength:'不可超过500位',remote:'变量名已存在'},
@@ -232,7 +236,7 @@ $(document).ready(function() {
         }
     );
     $('#update_request_headers').click(function(){
-        request_headers_id = $('#request_headers').val();
+        request_headers_id = $('#request_headers_id').val();
         window.location = "{{ url_for('request_headers_blueprint.request_headers_update',id=0)}}?request_headers_id=" + request_headers_id
         }
     );
@@ -259,11 +263,11 @@ $(document).ready(function() {
                 success:function(response){
                     let request_headers_dict = JSON.parse(response)["request_headers_dict"];
                     request_headers_dict = eval("("+request_headers_dict+")");
-                    $("#request_headers").empty();
+                    $("#request_headers_id").empty();
                     for (let i = 0; i <= request_headers_dict["index"]; i++) {
                         let request_headers_id=request_headers_dict["id"+i];
                         let request_headers_name=request_headers_dict["name"+i];
-                         $("#request_headers").append("<option value="+request_headers_id+">"+request_headers_name+"</option>")
+                         $("#request_headers_id").append("<option value="+request_headers_id+">"+request_headers_name+"</option>")
                         }
                 }
             })

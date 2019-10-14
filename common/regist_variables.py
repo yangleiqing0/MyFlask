@@ -6,7 +6,7 @@ from flask import session
 from modles import Variables, db
 
 
-def to_regist_variables(name, method, url, data, headers, regist_variable='', regular=''):
+def to_regist_variables(name, method, url, data, headers, regist_variable='', regular='', is_commit=True):
     response_body = MethodRequest().request_value(method, url, data, headers)
     user_id = session.get('user_id')
     if 'html' in response_body:
@@ -63,14 +63,16 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                         print('%s 请求结束,存在此变量时：' % url,
                               Variables.query.filter(Variables.name == regist_variable_list[index], Variables.user_id == user_id).first())
                         Variables.query.filter(Variables.name == regist_variable_list[index], Variables.user_id == user_id).first().value = \
-                        regist_variable_value
-                        db.session.commit()
+                          regist_variable_value
+                        if is_commit:
+                            db.session.commit()
                     else:
                         private_variable_value = regist_variable_value
                         private_variable = Variables(regist_variable_list[index], private_variable_value, is_private=1,
                                                      user_id=user_id)
                         db.session.add(private_variable)
-                        db.session.commit()
+                        if is_commit:
+                            db.session.commit()
                 return response_body, str(regist_variable_value_list)
             return response_body, '正则匹配规则数量过多'
         return response_body, '未存在正则匹配'

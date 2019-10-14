@@ -63,24 +63,28 @@ class TestCaseRun(MethodView):
         print('sql_wait:', sql_wait)
         testcase_id, case_group_id, testcase_add_run, testcase_update_run \
             = request_get_values('testcase_id', 'case_group_id', 'testcase_add_run', 'testcase_update_run')
-        testcase = TestCases.query.get(testcase_id)
         print('TestCaseRunForm: ', request.form)
+
         if testcase_update_run:
+            testcase = TestCases.query.get(testcase_id)
             testcase.name, testcase.url, testcase.data, testcase.method, request_headers_id, \
             testcase.regist_variable, testcase.regular \
-                = request_get_values('name', 'url', 'data', 'method', 'request_headers', 'regist_variable', 'regular')
+                = request_get_values('name', 'url', 'data', 'method', 'request_headers_id', 'regist_variable', 'regular')
             testcase.testcase_request_header = RequestHeaders.query.get(request_headers_id)
-        if testcase_add_run:
+        elif testcase_add_run:
             testcase = NullObject()
             testcase.name, testcase.url, testcase.data, testcase.method, request_headers_id, \
-            testcase.regist_variable, testcase.regular \
-                = request_get_values('name', 'url', 'data', 'method', 'request_headers', 'regist_variable', 'regular')
+            testcase.regist_variable, testcase.regular, testcase.hope_result \
+                = request_get_values('name', 'url', 'data', 'method', 'request_headers_id', 'regist_variable',
+                                     'regular', 'hope_result')
             testcase.testcase_request_header = RequestHeaders.query.get(request_headers_id)
+        else:
+            testcase = TestCases.query.get(testcase_id)
         testcase_results = []
         if sql_wait != "0":
-            testcase_result, regist_variable_value = post_testcase(testcase=testcase)
+            testcase_result, regist_variable_value = post_testcase(testcase=testcase, is_commit=False)
         else:
-            testcase_result, regist_variable_value = to_execute_testcase(testcase)
+            testcase_result, regist_variable_value = to_execute_testcase(testcase, is_commit=False)
         testcase_results.extend(['【%s】' % testcase.name, testcase_result, '【正则匹配的值】', regist_variable_value])
         testcase_results_html = '<br>'.join(testcase_results)
         FrontLogs('执行测试用例 name: %s ' % testcase.name).add_to_front_log()
@@ -153,9 +157,9 @@ class TestCaseAdd(MethodView):
             old_sql_regist_variable, new_sql_regist_variable, old_sql_hope_result, new_sql_hope_result, old_sql_id, \
             new_sql_id = \
             request_get_values('page', 'scene_page', 'name', 'url', 'method',
-                               'regist_variable', 'regular', 'request_headers', 'old_sql', 'new_sql',
+                               'regist_variable', 'regular', 'request_headers_id', 'old_sql', 'new_sql',
                                'old_sql_regist_variable', 'new_sql_regist_variable', 'old_sql_hope_result',
-                               'new_sql_hope_result', 'old_mysql', 'new_mysql')
+                               'new_sql_hope_result', 'old_sql_id', 'new_sql_id')
 
         group_id = request.form.get('case_group', None)
         data = request.form.get('data', '').replace('/n', '').replace(' ', '')
@@ -292,7 +296,6 @@ class UpdateTestCase(MethodView):
                new_sql_id=new_sql_id)
 
         FrontLogs('编辑测试用例 name: %s 成功' % name).add_to_front_log()
-        session['msg'] = '编辑用例成功'
         # app.logger.info('message:update testcases success, name: %s' % name)
         print('UpdateTestCase post:testcase_scene_id return :', testcase_scene_id, len(testcase_scene_id))
         if testcase_scene_id not in (None, "None"):

@@ -110,13 +110,18 @@ class TestCaseRequestStart(MethodView):
             return response_body
 
 
-def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_run=False):
+def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_run=False, is_commit=True):
     if not testcase:
         testcase = TestCases.query.get(test_case_id)
     else:
         is_run = True
-    url, data, hope_result = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase.hope_result)
+
+    url, data = AnalysisParams().analysis_more_params(testcase.url, testcase.data)
     method = testcase.method
+
+    if isinstance(testcase, NullObject):
+        return to_execute_testcase(testcase, is_commit=is_commit)
+    hope_result = AnalysisParams().analysis_more_params(testcase.hope_result)
     if testcase.wait:
         # 前置等待验证
         wait = testcase.wait[0]
