@@ -62,7 +62,7 @@ function ajax_post(start,len, ids) {
             $('#response_'+ids[start]).html('<div class="col-md-10 col-md-offset-1" id="wait">' +
                 '                                    <div class="div-middle" style=""><span style="font-size: 12px">请求中...</span></div>' +
                 '                                </div>');
-            $("#start_testcase").attr({disabled: "disabled"})
+
         },
         url:{{ url_for('test_case_request_blueprint.test_case_request_start') }},
         type: "POST",
@@ -75,12 +75,10 @@ function ajax_post(start,len, ids) {
                 ajax_post(start,len,ids)
             }
             else {
+                $("#start_testcase").removeAttr("disabled");
                 $('#to_report').removeAttr("disabled")
             }
-        },
-        complete: function () {
-            $("#start_testcase").removeAttr("disabled");
-        },
+        }
         {#async: false,#}
     });
 }
@@ -88,6 +86,7 @@ $(document).ready(function() {
 
     $("#start_testcase").click(function () {
         $('#to_report').attr("disabled",'disabled');
+        $("#start_testcase").attr({disabled: "disabled"});
         $.ajax({
                 url:{{ url_for('test_case_request_blueprint.test_case_time_get') }},
                 type:"GET",

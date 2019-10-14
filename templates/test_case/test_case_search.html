@@ -33,7 +33,7 @@
                             </div>
                     </div>
                     {{ macro.form_group(lable_name="method",blank_name="请求方式(必填)",value=item.method,placeholder_name="必填") }}
-                    {{ macro.form_group(lable_name="url",blank_name="请求接口(必填)",value=item.url,placeholder_name="必填") }}
+                    {{ macro.form_group_textarea(rows=2,lable_name="url",blank_name="请求接口(必填)",value=item.url,placeholder_name="必填") }}
                     {{ macro.form_group_textarea(rows=2,lable_name="regist_variable",blank_name="注册变量", value=item.regist_variable,placeholder_name="可使用,来区分多个") }}
                     {{ macro.form_group_textarea(rows=2,lable_name="regular",blank_name="注册规则", value=item.regular,placeholder_name="支持正则和字典,可使用,来区分多个,如 $.data.id,$.token") }}
                     {{ macro.form_group_textarea(lable_name="data",blank_name="请求报文",value=item.data,placeholder_name="可使用如：${随机4}自动在执行的时候生成随机位名称,必填") }}

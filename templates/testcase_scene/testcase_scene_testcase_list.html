@@ -101,6 +101,38 @@
 
     <script>
     $(document).ready(function () {
+        let groups = localStorage.getItem('scene_open');
+        if(groups !== null && groups){
+            groups = JSON.parse(groups);
+            for(let i=0;i<groups.length;i++){
+                $(groups[i]).addClass('in')
+            }
+        }
+        $('#ajax_content').on('click', 'div[href*="case_group_"]', function (event) {
+            let group = event.currentTarget.getAttribute('href');
+            let classname = $(group).attr('class');
+            let groups = localStorage.getItem('scene_open');
+            if (classname.indexOf(' in') === -1){
+                if (groups !== null && groups) {
+                    groups = JSON.parse(groups);
+                    if(groups.indexOf(group) === -1){
+                        groups.push(group);
+                        localStorage.setItem('scene_open', JSON.stringify(groups))
+                    }
+                }else{
+                    groups = [];
+                    groups.push(group);
+                    localStorage.setItem('scene_open', JSON.stringify(groups))
+                }
+            }else{
+                groups = JSON.parse(groups);
+                if(groups.indexOf(group) !== -1){
+                    groups.splice(groups.indexOf(group), 1);
+                    localStorage.setItem('scene_open', JSON.stringify(groups))
+                }
+            }
+
+        });
         $('a[id*="testcase_add"]').click(function () {
             let scene_page = GetQueryString('page');
             let testcase_scene_id = $(this).attr('id').replace('testcase_add_','');
