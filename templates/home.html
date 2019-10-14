@@ -663,8 +663,9 @@ $(document).ready(function() {
                     }
                     window.localStorage.setItem(href+'_not_show_ths', JSON.stringify(show_ths));
                  });
+                 location.reload();
              });
-        $('#layer-reset').click(function () {
+         $('#layer-reset').click(function () {
            $('#cm_layer').css('display','none');
            $('#layer-content').empty();
            add_col_select();
