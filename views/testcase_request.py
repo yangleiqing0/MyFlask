@@ -24,7 +24,8 @@ class TestCaseRequest(MethodView):
         user = User.query.get(user_id)
         print('user_id:', user_id)
         FrontLogs('进入测试用例执行页面').add_to_front_log()
-        case_groups = user.user_case_groups
+        case_groups = CaseGroup.query.filter(CaseGroup.user_id == user_id).order_by(
+            CaseGroup.updated_time.desc(), CaseGroup.id.desc()).all()
         case_groups_new = []
         for case_group in case_groups:
             case_group_NullObject = NullObject()

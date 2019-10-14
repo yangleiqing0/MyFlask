@@ -17,7 +17,7 @@ home_blueprint = Blueprint('home_blueprint', __name__)
 class Home(MethodView):
 
     def get(self):
-        return render_template('home.html')
+        return redirect(url_for('testcase_blueprint.test_case_list'))
 
 
 class DbCreatAll(MethodView):
@@ -177,7 +177,7 @@ def zero_division_error(e):
     return render_template('exception/404.html', err_msg=e, mes=500)
 
 
-@app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
+# @app.before_first_request  # 在第一个次请求前执行创建数据库和预插入数据的操作
 def db_create_pre_all():
     session['user_id'] = ''
     session['username'] = ''
