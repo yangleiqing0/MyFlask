@@ -1,5 +1,6 @@
 #coding=utf-8
 from datetime import datetime
+
 import json
 from flask.views import MethodView
 from flask import render_template, Blueprint, redirect, url_for, session, request, current_app, jsonify
@@ -131,6 +132,18 @@ class JobList(MethodView):
         return render_template('job/job_list.html', pagination=pagination, jobs=jobs, page=page, search=search)
 
 
+class JobRun(MethodView):
+
+    def get(self):
+        mail = None
+        job_id = request_get_values('id')
+        job = Job.query.get(job_id)
+        if job.mail_id:
+            mail = Mail.query.get(job.mail_id)
+        auto_send_mail(job, mail, is_async=False)
+        return jsonify('邮件已开始发送')
+
+
 class JobUpdateValidate(MethodView):
 
     def get(self):
@@ -150,6 +163,7 @@ job_blueprint.add_url_rule('/job_add/', view_func=JobAdd.as_view('job_add'))
 job_blueprint.add_url_rule('/job_update/', view_func=JobUpdate.as_view('job_update'))
 job_blueprint.add_url_rule('/job_list/', view_func=JobList.as_view('job_list'))
 job_blueprint.add_url_rule('/job_delete/', view_func=JobDelete.as_view('job_delete'))
+job_blueprint.add_url_rule('/job_run/', view_func=JobRun.as_view('job_run'))
 
 job_blueprint.add_url_rule('/job_scheduler_update/', view_func=JobSchedulerUpdate.as_view('job_scheduler_update'))
 
@@ -165,6 +179,7 @@ def scheduler_job(job, scheduler=None, cron_change=None):
     if scheduler.get_job(scheduler_job_id) and not cron_change and job.is_start==1:
         print('此任务已在执行')
         return
+
     if job.cron and job.triggers:
         if job.mail_id:
             mail = Mail.query.get(job.mail_id)
@@ -200,6 +215,7 @@ def scheduler_job(job, scheduler=None, cron_change=None):
                 return
             print('get_jobs is_after:', scheduler.get_jobs())
         print('现在有的任务：', scheduler.get_jobs())
+
     else:
         print('未输入cron表达式或trigger')
         return
@@ -209,14 +225,14 @@ def print_job_name(job):
     print(job.name)
 
 
-def auto_send_mail(job, mail):
+def auto_send_mail(job, mail, is_async=True):
     user_id = job.user_id
     testcases_ids = testcase_scenes_ids = []
     if job.testcases:
         testcases_ids = eval(job.testcases)
     if job.testcase_scenes:
         testcase_scenes_ids = eval(job.testcase_scenes)
-    testcase_time_id = get_testcase_time_id(user_id)
+    testcase_time_id = get_testcase_time_id(user_id, is_async)
     post_request(testcases_ids, testcase_scenes_ids, testcase_time_id)
     get_report(testcase_time_id)
     add_message(testcase_time_id)
@@ -229,13 +245,14 @@ def auto_send_mail(job, mail):
             print('auto_send_mail:错误的邮件发送方式')
 
 
-def get_testcase_time_id(user_id):
-    from werkzeug.test import EnvironBuilder
-    from app import return_app
-    app = return_app()
-    ctx = app.request_context(EnvironBuilder('/', 'http://localhost/').get_environ())
-    # 构建一个request上下文对象放入app
-    ctx.push()
+def get_testcase_time_id(user_id, is_async=True):
+    if is_async:
+        from werkzeug.test import EnvironBuilder
+        from app import return_app
+        app = return_app()
+        app.request_context(EnvironBuilder('/', 'http://localhost/').get_environ()).push()
+        # 构建一个request上下文对象放入app
+
     session['user_id'] = user_id
     time_strftime = datetime.now().strftime('%Y%m%d%H%M%S')
     testcase_time = TestCaseStartTimes(time_strftime=time_strftime, user_id=user_id)

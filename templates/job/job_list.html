@@ -41,6 +41,7 @@
                                 </div>
                                  <a href="{{ url_for('job_blueprint.job_update',job_id=job.id, page=page) }}"  class="btn btn-default btn-xs" title="编辑测试任务 "><i class="fa fa-pencil"></i></a>
                                  <a href="{{ url_for('job_blueprint.job_delete',job_id=job.id, page=page) }}" class="btn btn-default btn-xs" title="删除测试任务"><i class="fa fa-trash"></i></a>
+                                 <button id="job_run_{{ job.id }}" type="button" class="btn btn-default btn-xs" title="执行一次测试任务"><i class="fa fa-play"></i></button>
                             </td>
                         </tr>
                         {% endfor %}
@@ -52,6 +53,12 @@
 {% block js %}
     <script>
         $(document).ready(function () {
+            $('button[id*="job_run_"]').click(function () {
+                let id = $(this).attr('id').replace('job_run_', '');
+                $.get('{{ url_for('job_blueprint.job_run') }}?id=' + id, function (response) {
+                    $('#request_body_show').html(response)
+                })
+            });
             $('input[name*="male_"]').click(function () {
                 let job_id = $(this).attr('id').replace('male_','');
                 if ($(this).attr('checked') === "checked") {
