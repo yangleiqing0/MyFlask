@@ -74,7 +74,7 @@ class MysqlList(MethodView):
         return render_template('database/mysql_list.html', pagination=pagination, mysqls=mysqls, search=search)
 
 
-def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=True):
+def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=True, cache=False, is_cache=False):
     print('MysqlRun:', sql, regist_variable)
     mysql = Mysql.query.get(mysql_id)
     if not mysql:
@@ -82,10 +82,15 @@ def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=
     if not sql:
         return json.dumps('请输入查询语句')
     user_id = session.get('user_id')
-    host, port, db_name, user, password = AnalysisParams().analysis_more_params(
-        mysql.ip, mysql.port, mysql.db_name, mysql.user, mysql.password)
+    if cache:
+        host, port, db_name, user, password, sql = session.get('mysql')
+    else:
+        host, port, db_name, user, password, sql = AnalysisParams().analysis_more_params(
+            mysql.ip, mysql.port, mysql.db_name, mysql.user, mysql.password, sql)
+        if is_cache:
+            session['mysql'] = host, port, db_name, user, password, sql
     try:
-        result = ConnMysql(host, int(port), user, password, db_name, sql).select_mysql()
+        result = ConnMysql(host, int(port), user, password, db_name, sql, is_param=False).select_mysql()
         if regist_variable and regist:
             if Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).count() > 0:
                 Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).first().value = str(result)

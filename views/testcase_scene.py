@@ -156,7 +156,7 @@ class TestCaseSceneCopy(MethodView):
             name = testcase_scene.name[:21] + timestr
         else:
             name = testcase_scene.name + timestr
-        testcase_scene_copy = TestCaseScene(name, description=testcase_scene.description, user_id=testcase_scene.user_id)
+        testcase_scene_copy = TestCaseScene(name, testcase_scene.group_id, description=testcase_scene.description, user_id=testcase_scene.user_id)
         db.session.add(testcase_scene_copy)
         db.session.commit()
         session['msg'] = '复制场景成功'

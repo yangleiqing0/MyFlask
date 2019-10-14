@@ -122,10 +122,13 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
         wait = testcase.wait[0]
         time_count = 0
         if wait.old_wait_mysql and wait.old_wait and wait.old_wait_sql:
+            _hope_result = AnalysisParams().analysis_params(wait.old_wait)
+            mysqlrun(mysql_id=wait.old_wait_mysql, sql=wait.old_wait_sql, is_request=False, regist=False, is_cache=True)
             while 1:
-                old_wait_value = mysqlrun(mysql_id=wait.old_wait_mysql, sql=wait.old_wait_sql, is_request=False, regist=False)
+                old_wait_value = mysqlrun(mysql_id=wait.old_wait_mysql, sql=wait.old_wait_sql, is_request=False,
+                                          regist=False, cache=True)
                 old_wait_assert_result = AssertMethod(actual_result=old_wait_value,
-                             hope_result=AnalysisParams().analysis_params(wait.old_wait)).assert_method()
+                             hope_result=_hope_result).assert_method()
                 if old_wait_assert_result == "测试成功":
                     break
                 else:
@@ -177,12 +180,15 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
         wait = testcase.wait[0]
         time_new_count = 0
         if wait.new_wait_mysql and wait.new_wait and wait.new_wait_sql:
+            __hope_result = AnalysisParams().analysis_params(wait.new_wait)
+            mysqlrun(mysql_id=wait.new_wait_mysql, sql=wait.new_wait_sql, is_request=False,
+                     regist=False, is_cache=True)
+            # 先运行一次进行缓存数据，后面每次直接调用
             while 1:
                 new_wait_value = mysqlrun(mysql_id=wait.new_wait_mysql, sql=wait.new_wait_sql, is_request=False,
-                                          regist=False)
+                                          regist=False, cache=True)
                 new_wait_assert_result = AssertMethod(actual_result=new_wait_value,
-                                                      hope_result=AnalysisParams().analysis_params(
-                                                          wait.new_wait)).assert_method()
+                                                      hope_result=__hope_result).assert_method()
                 if new_wait_assert_result == "测试成功":
                     break
                 else:
