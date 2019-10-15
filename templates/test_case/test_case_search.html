@@ -55,7 +55,7 @@
                         </div>
                          <div class="col-md-4" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
-                             <select class="btn btn-default" name="old_wait_mysql" id="old_wait_mysql" style="width: 120px;height: 34px">
+                             <select class="btn btn-default" name="old_wait_sql_id" id="old_wait_sql_id" style="width: 120px;height: 34px">
                                 {% for mysql in mysqls %}
                                     <option  value="{{ mysql.id }}" style="width: 20px" {{"selected" if mysql.id== wait.old_wait_mysql}}>{{ mysql.name }}</option>
                                 {% endfor %}
@@ -74,7 +74,7 @@
                         </div>
                          <div class="col-md-4" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
-                             <select class="btn btn-default" name="new_wait_mysql" id="new_wait_mysql" style="width: 120px;height: 34px">
+                             <select class="btn btn-default" name="new_wait_sql_id" id="new_wait_sql_id" style="width: 120px;height: 34px">
                                 {% for mysql in mysqls %}
                                     <option  value="{{ mysql.id }}" style="width: 20px" {{"selected" if mysql.id== wait.new_wait_mysql}}>{{ mysql.name }}</option>
                                 {% endfor %}
@@ -242,7 +242,7 @@
                     }
                     })
             });
-            $('button[id*="run_mysql"]').click(function () {
+        $('button[id*="run_mysql"]').click(function () {
         let name = $(this).attr('id').replace('run_mysql_','');
         let regist_variable = $('#' + name + '_sql_regist_variable').val();
         let mysql_id = $('#' + name + '_sql_id').val();

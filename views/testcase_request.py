@@ -156,8 +156,13 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
                         db.session.commit()
                         return time_out_mes
 
-    if testcase.old_sql and testcase.old_sql_id and testcase.old_sql_regist_variable:
-        old_sql_value = mysqlrun(mysql_id=testcase.old_sql_id, sql=testcase.old_sql, regist_variable=testcase.old_sql_regist_variable, is_request=False)
+    if testcase.old_sql and testcase.old_sql_id:
+        if not testcase.old_sql_regist_variable:
+            old_sql_regist_variable = ''
+        else:
+            old_sql_regist_variable = testcase.old_sql_regist_variable
+        old_sql_value = mysqlrun(mysql_id=testcase.old_sql_id, sql=testcase.old_sql,
+                                 regist_variable=old_sql_regist_variable, is_request=False)
         old_sql_value_result = AssertMethod(actual_result=old_sql_value, hope_result=AnalysisParams().analysis_params(testcase.old_sql_hope_result)).assert_method()
     else:
         old_sql_value = old_sql_value_result = ''
@@ -166,9 +171,13 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
 
     testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_method()
 
-    if testcase.new_sql and testcase.new_sql_id and testcase.new_sql_regist_variable:
+    if testcase.new_sql and testcase.new_sql_id:
+        if not testcase.new_sql_regist_variable:
+            new_sql_regist_variable = ''
+        else:
+            new_sql_regist_variable = testcase.new_sql_regist_variable
         new_sql_value = mysqlrun(mysql_id=testcase.new_sql_id, sql=testcase.new_sql,
-                                 regist_variable=testcase.new_sql_regist_variable, is_request=False)
+                                 regist_variable= new_sql_regist_variable, is_request=False)
         new_sql_value_result = AssertMethod(actual_result=new_sql_value, hope_result=AnalysisParams().analysis_params(testcase.new_sql_hope_result)).assert_method()
 
     else:

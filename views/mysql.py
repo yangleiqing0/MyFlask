@@ -91,13 +91,14 @@ def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=
             session['mysql'] = host, port, db_name, user, password, sql
     try:
         result = ConnMysql(host, int(port), user, password, db_name, sql, is_param=False).select_mysql()
-        if regist_variable and regist:
-            if Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).count() > 0:
-                Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).first().value = str(result)
-            else:
-                variable = Variables(regist_variable, str(result), is_private=1, user_id=user_id)
-                db.session.add(variable)
-            db.session.commit()
+        if regist:
+            if regist_variable:
+                if Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).count() > 0:
+                    Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).first().value = str(result)
+                else:
+                    variable = Variables(regist_variable, str(result), is_private=1, user_id=user_id)
+                    db.session.add(variable)
+                db.session.commit()
             if is_request:
                 result = '【查询结果】<br>' + str(result) + '<br>【注册变量名】 【' + regist_variable + '】<br>' + str(result)
             else:
