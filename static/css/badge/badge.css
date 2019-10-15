@@ -60,3 +60,17 @@ span,.tpl-left-nav-item .nav-link span, .tpl-left-nav-sub-menu a span,table,.tab
     position: relative;
     top:-4px
 }
+.text-right{
+    text-align: right;
+}
+.btn-left{
+    padding-left: 0;
+    width:110px
+}
+.no-padding-left{
+    padding-left: 0;
+}
+
+.my-btn-back{
+    display:inline-block;width:29.2%;background-color: lightsteelblue;margin:0 0 3px 3px
+}

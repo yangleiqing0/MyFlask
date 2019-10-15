@@ -6,8 +6,8 @@
                     {{ macro.form_group(lable_name="name",blank_name="邮件名称(必填)",placeholder_name="仅用来分别不同的邮件配置",value=mail.name) }}
                     {{ macro.form_group(lable_name="subject",blank_name="邮件标题",placeholder_name="发送邮件的标题",value=mail.subject) }}
                     {{ macro.form_group(lable_name="to_user_list",blank_name="接收人(必填)",placeholder_name="多个接收人如：1@qq.com,2@qq.com",value=mail.to_user_list) }}
-                    <label for="email_method" class="control-label col-md-4">发送邮件方式</label>
-                            <div class="col-md-4">
+                    <label for="email_method" class="control-label col-md-2">发送邮件方式</label>
+                            <div class="col-md-9">
                                     <select name="email_method" id="email_method" class="form-control">
                                         <option value="1" {{"selected" if mail.email_method ==1 else "" }}>图片</option>
                                         <option value="2" {{"selected" if mail.email_method ==2 else "" }}>附件</option>

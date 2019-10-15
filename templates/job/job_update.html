@@ -5,9 +5,9 @@
                 <form action="{{ url_for('job_blueprint.job_update', job_id=job.id, page=page) }}" id="job_update_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="任务名称",value=job.name) }}
                     {{ macro.form_group(lable_name="testcases",blank_name="任务用例",value="去除勾选即从任务删除",disabled="disabled") }}
-                    <div class="col-md-8 col-md-offset-2" style="float: left">
+                    <div class="col-md-10 col-md-offset-2" style="float: left;margin-bottom: 12px">
                     {% for testcase in job.testcase_list %}
-                        <div class="form-group col-md-4 no-padding" >
+                        <div class="form-group no-padding"  style="display:inline-block;width:29.2%;background-color: lightsteelblue;margin:0 0 3px 3px">
                               <div>
                               <label for="{{ testcase.id }}"  class="dots control-label col-md-8" style="font-weight: normal;text-align: left">{{testcase.name}}</label>
                               </div>
@@ -16,9 +16,9 @@
                     {% endfor %}
                     </div>
                     {{ macro.form_group(lable_name="testcase_scenes",blank_name="任务场景",value="去除勾选即从任务删除", disabled="disabled") }}
-                    <div class="col-md-8 col-md-offset-2" style="float: left">
+                    <div class="col-md-10 col-md-offset-2" style="float: left;margin-bottom: 12px">
                     {% for testcase_scene in job.testcase_scene_list %}
-                        <div class="form-group col-md-4 no-padding" >
+                        <div class="form-group no-padding" style="display:inline-block;width:29.2%;background-color: lightsteelblue;margin:0 0 3px 3px">
                               <div>
                               <label for="testcase_scene_{{ testcase_scene.id }}"  class="dots control-label col-md-8" style="font-weight: normal;text-align: left">{{ testcase_scene.name }}</label>
                               </div>
@@ -28,8 +28,8 @@
                     </div>
                     {{ macro.form_group(lable_name="description",blank_name="任务备注",value=job.description) }}
                     <div class="form-group agileinfo wthree w3-agileits agile ">
-                        <label for="male"  class="control-label col-md-4" id="is_start_status">{{ "关闭定时" if job.is_start else "开启定时" }}</label>
-                        <div class="col-md-4">
+                        <label for="male"  class="control-label col-md-2" id="is_start_status">{{ "关闭定时" if job.is_start else "开启定时" }}</label>
+                        <div class="col-md-9">
                             <input type="checkbox" name="sex" id="male" class="chooseBtn" {{ 'checked' if job.is_start==1 else "" }} />
                             <label for="male" class="choose-label" style="margin-top: 7px"></label>
                         </div>
@@ -38,8 +38,8 @@
                     {{ macro.form_group(lable_name="triggers",blank_name="触发器类型",value=job.triggers, placeholder_name="默认：cron") }}
                     {{ macro.form_group(lable_name="cron",blank_name="cron表达式:(只支持每天几点几分几秒)",value=job.cron, placeholder_name="请输入正确的cron表达式") }}
                     <div class="form-group">
-                        <label for="email" class="control-label col-md-4">邮件配置</label>
-                            <div class="col-md-4">
+                        <label for="email" class="control-label col-md-2">邮件配置</label>
+                            <div class="col-md-9">
                                 <select name="email" id="email" class="form-control">
                                     {% for mail in mails %}
                                         <option  value="{{ mail.id }}" {{ "selected" if mail.id == job.mail_id  }}>{{ mail.name }}</option>

@@ -1,5 +1,5 @@
 {% macro form_group(lable_name,blank_name,id_name=lable_name,name_name=lable_name,placeholder_name=blank_name,
-type_name="text",lable_class_name="control-label col-md-4",div_class_name="col-md-4",
+type_name="text",lable_class_name="control-label col-md-2",div_class_name="col-md-9",
 input_name="form-control",value="",disabled="",class_name="") %}
         <div class="form-group agileinfo wthree w3-agileits agile {{ class_name }}">
             <label for="{{ lable_name }}" class="{{ lable_class_name }}">{{ blank_name if blank_name else ""}}</label>
@@ -13,8 +13,8 @@ input_name="form-control",value="",disabled="",class_name="") %}
 
 {% macro form_group_textarea(
 lable_name,blank_name,id_name=lable_name,name_name=lable_name,
-placeholder_name=blank_name,lable_class_name="control-label col-md-4",
-div_class_name="col-md-4",
+placeholder_name=blank_name,lable_class_name="control-label col-md-2",
+div_class_name="col-md-9",
 textarea_class_name="form-control",textarea_style="resize: vertical;min-height: 68px",rows="8",col="10",value="") %}
  <div class="form-group">
     <label for="{{ lable_name }}" class="{{ lable_class_name }}">{{ blank_name }}</label>

@@ -5,8 +5,8 @@
                 <form  action="{{ url_for('testcase_blueprint.update_test_case',id=item.id) }}?testcase_scene_id={{ testcase_scene_id }}&page={{ page }}&scene_page={{ scene_page }}" id="testcase_update_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="测试用例名称(必填)",placeholder_name="必填",value=item.name) }}
                     <div class="form-group">
-                        <label for="group_id" class="control-label col-md-4">测试用例分组</label>
-                            <div class="col-md-4">
+                        <label for="group_id" class="control-label col-md-2">测试用例分组</label>
+                            <div class="col-md-9">
                                         <select name="group_id" id="group_id" class="form-control">
                                             {% for case_group in case_groups %}
                                                 {% if case_group.id == case_group_id_before %}
@@ -19,8 +19,8 @@
                             </div>
                     </div>
                     <div class="form-group">
-                        <label for="request_headers_id" class="control-label col-md-4">请求头部(必填)</label>
-                            <div class="col-md-4">
+                        <label for="request_headers_id" class="control-label col-md-2">请求头部(必填)</label>
+                            <div class="col-md-9">
                                 <select name="request_headers_id" id="request_headers_id" class="form-control">
                                     {% for request_headers in request_headerses %}
                                         {% if request_headers.id == request_headers_id_before %}
@@ -33,11 +33,11 @@
                             </div>
                     </div>
                     {{ macro.form_group(lable_name="method",blank_name="请求方式(必填)",value=item.method,placeholder_name="必填") }}
-                    {{ macro.form_group_textarea(rows=2,lable_name="url",blank_name="请求接口(必填)",value=item.url,placeholder_name="必填") }}
-                    {{ macro.form_group_textarea(rows=2,lable_name="regist_variable",blank_name="注册变量", value=item.regist_variable,placeholder_name="可使用,来区分多个") }}
-                    {{ macro.form_group_textarea(rows=2,lable_name="regular",blank_name="注册规则", value=item.regular,placeholder_name="支持正则和字典,可使用,来区分多个,如 $.data.id,$.token") }}
+                    {{ macro.form_group(lable_name="url",blank_name="请求接口(必填)",value=item.url,placeholder_name="必填") }}
+                    {{ macro.form_group(lable_name="regist_variable",blank_name="注册变量", value=item.regist_variable,placeholder_name="可使用,来区分多个") }}
+                    {{ macro.form_group(lable_name="regular",blank_name="注册规则", value=item.regular,placeholder_name="支持正则和字典,可使用,来区分多个,如 $.data.id,$.token") }}
                     {{ macro.form_group_textarea(lable_name="data",blank_name="请求报文",value=item.data,placeholder_name="可使用如：${随机4}自动在执行的时候生成随机位名称,必填") }}
-                    {{ macro.form_group_textarea(rows=2,lable_name="hope_result",blank_name="预期结果(必填)", value=item.hope_result,placeholder_name="包含:username(支持包含 等于 不包含 不等于) 必填 可使用,来区分多个") }}
+                    {{ macro.form_group(lable_name="hope_result",blank_name="预期结果(必填)", value=item.hope_result,placeholder_name="包含:username(支持包含 等于 不包含 不等于) 必填 可使用,来区分多个") }}
                     <div class="form-group">
                          <div class="control-label col-md-4 col-md-offset-3">
                             <label class="checkbox-inline">
@@ -49,11 +49,11 @@
                          </div>
                      </div>
                     <div class="form-group config_wait_content">
-                        <label for="old_wait_sql" class="control-label col-md-4">前置等待查询语句</label>
-                            <div class="col-md-4">
+                        <label for="old_wait_sql" class="control-label col-md-2">前置等待查询语句</label>
+                            <div class="col-md-7">
                                 <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="old_wait_sql" name="old_wait_sql" placeholder="前置等待查询语句" >{{ wait.old_wait_sql }}</textarea>
                         </div>
-                         <div class="col-md-4" style="height: 34px">
+                         <div class="col-md-2 text-right no-padding-left" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
                              <select class="btn btn-default" name="old_wait_sql_id" id="old_wait_sql_id" style="width: 120px;height: 34px">
                                 {% for mysql in mysqls %}
@@ -68,11 +68,11 @@
                     {{ macro.form_group(lable_name="old_wait_time",blank_name="前置等待超时设置",value=wait.old_wait_time, class_name="config_wait_content") }}
 
                     <div class="form-group config_wait_content">
-                        <label for="new_wait_sql" class="control-label col-md-4">后置等待查询语句</label>
-                            <div class="col-md-4">
+                        <label for="new_wait_sql" class="control-label col-md-2">后置等待查询语句</label>
+                            <div class="col-md-7">
                                 <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="new_wait_sql" name="new_wait_sql" placeholder="后置等待查询语句" >{{ wait.new_wait_sql }}</textarea>
                         </div>
-                         <div class="col-md-4" style="height: 34px">
+                         <div class="col-md-2 text-right no-padding-left" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
                              <select class="btn btn-default" name="new_wait_sql_id" id="new_wait_sql_id" style="width: 120px;height: 34px">
                                 {% for mysql in mysqls %}
@@ -87,11 +87,11 @@
                     {{ macro.form_group(lable_name="new_wait_time",blank_name="后置等待超时设置",value=wait.new_wait_time, class_name="config_wait_content") }}
 
                     <div class="form-group config_sql_content">
-                        <label for="old_sql" class="control-label col-md-4">前置数据库查询语句</label>
-                            <div class="col-md-4">
+                        <label for="old_sql" class="control-label col-md-2">前置数据库查询语句</label>
+                            <div class="col-md-7">
                                 <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="old_sql" name="old_sql" placeholder="前置数据库查询语句" >{{ item.old_sql if item.old_sql else ""}}</textarea>
                         </div>
-                         <div class="col-md-4" style="height: 34px">
+                         <div class="col-md-2 text-right no-padding-left" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
                              <select class="btn btn-default" name="old_sql_id" id="old_sql_id" style="width: 120px;height: 34px">
                                 {% for mysql in mysqls %}
@@ -105,11 +105,11 @@
                     {{ macro.form_group(lable_name="old_sql_regist_variable",blank_name="前置数据库注册变量", value=item.old_sql_regist_variable,class_name="config_sql_content") }}
                     {{ macro.form_group(lable_name="old_sql_hope_result",blank_name="前置数据库预期结果",value=item.old_sql_hope_result,class_name="config_sql_content") }}
                     <div class="form-group config_sql_content">
-                        <label for="new_sql" class="control-label col-md-4">后置数据库查询语句</label>
-                            <div class="col-md-4">
+                        <label for="new_sql" class="control-label col-md-2">后置数据库查询语句</label>
+                            <div class="col-md-7">
                                 <textarea rows="1" cols="10" style="resize:vertical;min-height: 34px" class="form-control" id="new_sql" name="new_sql" placeholder="后置数据库查询语句" >{{ item.new_sql if item.new_sql else "" }}</textarea>
                         </div>
-                        <div class="col-md-4" style="height: 34px">
+                        <div class="col-md-2  text-right no-padding-left" style="height: 34px">
                             <div class="form-group col-md-12" style="padding-left: 0">
                              <select class="btn btn-default" name="new_sql_id" id="new_sql_id" style="width: 120px;height: 34px">
                                 {% for mysql in mysqls %}

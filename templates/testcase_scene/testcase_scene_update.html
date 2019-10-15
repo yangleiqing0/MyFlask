@@ -5,8 +5,8 @@
                 <form action="{{ url_for('testcase_scene_blueprint.testcase_scene_update') }}?id={{ testcase_scene.id }}&page={{ page }}" id="testcase_scene_update_form" data-toggle="validator" method="post" enctype="multipart/form-data" class="form-horizontal">
                     {{ macro.form_group(lable_name="name",blank_name="测试场景名称(必填)", value=testcase_scene.name) }}
                     <div class="form-group">
-                        <label for="group_id" class="control-label col-md-4">测试场景分组</label>
-                            <div class="col-md-4">
+                        <label for="group_id" class="control-label col-md-2">测试场景分组</label>
+                            <div class="col-md-9">
                                     <select name="group_id" id="group_id" class="form-control">
                                         {% for case_group in case_groups %}
                                             {% if case_group.id == testcase_scene.group_id %}
