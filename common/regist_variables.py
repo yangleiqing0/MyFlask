@@ -24,12 +24,7 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                 regist_variable_value_list = []
                 for index in range(len(regular_list)):
                     # 循环取正则的规则
-                    if '$.' not in regular_list[index]:
-                        try:
-                            regist_variable_value = re.compile(regular_list[index]).findall(response_body)
-                        except Exception as e:
-                            regist_variable_value = str(e)
-                    else:
+                    if '$.' in regular_list[index]:
                         if not is_json(response_body):
                             regist_variable_value = "不是合法的字典响应信息"
                         else:
@@ -50,6 +45,19 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                                         print(e)
                                         regist_variable_value = ''
                                     print('regist_variable_value:', regist_variable_value)
+                    elif '$[' in regular_list[index]:
+                        # try:
+                            print('session params', session['params'])
+                            p_index = int(regular_list[index][2:-1])
+                            regist_variable_value = session['params'][p_index]
+                        # except Exception as e:
+                        #     regist_variable_value = str(e)
+                    else:
+                        try:
+                            regist_variable_value = re.compile(regular_list[index]).findall(response_body)
+                        except Exception as e:
+                            regist_variable_value = str(e)
+
                     if not regist_variable_value:
                         regist_variable_value = ''
                     elif isinstance(regist_variable_value, (int, str, dict)):

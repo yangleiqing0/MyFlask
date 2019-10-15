@@ -37,6 +37,8 @@ class AssertMethod:
                 result = self.assert_eq(self.hoperesult)
             elif '包含' in self.assertmethod:
                 result = self.assert_in(self.hoperesult)
+            elif '大于' in self.assertmethod:
+                result = self.assert_gt(self.hoperesult)
             else:
                 result = ''
             return result
@@ -66,6 +68,13 @@ class AssertMethod:
 
     def not_assert_eq(self, hoperesult):
         if self.actual_result != hoperesult:    # 返回结果与期望结果相等
+            self.result = '测试成功'
+        else:
+            self.result = '测试失败'
+        return self.result
+
+    def assert_gt(self, hoperesult):
+        if self.actual_result > hoperesult:    # 返回结果与期望结果相等
             self.result = '测试成功'
         else:
             self.result = '测试失败'

@@ -2,10 +2,11 @@
 import json
 from common.analysis_params import AnalysisParams
 from common.regist_variables import to_regist_variables
+from flask import session
 
 
 def to_execute_testcase(testcase, is_commit=True):
-
+    session['params'] = []
     testcase_request_header = testcase.testcase_request_header  # 通过反向引用获得case对应的请求头对象
     print('testcase:', testcase, testcase_request_header)
 

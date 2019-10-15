@@ -75,7 +75,7 @@ class MysqlList(MethodView):
 
 
 def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=True, cache=False, is_cache=False):
-    print('MysqlRun:', sql, regist_variable)
+    print('MysqlRun:', sql, regist_variable, mysql_id)
     mysql = Mysql.query.get(mysql_id)
     if not mysql:
         return json.dumps('请检查配置数据库')
@@ -89,28 +89,29 @@ def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=
             mysql.ip, mysql.port, mysql.db_name, mysql.user, mysql.password, sql)
         if is_cache:
             session['mysql'] = host, port, db_name, user, password, sql
-    try:
-        result = ConnMysql(host, int(port), user, password, db_name, sql, is_param=False).select_mysql()
-        if regist:
-            if regist_variable:
-                if Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).count() > 0:
-                    Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).first().value = str(result)
-                else:
-                    variable = Variables(regist_variable, str(result), is_private=1, user_id=user_id)
-                    db.session.add(variable)
-                db.session.commit()
-            if is_request:
-                result = '【查询结果】<br>' + str(result) + '<br>【注册变量名】 【' + regist_variable + '】<br>' + str(result)
+    # try:
+    result = ConnMysql(host, int(port), user, password, db_name, sql, is_param=False).select_mysql()
+    print('run result', result)
+    if regist:
+        if regist_variable:
+            if Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).count() > 0:
+                Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).first().value = str(result)
             else:
-                return result
-        elif not regist:
-            return result
+                variable = Variables(regist_variable, str(result), is_private=1, user_id=user_id)
+                db.session.add(variable)
+            db.session.commit()
+        if is_request:
+            result = '【查询结果】<br>' + str(result) + '<br>【注册变量名】 【' + regist_variable + '】<br>' + str(result)
         else:
-            result = '【查询结果】<br>' + str(result) + '<br>【未注册变量】'
-        return json.dumps(result)
-    except Exception as e:
-        print(e)
-        return json.dumps(str(e))
+            return result
+    elif not regist:
+        return result
+    else:
+        result = '【查询结果】<br>' + str(result) + '<br>【未注册变量】'
+    return json.dumps(result)
+    # except Exception as e:
+    #     print(e)
+        # return json.dumps(str(e))
 
 
 class MysqlRun(MethodView):

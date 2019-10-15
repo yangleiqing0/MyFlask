@@ -1,4 +1,5 @@
 from . import random, string, re
+from flask import session
 
 
 class RangName:
@@ -12,7 +13,9 @@ class RangName:
         if len(com_word) > 0:
             word = re.findall(re.compile(res), self.name)[0]  # 限定最多一次随机
             ran_str = self.rand_name(word[2:])
-            self.name = self.name.replace('${%s}' % word, '%s' % ran_str)
+            if isinstance(session.get('params'), list):
+                session['params'].append(ran_str)
+            self.name = self.name.replace('${%s}' % word, '%s' % ran_str, 1)
             print('随机名称self.name: ', self.name)
             return self.name
         return self.name

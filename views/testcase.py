@@ -88,6 +88,7 @@ class TestCaseRun(MethodView):
         testcase_results.extend(['【%s】' % testcase.name, testcase_result, '【正则匹配的值】', regist_variable_value])
         testcase_results_html = '<br>'.join(testcase_results)
         FrontLogs('执行测试用例 name: %s ' % testcase.name).add_to_front_log()
+        print('TestCaseRun last:')
         return json.dumps({'testcase_result': testcase_results_html})
 
 
@@ -470,14 +471,20 @@ class RegularValidata(MethodView):
         for _regular in regular_list:
             print('_regular:', _regular)
             if '$' in _regular:
-                if _regular[1] != '.':
-                    return jsonify(False)
-                if len(_regular.split('.')) != len(set(_regular.split('.'))):
-                    return jsonify(False)
+                if _regular[1] == '.':
+                    if len(_regular.split('.')) != len(set(_regular.split('.'))):
+                        return jsonify(False)
+                    else:
+                        for key in _regular.split('.'):
+                            if ' ' in key:
+                                return jsonify(False)
+                elif _regular[1] == '[':
+                    if _regular[-1] != ']':
+                        return jsonify(False)
+                    if not _regular[2:-1].isdigit():
+                        return jsonify(False)
                 else:
-                    for key in _regular.split('.'):
-                        if ' ' in key:
-                            return jsonify(False)
+                    return jsonify(False)
         return jsonify(True)
 
 

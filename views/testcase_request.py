@@ -112,6 +112,7 @@ class TestCaseRequestStart(MethodView):
 
 
 def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_run=False, is_commit=True):
+    session['params'] = []
     if not testcase:
         testcase = TestCases.query.get(test_case_id)
     else:
@@ -155,7 +156,7 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
                         db.session.add(testcase_result)
                         db.session.commit()
                         return time_out_mes
-
+    print('testcase.old', testcase.old_sql, testcase.old_sql_id, testcase.old_sql_regist_variable)
     if testcase.old_sql and testcase.old_sql_id:
         if not testcase.old_sql_regist_variable:
             old_sql_regist_variable = ''
@@ -163,7 +164,11 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
             old_sql_regist_variable = testcase.old_sql_regist_variable
         old_sql_value = mysqlrun(mysql_id=testcase.old_sql_id, sql=testcase.old_sql,
                                  regist_variable=old_sql_regist_variable, is_request=False)
-        old_sql_value_result = AssertMethod(actual_result=old_sql_value, hope_result=AnalysisParams().analysis_params(testcase.old_sql_hope_result)).assert_method()
+        if testcase.old_sql_hope_result:
+            old_sql_value_result = AssertMethod(actual_result=old_sql_value, hope_result=AnalysisParams().analysis_params(testcase.old_sql_hope_result)).assert_method()
+        else:
+            old_sql_value_result = ''
+        print('old_sql_value_result:', old_sql_value_result)
     else:
         old_sql_value = old_sql_value_result = ''
 
@@ -178,8 +183,14 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
             new_sql_regist_variable = testcase.new_sql_regist_variable
         new_sql_value = mysqlrun(mysql_id=testcase.new_sql_id, sql=testcase.new_sql,
                                  regist_variable= new_sql_regist_variable, is_request=False)
-        new_sql_value_result = AssertMethod(actual_result=new_sql_value, hope_result=AnalysisParams().analysis_params(testcase.new_sql_hope_result)).assert_method()
-
+        print('new_sql_regist_variable:', testcase.new_sql_regist_variable)
+        if testcase.new_sql_hope_result:
+            new_sql_value_result = AssertMethod(actual_result=new_sql_value,
+                                            hope_result=AnalysisParams().analysis_params(
+                                                testcase.new_sql_hope_result)).assert_method()
+        else:
+            new_sql_value_result = ''
+        print('new_sql_value_result:', new_sql_value_result)
     else:
         new_sql_value = new_sql_value_result = ''
     # 调用比较的方法判断响应报文是否满足期望
@@ -224,6 +235,7 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
     # 测试结果实例化
     db.session.add(testcase_result)
     db.session.commit()
+    session.pop('params')
     if is_run:
         return response_body, regist_variable_value
 
