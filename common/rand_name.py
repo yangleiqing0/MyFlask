@@ -7,14 +7,14 @@ class RangName:
     def __init__(self, name):
         self.name = name
 
-    def rand_str(self):
+    def rand_str(self, testcase_name = '__testcase_name'):
         res = r'\${([^\${}]+)}'
         com_word = re.findall(re.compile(res), self.name)
         if len(com_word) > 0:
             word = re.findall(re.compile(res), self.name)[0]  # 限定最多一次随机
             ran_str = self.rand_name(word[2:])
-            if isinstance(session.get('params'), list):
-                session['params'].append(ran_str)
+            if isinstance(session.get(testcase_name), list):
+                session[testcase_name].append(ran_str)
             self.name = self.name.replace('${%s}' % word, '%s' % ran_str, 1)
             print('随机名称self.name: ', self.name)
             return self.name

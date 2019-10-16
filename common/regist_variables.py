@@ -6,7 +6,8 @@ from flask import session
 from modles import Variables, db
 
 
-def to_regist_variables(name, method, url, data, headers, regist_variable='', regular='', is_commit=True):
+def to_regist_variables(name, method, url, data, headers, regist_variable='', regular='', is_commit=True,
+                        testcase_name="__testcase_name"):
     response_body = MethodRequest().request_value(method, url, data, headers)
     user_id = session.get('user_id')
     if 'html' in response_body:
@@ -47,9 +48,10 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                                     print('regist_variable_value:', regist_variable_value)
                     elif '$[' in regular_list[index]:
                         # try:
-                            print('session params', session['params'])
+                            print('session params', testcase_name, session[testcase_name])
                             p_index = int(regular_list[index][2:-1])
-                            regist_variable_value = session['params'][p_index]
+                            if testcase_name != '__testcase_name':
+                                regist_variable_value = session[testcase_name][p_index]
                         # except Exception as e:
                         #     regist_variable_value = str(e)
                     else:

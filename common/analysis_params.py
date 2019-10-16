@@ -12,7 +12,7 @@ class AnalysisParams:
         self.variables = cdb().query_db(variables_query_sql, (user_id,))
         print('init:self.variables:', self.variables)
 
-    def analysis_params(self,  params, is_change=None):
+    def analysis_params(self,  params, is_change=None, testcase_name='__testcase_name'):
         if params in ("", None):
             params = ""
             return params
@@ -26,7 +26,7 @@ class AnalysisParams:
             in_variables_num = 0
             for word in words:
                 if '随机' in word:
-                    params = RangName(params).rand_str()
+                    params = RangName(params).rand_str(testcase_name=testcase_name)
                 if (word,) in self.variables:
                     in_variables_num += 1
                     variable_value_query_sql = 'select value from variables where name=%s'
@@ -39,17 +39,17 @@ class AnalysisParams:
             if in_variables_num == 0:
                 return params
 
-    def analysis_more_params(self, *args, not_repeat=False):
+    def analysis_more_params(self, *args, testcase_name='__testcase_name', not_repeat=False):
         if len(args) == 1:
-            arg = AnalysisParams().analysis_params(*args)
+            arg = AnalysisParams().analysis_params(*args, testcase_name=testcase_name)
             return arg
 
         new_args = []
         for arg in args:
             if not_repeat:
-                arg = self.analysis_params(arg)
+                arg = self.analysis_params(arg, testcase_name=testcase_name)
             else:
-                arg = AnalysisParams().analysis_params(arg)
+                arg = AnalysisParams().analysis_params(arg, testcase_name=testcase_name)
             new_args.append(arg)
 
         return new_args
