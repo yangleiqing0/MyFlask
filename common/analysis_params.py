@@ -26,16 +26,18 @@ class AnalysisParams:
             in_variables_num = 0
             for word in words:
                 if '随机' in word:
-                    params = RangName(params).rand_str(testcase_name=testcase_name)
-                if (word,) in self.variables:
-                    in_variables_num += 1
-                    variable_value_query_sql = 'select value from variables where name=%s'
-                    variable_value = cdb().query_db(variable_value_query_sql, (word,), True)[0]
-                    print('variable_value: ${%s}' % word, variable_value)
-                    if is_change == "headers":
-                        params = params.replace('${%s}' % word, '"%s"' % variable_value)
-                    params = params.replace('${%s}' % word, variable_value)
-                    # print('解析后的参数为:', params, type(params))
+                    print('随机开始', word)
+                    params = RangName(params).rand_str(testcase_name=testcase_name, analysis_word=word)
+                else:
+                    if (word,) in self.variables:
+                        in_variables_num += 1
+                        variable_value_query_sql = 'select value from variables where name=%s'
+                        variable_value = cdb().query_db(variable_value_query_sql, (word,), True)[0]
+                        print('variable_value: ${%s}' % word, variable_value)
+                        if is_change == "headers":
+                            params = params.replace('${%s}' % word, '"%s"' % variable_value)
+                        params = params.replace('${%s}' % word, variable_value)
+                        # print('解析后的参数为:', params, type(params))
             if in_variables_num == 0:
                 return params
 

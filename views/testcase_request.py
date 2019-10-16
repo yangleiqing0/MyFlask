@@ -122,7 +122,7 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
     method = testcase.method
 
     if isinstance(testcase, NullObject):
-        return to_execute_testcase(testcase, is_commit=is_commit)
+        return to_execute_testcase(testcase, url, data , is_commit=is_commit)
     hope_result = AnalysisParams().analysis_more_params(testcase.hope_result)
     if testcase.wait:
         # 前置等待验证
@@ -145,21 +145,22 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
                 if wait.old_wait_time:
                     if time_count == int(wait.old_wait_time) * 60:
                         time_out_mes = "前置等待超时, 查询结果 %s" % old_wait_value
-                        testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
-                                                         testcase_time_id, '', '',
-                                                         old_sql_value='',
-                                                         new_sql_value='',
-                                                         old_sql_value_result='',
-                                                         new_sql_value_result='', result=time_out_mes,
-                                                         scene_id=testcase.testcase_scene_id)
-                        # 测试结果实例化
-                        db.session.add(testcase_result)
-                        db.session.commit()
+                        if testcase_time_id:
+                            testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
+                                                             testcase_time_id, '', '',
+                                                             old_sql_value='',
+                                                             new_sql_value='',
+                                                             old_sql_value_result='',
+                                                             new_sql_value_result='', result=time_out_mes,
+                                                             scene_id=testcase.testcase_scene_id)
+                            # 测试结果实例化
+                            db.session.add(testcase_result)
+                            db.session.commit()
                         return time_out_mes
     print('testcase.old', testcase.old_sql, testcase.old_sql_id, testcase.old_sql_regist_variable)
     old_sql_value, old_sql_value_result = get_assert_value(testcase, 'old_sql')
 
-    response_body, regist_variable_value = to_execute_testcase(testcase)  # 发送请求
+    response_body, regist_variable_value = to_execute_testcase(testcase, url, data)  # 发送请求
 
     testcase_test_result = AssertMethod(actual_result=response_body, hope_result=hope_result).assert_method()
 
@@ -197,14 +198,14 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
                         time_out_new_mes = "后置等待超时, 查询结果 %s" % new_wait_value
                         test_result = time_out_new_mes
                         break
-
-    testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
-                                     testcase_time_id, response_body, testcase_test_result, old_sql_value=str(old_sql_value),
-                                     new_sql_value=str(new_sql_value), old_sql_value_result=old_sql_value_result,
-                                     new_sql_value_result=new_sql_value_result, result=test_result, scene_id=testcase.testcase_scene_id)
-    # 测试结果实例化
-    db.session.add(testcase_result)
-    db.session.commit()
+    if testcase_time_id:
+        testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
+                                         testcase_time_id, response_body, testcase_test_result, old_sql_value=str(old_sql_value),
+                                         new_sql_value=str(new_sql_value), old_sql_value_result=old_sql_value_result,
+                                         new_sql_value_result=new_sql_value_result, result=test_result, scene_id=testcase.testcase_scene_id)
+        # 测试结果实例化
+        db.session.add(testcase_result)
+        db.session.commit()
     session.pop(testcase.name)
     if is_run:
         return response_body, regist_variable_value
