@@ -1,6 +1,7 @@
 import datetime
 import json
 from common.tail_font_log import FrontLogs
+from common.analysis_params import AnalysisParams
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, jsonify, session, flash
 from common.request_get_more_values import request_get_values
@@ -70,7 +71,9 @@ class TestCaseSceneRun(MethodView):
             if sql_wait != "0" :
                 testcase_result, regist_variable_value = post_testcase(testcase=testcase)
             else:
-                testcase_result, regist_variable_value = to_execute_testcase(testcase)
+                url, data = AnalysisParams().analysis_more_params(testcase.url, testcase.data,
+                                                                  testcase_name=testcase.name)
+                testcase_result, regist_variable_value = to_execute_testcase(testcase, url, data)
             testcase_results.extend(['【%s】' % testcase.name, testcase_result])
         testcase_results_html = '<br>'.join(testcase_results)
         print('TestCaseSceneRun: ', json.dumps({'testcase_results': testcase_results_html}))

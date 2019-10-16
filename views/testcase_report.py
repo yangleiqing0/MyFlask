@@ -2,7 +2,7 @@
 import os
 import re
 from flask.views import MethodView
-from sqlalchemy import or_
+from config import project_path
 from flask import render_template, Blueprint, request, redirect, url_for, send_from_directory, session, jsonify
 from common.tail_font_log import FrontLogs
 from db_create import db
@@ -294,7 +294,7 @@ class TestCaseReportDownLoad(MethodView):
         download_path = TestCaseStartTimes.query.filter(TestCaseStartTimes.name == name).first().\
             filename.replace(name, '')
         print('download_path:', download_path)
-        dirpath = os.path.join(session.get('app_rootpath'), download_path)
+        dirpath = os.path.join(project_path, download_path)
         # 这里是下在目录，从工程的根目录写起，比如你要下载static/js里面的js文件，这里就要写“static/js”
         print('dirpath:', dirpath)
         FrontLogs('下载测试报告 测试报告名称: %s ' % name).add_to_front_log()
