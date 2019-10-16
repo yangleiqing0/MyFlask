@@ -59,8 +59,8 @@ class TestCaseLook(MethodView):
 class TestCaseRun(MethodView):
 
     def post(self):
-        sql_wait = Variables.query.filter(Variables.name == '_Sql_wait').first().value
-        print('sql_wait:', sql_wait)
+        # sql_wait = Variables.query.filter(Variables.name == '_Sql_wait').first().value
+        # print('sql_wait:', sql_wait)
         testcase_id, case_group_id, testcase_add_run, testcase_update_run \
             = request_get_values('testcase_id', 'case_group_id', 'testcase_add_run', 'testcase_update_run')
         print('TestCaseRunForm: ', request.form)
@@ -81,10 +81,10 @@ class TestCaseRun(MethodView):
         else:
             testcase = TestCases.query.get(testcase_id)
         testcase_results = []
-        if sql_wait != "0":
-            testcase_result, regist_variable_value = post_testcase(testcase=testcase, is_commit=False)
-        else:
-            testcase_result, regist_variable_value = to_execute_testcase(testcase, is_commit=False)
+        # if sql_wait != "0":
+        testcase_result, regist_variable_value = post_testcase(testcase=testcase, is_commit=False)
+        # else:
+        #     testcase_result, regist_variable_value = to_execute_testcase(testcase, is_commit=False)
         testcase_results.extend(['【%s】' % testcase.name, testcase_result, '【正则匹配的值】', regist_variable_value])
         testcase_results_html = '<br>'.join(testcase_results)
         FrontLogs('执行测试用例 name: %s ' % testcase.name).add_to_front_log()

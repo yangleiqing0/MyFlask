@@ -52,6 +52,8 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                             p_index = int(regular_list[index][2:-1])
                             if testcase_name != '__testcase_name':
                                 regist_variable_value = session[testcase_name][p_index]
+                            else:
+                                regist_variable_value = '__testcase_name'
                         # except Exception as e:
                         #     regist_variable_value = str(e)
                     else:
@@ -63,7 +65,7 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                     if not regist_variable_value:
                         regist_variable_value = ''
                     elif isinstance(regist_variable_value, (int, str, dict)):
-                        regist_variable_value = regist_variable_value
+                        pass
                     elif len(regist_variable_value) > 0:
                         regist_variable_value = regist_variable_value[0]
                     else:

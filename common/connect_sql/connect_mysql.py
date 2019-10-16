@@ -19,21 +19,24 @@ class ConnMysql:
             self.sql = sql
 
     def select_mysql(self):
-        if not self.sql:
-            return 'sql语句不可为空'
-        cur = self.db.cursor()
-        cur.execute(self.sql)
-        r = cur.fetchall()
-        print('ConnMysql result:', r)
-        cur.close()
-        if not r:
-            return ''
-        elif len(r) == 1:
-            if len(r[0]) == 1:
-                print('r', len(r[0]), r[0])
-                return r[0][0]
-            return r[0]
-        return r
+        try:
+            if not self.sql:
+                return 'sql语句不可为空'
+            cur = self.db.cursor()
+            cur.execute(self.sql)
+            r = cur.fetchall()
+            print('ConnMysql result:', r)
+            cur.close()
+            if not r:
+                return ''
+            elif len(r) == 1:
+                if len(r[0]) == 1:
+                    print('r', len(r[0]), r[0])
+                    return r[0][0]
+                return r[0]
+            return r
+        except Exception as e:
+            return e
 
     def operate_mysql(self):
         cur = self.db.cursor()
