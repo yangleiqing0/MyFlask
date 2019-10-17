@@ -10,7 +10,7 @@ class TestCaseResult(Base, db.Model):
     testcase_method = db.Column(db.String(10), nullable=False)
     testcase_hope_result = db.Column(db.String(200))
 
-    response_body = db.Column(db.TEXT)
+    response_body = db.Column(db.UnicodeText)
     testcase_test_result = db.Column(db.TEXT)
     testcase_id = db.Column(db.Integer, db.ForeignKey(TestCases.id))
     scene_id = db.Column(db.Integer)
