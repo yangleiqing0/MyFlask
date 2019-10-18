@@ -62,9 +62,10 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                                 regist_variable_value = re.compile(regular_list[index]).findall(response_body)
                             except Exception as e:
                                 regist_variable_value = str(e)
-
-                        if isinstance(regist_variable_value, (int, str, dict)) or regist_variable_value==0:
+                        if regist_variable_value==0:
                             pass
+                        if isinstance(regist_variable_value, (int, str, dict, list)):
+                            regist_variable_value = str(regist_variable_value)
                         elif not regist_variable_value:
                             regist_variable_value = ''
                         elif len(regist_variable_value) > 0:
