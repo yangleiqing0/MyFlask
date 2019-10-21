@@ -118,9 +118,9 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
     else:
         is_run = True
     session[testcase.name] = []
-    url, data = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase_name=testcase.name)
     method = testcase.method
     if isinstance(testcase, NullObject):
+        url, data = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase_name=testcase.name)
         return to_execute_testcase(testcase, url, data , is_commit=is_commit)
 
     if testcase.wait:
