@@ -253,13 +253,16 @@ class UpdateTestCase(MethodView):
         page, scene_page, name, url, method, data, group_id, request_headers_id, regist_variable, regular \
             , hope_result, testcase_scene_id, old_sql, new_sql, old_sql_regist_variable, new_sql_regist_variable, \
             old_sql_hope_result, new_sql_hope_result, old_sql_id, new_sql_id = request_get_values(
-            'page', 'scene_page', 'name', 'url', 'method', 'data', 'group_id', 'request_headers_id', 'regist_variable',
-            'regular', 'hope_result', 'testcase_scene_id', 'old_sql', 'new_sql', 'old_sql_regist_variable',
-            'new_sql_regist_variable', 'old_sql_hope_result', 'new_sql_hope_result', 'old_sql_id', 'new_sql_id')
+                        'page', 'scene_page', 'name', 'url', 'method', 'data', 'group_id', 'request_headers_id',
+                        'regist_variable',
+                        'regular', 'hope_result', 'testcase_scene_id', 'old_sql', 'new_sql', 'old_sql_regist_variable',
+                        'new_sql_regist_variable', 'old_sql_hope_result', 'new_sql_hope_result', 'old_sql_id',
+                        'new_sql_id')
 
-        old_wait_sql, old_wait, old_wait_time, old_wait_mysql, new_wait_sql, new_wait, new_wait_time, new_wait_mysql = request_get_values(
-            'old_wait_sql', 'old_wait', 'old_wait_time', 'old_wait_mysql', 'new_wait_sql', 'new_wait', 'new_wait_time',
-            'new_wait_mysql')
+        old_wait_sql, old_wait, old_wait_time, old_wait_mysql, new_wait_sql, new_wait, new_wait_time, \
+            new_wait_mysql = request_get_values(
+                'old_wait_sql', 'old_wait', 'old_wait_time', 'old_wait_sql_id', 'new_wait_sql', 'new_wait', 'new_wait_time',
+                'new_wait_sql_id')
         print('UpdateTestCase post:testcase_scene_id ', testcase_scene_id, scene_page)
         id = request.args.get('id', id)
         user_id = session.get('user_id')

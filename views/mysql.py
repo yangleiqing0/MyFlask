@@ -91,7 +91,7 @@ def mysqlrun(mysql_id=None, sql='', regist_variable='', is_request=True, regist=
             session['mysql'] = host, port, db_name, user, password, sql
     # try:
     result = ConnMysql(host, int(port), user, password, db_name, sql, is_param=False).select_mysql()
-    print('run result', result)
+    print('run result', result, regist, regist_variable)
     if regist:
         if regist_variable:
             if Variables.query.filter(Variables.name == regist_variable, Variables.user_id == user_id).count() > 0:

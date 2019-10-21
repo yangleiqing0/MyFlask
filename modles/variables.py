@@ -16,10 +16,10 @@ class Variables(BaseModel, db.Model):
         self.description = description
         self.is_private = is_private
         self.user_id = user_id
-    #
-    # def __repr__(self):
-    #     return '<全局变量 {}： {} {} {} {}>' . format(
-    #         self.name, self.value, self.description, self.timestamp,self.user_id)
+
+    def __repr__(self):
+        return '<全局变量 {}： {} {} {} {}>' . format(
+            self.name, self.value, self.description, self.timestamp,self.user_id)
     #
     # def to_json(self):
     #     return dict(id=self.id, name=self.name, value=self.value,

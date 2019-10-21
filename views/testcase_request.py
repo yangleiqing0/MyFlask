@@ -120,12 +120,12 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
     session[testcase.name] = []
     url, data = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase_name=testcase.name)
     method = testcase.method
-
     if isinstance(testcase, NullObject):
         return to_execute_testcase(testcase, url, data , is_commit=is_commit)
 
     if testcase.wait:
         # 前置等待验证
+        # url, data = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase_name=testcase.name)
         hope_result = AnalysisParams().analysis_more_params(testcase.hope_result)
         wait = testcase.wait[0]
         time_count = 0
@@ -147,7 +147,7 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
                     if time_count == int(wait.old_wait_time) * 60:
                         time_out_mes = "前置等待超时, 查询结果 %s" % old_wait_value
                         if testcase_time_id:
-                            testcase_result = TestCaseResult(test_case_id, testcase.name, url, data, method, hope_result,
+                            testcase_result = TestCaseResult(test_case_id, testcase.name, testcase.url, testcase.data, method, hope_result,
                                                              testcase_time_id, '', '',
                                                              old_sql_value='',
                                                              new_sql_value='',
@@ -160,6 +160,8 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
                         return time_out_mes
     print('testcase.old', testcase.old_sql, testcase.old_sql_id, testcase.old_sql_regist_variable)
     old_sql_value, old_sql_value_result = get_assert_value(testcase, 'old_sql')
+
+    url, data = AnalysisParams().analysis_more_params(testcase.url, testcase.data, testcase_name=testcase.name)
 
     response_body, regist_variable_value = to_execute_testcase(testcase, url, data)
     # 发送请求
@@ -178,6 +180,7 @@ def post_testcase(test_case_id=None, testcase_time_id=None, testcase=None, is_ru
 
     if testcase.wait:
         # 后置等待验证
+        print('进入后置等待:', testcase)
         wait = testcase.wait[0]
         time_new_count = 0
         if wait.new_wait_mysql and wait.new_wait and wait.new_wait_sql:
@@ -251,7 +254,7 @@ def get_assert_value(testcase, value):
                 old_sql_value_result = AssertMethod(actual_result=old_sql_value, hope_result=AnalysisParams().analysis_params(testcase.old_sql_hope_result)).assert_method()
             else:
                 old_sql_value_result = ''
-            print('old_sql_value_result:', old_sql_value_result)
+            print('old_sql_value_result:', old_sql_value_result, old_sql_value)
         else:
             old_sql_value = old_sql_value_result = ''
         return old_sql_value, old_sql_value_result

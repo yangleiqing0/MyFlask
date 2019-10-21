@@ -18,7 +18,7 @@ class cdb:
 
     def query_db(self, sql, params='', one=False):
         try:
-            print('执行sql:', sql)
+            print('执行sql:', sql, params)
             self.cur = self.db_cur()
             if params:
                 self.cur.execute(sql, params)

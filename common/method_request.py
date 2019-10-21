@@ -14,6 +14,13 @@ class MethodRequest:
         user_id = session.get('user_id')
         headers.update({'Connection': 'close'})
         print('请求方法: ', method, url, data, headers, type(url))
+        new_data = ''
+        for c in data:
+            # 判断是否有中文  有的话进行解析
+           if ord(c) > 255:
+                c = c.encode('UTF-8').decode('latin1')
+           new_data += c
+        data = new_data
         requests.adapters.DEFAULT_RETRIES = 51
         requests.session().keep_alive = False
         timeout = Variables.query.filter(Variables.name == '_Request_Time_Out', Variables.user_id == user_id).first().value

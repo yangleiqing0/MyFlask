@@ -20,7 +20,7 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                 #  判断是否有正则匹配规则
                 regular_list = regular.split(',')
                 regist_variable_list = regist_variable.split(',')
-                print('regular_list:', regular_list, len(regular_list), len(regist_variable_list))
+                print('regular_list:', regular_list, len(regular_list), len(regist_variable_list), regist_variable_list)
                 if len(regular_list) <= len(regist_variable_list):
                     # 判断正则和注册变量数目是否相符 小于或等于
                     regist_variable_value_list = []
@@ -46,7 +46,7 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                                         except AttributeError as e:
                                             print(e)
                                             regist_variable_value = ''
-                                        print('regist_variable_value:', regist_variable_value)
+                                        print('regist_variable_value:', regist_variable_value, type(regist_variable_value),  regist_variable_list[index])
                         elif '$[' in regular_list[index]:
                             # try:
                                 print('session params', testcase_name, session[testcase_name])
@@ -55,24 +55,35 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
                                     regist_variable_value = session[testcase_name][p_index]
                                 else:
                                     regist_variable_value = '__testcase_name'
-                            # except Exception as e:
-                            #     regist_variable_value = str(e)
                         else:
                             try:
                                 regist_variable_value = re.compile(regular_list[index]).findall(response_body)
                             except Exception as e:
                                 regist_variable_value = str(e)
+
+
+                        if isinstance(regist_variable_value, (dict, list)):
+                            if len(regist_variable_value) == 1:
+                                regist_variable_value = regist_variable_value[0]
                         if regist_variable_value==0 or isinstance(regist_variable_value, str):
                             pass
-                        if isinstance(regist_variable_value, (int, dict, list)):
+                        elif isinstance(regist_variable_value, int):
                             regist_variable_value = str(regist_variable_value)
-                        elif not regist_variable_value:
-                            regist_variable_value = ''
-                        elif len(regist_variable_value) > 0:
-                            regist_variable_value = regist_variable_value[0]
+                            print('regist_variable_value int', regist_variable_value)
                         else:
-                            regist_variable_value = '未知的值'
+                            if isinstance(regist_variable_value, (dict, list)):
+                                if len(regist_variable_value) == 1:
+                                    regist_variable_value = regist_variable_value[0]
+                                regist_variable_value = json.dumps(regist_variable_value)
+                                print('json.dumps后:', regist_variable_value)
+                            elif not regist_variable_value:
+                                regist_variable_value = ''
+                            else:
+                                regist_variable_value = '未知的值'
+                        print('regist_variable_value last', regist_variable_value)
                         regist_variable_value_list.append(regist_variable_value)
+                        regist_variable_list[index] = regist_variable_list[index].strip()
+                        # 注册变量时清除空格
                         if Variables.query.filter(Variables.name == regist_variable_list[index], Variables.user_id == user_id).count() > 0:
                             print('%s 请求结束,存在此变量时：' % url,
                                   Variables.query.filter(Variables.name == regist_variable_list[index], Variables.user_id == user_id).first())
@@ -90,5 +101,6 @@ def to_regist_variables(name, method, url, data, headers, regist_variable='', re
             return response_body, '未存在正则匹配'
         return response_body, '存在未注册变量'
     except Exception as e:
+        print('注册变量解析失败', e)
         return response_body, '注册变量解析失败'
 
