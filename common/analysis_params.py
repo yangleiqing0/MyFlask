@@ -41,9 +41,6 @@ class AnalysisParams:
                         if word == 'auto_vdb_parameter':
                             #  恢复VDB时代码处理VDB的参数
                             try:
-                                # db_name = word.split('_')[0]
-                                # vdb_name = 'vdb_' + cdb().query_db(variable_value_query_sql,
-                                #                                 (db_name + '_vdb_name',), True)[0]
                                 target_env_tag = cdb().query_db(variable_value_query_sql,
                                                                 ('target_env_tag',), True)[0]
                                 # print('auto_vdb_parameter:', target_env_tag)
@@ -58,8 +55,22 @@ class AnalysisParams:
                                     '${%s}' % word, variable_value).replace(
                                     target_env_tag, tag_name)
                                 print('auto_vdb_parameter:', tag_name, target_env_tag, params)
-                            except TypeError:
-                                pass
+                            except TypeError as e:
+                                print('auto_vdb_parameter error', e)
+                            continue
+                        elif word == 'auto_v2p_parameter':
+                            try:
+
+                                auto_v2p_cannot_parameter = cdb().query_db(variable_value_query_sql,
+                                                                ('auto_v2p_cannot_parameter',), True)[0]
+                                variable_value = json.loads(variable_value)
+                                variable_value.extend(json.loads(auto_v2p_cannot_parameter))
+                                variable_value = json.dumps(variable_value)
+                                params = params.replace(
+                                    '${%s}' % word, variable_value)
+                                print('auto_v2p_parameter:', params)
+                            except TypeError as e:
+                                print('auto_v2p_parameter error', e)
                             continue
                         params = params.replace('${%s}' % word, variable_value)
             if in_variables_num == 0:

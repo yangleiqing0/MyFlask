@@ -30,6 +30,7 @@ class TestCaseRequest(MethodView):
         for case_group in case_groups:
             case_group_NullObject = NullObject()
             case_group_NullObject.name = case_group.name
+            case_group_NullObject.id = case_group.id
             testcase_list = []
             testcases = TestCases.query.join(CaseGroup, CaseGroup.id == TestCases.group_id).filter(
                 TestCases.testcase_scene_id.is_(None), TestCases.group_id == case_group.id, TestCases.user_id == user_id

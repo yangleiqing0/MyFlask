@@ -31,6 +31,7 @@
                             <div class="form-group col-md-12" style="margin-top: 7px">
                                 <div class="float-right">
                                     <select class="btn btn-default" name="testcase_copy" id="testcase_copy" style="width: 120px;height: 34px">
+{#                                        <input type="text" name="search" class="form-control" value="{{ search if search else "" }}" placeholder="Search">#}
                                         {% for model_testcase in model_testcases %}
                                             <option  value="{{ model_testcase.id }}" style="width: 20px">{{ model_testcase.name }}</option>
                                         {% endfor %}

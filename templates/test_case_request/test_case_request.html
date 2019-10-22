@@ -6,7 +6,7 @@
             <div style="float: left" class="col-md-12 no-padding"  >
                         {% for case_group in case_groups %}
                             <div class="btn col-md-12 btn-default no-padding"  >
-                                <div class="col-md-11" style="float: left" href="#case_group_{{ loop.index }}" data-toggle="collapse">
+                                <div class="col-md-10" style="float: left" href="#case_group_{{ loop.index }}" data-toggle="collapse">
                                     <div class="col-md-11">
                                         <span style="margin-left: 120px"><b>{{case_group.name | safe }}</b></span>
                                     </div>
@@ -15,14 +15,15 @@
                                     </div>
 
                                 </div>
-                                 <div class="col-md-1 has_no_padding" style="float: left">
+                                 <div class="col-md-2 has_no_padding" style="float: left">
                                      <div class=" has_no_padding" >
-                                         <label style="font-weight: normal" for="case_group_{{ loop.index }}_all" class="col-md-8 has_no_padding">全选分组</label>
+                                         <label style="font-weight: normal" for="case_group_{{ loop.index }}_all" class="col-md-7 has_no_padding">全选分组</label>
                                      </div>
-                                     <div class="col-md-4 has_no_padding" >
+                                     <div class="col-md-5 has_no_padding" >
                                          <input type="checkbox" id="case_group_{{ loop.index }}_all" value="case_group_{{ loop.index }}_all" name="case_group_{{ loop.index }}_all" class="all_checkbox" style="zoom:1.5;width: 20px;margin-top: 1px;">
+                                          <a  title="提升分组排序名次" class="up" href="{{ url_for('case_group_blueprint.group_up') }}?id={{ case_group.id }}" style="" ><i class="fa-arrow-up am-icon-fw"></i></a>
                                      </div>
-                                </div>
+                                     </div>
                             </div>
                             <div id="case_group_{{ loop.index }}" class="collapse no-padding">
                                  {% for testcase in case_group.testcase_list %}

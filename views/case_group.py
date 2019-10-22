@@ -1,4 +1,5 @@
 import json
+import datetime
 from flask.views import MethodView
 from flask import render_template, Blueprint, request, redirect, url_for, jsonify, session
 from common.tail_font_log import FrontLogs
@@ -110,6 +111,15 @@ class CaseGroupSearchCase(MethodView):
                                request_headers=request_headers)
 
 
+class GroupUp(MethodView):
+    def get(self):
+        _id = request_get_values('id')
+        group = CaseGroup.query.get(_id)
+        group.updated_time = datetime.datetime.now()
+        db.session.commit()
+        return redirect(url_for('test_case_request_blueprint.test_case_request'))
+
+
 class CaseGroupValidata(MethodView):
 
     def get(self):
@@ -140,6 +150,8 @@ case_group_blueprint.add_url_rule('/casegrouplist/', view_func=CaseGroupList.as_
 case_group_blueprint.add_url_rule('/casegroupupdate/<id>/', view_func=CaseGroupUpdate.as_view('case_group_update'))
 case_group_blueprint.add_url_rule('/casegroupdelete/<id>/', view_func=CaseGroupDelete.as_view('case_group_delete'))
 case_group_blueprint.add_url_rule('/casegroupsearchcase/<id>/', view_func=CaseGroupSearchCase.as_view('case_group_search_case'))
+case_group_blueprint.add_url_rule('/group_up/', view_func=GroupUp.as_view('group_up'))
+
 
 case_group_blueprint.add_url_rule('/casegroupvalidate/', view_func=CaseGroupValidata.as_view('case_group_validate'))
 case_group_blueprint.add_url_rule('/casegroupupdatevalidate/', view_func=CaseGroupUpdateValidata.as_view('case_group_update_validate'))
