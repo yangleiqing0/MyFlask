@@ -161,6 +161,7 @@ $(document).ready(function() {
              $(this).css("background-color", "white");
          })
     });
+   $('option').css('font-size','16px')
 
 });
 
