@@ -162,7 +162,6 @@ $(document).ready(function() {
          })
     });
    $('option').css('font-size','16px')
-
 });
 
 

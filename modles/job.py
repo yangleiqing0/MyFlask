@@ -4,8 +4,8 @@ from . import BaseModel, datetime, db, Mail, User
 
 class Job(BaseModel, db.Model):
     __tablename__ = 'job'
-    testcases = db.Column(db.String(50))
-    testcase_scenes = db.Column(db.String(50))
+    testcases = db.Column(db.Text)
+    testcase_scenes = db.Column(db.Text)
     description = db.Column(db.String(50))
     user_id = db.Column(db.Integer, db.ForeignKey(User.id))
     triggers = db.Column(db.String(50))
