@@ -7,18 +7,23 @@ class ConnMysql:
 
     def __init__(self, host, port, user, password, db_name, sql, is_param=True):
         print('ConnMysql:', host, port, user, password, db_name, sql)
-
-        self.db = pymysql.connect(host=host, port=port, user=user,
-                                  passwd=password, db=db_name, charset='utf8', connect_timeout=3)
-        if db_name:
-            if sql:
-                if is_param:
-                    sql = AnalysisParams().analysis_params(sql)
-            self.sql = sql
-        else:
-            self.sql = sql
+        self.success = True
+        try:
+            self.db = pymysql.connect(host=host, port=port, user=user,
+                                      passwd=password, db=db_name, charset='utf8', connect_timeout=30)
+            if db_name:
+                if sql:
+                    if is_param:
+                        sql = AnalysisParams().analysis_params(sql)
+                self.sql = sql
+            else:
+                self.sql = sql
+        except Exception as e:
+            self.success = False
 
     def select_mysql(self):
+        if not self.success:
+            return '数据库链接失败'
         try:
             if not self.sql:
                 return 'sql语句不可为空'
@@ -39,13 +44,16 @@ class ConnMysql:
             return e
 
     def operate_mysql(self):
+        if not self.success:
+            return '数据库链接失败'
         cur = self.db.cursor()
         cur.execute(self.sql)
         self.db.commit()
         cur.close()
 
     def __del__(self):
-        self.db.close()
+        if self.success:
+            self.db.close()
 
 
 if __name__ == "__main__":

@@ -37,7 +37,7 @@ class AnalysisParams:
                         variable_value = cdb().query_db(variable_value_query_sql, (word,), True)[0]
                         print('variable_value: ${%s}' % word, variable_value)
                         if is_change == "headers":
-                            params = params.replace('${%s}' % word, '"%s"' % variable_value)
+                            params = params.replace('${%s}' % word, '%s' % variable_value)
                         if word == 'auto_vdb_parameter':
                             #  恢复VDB时代码处理VDB的参数
                             try:
