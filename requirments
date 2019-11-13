@@ -1,1 +1,1 @@
-flask_apscheduler requests xlsxwriter flask_wtf wtforms flask_sqlalchemy flask flask_migrate flask_script flask_mail selenium
+flask_apscheduler xlrd pymysql flask_cors requests xlsxwriter flask_wtf wtforms flask_sqlalchemy flask flask_migrate flask_script flask_mail selenium
